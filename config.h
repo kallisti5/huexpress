@@ -145,7 +145,7 @@
 #undef NETPLAY_DEBUG
 
 /* defined if user wants to use the new gfx engine */
-#undef NEW_GFX_ENGINE
+#define NEW_GFX_ENGINE 1
 
 /* defined if user wants ogg support in hcd */
 #undef OGG_SUPPORT
