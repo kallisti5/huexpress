@@ -1,7 +1,7 @@
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
 /* modified bsd pce cd hardware support (old one) */
-#undef BSD_CD_HARDWARE_SUPPORT
+#define BSD_CD_HARDWARE_SUPPORT 1
 
 /* for hugo developers working on the cd subsystem */
 #undef CD_DEBUG
@@ -58,7 +58,7 @@
 #define HAVE_LIBSDL 1
 
 /* Define to 1 if you have the `SDL_mixer' library (-lSDL_mixer). */
-#undef HAVE_LIBSDL_MIXER
+#define HAVE_LIBSDL_MIXER 1
 
 /* Define to 1 if you have the SDL_net library */
 #undef HAVE_LIBSDL_NET

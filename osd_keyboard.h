@@ -18,7 +18,7 @@
 #else // !WIN32
 
 #if defined(SDL)
-#include "osd_linux_sdl_machine.h"
+#include "osd_haiku_sdl_machine.h"
 #else // !SDL
 
 #if defined(ALLEGRO)

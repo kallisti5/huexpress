@@ -34,7 +34,7 @@ APP_MIME_SIG=
 #	if two source files with the same name (source.c or source.cpp)
 #	are included from different directories.  Also note that spaces
 #	in folder names do not work well with this makefile.
-SRCS=pce.c hard_pce.c sprite.c h6280.c view_zp.c edit_ram.c debug.c format.c subs_eagle.c cd.c hcd.c lsmp3.c sound.c mix.c followop.c dis.c optable.c view_inf.c lang.c list_rom.c trans_fx.c cheat.c gfx.c bp.c bios.c osd_haiku_cd.c osd_linux_snd.c osd_haiku_sdl_machine.c utils.c hugo.c
+SRCS=pce.c pcecd.c hard_pce.c sprite.c h6280.c view_zp.c edit_ram.c debug.c format.c subs_eagle.c cd.c hcd.c lsmp3.c sound.c mix.c followop.c dis.c optable.c view_inf.c lang.c list_rom.c trans_fx.c cheat.c gfx.c bp.c bios.c osd_haiku_cd.c osd_linux_snd.c osd_haiku_sdl_machine.c osd_keyboard.c osd_sdl_gfx.c utils.c hugo.c 
 
 #	specify the resource definition files to use
 #	full path or a relative path to the resource file can be used.
@@ -122,7 +122,7 @@ DEBUGGER =
 COMPILER_FLAGS =-I/boot/common/include/SDL -D_GNU_SOURCE=1
 
 #	specify additional linker flags
-LINKER_FLAGS =
+LINKER_FLAGS =-L/boot/common/lib -lSDL
 
 #	specify the version of this particular item
 #	(for example, -app 3 4 0 d 0 -short 340 -long "340 "`echo -n -e '\302\251'`"1999 GNU GPL") 
