@@ -13,8 +13,6 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-#define SOLARIS 1
-
 #include "iniconfig.h"
 #include "utils.h"
 
@@ -380,7 +378,7 @@ set_arg (char nb_arg, const char *val)
     }
 }
 
-#if !defined(WIN32) && !defined(SOLARIS)
+#if !defined(WIN32) && !defined(SOLARIS) && !defined(__HAIKU__)
 
 //! program header for GNU argp function
 const char *argp_program_version = "Hu-Go! 2.12";
@@ -551,13 +549,13 @@ static struct argp argp = { options, parse_opt, args_doc, doc };
 void
 parse_commandline (int argc, char **argv)
 {
-#if defined(WIN32) || defined(SOLARIS)
+#if defined(WIN32) || defined(SOLARIS) || defined(__HAIKU__)
   char next_arg, i, arg_error = 0;
 #endif
 
   Log ("--[ PARSING COMMAND LINE ]--------------------------\n");
 
-#if !defined(WIN32) && !defined(SOLARIS)
+#if !defined(WIN32) && !defined(SOLARIS) && !defined(__HAIKU__)
   argp_parse (&argp, argc, argv, 0, 0, &option);
 #else
   next_arg = 0;
@@ -1043,5 +1041,3 @@ save_config (void)
   dispose_config ();
 
 }
-
-#undef SOLARIS
