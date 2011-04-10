@@ -12,50 +12,50 @@
 #undef CRAY_STACKSEG_END
 
 /* Define to 1 if using `alloca.c'. */
-#undef C_ALLOCA
+/* #undef C_ALLOCA */
 
 /* defined if user wants netplay support */
-#undef ENABLE_NETPLAY
+/* #undef ENABLE_NETPLAY */
 
 /* defined if user wants a 'clean' binary ( = not for hugo developpers) */
-#undef FINAL_RELEASE
+#define FINAL_RELEASE 1
 
 /* for hugo developers working on the graphics subsystem */
-#undef GFX_DEBUG
+/* #undef GFX_DEBUG */
 
 /* defined if user have GTK2 installed */
-#undef GTK
+/* #undef GTK */
 
 /* Define to 1 if you have `alloca', as a function or macro. */
-#undef HAVE_ALLOCA
+#define HAVE_ALLOCA 1
 
 /* Define to 1 if you have <alloca.h> and it should be used (not on Ultrix).
    */
-#undef HAVE_ALLOCA_H
+#define HAVE_ALLOCA_H 1
 
 /* Define to 1 if you have the `atexit' function. */
-#undef HAVE_ATEXIT
+#define HAVE_ATEXIT 1
 
 /* Define to 1 if you have the `bzero' function. */
-#undef HAVE_BZERO
+#define HAVE_BZERO 1
 
 /* Define to 1 if you don't have `vprintf' but do have `_doprnt.' */
 #undef HAVE_DOPRNT
 
 /* Define to 1 if you have the `dup2' function. */
-#undef HAVE_DUP2
+#define HAVE_DUP2 1
 
 /* Define to 1 if you have the <fcntl.h> header file. */
-#undef HAVE_FCNTL_H
+#define HAVE_FCNTL_H 1
 
 /* Define to 1 if you have the `gettimeofday' function. */
-#undef HAVE_GETTIMEOFDAY
+#define HAVE_GETTIMEOFDAY 1
 
 /* Define to 1 if you have the <inttypes.h> header file. */
-#undef HAVE_INTTYPES_H
+#define HAVE_INTTYPES_H 1
 
 /* Define to 1 if you have the `SDL' library (-lSDL). */
-#undef HAVE_LIBSDL
+#define HAVE_LIBSDL 1
 
 /* Define to 1 if you have the `SDL_mixer' library (-lSDL_mixer). */
 #undef HAVE_LIBSDL_MIXER
@@ -139,7 +139,7 @@
 #undef KERNEL_DEBUG
 
 /* defined if user wants new kernel */
-#undef KERNEL_DS
+#define KERNEL_DS 1
 
 /* for hugo developers working on netplay emulation */
 #undef NETPLAY_DEBUG
@@ -172,7 +172,7 @@
 #undef PACKAGE_VERSION
 
 /* defined if user wants SDL as library */
-#undef SDL
+#define SDL 1
 
 /* defined if user wants SDL_mixer as library */
 #undef SDL_mixer
@@ -181,19 +181,19 @@
 #undef SHARED_MEMORY
 
 /* The size of a `char', as computed by sizeof. */
-#undef SIZEOF_CHAR
+#define SIZEOF_CHAR 1
 
 /* The size of a `int', as computed by sizeof. */
-#undef SIZEOF_INT
+#define SIZEOF_INT 4
 
 /* The size of a `long int', as computed by sizeof. */
-#undef SIZEOF_LONG_INT
+#define SIZEOF_LONG_INT 4
 
 /* The size of a `short int', as computed by sizeof. */
-#undef SIZEOF_SHORT_INT
+#define SIZEOF_SHORT_INT 2
 
 /* for hugo developers working on the cd subsystem */
-#undef SOUND_DEBUG
+/* #undef SOUND_DEBUG */
 
 /* If using the C implementation of alloca, define if you know the
    direction of stack growth for your system; otherwise it will be
@@ -204,16 +204,16 @@
 #undef STACK_DIRECTION
 
 /* Define to 1 if you have the ANSI C header files. */
-#undef STDC_HEADERS
+#define STDC_HEADERS 1
 
 /* defined if rom are expected to be patched to run from bank 0x68 */
 #undef TEST_ROM_RELOCATED
 
 /* Define to 1 if you can safely include both <sys/time.h> and <time.h>. */
-#undef TIME_WITH_SYS_TIME
+#define TIME_WITH_SYS_TIME 1
 
 /* Version number of package */
-#undef VERSION
+#define VERSION "2.12"
 
 /* Define to 1 if your processor stores words with the most significant byte
    first (like Motorola and SPARC, unlike Intel and VAX). */
