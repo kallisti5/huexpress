@@ -2799,6 +2799,7 @@ InitPCE (char *name, char *backmemname)
   /* TEST */
   io.screen_w = 256;
 
+  #if 0
   if (!builtin_system_used)
     {
 
@@ -2817,6 +2818,7 @@ InitPCE (char *name, char *backmemname)
       NO_ROM = 255;
       printf("ROM not in database: CRC=%lx\n", CRC);
     }
+  #endif
 
   memset (WRAM, 0, 0x2000);
   WRAM[0] = 0x48;		/* 'H' */
