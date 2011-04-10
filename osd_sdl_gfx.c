@@ -256,7 +256,7 @@ int osd_gfx_init(void)
     return 0;
   }
 
-  SDL_WM_SetCaption("Hu-Go! (www.zeograd.com)",NULL);	
+  SDL_WM_SetCaption("Hu-KU!",NULL);	
 
   if (option.want_fullscreen)
     SDL_ShowCursor(SDL_DISABLE);
