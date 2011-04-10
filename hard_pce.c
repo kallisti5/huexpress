@@ -658,11 +658,7 @@ IO_read_raw (UInt16 A)
 		break;
 	}
 	case 0x1800:		// CD-ROM extention
-#if defined(BSD_CD_HARDWARE_SUPPORT)
           return pce_cd_handle_read_1800(A);
-#else
-          return gpl_pce_cd_handle_read_1800(A);
-#endif
 	}
 #ifndef FINAL_RELEASE
 #if !defined(KERNEL_DS)

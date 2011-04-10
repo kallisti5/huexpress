@@ -12,4 +12,6 @@
 #include "sys_misc.h"
 #include "sys_snd.h"
 
+#include <netinet/in.h>
+
 #endif
