@@ -1,0 +1,44 @@
+Hu-Go! Joypad manual
+
+[mail:zeograd@zeograd.com||Zeograd]
+
+Table of Contents
+
+Introduction
+Joypad configuration
+
+
+
+ Introduction
+
+This document briefly describes how to use your joypad 
+with Hu-Go!. 
+
+ Joypad configuration
+
+Joypads are automatically recognized at startup and can 
+be setup using the "Options->Input settings ..." item.
+
+On the "Input Settings" window, the first field, called "
+Configuration" is the configuration number. By default, 
+it is number 0, but you can define up to configuration 
+#15 to quickly switch between various configuration, 
+such as one player with joypad, two players with 
+joypads, one player on keyboard and one on joypad, ...
+
+For each configuration, you have 5 tabs, one for each 
+player. In each tab, you can change the key, joypad 
+axis or joypad button assigned to each fonction by 
+clicking on the button and then pressing the keyboard 
+key, joypad axis or joypad button you want to assign. A 
+little screen will popup in which you activate the 
+desired key, axis or button. If a game is already in 
+progress, the game screen is used instead.
+
+If you want to remove an assignation, use the "ESC" key 
+when prompted for the key, axis or button.
+
+For the joypad itself, if you do not want to use one 
+for the current player, set the "joystick" field to "0", 
+else change it to fit the number of the joypad you want 
+to use.

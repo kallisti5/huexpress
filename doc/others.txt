@@ -1,0 +1,43 @@
+Hu-Go! other platforms specific notes
+
+ 
+
+Zeograd (zeograd@zeograd.com)
+
+Table of Contents
+
+Introduction
+Supported platforms
+
+
+
+ Introduction
+
+This document briefly describes specifics of Hu-Go! on 
+platforms others than Windows and linux.
+
+ Supported platforms
+
+Hu-Go! has became quite portable and runs on manu 
+platform even if not all are supported officially (due 
+to lack of time, knowledge and hardware).
+
+Hu-Go! runs well on Solaris, FreeBsd. The same notes 
+than Linux applies to them, excepted that cdrom isn't supported.
+
+Hu-Go! is ported for Xbox by Xport, and documentation 
+for this port are included in its distribution.
+
+Hu-Go! is ported for BeOs, thanks to Caz. I don't have 
+much details about it.
+
+Hu-Go! is also ported to Sheldows.
+
+Parts of Hu-Go! are found in GPEngine, the GP32 pc 
+engine emulator.
+
+There are certainly other ports and or derived work. 
+I'd be glad to hear about them and include them here.
+
+A dreamcast port is also in progress but I don't have 
+much details.

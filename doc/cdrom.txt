@@ -1,0 +1,49 @@
+Hu-Go! CD-rom manual
+
+[mail:zeograd@zeograd.com||Zeograd]
+
+Table of Contents
+
+Introduction
+CD drive configuration
+CD system rom configuration
+
+
+
+ Introduction
+
+This document briefly describes how to play pc engine 
+games on cd with Hu-Go!. It is also useful for playing 
+simple .iso files, just skip to "CD system rom configuration".
+
+ CD drive configuration
+
+Under Windows, CD-rom devices are automatically 
+detected and the first one is used. It normally 
+corresponds to the lower letter one. It can be changed 
+but not easily.
+
+Under Linux (as it is the only other platform 
+supporting reading from raw cds), you must set the 
+device path with the option called "CD path" if it's not "/dev/cdrom"
+.
+
+ CD system rom configuration
+
+<sec:CD-system-rom>When playing cds or .iso files, Hu-Go! needs a cd 
+system rom to provide the cd bios functions. To have 
+Hu-go! automatically start it when loading a cd or .iso 
+file, you must set the option "CD system filename" in the 
+options. It should point to a rom which provides cd 
+bios functions. Usually this rom is called "syscard.pce", "
+syscard3.pce", "syscard30.pce",...
+
+If you didn't set this option field, Hu-go! will try to 
+find such a rom on your system, looking for names "syscard.pce"
+, "syscard3.pce", "syscard30.pce", "cd-rom~1.pce" on the 
+following locations : current Hu-Go! binary location, 
+parent of Hu-Go! binary location, "c:\", "/usr/local/lib/hugo"
+, "/usr/lib/hugo".
+
+When you try to load a cd and no rom could be found, an 
+error window will pop up.

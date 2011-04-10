@@ -1,0 +1,116 @@
+Hu-Go! Netplay manual
+
+[mail:zeograd@zeograd.com||Zeograd]
+
+Table of Contents
+
+Introduction
+Principles
+Protocols
+Configuration
+Firewall issues
+
+
+
+ Introduction
+
+This document briefly describes how to play pc engine 
+games with Hu-Go! using two or more machines.
+
+ Principles
+
+Hu-Go! supports playing games with some players being 
+on remote machines, either on the lan or internet. It 
+uses a specific protocol working on client-server 
+principle. A server is started by one player on her 
+machine and others players, as well as her, will start 
+the usual Hu-Go! client and configure it to connect to 
+the server instead of running locally.
+
+For each frame, each client will send its local input 
+data. The server will collect them and dispatch them to 
+all clients. On reception of this digest data, 
+gathering input from every player, Hu-Go! will act as 
+is it was the local devices which produced it and 
+proceed to the next frame.
+
+The server is started either in command line or 
+graphically, for a given protocol, awaitting for 
+several "slots" to be filled. Those "slots" represent pc 
+engine players which are embodied by some players on 
+clients side.
+
+On client side, you "export" some local players to the 
+server. For example, you can use the locally configured 
+player 2 and 4 for playing in network. This client will 
+then be considered as using 2 "slots" and will embody 2 
+players, whatever the used local devices. Generally, 
+you will export player 1, eventually also player 2. The 
+server will reorganize players so that if everyone uses 
+local device 1 (which is a common case), they will be 
+actually assigned sequentially to global player 1, 2, 
+3, ...
+
+There's no restrictions on games run on each client. 
+You should use the very same rom on each client, but 
+you're free to use US and jap versions of games. Future 
+versions will help preventing starting incompatible 
+versions on clients side.
+
+ Protocols
+
+To be more precise, Hu-Go! uses two slightly different 
+protocols. They both uses UDP and can't be mixed. All 
+clients and the server must be configured to use the 
+same protocol.
+
+ LAN protocol : This protocol suits local networks. It 
+  is reliable and latency-free but requires a low RTT 
+  between clients and server. In case of high RTT (for 
+  instance when trying over internet), the framerate is 
+  dropping to fit the latency.
+
+ INTERNET protocol : This protocol suits client spread 
+  over internet. It is less reliable, but bear higher 
+  RTT. It induces latency between the time you press a 
+  button and the time it is seen by all (including 
+  yourself, since all clients should be synchronized). 
+  This latency should be the one between each client 
+  and the server.
+
+ Configuration
+
+The netplay options can be found under "options->General 
+settings ..." in the "Netplay" tab.
+
+The Netplay mode should be set to the desired protocol. 
+Then you fill in the server hostname and port (which is 
+by default 25679).
+
+Finally, you "export" local devices to slots. You must 
+first export slot 1, whatever the local device assigned 
+to it. It you want to export another, use slot 2, 
+etc... So, if you export 2 local devices, slots 3 et 5 
+should be "none". You can't export slot 1 and 3 for 
+example. That will be enforced in future version of the 
+gui, but for now, it's up to you to respect this.
+
+Once done, you can start a game.
+
+ Firewall issues
+
+If the server or client are behind firewall and/or nat 
+devices, you can get around to make the whole stuff 
+work. The server only receives data in UDP on the 
+listening port (by default 25679) and send data back 
+starting from the very same port. Usually firewall 
+prevent incoming streams and allowing incoming data to 
+UDP 25679 should do the trick.
+
+The client only send UDP traffic to the server port 
+(still 25679 by default) and will get traffic back from 
+this port, from the server machine. On stateful 
+firewalls, this is generally automatically allowed.
+
+Refer to your firewall provider documentation for exact 
+instructions on how to allow those streams in and out.

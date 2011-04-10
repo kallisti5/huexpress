@@ -1,0 +1,39 @@
+Hu-Go! authors
+==============
+
+Hu-Go! is based on fpce, a pc engine emulator made by Bero.
+Improvements done in Xpce, from Hmmx, were also integrated.
+It contains code for unzipping by Gilles Vollant (unzip.[hc])
+and relies on zlib (zlib team, zlib licencen, zlib.org), SDL (SDL team,
+LGPL licence, libsdl.org), SDLnet (Sam Lantinga, Roy Wood and
+Masahiro Minami, http://jcatki.no-ip.org/SDL_net/)
+
+Work had then been resumed by Zeograd with the help (in no special order) of :
+- David Shadoff (new kernel code, ideas, ...)
+- Nyef (cd emulation, ...)
+- Ixion (linux coding, sdl joypad, cd emulation, sound emulation, ...)
+- Black- (gfx bug fixes, gp32 port, ...)
+- Cleaner (freeBSD port fixes)
+- Laurent Desnogues (cpu coding, ps2 port, ...)
+- Erich Kitzmuller (sound improvement, dma bug fixes)
+- Pit (gfx)
+- David Michel (ideas, ...)
+- Lester Barrow (linux coding, joypad support, ...)
+- Mooz (ideas, ...)
+- Bt Garner (ideas, ...)
+- Littletux (mandrake packages, ...)
+- Zoop & his gf (gfx bug fixes)
+
+Tests by :
+- Raph
+- Fagemul
+- NaMco
+- Fixo
+- sALTY
+- Gato
+- Nostromo
+- Cissou
+- Leeloo
+- Sir Jaguar
+
+I probably forgot some people, don't hesitate to contact me so that I can fix this.

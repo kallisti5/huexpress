@@ -1,0 +1,102 @@
+Hu-Go! installation instructions
+================================
+
+See INSTALL.gnu for the usual instructions once the development environment is set up.
+
+Linux development environment
+=============================
+
+As it is a real OS, you probably don't need much to make it usable for building Hu-Go!
+You need :
+- gcc (2.95 seems to produce core dumps sometimes, gcc-3.0 and more recent doesn't)
+- gnu make
+- gtk development libraries (check packages for your distribution if needed) [optional but recommended]
+- zlib development libraries (ditto) [optional but recommended]
+
+Those were very common and you're extremely likely to already have them.
+
+- sdl development library (check packages for you distribution or go to www.libsdl.org)
+
+the usual './configure && make'
+and then 'make install' as root should work flawlessly. Some warning may happen (10-20), you
+can safety ignore them.
+
+Linux -> Windows development environment
+========================================
+
+You need to install a cross compiler linux -> windows, mingw (debian users can install
+it with apt)
+
+You need to have all windows gtk needed libs (see the next section) and sdl development
+libraries for windows. Copy the include and lib files in the include and lib directory
+of mingw installation.
+
+'gtk-config' in hugo sources is to be put on the bin subdir of the mingw installation
+so that it behaves like the linux version.
+
+Last thing, since you have to set a path and then call ./configure with argument to 
+force an host which isn't the one building the program, you can use the
+'./cross-configure' script included in hugo sources. Then, simply use 'make'.
+
+Alter paths in those two scripts to match your real directory structures. The changes,
+if any, are really easy to spot.
+
+Native Windows development environment
+======================================
+
+You need to grab the native mingw environment and msys (so you get a shell,
+a compiler, make, ...) (see www.mingw.org, install mingw and then msys).
+
+You need to grab the sdl development libraty for mingw on www.libsdl.org.
+Install it in the mingw directory (so that SDL.h is in the include subdirectory
+of the mingw main directory, etc ..)
+
+Now, the most difficult part, the windows port of gtk. You can go there :
+http://www.gimp.org/~tml/gimp/win32/downloads.html
+There, grab :
+ - gtk+-dev
+ - libiconv-bin (you'll have to move the .dll in it into the lib subdir of mingw)
+ - atk-dev
+ - gettext-dev
+ - pango-dev
+ - glib-dev
+ 
+Installation is easy, as you simply unzip them in the mingw main directory (you can
+use enzip [http://www.cpam.freeserve.co.uk/] if you don't have an unarchiver).
+
+You should then replace the gtk+-1.3-win32-production.pc installed by the one provided in
+hugo sources (in the extra_dev subdirectory) (replacing the path if needed) (it adds
+-mms-bitfield option needed for gtk to compile properly).
+
+You should finally put the gtk-config script provided (in the extra_dev subdir)
+into the bin directory (changing the path, as usual) so that you can call gtk
+script in an homogeneous maneer.
+
+If you can compile the usual hello world program (see http://gtk.org) with
+gcc -o hello hello.c `gtk-config --cflags --libs`, then you're ready to compile
+hugo with ./configure && make.
+
+FreeBSD development environment
+===============================
+
+See the linux notes.
+A few details : sdl config script is called slightly differently (sdl11-config).
+You can simply make a link called sdl-config toward it. It should be the only
+difference with the linux instructions.
+
+Solaris development environment
+===============================
+
+I have only tested on Solaris 9 for Sparc so far.
+I used the GNU tools, either for compiling (gcc), for handling makefiles
+(gmake) and for generating configure scripts (autoconf/automake). The
+generation of configure scripts is only relevant for people using the CVS
+tarball, else it's already "compiled" and ready to execute.
+Just like other OSes, you'll need SDL, zlib (already handy if my memory serves).
+
+See the linux notes then.
+Just a little note, I personnaly had to use the following line to launch
+configure :
+MAKE=gmake LDFLAGS=-L/usr/local/lib CPPFLAGS=-I/usr/local/include/SDL ./configure
+
+to accomodate the gnu make name under Solaris and the location of SDL libs.

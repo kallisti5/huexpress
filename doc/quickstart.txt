@@ -1,0 +1,160 @@
+Hu-Go! Quickstart
+
+[mail:zeograd@zeograd.com||Zeograd]
+
+Table of Contents
+
+Introduction
+Keyboard mapping
+    Games keys
+    Special keys
+Supported formats
+Options
+    Graphics
+    Paths
+    CD emulation
+    Sound
+    Netplay
+
+
+
+ Introduction
+
+This document briefly describes how to play pc engine 
+games with Hu-Go!. More detailled explanations can be 
+found in the other thematic document in the same 
+directory as this one.
+
+Hu-Go! can be launched without argument to start with a 
+gtk interface in which you can change options and start 
+roms and cds. You can also start it giving as argument 
+the name of the .pce file to run.
+
+ Keyboard mapping
+
+ Games keys
+
+By default, the keyboard is mapped like this :
+
+up up arrow
+
+down down arrow
+
+left left arrow
+
+right right arrow
+
+II button Alt key
+
+I button Space key
+
+select Tab key
+
+run Return key
+
+auto II X key
+
+auto I C key
+
+ Special keys
+
+Toggle fullscreen F9 key
+
+Quit F12 key / ESC key
+
+Save current game state F6 key
+
+Load current game state F7 key
+
+ Supported formats
+
+You can use the "load rom" button to load rom as .pce 
+files, or cd as .iso files. The "load cd" button is used 
+to play real pc engine cds.
+
+ Options
+
+Options control how the game are rendered. They are 
+stored in an .ini file which is generated from the gtk 
+interface (prefered) or edited with a text editor. Most 
+options can be overriden with command line options.
+
+ Graphics
+
+ Start games in fullsceen mode : When game are started, 
+  they are in fullscreen mode.
+
+ Maintain pce aspect ratio in fullscreen mode : When in 
+  fullscreen mode, keep the same ratio for screen 
+  dimention than the one of the original game, else use 
+  the maximum available space even if it means that 
+  proportions are messed.
+
+ Emulate television size [Not yet implemented] : Drop 
+  the rendering of lines outside the 224 lines of the 
+  middle of the screen. When using games on tv, those 
+  are generally outside the visible area.
+
+ Window zoom factor : Zoom factor when in windowed mode.
+
+ Prefered full screen size : Size of the fullscreen 
+  mode. You can switch to it with F9 key.
+
+ Hardware acceleration when available : Try to use the 
+  super fast hardware rendering mode. It is not 
+  available on older machines, and will simply use the 
+  classical mode in this case.
+
+ Hardware graphic format : Change this value to 
+  something else than Autodetect if colors are screwed 
+  when using the hardware acceleration.
+
+ Paths
+
+ CD system filename : Path to the cd system rom to be 
+  used for launching cd or isos.
+
+ Default rom directory : Directory in which to begin 
+  browsing roms.
+
+ CD emulation
+
+ Soft bios emulation mode : Do not try to emulate cd 
+  bios calls at high level, hence slowing the cd 
+  emulation but raising the compatibility.
+
+ CD path [Unused for windows] : Path to the cd rom 
+  device, e.g. /dev/hdd.
+
+ Enable arcade card mode [Still in progress] : Enable 
+  arcade card emulation.
+
+ Sound
+
+ Use stereo sound : Enable stereo sound rendering.
+
+ Output frequency : Frequency of sound rendering. If 
+  your card doesn't support the given frequency, Hu-Go! 
+  will pick the nearest supported one.
+
+ Buffer size : Size of the buffer sound. You can double 
+  or half it if the sound is choppy. 256, 512 or 1024 
+  should fit most machines. It must be a power of 2.
+
+ Netplay
+
+ Netplay mode : "Local mode" disables netplay support 
+  while "LAN netplay" enables it using the LAN protocol 
+  and "INTERNET netplay" enabled it using the Internet protocol.
+
+ Server hostname [Unused when in local mode] : Hostname 
+  of the machine running the Hu-Go! netplay server. It 
+  doesn't support ip for now.
+
+ Server port [Unused when in local mode] : Port on 
+  which the Hu-Go netplay server is listening.
+
+ Slot X [Unused when in local mode] : Number of the 
+  local input to export for netplay. "None" should be 
+  used for the last entries. Typical configuration is "
+  Slot 1 : Player 1" and remainings to "None"

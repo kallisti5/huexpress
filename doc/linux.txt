@@ -1,0 +1,73 @@
+Hu-Go! Linux specific notes
+
+ 
+
+Zeograd (zeograd@zeograd.com)
+
+Table of Contents
+
+Introduction
+Supported versions
+Installation
+    Sources
+    Debian package
+    Mandrake packages
+    Others distributions
+
+
+
+ Introduction
+
+This document briefly describes specifics of Hu-Go! on 
+the Linux platforms.
+
+ Supported versions
+
+Hu-Go! has been reported to work on Linux 2.4, 2.5, 2.6 
+but should theorically work on lower and higher 
+versions. All distributions should be support by 
+Hu-Go!, for instance Debian, Red Hat, Mandrake, 
+Knoppix, Suse, Slackware, ...
+
+ Installation
+
+Hu-Go! is available as binary packages for some 
+distributions or as sources for others.
+
+ Sources
+
+Hu-Go! requirements for compiling from sources is quite 
+usual. It needs gcc 2.95+ or 3+ and SDL development 
+files. Optional developpement files includes gtk+ 2.0 
+or better for the graphical interface, zlib for unzip 
+support, SDL_net for netplay. The classical "./configure" 
+execution should detect all what is available and the 
+usual "make" and "make install" will compile and install Hu-Go!
+
+ Debian package
+
+Latest debian packages can be found on zeograd.com. To 
+install them the apt-get way (which will handle the 
+dependencies right), add the following line in your "
+/etc/apt/sources.list" :
+
+deb http://www.zeograd.com/debian/ unstable main
+
+deb-src http://www.zeograd.com/debian unstable main 
+
+then do a "apt-get update && apt-get install hugo". 
+Actually, this is the location of the CVS daily build. 
+I will set up a stable repository if there is any 
+demand for it.
+
+ Mandrake packages
+
+Littletux provides packages for i586 architectures in 
+.rpm format, either the binary and the source package. 
+You need to dowload it and use "rpm" to install it.
+
+ Others distributions
+
+If you which to help setting up another kind of 
+repository for Hu-Go! packages (Ubuntu, Gentoo, Red 
+Hat, ...), I'd be glad to hear from you.

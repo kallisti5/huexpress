@@ -1,0 +1,15 @@
+Simplified license into GPL+mBSD (zlib licensed code is still there,
+  but it is not required to make it part of the whole license)
+BUGZILLA 11: Now removes the temporary directory when quitting.
+BUGZILLA 12: Quitting the main window also closes the game in progress
+  so that exiting is immediate.
+BUGZILLA 15: Doesn't necessarily depends on SDL_net for compiling,
+  if not present, compiles with the usual manipulation.
+BUGZILLA 17: Fixed mapping of split roms, which was breaking many games
+  or at least screwing graphics.
+BUGZILLA 25: Readded screenshot support (in .ppm).
+BUGZILLA 28: Added unzipping in memory, for cleaner, faster and more
+  robust handling of zipped roms.
+Fixed compilation scripts to allow to compile without all the
+  documentation tools installed, also fixed debian packaging.
+Cleaned sources a bit more.

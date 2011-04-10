@@ -1,0 +1,211 @@
+#LyX 1.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 221
+\textclass article
+\begin_preamble
+\usepackage {html}
+\end_preamble
+\language english
+\inputencoding auto
+\fontscheme helvet
+\graphics default
+\paperfontsize 11
+\spacing single 
+\papersize a4paper
+\paperpackage a4
+\use_geometry 0
+\use_amsmath 0
+\use_natbib 0
+\use_numerical_citations 0
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language french
+\quotes_times 2
+\papercolumns 1
+\papersides 1
+\paperpagestyle plain
+
+\layout Title
+
+Hu-Go! Linux specific notes
+\layout Standard
+\align center 
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+
+\backslash 
+begin{htmlonly}
+\end_inset 
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+
+\backslash 
+htmladdnormallink {Zeograd}{mailto:zeograd@zeograd.com}
+\end_inset 
+
+ 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+
+\backslash 
+end{htmlonly}
+\end_inset 
+
+
+\layout Author
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+
+\backslash 
+begin{latexonly}
+\end_inset 
+
+Zeograd (zeograd@zeograd.com)
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+
+\backslash 
+end{latexonly}
+\end_inset 
+
+
+\layout Standard
+
+
+\begin_inset LatexCommand \tableofcontents{}
+
+\end_inset 
+
+
+\layout Section
+
+Introduction
+\layout Standard
+
+This document briefly describes specifics of Hu-Go! on the Linux platforms.
+\layout Section
+
+Supported versions
+\layout Standard
+
+Hu-Go! has been reported to work on Linux 2.4, 2.5, 2.6 but should theorically
+ work on lower and higher versions.
+ All distributions should be support by Hu-Go!, for instance Debian, Red
+ Hat, Mandrake, Knoppix, Suse, Slackware, ...
+\layout Section
+
+Installation
+\layout Standard
+
+Hu-Go! is available as binary packages for some distributions or as sources
+ for others.
+\layout Subsection
+
+Sources
+\layout Standard
+
+Hu-Go! requirements for compiling from sources is quite usual.
+ It needs gcc 2.95+ or 3+ and SDL development files.
+ Optional developpement files includes gtk+ 2.0 or better for the graphical
+ interface, zlib for unzip support, SDL_net for netplay.
+ The classical 
+\begin_inset Quotes fld
+\end_inset 
+
+./configure
+\begin_inset Quotes frd
+\end_inset 
+
+ execution should detect all what is available and the usual 
+\begin_inset Quotes fld
+\end_inset 
+
+make
+\begin_inset Quotes frd
+\end_inset 
+
+ and 
+\begin_inset Quotes fld
+\end_inset 
+
+make install
+\begin_inset Quotes frd
+\end_inset 
+
+ will compile and install Hu-Go!
+\layout Subsection
+
+Debian package
+\layout Standard
+
+Latest debian packages can be found on zeograd.com.
+ To install them the apt-get way (which will handle the dependencies right),
+ add the following line in your 
+\begin_inset Quotes fld
+\end_inset 
+
+/etc/apt/sources.list
+\begin_inset Quotes frd
+\end_inset 
+
+ :
+\layout LyX-Code
+
+deb http://www.zeograd.com/debian/ unstable main
+\layout LyX-Code
+
+deb-src http://www.zeograd.com/debian unstable main 
+\layout Standard
+
+then do a 
+\begin_inset Quotes fld
+\end_inset 
+
+apt-get update && apt-get install hugo
+\begin_inset Quotes frd
+\end_inset 
+
+.
+ Actually, this is the location of the CVS daily build.
+ I will set up a stable repository if there is any demand for it.
+\layout Subsection
+
+Mandrake packages
+\layout Standard
+
+Littletux provides packages for i586 architectures in .rpm format, either
+ the binary and the source package.
+ You need to dowload it and use 
+\begin_inset Quotes fld
+\end_inset 
+
+rpm
+\begin_inset Quotes frd
+\end_inset 
+
+ to install it.
+\layout Subsection
+
+Others distributions
+\layout Standard
+
+If you which to help setting up another kind of repository for Hu-Go! packages
+ (Ubuntu, Gentoo, Red Hat, ...), I'd be glad to hear from you.
+\the_end

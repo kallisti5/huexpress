@@ -1,0 +1,11 @@
+prefix=/target
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: GTK+
+Description: GIMP Tool Kit (Win32 "production" branch)
+Version: 1.3.0
+Requires: gdk-1.3-win32-production gmodule-2.0
+Libs: -L${libdir} -lgtk
+Cflags: -I${includedir} -mms-bitfields

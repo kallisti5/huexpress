@@ -1,0 +1,136 @@
+#LyX 1.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 221
+\textclass article
+\begin_preamble
+\usepackage {html}
+\end_preamble
+\language english
+\inputencoding auto
+\fontscheme helvet
+\graphics default
+\paperfontsize 11
+\spacing single 
+\papersize a4paper
+\paperpackage a4
+\use_geometry 0
+\use_amsmath 0
+\use_natbib 0
+\use_numerical_citations 0
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language french
+\quotes_times 2
+\papercolumns 1
+\papersides 1
+\paperpagestyle plain
+
+\layout Title
+
+Hu-Go! other platforms specific notes
+\layout Standard
+\align center 
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+
+\backslash 
+begin{htmlonly}
+\end_inset 
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+
+\backslash 
+htmladdnormallink {Zeograd}{mailto:zeograd@zeograd.com}
+\end_inset 
+
+ 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+
+\backslash 
+end{htmlonly}
+\end_inset 
+
+
+\layout Author
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+
+\backslash 
+begin{latexonly}
+\end_inset 
+
+Zeograd (zeograd@zeograd.com)
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+
+\backslash 
+end{latexonly}
+\end_inset 
+
+
+\layout Standard
+
+
+\begin_inset LatexCommand \tableofcontents{}
+
+\end_inset 
+
+
+\layout Section
+
+Introduction
+\layout Standard
+
+This document briefly describes specifics of Hu-Go! on platforms others
+ than Windows and linux.
+\layout Section
+
+Supported platforms
+\layout Standard
+
+Hu-Go! has became quite portable and runs on manu platform even if not all
+ are supported officially (due to lack of time, knowledge and hardware).
+\layout Standard
+
+Hu-Go! runs well on Solaris, FreeBsd.
+ The same notes than Linux applies to them, excepted that cdrom isn't supported.
+\layout Standard
+
+Hu-Go! is ported for Xbox by Xport, and documentation for this port are
+ included in its distribution.
+\layout Standard
+
+Hu-Go! is ported for BeOs, thanks to Caz.
+ I don't have much details about it.
+\layout Standard
+
+Hu-Go! is also ported to Sheldows.
+\layout Standard
+
+Parts of Hu-Go! are found in GPEngine, the GP32 pc engine emulator.
+\layout Standard
+
+There are certainly other ports and or derived work.
+ I'd be glad to hear about them and include them here.
+\layout Standard
+
+A dreamcast port is also in progress but I don't have much details.
+\the_end

@@ -1,0 +1,47 @@
+Hu-Go! Windows specific notes
+
+ 
+
+Zeograd (zeograd@zeograd.com)
+
+Table of Contents
+
+Introduction
+Supported versions
+Installation
+CD Drive configuration
+
+
+
+ Introduction
+
+This document briefly describes specifics of Hu-Go! on 
+the Windows platforms.
+
+ Supported versions
+
+Hu-Go! has been reported to work on x86 windows in 
+versions 95, 98, ME, 2000, XP, 2003 professional.
+
+ Installation
+
+Hu-Go! depends on gtk+ libraries. If you haven't yet a 
+gtk+ 2.4 or newer version installed, you can either 
+download the Hu-Go! + gtk+ bundle download and launch 
+both setup .exe, or download and install gtk+ 
+separately, on  Gimp-win download page 
+(http://gimp-win.sf.net/stable.html).
+
+It happens that if you have just installed gtk+ and 
+Hu-Go! still refuses to run claiming to miss a library 
+such as atk.dll, it is due to PATH changes which hasn't 
+been yet taken in account. You can reboot your computer 
+or go to the system properties, and in the environment 
+variables, edit the PATH variable and just confirm it. 
+It should already contain the PATH to gtk, but doing 
+this appears to refresh it within the same session.
+
+ CD Drive configuration
+
+Under windows, you can't choose which CD drive to use. 
+CD drives are autodetected and the first one is always used.

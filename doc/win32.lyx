@@ -1,0 +1,185 @@
+#LyX 1.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 221
+\textclass article
+\begin_preamble
+\usepackage {html}
+\end_preamble
+\language english
+\inputencoding auto
+\fontscheme helvet
+\graphics default
+\paperfontsize 11
+\spacing single 
+\papersize a4paper
+\paperpackage a4
+\use_geometry 0
+\use_amsmath 0
+\use_natbib 0
+\use_numerical_citations 0
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language french
+\quotes_times 2
+\papercolumns 1
+\papersides 1
+\paperpagestyle plain
+
+\layout Title
+
+Hu-Go! Windows specific notes
+\layout Standard
+\align center 
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+
+\backslash 
+begin{htmlonly}
+\end_inset 
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+
+\backslash 
+htmladdnormallink {Zeograd}{mailto:zeograd@zeograd.com}
+\end_inset 
+
+ 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+
+\backslash 
+end{htmlonly}
+\end_inset 
+
+
+\layout Author
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+
+\backslash 
+begin{latexonly}
+\end_inset 
+
+Zeograd (zeograd@zeograd.com)
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+
+\backslash 
+end{latexonly}
+\end_inset 
+
+
+\layout Standard
+
+
+\begin_inset LatexCommand \tableofcontents{}
+
+\end_inset 
+
+
+\layout Section
+
+Introduction
+\layout Standard
+
+This document briefly describes specifics of Hu-Go! on the Windows platforms.
+\layout Section
+
+Supported versions
+\layout Standard
+
+Hu-Go! has been reported to work on x86 windows in versions 95, 98, ME,
+ 2000, XP, 2003 professional.
+\layout Section
+
+Installation
+\layout Standard
+
+Hu-Go! depends on gtk+ libraries.
+ If you haven't yet a gtk+ 2.4 or newer version installed, you can either
+ download the Hu-Go! + gtk+ bundle download and launch both setup .exe, or
+ download and install gtk+ separately, on 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+
+\backslash 
+begin{htmlonly}
+\end_inset 
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+
+\backslash 
+htmladdnormallink {Win-gimp download page}{http://gimp-win.sf.net/stable.html}
+\end_inset 
+
+ 
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+
+\backslash 
+end{htmlonly}
+\end_inset 
+
+
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+
+\backslash 
+begin{latexonly}
+\end_inset 
+
+Gimp-win download page (http://gimp-win.sf.net/stable.html)
+\begin_inset ERT
+status Collapsed
+
+\layout Standard
+
+\backslash 
+end{latexonly}
+\end_inset 
+
+.
+\layout Standard
+
+It happens that if you have just installed gtk+ and Hu-Go! still refuses
+ to run claiming to miss a library such as atk.dll, it is due to PATH changes
+ which hasn't been yet taken in account.
+ You can reboot your computer or go to the system properties, and in the
+ environment variables, edit the PATH variable and just confirm it.
+ It should already contain the PATH to gtk, but doing this appears to refresh
+ it within the same session.
+\layout Section
+
+CD Drive configuration
+\layout Standard
+
+Under windows, you can't choose which CD drive to use.
+ CD drives are autodetected and the first one is always used.
+\the_end

@@ -1,0 +1,457 @@
+Changes from HU-GO! 2.11 to HU-GO! 2.12
+
+Simplified license into GPL + mBSD (zlib licensed code is still there,
+  but it is not required to make it part of the whole license)
+BUGZILLA 11: Now removes the temporary directory when quitting.
+BUGZILLA 12: Quitting the main window also closes the game in progress
+  so that exiting is immediate.
+BUGZILLA 15: Doesn't necessarily depends on SDL_net for compiling,
+  if not present, compiles with the usual manipulation.
+BUGZILLA 17: Fixed mapping of split roms, which was breaking many games
+  or at least screwing graphics.
+BUGZILLA 25: Readded screenshot support (in .ppm).
+BUGZILLA 28: Added unzipping in memory, for cleaner, faster and more
+  robust handling of zipped roms.
+Fixed compilation scripts to allow to compile without all the
+  documentation tools installed, also fixed debian packaging.
+Cleaned sources a bit more.
+
+Changes from HU-GO! 2.10 to HU-GO! 2.11
+
+Rewrote manual into smaller manuals, in html and plain text.
+Added zipped rom support for all platforms.
+Added hardware video rendering.
+Cleaned sources, again and again (thanks to splint) (compiles with gcc up to 3.3).
+Added error message when trying to start a cd and the cd system rom
+  can't be found.
+Added partial arcade card support (inner memory management rewritten).
+Added readonly-ness of roms (was writeable until now).
+Removed a bug in DraculaX which was crashing in the intro when not in -m1 mode
+Added netplay support. The normal binary is a client, a server binary is also
+  provided.
+Added nice graphical configuration of keyboard and joypads.
+Added support of joypad via SDL under windows.
+Rewrote graphical engine.
+Added support for big endian cpu (Sparc, ...).
+Switched to gtk 2 for graphical toolkit.
+Added support for interacting with the core variable of the emulation from
+  external processes (can be used to change rom content on the fly e.g.).
+Changed licence to be considered as free (GPL + mBSD + zlib).
+Fixed a crash when starting any game in the windows port.
+Added support for dumping audio and video. Some samples are available to 
+  make an .avi/.mpg/.whatever from it under un*x.
+Fixed some bugs in DMA handling (including one occuring at the end of the first
+  stage of gunhed).
+Improved internal I/O handling (handle remanence of unaffected bit latches).
+Began adding ogg support (untested).
+Fixes sound frequency bug and added stop/start audio subsystem between the various
+  games to provide instantaneous effects of configuration changes.
+Added better command line argument support.
+Autodetection of US encoded roms.
+Added signed format support for audio rendering.
+
+Changes from HU-GO! 2.09 to HU-GO! 2.10
+
+Arrival of a real GUI (using gtk) for both windows and linux ports
+  (which includes lot of easiness in changing configuration, ...)
+Availability on binary forms for several platforms
+FreeBSD port
+Improved CD support at pce level
+SDL joypad support (for linux only right now)
+CD support reenabled for windows (was messed since 2.00 probably)
+Rewritten fullscreen support, as well as x2, x3, x4 mode
+  in windowed mode.
+Lots of bugs fixed in the graphical engine (gunhed works
+  after the first level for instance)
+Improvement in the sound engine (for rendering noise
+  and drums and stereo mode)
+Thanks to Ixion, Black-, Cleaner, Zoop and Valerie Tching
+  for their very active contribution  
+
+Changes from HU-GO! 2.00 to HU-GO! 2.09
+
+Removed all Allegro references, switched to SDL ! which in itself
+  should improve pc compatibility especially in windows.
+Improved synchronization (limitation to 60hz rather)
+New sound engine (linked to the SDL switch)
+Externalized bios (for legal issues)
+Somes fixes, this and there
+Russian version
+
+Changes from HU-GO! 1.99 to HU-GO! 2.00
+
+Restored the hard bios support feature
+Improvement in the pad support and ability to remap button on pad or keyboard
+  (thanks to Lester)
+Hacking of the file selector so that it works a bit under win
+Eagle and Scanline mode enabled in linux version
+Restored save/load feature as well as improvement in it
+Auto fixing of damaged ISO headers
+Slight improvement in the german translation
+
+Changes from HU-GO! 1.29 to HU-GO! 1.99
+
+NEW KERNEL !!!! (short to say but long to implement :)
+
+Changes from HU-GO! 1.29 alpha to HU-GO! 1.29
+
+Ability to dump images in order to gather them into a video file
+Joypad support under linux thanks to Lester Barrows
+Sources put in CVS form, I hope soon accessible trought public anonymous access
+Restructured sources
+
+Changes from HU-GO! 1.28 to HU-GO! 1.29 alpha
+
+Begin of cd support under the win port
+Corrected the bug in real CD emulation, no cds were playable at least since
+   the 1.28 version, certainly before
+Preparation for the DreamCast port
+
+Changes from HU-GO! 1.27 to HU-GO! 1.28
+
+Improve of ISO support, especially concerning BRAM
+Cheat engine have been improved anew, allowing full variable research with
+  ISO/CD
+
+Changes from HU-GO! 1.26 to HU-GO! 1.27
+
+Ability to use real cd tracks for faking .hcd tracks
+Added relative research in the cheat engine
+Corrected anew the bug in the ram editor, which was changing too many bits
+
+Changes from HU-GO! 1.25 to HU-GO! 1.26
+
+Changes only in sources, nothing new for gamers but nice stuff for porters
+
+Changes from HU-GO! 1.24 to HU-GO! 1.25
+
+Mp3 playing available under linux
+Synchronisation (limit fps) should work under linux
+Limitation of fps can be set in the INI file (upon request)
+Better debugging info with the new version of the C compiler for pc engine
+
+Changes from HU-GO! 1.23 to HU-GO! 1.24
+
+Slightly improved ISO support
+Added .BIN supporting in file selector
+Added 'load rom' and 'credit' working in the gui
+Slightly changes in the included cd system
+Changes zip support for a very fast directory refreshing and no more
+   crashing (well, let's say infinitely less :)
+Corrected the color bug in screenshots
+Fixed some languages specific messages
+Modified some internal interface functions
+A bit cleaner sources
+
+Changes from HU-GO! 1.22 to HU-GO! 1.23
+
+One can now disable the zip scanning in the file selector (but you can
+  force refreshing of a directory with zip scanning with F2)
+Synchronization of the subtitles with mp3 if asked
+Added installation script (plus desinstall script generation) thanks to
+  Brieuc Jeunhomme
+
+Changes from HU-GO! 1.21 to HU-GO! 1.22
+
+Added subtitle feature
+Speeded emulation a bit
+Added repeated MP3 or not
+No more glitches in saint dragon (recognized as splitted rom)
+Cleaned some sprites and background stuff that were not initialized
+Added scanline mode setting in INI file
+Zip support have been re enabled in the file selector but still blocks
+  on some archives and had not been boosted as I wanted to ...
+Added a Satb viewer (developper's feature)
+Improved disassembler possibilities
+
+Changes from HU-GO! 1.2 to HU-GO! 1.21
+
+Eagle and scanline mode recentred (again ! I hope this is the last one !)
+Added scanline mode screenshot feature
+Added cd buffer to read data
+Added cd (and mp3) sound in no bios mode
+Improvements in developpers informations
+Better installation under Linux
+Code even mode modular, almost portable ^^
+
+Changes from HU-GO! 1.11 to HU-GO! 1.2
+
+ASPI driver!! All CDs works in windows as well as in dos mode. No need
+  to reboot to enjoy cd games.
+Debugged HCD support that was broken for a few versions (it has became
+  case sensitive and some file were no more correctly recognized)
+Cleaner sources and dos ones very easy to compile (if you have Djgpp, allegro
+  and seal)
+
+Changes from HU-GO! 1.10 to HU-GO! 1.11
+
+Way better Adpcm rendering (thanks to David Michel)
+Debugged 800x600 mode in dos version
+Added 2 automatic detected US roms (pac land & hero tonma)
+Good beginning of modular and generic sources (which are available anew)
+Lots of '1' in the version :)
+
+Changes from HU-GO! 1.09 to HU-GO! 1.10
+
+Debugged key modification in the .ini (due to a modification in allegro
+  that I hadn't see)
+Slight modifications in iso support (Solid Force now run in Bios mode)
+Some Hucards are now detected as split rom and runs well (well only 1 for now)
+
+Changes from HU-GO! 1.08 to HU-GO! 1.09
+
+Improvement of the gui, almost functionable
+Added audio cd playing under Linux in bios mode
+Correction of a problem in the initalisation of the backup RAM (could be the
+   one that caused some mem related error screens in CDs)
+Corrected a bug in the ram editor function (a double word was edited
+   instead of a byte)
+Corrected a very rare bug that could exit the emu with unknown roms
+
+Changes from HU-GO! 1.07 to HU-GO! 1.08
+
+Correction of Adpcm support (in fact, arrival of it in public releases,
+   the improvement of the algorithm can't be seen)
+Added correct minimum bios support under Linux
+Played a bit sound chip frequency, may sync better CD
+Hucards can now access Adpcm resources
+
+Changes from HU-GO! 1.06 to HU-GO! 1.07
+
+Begin of Adpcm support (generaly voices in ISOs/CDs)
+   (Not yet mixed with PCM sound)
+Some changes in ISO support (some games don't need .HCd anymore [solid force, 
+  CD denjin] )
+Slight improvement in .HCD (default ISO/MP3 path is the one of the .HCD)
+Sound in Linux version
+Internal changes in the interface to come
+
+Changes from HU-GO! 1.05 to HU-GO! 1.06
+
+'minimum bios' mode became 'no bios' mode (Theorical support of CD from
+  Game express)
+ISO support slightly improved
+Now using Allegro WIP 3.9.28 with all its enhancement (sound card, pads, ...)
+  although, I've not remade the joypad 'numerotation' yet...
+Bug in horizontal centering in eagle mode removed
+Bug in cdrom autodetection under DOS removed
+Oh, by the way, just a little thing : Linux port :)
+
+Changes from HU-GO! 1.04 to HU-GO! 1.05
+
+Added a 'minimum Bios usage' mode for better ISO support
+Added HCD in the file selector
+Begin of GUI support for skin testing purposes
+Better HCD automatic data filling thanks to MP3 length searching (if you got
+  all MP3 you got almost [99.9% precise] the same structure as a
+  reconstructed CD)
+Added some HCD option (e.g. or patch to add some more games to
+  the compatiblity list)
+Better sound with a true CD (better synchronisation, better sound length and
+  sound where absent before ...)
+Added a default path for ISO and MP3 in HCD files
+Some bugs fixed :
+     o In true CD launching
+     o Crashes when saving with Seal
+     o In ISO support
+     o In the debugger for instruction BBR
+Added US encoding detection of cadash US
+
+Changes from HU-GO! 1.03 to HU-GO! 1.04
+
+One can now choose between 2 sound driver
+Slighty improved ISO support
+
+Changes from HU-GO! 1.02 to HU-GO! 1.03
+
+Beginning of scanline mode (not in the gui)
+Corrected some bugs with HCD support that made the machine crashing
+
+Changes from HU-GO! 1.01 to HU-GO! 1.02
+
+CD System Hu-card no more needed (and cdsystem_path variable neither
+  [was the topic of 90+% of pb with Hu-Go!] )
+Beginning of HCD support (i.e. file allowing support of more than one code
+   track and .WAV/.MP3 emulation)
+Fixed the bug that was preventing ISO/ISQ from being displaying when in
+   static_refresh mode in writeable directories where were recognized roms.
+No more 'Hu-Go!.dat', all is in the EXE
+Corrected a small bug that was displaying a saved game were loaded when not
+Italian version added
+Sound should not jiggle anymore when accessing CD
+No more code size limit for ISQ
+
+Changes from HU-GO! 1.00 to HU-GO! 1.01
+
+Better ISO/CD support
+Support ISQ (Hu-Go! specific compressed ISO files)
+  (only if code <280 Mb for now)
+Support BIN (plain raw dump from CD, not only code track) it's only a nice
+  hack for now, I don't use CUE so it's limited to 1 code track <280 Mb for now.
+ISQ and ISO can be chosen from the file selector
+Saved game have slightly changed so that you could encounter some
+  rare problems with it
+Can now choose which CD drive to use
+Support US encoded roms (thank to David Michel)
+More gamepads should be supported
+Screen better centered
+Improved debugger
+Added a spanish documentation (already present in version 1.00 but not
+  precised since then)
+Added a FAQ
+Corrected a bug that could cause some segmentation fault with ISO files
+Added a 800x600 screen mode for very very refractory screens
+
+Changes from HU-GO! 0.98 beta to HU-GO! 1.00
+
+Begin of true PC Engine CDs support
+EXCELLENT sound with a new sound librairie which will also allow em to
+  emulate CD audio tracks with MP3 or WAV.
+Better support of joypad in ISO files
+Easier ISO launching, just like a ROM if you specify the path of your CD
+   system in the INI file
+Auto execution of CD system cards ofter loading (no need to press start)
+   (if yours don't, tell me, I'll add it)
+Fixed a little error in the debugger that was sometime preventing the displaying
+Fixed another bug in BIOS read function
+Log actions into Hu-Go!.log
+Now dump sound in WAV RIFF format
+
+Changes from HU-GO! 0.98 alpha to HU-GO! 0.98 beta
+
+Better ISO support
+ISO save state added
+Zip support in file selector have been temporary disabled because of
+  bug and rewritting
+Should no more create index file when in static_refresh mode
+A little demo rom has been included (courtesy of Magic Team)
+New EXE packer used for better compression
+Others video mode available : 256*224 and 320*240 for normal modes
+  and 360*240 for extended modes
+Correctly restore joy mapping after a pinball game
+Fixed followop operation with BPL and BMI (developpement feature)
+Added 2 functions : Go to cursor and Set bp at (developpement feature)
+
+Changes from HU-GO! 0.97 to HU-GO! 0.98 alpha
+
+Beginning of ISO support
+Ascii work in .diz and doc by Cools
+Plus improvements in english doc by Cools
+Two new little transitions
+Dev feature : Viewer of Zero Page
+Polish translation by Dox and Faust
+Improved german translation
+
+Changes from HU-GO! 0.96 to HU-GO! 0.97
+
+EAGLE integration!!! i.e. graphics enhanced! TRY IT! it really worth it!
+Faster but maybe unstable (changed of compilator)
+Quick move in the fileselector
+New background for file selector courtesy of MrF (drawn by Ikenoya Takeshi)
+Some bugs fixed
+German translation by sALTY
+Dutch translation by fixo
+English doc slightly changed by BaconBoy 99
+Better commented and cleaner sources
+
+Changes from HU-GO! 0.95 to HU-GO! 0.96
+
+BEWARE: the index type used in the fileselector changed, Hu-Go! will try
+  to autodetect the change and update the index, else refresh it with F1
+Better zip support, bug which caused line command zip files not to work
+  was fixed and zip file integration in fileselector
+Input support improved (joypads, etc...)
+Fixed a bug which prevented roms with a '-' in to be loaded on the command line
+As a test, logo from ]pit[
+More recognized roms (525)
+You can now step trought the rom in disassembly mode
+One can put a breakpoint before the execution of the first op with -d1 command
+  line option
+Began ISO/CD investigations
+Slovenian translation by ]pit[
+Portuguese translation by CodeMaster
+Cleaner docs because my editor was handling tabulation of a weird maneer
+Better commented sources
+
+Changes from HU-GO! 0.94 to HU-GO! 0.95
+
+Now a poll and a forum are available on the main webpage
+Theoricaly run all games in 320*??? (before the screen were cut on both
+  sides [e.g. Military Madness, Panza Kick Boxing,...] )
+Auto fire now implemented
+A bit faster (I'm working on it...)
+Support zipped roms (only on command line for now)
+Fixed a stupid bug which caused bug when invoking Hu-Go! with a filename
+  containing no slash, and another which could prevent from changing rom
+  when playing.
+One can now quit the emu from the file selector (with F12) or refresh the list
+  with F1.
+When in disassembler mode, if can't go up one line w/o illegal instructs,
+  just go backward a byte
+Now, the minimum machine is a pentium (Once more, I don't think I denigrate
+  a lot of people and we gain a bit a speed, if needed I could make a 486 version)
+Better commented sources (It's an habit, now;)
+
+Changes from HU-GO! 0.93 to HU-GO! 0.94
+
+Big changes in the philosophy of Hu-Go!, now you will also find features for
+  PC Engine game creators. But don't worry, the main goal is still to
+  run most roms as well as I can ;)
+So now, there's a disassembler and a RAM editor.
+One can freeze a value in RAM
+A new section 'Options' where you will find all available options.
+Now, messages are available in English, French and Spanish...
+Pictures has been placed in a single .DAT file
+New option for faster (but a bit less acurate) drawing of sprites (exact_draw)
+Better commented and better divided sources
+
+Changes from HU-GO! 0.92 to HU-GO! 0.93
+
+The fileselector display full name of the rom if recognized
+Format of the INI file changed, plus more some options there
+A new section 'Projects' where you can find what will soon change, or if
+  you're a developper, you will find interresting parts to tackle
+Code source is better splitted for a better control of optimisation so...
+Better sound quality on small machines
+
+Changes from FPCE 0.91 to HU-GO! 0.92
+
+The name (really ?)
+SOUND (quite limited but will evolve, still need a good PC)
+Can save sound on disk
+Hu-Go! now has it own homepage on members.tripod.com/zeograd
+  (in english or french...)
+Multiple players (with option -j ? where is the number of player you want
+  only up to 4 [can you really play at 5 on a single keyboard ?] )
+INI file for new personal definition of keys
+Smaller saves (have you ever seen so small SAV files ~50ko) and all
+  placed in a sub directory of the EXE ( 'SAV' )
+3 more games playable (2 versions of Devil crush and Hisou...)
+Some cool transition FX
+Some keys changed (see the doc)
+Shows the name of the ROM at the begining
+Indicates the number of skipped frames
+Number of average frames displayed at the end
+Cleaner printings when cheating
+Better commented sources
+Only works on 486 and better (I don't think many people were using 386 and
+  we gain a bit of speed)
+Again slightly faster (but nothing flagrant)
+
+Changes from FPCE 0.9a to FPCE 0.91
+
+   16 March '99
+
+Better integration under Win9X (Don't put savegames in current dir,
+  that is the desktop, and load intro piccy from his own dir,
+  futhermore, when in 60hz mode, give CPU time to others processes ...)
+3 differents screen mode (first try 256*240 then 256*256 and 320*200)
+Option on command line -v0 or -v1 or -v2 (or -v ?) to select
+  favorite screen mode (try -v1 if you got an 'flag' effect on screen)
+Little delay added between two command keys (eg. inc/dec frame rate...)
+  to avoid multiple key pressed
+Message displayed on the bottom left
+Working synchronisation (In fact, limitation to 60 frame / sec.)
+More roms recognized (519)
+Cleaner code (I'm still waiting for help)
+Slightly faster (almost imperceptible)

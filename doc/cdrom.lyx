@@ -1,0 +1,205 @@
+#LyX 1.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 221
+\textclass article
+\language english
+\inputencoding auto
+\fontscheme helvet
+\graphics default
+\paperfontsize 11
+\spacing single 
+\papersize a4paper
+\paperpackage a4
+\use_geometry 0
+\use_amsmath 0
+\use_natbib 0
+\use_numerical_citations 0
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language french
+\quotes_times 2
+\papercolumns 1
+\papersides 1
+\paperpagestyle plain
+
+\layout Title
+
+Hu-Go! CD-rom manual
+\layout Author
+
+
+\begin_inset LatexCommand \htmlurl[Zeograd]{mail:zeograd@zeograd.com}
+
+\end_inset 
+
+
+\layout Standard
+
+
+\begin_inset LatexCommand \tableofcontents{}
+
+\end_inset 
+
+
+\layout Section
+
+Introduction
+\layout Standard
+
+This document briefly describes how to play pc engine games on cd with Hu-Go!.
+ It is also useful for playing simple .iso files, just skip to 
+\begin_inset Quotes fld
+\end_inset 
+
+CD system rom configuration
+\begin_inset Quotes frd
+\end_inset 
+
+.
+\layout Section
+
+CD drive configuration
+\layout Standard
+
+Under Windows, CD-rom devices are automatically detected and the first one
+ is used.
+ It normally corresponds to the lower letter one.
+ It can be changed but not easily.
+\layout Standard
+
+Under Linux (as it is the only other platform supporting reading from raw
+ cds), you must set the device path with the option called 
+\begin_inset Quotes fld
+\end_inset 
+
+CD path
+\begin_inset Quotes frd
+\end_inset 
+
+ if it's not 
+\begin_inset Quotes fld
+\end_inset 
+
+/dev/cdrom
+\begin_inset Quotes frd
+\end_inset 
+
+.
+\layout Section
+
+CD system rom configuration
+\layout Standard
+
+
+\begin_inset LatexCommand \label{sec:CD-system-rom}
+
+\end_inset 
+
+When playing cds or .iso files, Hu-Go! needs a cd system rom to provide the
+ cd bios functions.
+ To have Hu-go! automatically start it when loading a cd or .iso file, you
+ must set the option 
+\begin_inset Quotes fld
+\end_inset 
+
+CD system filename
+\begin_inset Quotes frd
+\end_inset 
+
+ in the options.
+ It should point to a rom which provides cd bios functions.
+ Usually this rom is called 
+\begin_inset Quotes fld
+\end_inset 
+
+syscard.pce
+\begin_inset Quotes frd
+\end_inset 
+
+, 
+\begin_inset Quotes fld
+\end_inset 
+
+syscard3.pce
+\begin_inset Quotes frd
+\end_inset 
+
+, 
+\begin_inset Quotes fld
+\end_inset 
+
+syscard30.pce
+\begin_inset Quotes frd
+\end_inset 
+
+,...
+\layout Standard
+
+If you didn't set this option field, Hu-go! will try to find such a rom
+ on your system, looking for names 
+\begin_inset Quotes fld
+\end_inset 
+
+syscard.pce
+\begin_inset Quotes frd
+\end_inset 
+
+, 
+\begin_inset Quotes fld
+\end_inset 
+
+syscard3.pce
+\begin_inset Quotes frd
+\end_inset 
+
+, 
+\begin_inset Quotes fld
+\end_inset 
+
+syscard30.pce
+\begin_inset Quotes frd
+\end_inset 
+
+, 
+\begin_inset Quotes fld
+\end_inset 
+
+cd-rom~1.pce
+\begin_inset Quotes frd
+\end_inset 
+
+ on the following locations : current Hu-Go! binary location, parent of
+ Hu-Go! binary location, 
+\begin_inset Quotes fld
+\end_inset 
+
+c:
+\backslash 
+
+\begin_inset Quotes frd
+\end_inset 
+
+, 
+\begin_inset Quotes fld
+\end_inset 
+
+/usr/local/lib/hugo
+\begin_inset Quotes frd
+\end_inset 
+
+, 
+\begin_inset Quotes fld
+\end_inset 
+
+/usr/lib/hugo
+\begin_inset Quotes frd
+\end_inset 
+
+.
+\layout Standard
+
+When you try to load a cd and no rom could be found, an error window will
+ pop up.
+\the_end

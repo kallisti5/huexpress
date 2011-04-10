@@ -1,0 +1,336 @@
+#LyX 1.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 221
+\textclass article
+\language english
+\inputencoding auto
+\fontscheme helvet
+\graphics default
+\paperfontsize 11
+\spacing single 
+\papersize a4paper
+\paperpackage a4
+\use_geometry 0
+\use_amsmath 0
+\use_natbib 0
+\use_numerical_citations 0
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language french
+\quotes_times 2
+\papercolumns 1
+\papersides 1
+\paperpagestyle plain
+
+\layout Title
+
+Hu-Go! Quickstart
+\layout Author
+
+
+\begin_inset LatexCommand \htmlurl[Zeograd]{mail:zeograd@zeograd.com}
+
+\end_inset 
+
+
+\layout Standard
+
+
+\begin_inset LatexCommand \tableofcontents{}
+
+\end_inset 
+
+
+\layout Section
+
+Introduction
+\layout Standard
+
+This document briefly describes how to play pc engine games with Hu-Go!.
+ More detailled explanations can be found in the other thematic document
+ in the same directory as this one.
+\layout Standard
+
+Hu-Go! can be launched without argument to start with a gtk interface in
+ which you can change options and start roms and cds.
+ You can also start it giving as argument the name of the .pce file to run.
+\layout Section
+
+Keyboard mapping
+\layout Subsection
+
+Games keys
+\layout Standard
+
+By default, the keyboard is mapped like this :
+\layout List
+\labelwidthstring 00.00.0000
+
+up up arrow
+\layout List
+\labelwidthstring 00.00.0000
+
+down down arrow
+\layout List
+\labelwidthstring 00.00.0000
+
+left left arrow
+\layout List
+\labelwidthstring 00.00.0000
+
+right right arrow
+\layout List
+\labelwidthstring 00.00.0000
+
+II\SpecialChar ~
+button Alt key
+\layout List
+\labelwidthstring 00.00.0000
+
+I\SpecialChar ~
+button Space key
+\layout List
+\labelwidthstring 00.00.0000
+
+select Tab key
+\layout List
+\labelwidthstring 00.00.0000
+
+run Return key
+\layout List
+\labelwidthstring 00.00.0000
+
+auto\SpecialChar ~
+II X key
+\layout List
+\labelwidthstring 00.00.0000
+
+auto\SpecialChar ~
+I C key
+\layout Subsection
+
+Special keys
+\layout List
+\labelwidthstring 00.00.0000
+
+Toggle\SpecialChar ~
+fullscreen F9 key
+\layout List
+\labelwidthstring 00.00.0000
+
+Quit F12 key / ESC key
+\layout List
+\labelwidthstring 00.00.0000
+
+Save\SpecialChar ~
+current\SpecialChar ~
+game\SpecialChar ~
+state F6 key
+\layout List
+\labelwidthstring 00.00.0000
+
+Load\SpecialChar ~
+current\SpecialChar ~
+game\SpecialChar ~
+state F7 key
+\layout Section
+
+Supported formats
+\layout Standard
+
+You can use the 
+\begin_inset Quotes eld
+\end_inset 
+
+load rom
+\begin_inset Quotes erd
+\end_inset 
+
+ button to load rom as .pce files, or cd as .iso files.
+ The 
+\begin_inset Quotes eld
+\end_inset 
+
+load cd
+\begin_inset Quotes erd
+\end_inset 
+
+ button is used to play real pc engine cds.
+\layout Section
+
+Options
+\layout Standard
+
+Options control how the game are rendered.
+ They are stored in an .ini file which is generated from the gtk interface
+ (prefered) or edited with a text editor.
+ Most options can be overriden with command line options.
+\layout Subsection
+
+Graphics
+\layout Itemize
+
+Start games in fullsceen mode : When game are started, they are in fullscreen
+ mode.
+\layout Itemize
+
+Maintain pce aspect ratio in fullscreen mode : When in fullscreen mode,
+ keep the same ratio for screen dimention than the one of the original game,
+ else use the maximum available space even if it means that proportions
+ are messed.
+\layout Itemize
+
+Emulate television size 
+\emph on 
+[Not yet implemented]
+\emph default 
+ : Drop the rendering of lines outside the 224 lines of the middle of the
+ screen.
+ When using games on tv, those are generally outside the visible area.
+\layout Itemize
+
+Window zoom factor : Zoom factor when in windowed mode.
+\layout Itemize
+
+Prefered full screen size : Size of the fullscreen mode.
+ You can switch to it with F9 key.
+\layout Itemize
+
+Hardware acceleration when available : Try to use the super fast hardware
+ rendering mode.
+ It is not available on older machines, and will simply use the classical
+ mode in this case.
+\layout Itemize
+
+Hardware graphic format : Change this value to something else than Autodetect
+ if colors are screwed when using the hardware acceleration.
+\layout Subsection
+
+Paths
+\layout Itemize
+
+CD system filename : Path to the cd system rom to be used for launching
+ cd or isos.
+\layout Itemize
+
+Default rom directory : Directory in which to begin browsing roms.
+\layout Subsection
+
+CD emulation
+\layout Itemize
+
+Soft bios emulation mode : Do not try to emulate cd bios calls at high level,
+ hence slowing the cd emulation but raising the compatibility.
+\layout Itemize
+
+CD path 
+\emph on 
+[Unused for windows]
+\emph default 
+ : Path to the cd rom device, e.g.
+ /dev/hdd.
+\layout Itemize
+
+Enable arcade card mode 
+\emph on 
+[Still in progress]
+\emph default 
+ : Enable arcade card emulation.
+\layout Subsection
+
+Sound
+\layout Itemize
+
+Use stereo sound : Enable stereo sound rendering.
+\layout Itemize
+
+Output frequency : Frequency of sound rendering.
+ If your card doesn't support the given frequency, Hu-Go! will pick the
+ nearest supported one.
+\layout Itemize
+
+Buffer size : Size of the buffer sound.
+ You can double or half it if the sound is choppy.
+ 256, 512 or 1024 should fit most machines.
+ It must be a power of 2.
+\layout Subsection
+
+Netplay
+\layout Itemize
+
+Netplay mode : 
+\begin_inset Quotes eld
+\end_inset 
+
+Local mode
+\begin_inset Quotes erd
+\end_inset 
+
+ disables netplay support while 
+\begin_inset Quotes eld
+\end_inset 
+
+LAN netplay
+\begin_inset Quotes erd
+\end_inset 
+
+ enables it using the LAN protocol and 
+\begin_inset Quotes eld
+\end_inset 
+
+INTERNET netplay
+\begin_inset Quotes erd
+\end_inset 
+
+ enabled it using the Internet protocol.
+\layout Itemize
+
+Server hostname 
+\emph on 
+[Unused when in local mode]
+\emph default 
+ : Hostname of the machine running the Hu-Go! netplay server.
+ It doesn't support ip for now.
+\layout Itemize
+
+Server port 
+\emph on 
+[Unused when in local mode]
+\emph default 
+ : Port on which the Hu-Go netplay server is listening.
+\layout Itemize
+
+Slot X 
+\emph on 
+[Unused when in local mode]
+\emph default 
+ : Number of the local input to export for netplay.
+ 
+\begin_inset Quotes eld
+\end_inset 
+
+None
+\begin_inset Quotes erd
+\end_inset 
+
+ should be used for the last entries.
+ Typical configuration is 
+\begin_inset Quotes eld
+\end_inset 
+
+Slot 1 : Player 1
+\begin_inset Quotes erd
+\end_inset 
+
+ and remainings to 
+\begin_inset Quotes eld
+\end_inset 
+
+None
+\begin_inset Quotes erd
+\end_inset 
+
+
+\the_end

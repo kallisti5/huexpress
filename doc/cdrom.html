@@ -1,0 +1,100 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!--Converted with LaTeX2HTML 2002-2-1 (1.70)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+
+<html>
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux/x86 (vers 1st August 2004), see www.w3.org">
+
+  <title>Hu-Go! CD-rom manual</title>
+  <meta name="description" content="Hu-Go! CD-rom manual">
+  <meta name="keywords" content="cdrom">
+  <meta name="resource-type" content="document">
+  <meta name="distribution" content="global">
+  <meta http-equiv="Content-Type" content=
+  "text/html; charset=us-ascii">
+  <meta name="Generator" content="LaTeX2HTML v2002-2-1">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <link rel="STYLESHEET" href="hugo_manual.css" type="text/css">
+</head>
+
+<body>
+  <h1 align="center">Hu-Go! CD-rom manual</h1>
+
+  <div class="author_info">
+    <p align="center"><strong>Zeograd
+    mail:zeograd@zeograd.com</strong></p>
+  </div><br>
+
+  <h2><a name="SECTION00010000000000000000" id=
+  "SECTION00010000000000000000">Contents</a></h2>
+  <!--Table of Contents-->
+
+  <ul class="TofC">
+    <li><a name="tex2html5" href=
+    "cdrom.html#SECTION00020000000000000000" id=
+    "tex2html5">Introduction</a></li>
+
+    <li><a name="tex2html6" href=
+    "cdrom.html#SECTION00030000000000000000" id="tex2html6">CD
+    drive configuration</a></li>
+
+    <li><a name="tex2html7" href=
+    "cdrom.html#SECTION00040000000000000000" id="tex2html7">CD
+    system rom configuration</a></li>
+  </ul><!--End of Table of Contents-->
+
+  <h1><a name="SECTION00020000000000000000" id=
+  "SECTION00020000000000000000">Introduction</a></h1>
+
+  <p>This document briefly describes how to play pc engine games on
+  cd with Hu-Go!. It is also useful for playing simple .iso files,
+  just skip to &laquo;CD system rom configuration&raquo;.</p>
+
+  <h1><a name="SECTION00030000000000000000" id=
+  "SECTION00030000000000000000">CD drive configuration</a></h1>
+
+  <p>Under Windows, CD-rom devices are automatically detected and
+  the first one is used. It normally corresponds to the lower
+  letter one. It can be changed but not easily.</p>
+
+  <p>Under Linux (as it is the only other platform supporting
+  reading from raw cds), you must set the device path with the
+  option called &laquo;CD path&raquo; if it's not
+  &laquo;/dev/cdrom&raquo;.</p>
+
+  <h1><a name="SECTION00040000000000000000" id=
+  "SECTION00040000000000000000">CD system rom
+  configuration</a></h1>
+
+  <p><a name="sec:CD-system-rom" id="sec:CD-system-rom"></a>When
+  playing cds or .iso files, Hu-Go! needs a cd system rom to
+  provide the cd bios functions. To have Hu-go! automatically start
+  it when loading a cd or .iso file, you must set the option
+  &laquo;CD system filename&raquo; in the options. It should point
+  to a rom which provides cd bios functions. Usually this rom is
+  called &laquo;syscard.pce&raquo;, &laquo;syscard3.pce&raquo;,
+  &laquo;syscard30.pce&raquo;,...</p>
+
+  <p>If you didn't set this option field, Hu-go! will try to find
+  such a rom on your system, looking for names
+  &laquo;syscard.pce&raquo;, &laquo;syscard3.pce&raquo;,
+  &laquo;syscard30.pce&raquo;, &laquo;cd-rom~1.pce&raquo; on the
+  following locations : current Hu-Go! binary location, parent of
+  Hu-Go! binary location, &laquo;c:\&raquo;,
+  &laquo;/usr/local/lib/hugo&raquo;,
+  &laquo;/usr/lib/hugo&raquo;.</p>
+
+  <p>When you try to load a cd and no rom could be found, an error
+  window will pop up.<br></p>
+  <hr>
+
+  <address>
+    Olivier Jolly 2005-03-13
+  </address>
+</body>
+</html>

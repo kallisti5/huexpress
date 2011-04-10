@@ -1,0 +1,222 @@
+#LyX 1.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 221
+\textclass article
+\language english
+\inputencoding auto
+\fontscheme helvet
+\graphics default
+\paperfontsize 11
+\spacing single 
+\papersize a4paper
+\paperpackage a4
+\use_geometry 0
+\use_amsmath 0
+\use_natbib 0
+\use_numerical_citations 0
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language french
+\quotes_times 2
+\papercolumns 1
+\papersides 1
+\paperpagestyle plain
+
+\layout Title
+
+Hu-Go! Netplay manual
+\layout Author
+
+
+\begin_inset LatexCommand \htmlurl[Zeograd]{mail:zeograd@zeograd.com}
+
+\end_inset 
+
+
+\layout Standard
+
+
+\begin_inset LatexCommand \tableofcontents{}
+
+\end_inset 
+
+
+\layout Section
+
+Introduction
+\layout Standard
+
+This document briefly describes how to play pc engine games with Hu-Go!
+ using two or more machines.
+\layout Section
+
+Principles
+\layout Standard
+
+Hu-Go! supports playing games with some players being on remote machines,
+ either on the lan or internet.
+ It uses a specific protocol working on client-server principle.
+ A server is started by one player on her machine and others players, as
+ well as her, will start the usual Hu-Go! client and configure it to connect
+ to the server instead of running locally.
+\layout Standard
+
+For each frame, each client will send its local input data.
+ The server will collect them and dispatch them to all clients.
+ On reception of this digest data, gathering input from every player, Hu-Go!
+ will act as is it was the local devices which produced it and proceed to
+ the next frame.
+\layout Standard
+
+The server is started either in command line or graphically, for a given
+ protocol, awaitting for several 
+\begin_inset Quotes fld
+\end_inset 
+
+slots
+\begin_inset Quotes frd
+\end_inset 
+
+ to be filled.
+ Those 
+\begin_inset Quotes fld
+\end_inset 
+
+slots
+\begin_inset Quotes frd
+\end_inset 
+
+ represent pc engine players which are embodied by some players on clients
+ side.
+\layout Standard
+
+On client side, you 
+\begin_inset Quotes fld
+\end_inset 
+
+export
+\begin_inset Quotes frd
+\end_inset 
+
+ some local players to the server.
+ For example, you can use the locally configured player 2 and 4 for playing
+ in network.
+ This client will then be considered as using 2 
+\begin_inset Quotes fld
+\end_inset 
+
+slots
+\begin_inset Quotes frd
+\end_inset 
+
+ and will embody 2 players, whatever the used local devices.
+ Generally, you will export player 1, eventually also player 2.
+ The server will reorganize players so that if everyone uses local device
+ 1 (which is a common case), they will be actually assigned sequentially
+ to global player 1, 2, 3, ...
+\layout Standard
+
+There's no restrictions on games run on each client.
+ You should use the very same rom on each client, but you're free to use
+ US and jap versions of games.
+ Future versions will help preventing starting incompatible versions on
+ clients side.
+\layout Section
+
+Protocols
+\layout Standard
+
+To be more precise, Hu-Go! uses two slightly different protocols.
+ They both uses UDP and can't be mixed.
+ All clients and the server must be configured to use the same protocol.
+\layout Itemize
+
+LAN protocol : This protocol suits local networks.
+ It is reliable and latency-free but requires a low RTT between clients
+ and server.
+ In case of high RTT (for instance when trying over internet), the framerate
+ is dropping to fit the latency.
+\layout Itemize
+
+INTERNET protocol : This protocol suits client spread over internet.
+ It is less reliable, but bear higher RTT.
+ It induces latency between the time you press a button and the time it
+ is seen by all (including yourself, since all clients should be synchronized).
+ This latency should be the one between each client and the server.
+\layout Section
+
+Configuration
+\layout Standard
+
+The netplay options can be found under 
+\begin_inset Quotes fld
+\end_inset 
+
+options->General settings ...
+\begin_inset Quotes frd
+\end_inset 
+
+ in the 
+\begin_inset Quotes fld
+\end_inset 
+
+Netplay
+\begin_inset Quotes frd
+\end_inset 
+
+ tab.
+\layout Standard
+
+The Netplay mode should be set to the desired protocol.
+ Then you fill in the server hostname and port (which is by default 25679).
+\layout Standard
+
+Finally, you 
+\begin_inset Quotes fld
+\end_inset 
+
+export
+\begin_inset Quotes frd
+\end_inset 
+
+ local devices to slots.
+ You must first export slot 1, whatever the local device assigned to it.
+ It you want to export another, use slot 2, etc...
+ So, if you export 2 local devices, slots 3 et 5 should be 
+\begin_inset Quotes fld
+\end_inset 
+
+none
+\begin_inset Quotes frd
+\end_inset 
+
+.
+ You can't export slot 1 and 3 for example.
+ That will be enforced in future version of the gui, but for now, it's up
+ to you to respect this.
+\layout Standard
+
+Once done, you can start a game.
+\layout Section
+
+Firewall issues
+\layout Standard
+
+If the server or client are behind firewall and/or nat devices, you can
+ get around to make the whole stuff work.
+ The server only receives data in UDP on the listening port (by default
+ 25679) and send data back starting from the very same port.
+ Usually firewall prevent incoming streams and allowing incoming data to
+ UDP 25679 should do the trick.
+\layout Standard
+
+The client only send UDP traffic to the server port (still 25679 by default)
+ and will get traffic back from this port, from the server machine.
+ On stateful firewalls, this is generally automatically allowed.
+\layout Standard
+
+Refer to your firewall provider documentation for exact instructions on
+ how to allow those streams in and out.
+\the_end

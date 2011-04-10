@@ -1,0 +1,145 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!--Converted with LaTeX2HTML 2002-2-1 (1.70)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+
+<html>
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux/x86 (vers 1st August 2004), see www.w3.org">
+
+  <title>Hu-Go! Linux specific notes</title>
+  <meta name="description" content="Hu-Go! Linux specific notes">
+  <meta name="keywords" content="linux">
+  <meta name="resource-type" content="document">
+  <meta name="distribution" content="global">
+  <meta http-equiv="Content-Type" content=
+  "text/html; charset=us-ascii">
+  <meta name="Generator" content="LaTeX2HTML v2002-2-1">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <link rel="STYLESHEET" href="hugo_manual.css" type="text/css">
+</head>
+
+<body>
+  <h1 align="center">Hu-Go! Linux specific notes</h1>
+
+  <div class="author_info"></div>
+
+  <div align="center">
+    <a name="tex2html1" href="mailto:zeograd@zeograd.com" id=
+    "tex2html1">Zeograd</a>
+  </div>
+
+  <p><br></p>
+
+  <h2><a name="SECTION00010000000000000000" id=
+  "SECTION00010000000000000000">Contents</a></h2>
+  <!--Table of Contents-->
+
+  <ul class="TofC">
+    <li><a name="tex2html10" href=
+    "linux.html#SECTION00020000000000000000" id=
+    "tex2html10">Introduction</a></li>
+
+    <li><a name="tex2html11" href=
+    "linux.html#SECTION00030000000000000000" id=
+    "tex2html11">Supported versions</a></li>
+
+    <li>
+      <a name="tex2html12" href=
+      "linux.html#SECTION00040000000000000000" id=
+      "tex2html12">Installation</a>
+
+      <ul>
+        <li><a name="tex2html13" href=
+        "linux.html#SECTION00041000000000000000" id=
+        "tex2html13">Sources</a></li>
+
+        <li><a name="tex2html14" href=
+        "linux.html#SECTION00042000000000000000" id=
+        "tex2html14">Debian package</a></li>
+
+        <li><a name="tex2html15" href=
+        "linux.html#SECTION00043000000000000000" id=
+        "tex2html15">Mandrake packages</a></li>
+
+        <li><a name="tex2html16" href=
+        "linux.html#SECTION00044000000000000000" id=
+        "tex2html16">Others distributions</a></li>
+      </ul>
+    </li>
+  </ul><!--End of Table of Contents-->
+
+  <h1><a name="SECTION00020000000000000000" id=
+  "SECTION00020000000000000000">Introduction</a></h1>
+
+  <p>This document briefly describes specifics of Hu-Go! on the
+  Linux platforms.</p>
+
+  <h1><a name="SECTION00030000000000000000" id=
+  "SECTION00030000000000000000">Supported versions</a></h1>
+
+  <p>Hu-Go! has been reported to work on Linux 2.4, 2.5, 2.6 but
+  should theorically work on lower and higher versions. All
+  distributions should be support by Hu-Go!, for instance Debian,
+  Red Hat, Mandrake, Knoppix, Suse, Slackware, ...</p>
+
+  <h1><a name="SECTION00040000000000000000" id=
+  "SECTION00040000000000000000">Installation</a></h1>
+
+  <p>Hu-Go! is available as binary packages for some distributions
+  or as sources for others.</p>
+
+  <h2><a name="SECTION00041000000000000000" id=
+  "SECTION00041000000000000000">Sources</a></h2>
+
+  <p>Hu-Go! requirements for compiling from sources is quite usual.
+  It needs gcc 2.95+ or 3+ and SDL development files. Optional
+  developpement files includes gtk+ 2.0 or better for the graphical
+  interface, zlib for unzip support, SDL_net for netplay. The
+  classical &laquo;./configure&raquo; execution should detect all
+  what is available and the usual &laquo;make&raquo; and
+  &laquo;make install&raquo; will compile and install Hu-Go!</p>
+
+  <h2><a name="SECTION00042000000000000000" id=
+  "SECTION00042000000000000000">Debian package</a></h2>
+
+  <p>Latest debian packages can be found on zeograd.com. To install
+  them the apt-get way (which will handle the dependencies right),
+  add the following line in your
+  &laquo;/etc/apt/sources.list&raquo; :</p>
+
+  <dl compact>
+    <dd>
+      deb&nbsp;http://www.zeograd.com/debian/&nbsp;unstable&nbsp;main
+
+      <p>
+      deb-src&nbsp;http://www.zeograd.com/debian&nbsp;unstable&nbsp;main&nbsp;</p>
+    </dd>
+  </dl>then do a &laquo;apt-get update &amp;&amp; apt-get install
+  hugo&raquo;. Actually, this is the location of the CVS daily
+  build. I will set up a stable repository if there is any demand
+  for it.
+
+  <h2><a name="SECTION00043000000000000000" id=
+  "SECTION00043000000000000000">Mandrake packages</a></h2>
+
+  <p>Littletux provides packages for i586 architectures in .rpm
+  format, either the binary and the source package. You need to
+  dowload it and use &laquo;rpm&raquo; to install it.</p>
+
+  <h2><a name="SECTION00044000000000000000" id=
+  "SECTION00044000000000000000">Others distributions</a></h2>
+
+  <p>If you which to help setting up another kind of repository for
+  Hu-Go! packages (Ubuntu, Gentoo, Red Hat, ...), I'd be glad to
+  hear from you.<br></p>
+  <hr>
+
+  <address>
+    Olivier Jolly 2005-03-13
+  </address>
+</body>
+</html>

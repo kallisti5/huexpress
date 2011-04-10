@@ -1,0 +1,131 @@
+#LyX 1.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 221
+\textclass article
+\language english
+\inputencoding auto
+\fontscheme helvet
+\graphics default
+\paperfontsize 11
+\spacing single 
+\papersize a4paper
+\paperpackage a4
+\use_geometry 0
+\use_amsmath 0
+\use_natbib 0
+\use_numerical_citations 0
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language french
+\quotes_times 2
+\papercolumns 1
+\papersides 1
+\paperpagestyle plain
+
+\layout Title
+
+Hu-Go! Joypad manual
+\layout Author
+
+
+\begin_inset LatexCommand \htmlurl[Zeograd]{mail:zeograd@zeograd.com}
+
+\end_inset 
+
+
+\layout Standard
+
+
+\begin_inset LatexCommand \tableofcontents{}
+
+\end_inset 
+
+
+\layout Section
+
+Introduction
+\layout Standard
+
+This document briefly describes how to use your joypad with Hu-Go!.
+ 
+\layout Section
+
+Joypad configuration
+\layout Standard
+
+Joypads are automatically recognized at startup and can be setup using the
+ 
+\begin_inset Quotes fld
+\end_inset 
+
+Options->Input settings ...
+\begin_inset Quotes frd
+\end_inset 
+
+ item.
+\layout Standard
+
+On the 
+\begin_inset Quotes fld
+\end_inset 
+
+Input Settings
+\begin_inset Quotes frd
+\end_inset 
+
+ window, the first field, called 
+\begin_inset Quotes fld
+\end_inset 
+
+Configuration
+\begin_inset Quotes frd
+\end_inset 
+
+ is the configuration number.
+ By default, it is number 0, but you can define up to configuration #15
+ to quickly switch between various configuration, such as one player with
+ joypad, two players with joypads, one player on keyboard and one on joypad,
+ ...
+\layout Standard
+
+For each configuration, you have 5 tabs, one for each player.
+ In each tab, you can change the key, joypad axis or joypad button assigned
+ to each fonction by clicking on the button and then pressing the keyboard
+ key, joypad axis or joypad button you want to assign.
+ A little screen will popup in which you activate the desired key, axis
+ or button.
+ If a game is already in progress, the game screen is used instead.
+\layout Standard
+
+If you want to remove an assignation, use the 
+\begin_inset Quotes fld
+\end_inset 
+
+ESC
+\begin_inset Quotes frd
+\end_inset 
+
+ key when prompted for the key, axis or button.
+\layout Standard
+
+For the joypad itself, if you do not want to use one for the current player,
+ set the 
+\begin_inset Quotes fld
+\end_inset 
+
+joystick
+\begin_inset Quotes frd
+\end_inset 
+
+ field to 
+\begin_inset Quotes fld
+\end_inset 
+
+0
+\begin_inset Quotes frd
+\end_inset 
+
+, else change it to fit the number of the joypad you want to use.
+\the_end

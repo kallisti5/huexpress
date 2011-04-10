@@ -1,0 +1,16 @@
+body {
+  font-family: Helvetica;
+  font-size: 10pt;
+  color: #000080;
+  background-color: #DFDFDF;
+}
+
+.linksBox {
+  background-color: red;
+  border: 1px dotted #336699;
+  background-color: #B4CDE7;
+  margin: 2px;
+}
+
+:link { color: #CC3300; }
+:visited { color: #CC3300; }
