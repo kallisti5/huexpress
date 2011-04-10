@@ -26,16 +26,8 @@
 #define MAX_INPUT 255
 #endif
 
-#if defined(LINUX) || defined(SOLARIS)
-
 #include <sys/time.h>
 #include <stdlib.h>
-
-#elif defined(WIN32)
-
-#include <windows.h>
-
-#endif
 
 #include "utils.h"
 #include <sys/types.h>

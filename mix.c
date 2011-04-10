@@ -1,19 +1,8 @@
 #include "mix.h"
 
-#if defined(SDL)
 #include <SDL_audio.h>
 
-#if defined(LINUX) || defined(FREEBSD)
-  #include "osd_linux_sdl_machine.h"
-#elif defined(SOLARIS)
-  #include "osd_unix_sdl_machine.h"
-#elif defined(WIN32)
-  #include "osd_win_sdl_machine.h"
-#else
-  #warning no machine defined for SDL audio include
-#endif
-
-#endif
+#include "osd_haiku_sdl_machine.h"
 
 void update_sound_null(void)
 {

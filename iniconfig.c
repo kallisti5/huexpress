@@ -16,10 +16,6 @@
 #include "iniconfig.h"
 #include "utils.h"
 
-#if !defined(WIN32) && !defined(SOLARIS)
-#include <argp.h>
-#endif
-
 static int default_joy_mapping[J_MAX] = {0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1, -1, -1};
 

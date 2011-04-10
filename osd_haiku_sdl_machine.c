@@ -1,5 +1,5 @@
 #include "utils.h"
-#include "osd_linux_sdl_machine.h"
+#include "osd_haiku_sdl_machine.h"
 
 int netplay_mode;
 
