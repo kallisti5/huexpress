@@ -144,9 +144,6 @@
 /* for hugo developers working on netplay emulation */
 #undef NETPLAY_DEBUG
 
-/* defined if user wants to use the new gfx engine */
-#define NEW_GFX_ENGINE 1
-
 /* defined if user wants ogg support in hcd */
 #undef OGG_SUPPORT
 

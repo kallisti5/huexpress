@@ -212,9 +212,9 @@ void change_pce_screen_height()
   (*osd_gfx_driver_list[video_driver].mode) ();
 }
 
-#if defined(NEW_GFX_ENGINE)
 
 #define MAX_GFX_CONTEXT_SLOT_NUMBER 2
+
 
 static gfx_context saved_gfx_context[MAX_GFX_CONTEXT_SLOT_NUMBER];
 
@@ -588,7 +588,6 @@ Loop6502()
 
   return INT_NONE;
 }
-#endif
 
 int video_dump_flag = 0;
 

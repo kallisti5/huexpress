@@ -57,10 +57,6 @@ extern int	oldScrollYDiff;
 extern UInt32 spr_init_pos[1024];
 // cooked initial position of sprite
 
-#if !defined(NEW_GFX_ENGINE)
-extern UChar SPM[WIDTH*HEIGHT];
-#endif
-
 /*
 ####################################
 ####################################

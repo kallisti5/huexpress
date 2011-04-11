@@ -14,14 +14,15 @@
  *	Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-/**************************************************************************/
-/*								 'Portable' PC-Engine Emulator Source file							*/
-/*																																				*/
-/*			1998 by BERO bero@geocities.co.jp																 */
-/*																																				*/
-/*		Modified 1998 by hmmx hmmx@geocities.co.jp													*/
-/*		Modified 1999-2005 by Zeograd (Olivier Jolly) zeograd@zeograd.com	 */
-/**************************************************************************/
+/************************************************************************/
+/*   'Portable' PC-Engine Emulator Source file							*/
+/*                                                                      */
+/*	1998 by BERO bero@geocities.co.jp                                   */
+/*                                                                      */
+/*  Modified 1998 by hmmx hmmx@geocities.co.jp                          */
+/*	Modified 1999-2005 by Zeograd (Olivier Jolly) zeograd@zeograd.com   */
+/*	Modified 2011 by Alexander von Gluck kallisti5@unixzen.com          */
+/************************************************************************/
 
 /* Header section */
 
@@ -159,34 +160,6 @@ UChar force_header = 1;
 
 char* server_hostname = NULL;
 
-/*
-####################################
-####################################
-####################################
-####################################
-2KILL :: BEGIN
-####################################
-####################################
-####################################
-####################################
-*/
-#if defined(EXTERNAL_DAT) && defined(ALLEGRO)
-DATAFILE *datafile;
-// A pointer to the datafile where we keep bitmaps...
-// Make things looks cleaner.
-#endif
-/*
-####################################
-####################################
-####################################
-####################################
-2KILL :: END
-####################################
-####################################
-####################################
-####################################
-*/
-
 char *bmdefault = NULL;
 // Name of the backup memory
 
@@ -235,18 +208,6 @@ Track CD_track[0x100];
 // type -> 0 = audio, 4 = data
 // beg_lsn -> beginning in number of sector (2048 bytes)
 // length -> number of sector
-
-/*
-####################################
-####################################
-####################################
-####################################
-2KILL :: END
-####################################
-####################################
-####################################
-####################################
-*/
 
 volatile SChar key_delay = 0;
 // delay to avoid too many key strokes
@@ -368,7 +329,6 @@ check_char (char *s, char c)
 
 UInt32 interrupt_60hz (UInt32 interval, void *param)
 {
-
 	/* Refresh freezed values in RAM */
 	for (can_blit = 0; can_blit < current_freezed_values; can_blit++)
 		RAM[list_to_freeze[can_blit].position] = list_to_freeze[can_blit].value;
@@ -399,7 +359,6 @@ void
 init_log_file ()
 {
 	unlink (log_filename);
-	Log ("--[ INITIALISATION ]--------------------------------\n");
 	Log ("Creating log file %s\n", __DATE__);
 }
 
@@ -530,64 +489,55 @@ read_sector_BIN (unsigned char *p, UInt32 sector)
 	int result;
 
 
-	if (first_read)
-		{
-			UChar found = 0, dummy;
-			int index_in_header = 0;
-			unsigned long position;
+	if (first_read) {
+		UChar found = 0, dummy;
+		int index_in_header = 0;
+		unsigned long position;
 
-			fseek (iso_FILE, 0, SEEK_SET);
+		fseek (iso_FILE, 0, SEEK_SET);
 
-			while ((!found) && (!feof (iso_FILE)))
-	{
-		dummy = getc (iso_FILE);
-		if (dummy == ISO_header[0])
-			{
+		while ((!found) && (!feof (iso_FILE))) {
+			dummy = getc (iso_FILE);
+			if (dummy == ISO_header[0]) {
 				position = ftell (iso_FILE);
 				index_in_header = 1;
-				while ((index_in_header < 0x800) &&
-				 (getc (iso_FILE) == ISO_header[index_in_header++]));
+				while ((index_in_header < 0x800)
+					&& (getc (iso_FILE) == ISO_header[index_in_header++]));
 
-				if (index_in_header == 0x800)
-		{
-			found = 1;
-			second_track_sector = ftell (iso_FILE) - 0x800;
-		}
+				if (index_in_header == 0x800) {
+					found = 1;
+					second_track_sector = ftell(iso_FILE) - 0x800;
+				}
 
 				fseek (iso_FILE, position, SEEK_SET);
 			}
+		}
+
+		first_read = 0;
+
 	}
 
-			first_read = 0;
+	for (result = bcdbin[nb_max_track]; result > 0x01; result--) {
+		if ((sector >= CD_track[binbcd[result]].beg_lsn)
+			&& (sector <= CD_track[binbcd[result]].beg_lsn
+				+ CD_track[binbcd[result]].length))
+			break;
+	}
 
-		}
-
-
-
-	for (result = bcdbin[nb_max_track]; result > 0x01; result--)
-		{
-			if ((sector >= CD_track[binbcd[result]].beg_lsn) &&
-		(sector <= CD_track[binbcd[result]].beg_lsn +
-		 CD_track[binbcd[result]].length))
-	break;
-		}
-
-	if (result != 0x02)
-		{
-			Log ("Read on non track 2\nTrack %d asked\nsector : 0x%x\n", result,
-		 pce_cd_sectoraddy);
-			exit (-10);
-		}
+	if (result != 0x02) {
+		MESSAGE_ERROR("Read on non-track 2\n");
+		TRACE("Track %d asked, sector number: 0x%X\n",
+			result, pce_cd_sectoraddy);
+		exit (-10);
+	}
 
 #ifndef FINAL_RELEASE
 	fprintf (stderr, "Loading sector n�%d.\n", pce_cd_sectoraddy);
 #endif
 
-	fseek (iso_FILE,
-	 second_track_sector + (sector -
-				CD_track[binbcd[result]].beg_lsn) * 2352,
-	 SEEK_SET);
-	fread (p, 2048, 1, iso_FILE);
+	fseek(iso_FILE, second_track_sector
+		+ (sector - CD_track[binbcd[result]].beg_lsn) * 2352, SEEK_SET);
+	fread(p, 2048, 1, iso_FILE);
 
 }
 
@@ -604,7 +554,7 @@ UInt32 first_sector = 0;
 
 
 void
-read_sector_CD (unsigned char *p, UInt32 sector)
+read_sector_CD(unsigned char *p, UInt32 sector)
 {
 	int i;
 #ifndef FINAL_RELEASE
@@ -612,21 +562,16 @@ read_sector_CD (unsigned char *p, UInt32 sector)
 #endif
 
 	if (cd_buf != NULL)
-		if ((sector >= first_sector) &&
-				(sector <= first_sector + CD_BUF_LENGTH - 1))
-			{
+		if ((sector >= first_sector)
+			&& (sector <= first_sector + CD_BUF_LENGTH - 1)) {
 				memcpy (p, cd_buf + 2048 * (sector - first_sector), 2048);
 				return;
-			}
-		else
-			{
+		} else {
 				for (i = 0; i < CD_BUF_LENGTH; i++)
 					osd_cd_read (cd_buf + 2048 * i, sector + i);
 				first_sector = sector;
 				memcpy (p, cd_buf, 2048);
-			}
-	else
-		{
+		} else {
 			cd_buf = (UChar *) malloc (CD_BUF_LENGTH * 2048);
 			for (i = 0; i < CD_BUF_LENGTH; i++)
 				osd_cd_read (cd_buf + 2048 * i, sector + i);
@@ -635,6 +580,7 @@ read_sector_CD (unsigned char *p, UInt32 sector)
 		}
 
 }
+
 
 void
 read_sector_ISO (unsigned char *p, UInt32 sector)
@@ -659,44 +605,41 @@ read_sector_ISO (unsigned char *p, UInt32 sector)
 	Log ("Track n�%d begin at %d\n", result, CD_track[result].beg_lsn);
 #endif
 
-	if (result != 0x02)
-		{
-			int i;
+	if (result != 0x02) {
+		int i;
+		MESSAGE_ERROR("Read on non-track 2\n");
+		TRACE("Track %d asked\nsector : 0x%X", result, pce_cd_sectoraddy);
 
-			Log ("Read on non track 2\nTrack %d asked\nsector : 0x%x\n", result,
-		 pce_cd_sectoraddy);
+		/* exit(-10);
+		* Don't quit anymore but fill the reading buffer with garbage
+		* easily recognizable
+		*/
 
-			/* exit(-10);
-
-			 * Don't quit anymore but fill the reading buffer with garbage
-			 * easily recognizable
-			 */
-
-			for (i = 0; i < 2048; i += 4)
-				*(UInt32 *) & p[i] = 0xDEADBEEF;
-
+		for (i = 0; i < 2048; i += 4)
+			*(UInt32 *) & p[i] = 0xDEADBEEF;
 			return;
 		}
 
-	if (sector == CD_track[result].beg_lsn)
-		{				/* We're reading the first sector, the header */
-			if (force_header)
-				{
-					memcpy (p, ISO_header, 0x800);
-					return;
-				}
+	if (sector == CD_track[result].beg_lsn) {
+		/* We're reading the first sector, the header */
+		if (force_header) {
+			memcpy (p, ISO_header, 0x800);
+			return;
 		}
+	}
 
 	fseek (iso_FILE, (sector - CD_track[result].beg_lsn) * 2048, SEEK_SET);
 	fread (p, 2048, 1, iso_FILE);
 
 }
 
+
 void
 read_sector_dummy (unsigned char *p, UInt32 sector)
 {
 	return;
 }
+
 
 void
 pce_cd_read_sector (void)
@@ -825,6 +768,7 @@ msf2nb_sect (UChar min, UChar sec, UChar frm)
 	return result;
 }
 
+
 void
 nb_sect2msf (UInt32 lsn, UChar * min, UChar * sec, UChar * frm)
 {
@@ -836,6 +780,7 @@ nb_sect2msf (UInt32 lsn, UChar * min, UChar * sec, UChar * frm)
 
 	return;
 }
+
 
 void
 IO_write (UInt16 A, UChar V)
@@ -869,72 +814,52 @@ IO_write (UInt16 A, UChar V)
 				return;
 			case HDR:		/* Horizontal Definition */
 				{
-								typeof (io.screen_w) old_value = io.screen_w;
-								io.screen_w = (V + 1) * 8;
+					typeof (io.screen_w) old_value = io.screen_w;
+					io.screen_w = (V + 1) * 8;
 
-								if (io.screen_w == old_value)
-									break;
+					if (io.screen_w == old_value)
+						break;
 
-								/* TODO: checking if needed, this could remove an ALLEGRO
-								 * related piece of code
-								 */
-#ifdef ALLEGRO
-								clear (screen);
-#endif
-
-								// (*init_normal_mode[video_driver]) ();
-#if defined(NEW_GFX_ENGINE)
-								gfx_need_video_mode_change = 1;
-#else
-								(*osd_gfx_driver_list[video_driver].mode) ();
-#endif
-
-
-								{
-									UInt32 x, y = (WIDTH - io.screen_w) / 2 - 512 * WIDTH;
-									for (x = 0; x < 1024; x++)
-										{
-											spr_init_pos[x] = y;
-											y += WIDTH;
-										}
-								}
+					// (*init_normal_mode[video_driver]) ();
+					gfx_need_video_mode_change = 1;
+					{
+						UInt32 x, y = (WIDTH - io.screen_w) / 2 - 512 * WIDTH;
+						for (x = 0; x < 1024; x++) {
+							spr_init_pos[x] = y;
+							y += WIDTH;
+						}
+					}
 				}
 				break;
 
-			case MWR:		/* size of the virtual background screen */
+			case MWR:	/* size of the virtual background screen */
 				{
-								static UChar bgw[] = { 32, 64, 128, 128 };
-								io.bg_h = (V & 0x40) ? 64 : 32;
-								io.bg_w = bgw[(V >> 4) & 3];
+					static UChar bgw[] = { 32, 64, 128, 128 };
+					io.bg_h = (V & 0x40) ? 64 : 32;
+					io.bg_w = bgw[(V >> 4) & 3];
 				}
 				break;
 
 			case BYR:		/* Vertical screen offset */
-
 				/*
 				if (io.VDC[BYR].B.l == V)
 					return;
 				*/
 
-#if defined(NEW_GFX_ENGINE)
-							save_gfx_context(0);
-#endif
+				save_gfx_context(0);
 
-				if (!scroll)
-								{
-									oldScrollX = ScrollX;
-									oldScrollY = ScrollY;
-									oldScrollYDiff = ScrollYDiff;
-								}
+				if (!scroll) {
+					oldScrollX = ScrollX;
+					oldScrollY = ScrollY;
+					oldScrollYDiff = ScrollYDiff;
+				}
 				io.VDC[BYR].B.l = V;
 				scroll = 1;
 				ScrollYDiff = scanline - 1;
-#if defined(NEW_GFX_ENGINE)
-							ScrollYDiff -= io.VDC[VPR].B.h + io.VDC[VPR].B.l;
-#endif
+				ScrollYDiff -= io.VDC[VPR].B.h + io.VDC[VPR].B.l;
 
 #if defined(GFX_DEBUG)
-							gfx_debug_printf("ScrollY = %d (l)", ScrollY);
+				gfx_debug_printf("ScrollY = %d (l)", ScrollY);
 #endif
 				return;
 			case BXR:		/* Horizontal screen offset */
@@ -944,55 +869,47 @@ IO_write (UInt16 A, UChar V)
 					return;
 				*/
 
-#if defined(NEW_GFX_ENGINE)
-							save_gfx_context(0);
-#endif
+				save_gfx_context(0);
 
-				if (!scroll)
-								{
-									oldScrollX = ScrollX;
-									oldScrollY = ScrollY;
-									oldScrollYDiff = ScrollYDiff;
-								}
+				if (!scroll) {
+					oldScrollX = ScrollX;
+					oldScrollY = ScrollY;
+					oldScrollYDiff = ScrollYDiff;
+				}
 				io.VDC[BXR].B.l = V;
 				scroll = 1;
 				return;
 
-#if defined(NEW_GFX_ENGINE)
+			case CR:
+				if (io.VDC[io.vdc_reg].B.l == V)
+					return;
+				save_gfx_context(0);
+				io.VDC[io.vdc_reg].B.l = V;
+				return;
 
-						case CR:
-							if (io.VDC[io.vdc_reg].B.l == V)
-								return;
-							save_gfx_context(0);
-							io.VDC[io.vdc_reg].B.l = V;
-							return;
+			case VCR:
+				io.VDC[io.vdc_reg].B.l = V;
+				gfx_need_video_mode_change = 1;
+				return;
 
-						case VCR:
-							io.VDC[io.vdc_reg].B.l = V;
-							gfx_need_video_mode_change = 1;
-							return;
+			case HSR:
+				io.VDC[io.vdc_reg].B.l = V;
+				gfx_need_video_mode_change = 1;
+				return;
 
-						case HSR:
-							io.VDC[io.vdc_reg].B.l = V;
-							gfx_need_video_mode_change = 1;
-							return;
-
-						case VPR:
-							io.VDC[io.vdc_reg].B.l = V;
-							gfx_need_video_mode_change = 1;
-							return;
+			case VPR:
+				io.VDC[io.vdc_reg].B.l = V;
+				gfx_need_video_mode_change = 1;
+				return;
 
 			case VDW:
-							io.VDC[io.vdc_reg].B.l = V;
-							gfx_need_video_mode_change = 1;
-							return;
-
-#endif
+				io.VDC[io.vdc_reg].B.l = V;
+				gfx_need_video_mode_change = 1;
+				return;
 			}
 
 		io.VDC[io.vdc_reg].B.l = V;
-		/* all others reg just need to get the value, without
-			 additional stuff */
+		// all others reg just need to get the value, without additional stuff
 
 
 #if defined(GFX_DEBUG) && !defined(FINAL_RELEASE)
@@ -1024,107 +941,78 @@ IO_write (UInt16 A, UChar V)
 				// io.vdc_ratch = 0;
 				return;
 
-#if defined(NEW_GFX_ENGINE)
-
-						case VCR:
-							io.VDC[io.vdc_reg].B.h = V;
-							gfx_need_video_mode_change = 1;
-							return;
-
-						case HSR:
-							io.VDC[io.vdc_reg].B.h = V;
-							gfx_need_video_mode_change = 1;
-							return;
-
-						case VPR:
-							io.VDC[io.vdc_reg].B.h = V;
-							gfx_need_video_mode_change = 1;
-							return;
-
-			case VDW:		/* screen height */
-							io.VDC[io.vdc_reg].B.h = V;
-							gfx_need_video_mode_change = 1;
-							return;
-#else
-						case VDW:
-				{
-		typeof (io.screen_h) temp_h = io.screen_h;
-		io.VDC[VDW].B.h = V;
-
-		io.screen_h = (io.VDC[VDW].W & 511) + 1;
-
-		MaxLine = io.screen_h - 1;
-
-		if (temp_h == io.screen_h)
-			return;
-		/* TODO: check utility here too, cf upper */
-
-#ifdef ALLEGRO
-		clear (screen);
-#endif
-
-		// (*init_normal_mode[video_driver]) ();
-		(*osd_gfx_driver_list[video_driver].mode) ();
-
-				}
+			case VCR:
+				io.VDC[io.vdc_reg].B.h = V;
+				gfx_need_video_mode_change = 1;
 				return;
 
-#endif
+			case HSR:
+				io.VDC[io.vdc_reg].B.h = V;
+				gfx_need_video_mode_change = 1;
+				return;
+
+			case VPR:
+				io.VDC[io.vdc_reg].B.h = V;
+				gfx_need_video_mode_change = 1;
+				return;
+
+			case VDW:		/* screen height */
+				io.VDC[io.vdc_reg].B.h = V;
+				gfx_need_video_mode_change = 1;
+				return;
 
 			case LENR:		/* DMA transfert */
 
 				io.VDC[LENR].B.h = V;
 
-							{ // black-- 's code
+				{ // black-- 's code
 
-								int sourcecount = (io.VDC[DCR].W & 8) ? -1 : 1;
-								int destcount = (io.VDC[DCR].W & 4) ? -1 : 1;
+					int sourcecount = (io.VDC[DCR].W & 8) ? -1 : 1;
+					int destcount = (io.VDC[DCR].W & 4) ? -1 : 1;
 
-								int source = io.VDC[SOUR].W * 2;
-								int dest = io.VDC[DISTR].W * 2;
+					int source = io.VDC[SOUR].W * 2;
+					int dest = io.VDC[DISTR].W * 2;
 
-								int i;
+					int i;
 
-								for (i = 0; i < (io.VDC[LENR].W + 1) * 2; i++)
-									{
-										*(VRAM + dest) = *(VRAM + source);
-										dest += destcount;
-										source += sourcecount;
-									}
+					for (i = 0; i < (io.VDC[LENR].W + 1) * 2; i++) {
+						*(VRAM + dest) = *(VRAM + source);
+						dest += destcount;
+						source += sourcecount;
+					}
 
-								/*
-									io.VDC[SOUR].W = source;
-									io.VDC[DISTR].W = dest;
-								*/
-								// Erich Kitzmuller fix follows
-								io.VDC[SOUR].W = source / 2;
-								io.VDC[DISTR].W = dest / 2;
+				/*
+					io.VDC[SOUR].W = source;
+					io.VDC[DISTR].W = dest;
+				*/
+				// Erich Kitzmuller fix follows
+				io.VDC[SOUR].W = source / 2;
+				io.VDC[DISTR].W = dest / 2;
 
-							}
+				}
 
-							io.VDC[LENR].W = 0xFFFF;
+				io.VDC[LENR].W = 0xFFFF;
 
-							memset(vchange, 1, VRAMSIZE / 32);
-							memset(vchanges,1, VRAMSIZE / 128);
+				memset(vchange, 1, VRAMSIZE / 32);
+				memset(vchanges, 1, VRAMSIZE / 128);
 
 
-							/* TODO: check whether this flag can be ignored */
-							io.vdc_status |= VDC_DMAfinish;
+				/* TODO: check whether this flag can be ignored */
+				io.vdc_status |= VDC_DMAfinish;
 
 				return;
 
 			case CR:		/* Auto increment size */
 				{
-								static UChar incsize[] = { 1, 32, 64, 128 };
-								/*
-									if (io.VDC[CR].B.h == V)
-									return;
-								*/
-#if defined(NEW_GFX_ENGINE)
-								save_gfx_context(0);
-#endif
-								io.vdc_inc = incsize[(V >> 3) & 3];
-								io.VDC[CR].B.h = V;
+					static UChar incsize[] = { 1, 32, 64, 128 };
+					/*
+						if (io.VDC[CR].B.h == V)
+						return;
+					*/
+					save_gfx_context(0);
+
+					io.vdc_inc = incsize[(V >> 3) & 3];
+					io.VDC[CR].B.h = V;
 				}
 				break;
 			case HDR:		/* Horizontal display end */
@@ -1143,25 +1031,21 @@ IO_write (UInt16 A, UChar V)
 					return;
 				*/
 
-#if defined(NEW_GFX_ENGINE)
-							save_gfx_context(0);
-#endif
+				save_gfx_context(0);
 
 				if (!scroll)
-		{
-			oldScrollX = ScrollX;
-			oldScrollY = ScrollY;
-			oldScrollYDiff = ScrollYDiff;
-		}
+				{
+					oldScrollX = ScrollX;
+					oldScrollY = ScrollY;
+					oldScrollYDiff = ScrollYDiff;
+				}
 				io.VDC[BYR].B.h = V & 1;
 				scroll = 1;
 				ScrollYDiff = scanline - 1;
-#if defined(NEW_GFX_ENGINE)
-							ScrollYDiff -= io.VDC[VPR].B.h + io.VDC[VPR].B.l;
+				ScrollYDiff -= io.VDC[VPR].B.h + io.VDC[VPR].B.l;
 #if defined(GFX_DEBUG)
 							if (ScrollYDiff < 0)
 								gfx_debug_printf("ScrollYDiff went negative when substraction VPR.h/.l (%d,%d)", io.VDC[VPR].B.h, io.VDC[VPR].B.l);
-#endif
 #endif
 
 #if defined(GFX_DEBUG)
@@ -1169,26 +1053,27 @@ IO_write (UInt16 A, UChar V)
 #endif
 
 				return;
-			case SATB:		/* DMA from VRAM to SATB */
+
+			case SATB:	/* DMA from VRAM to SATB */
 				io.VDC[SATB].B.h = V;
 				io.vdc_satb = 1;
 				io.vdc_status &= ~VDC_SATBfinish;
 				return;
-			case BXR:		/* Horizontal screen offset */
 
-							if (io.VDC[BXR].B.h == (V & 3))
-								return;
+			case BXR:	/* Horizontal screen offset */
 
-#if defined(NEW_GFX_ENGINE)
-							save_gfx_context(0);
-#endif
+				if (io.VDC[BXR].B.h == (V & 3))
+					return;
+
+				save_gfx_context(0);
 
 				if (!scroll)
-		{
-			oldScrollX = ScrollX;
-			oldScrollY = ScrollY;
-			oldScrollYDiff = ScrollYDiff;
-		}
+				{
+					oldScrollX = ScrollX;
+					oldScrollY = ScrollY;
+					oldScrollYDiff = ScrollYDiff;
+				}
+
 				io.VDC[BXR].B.h = V & 3;
 				scroll = 1;
 				return;
@@ -1519,226 +1404,6 @@ IO_write (UInt16 A, UChar V)
 //			DebugDumpTrace(4, TRUE);
 }
 
-#if !defined(NEW_GFX_ENGINE)
-
-#ifndef KERNEL_DS
-
-/* write */
-M6502 M;
-
-
-UChar
-Loop6502 (M6502 * R)
-#else
-UChar
-Loop6502 ()
-#endif
-{
-	static double lasttime = 0, lastcurtime = 0, frametime = 0.1;
-
-	static int UCount = 0;
-	static int prevline;
-	int dispmin, dispmax;
-	int ret;
-
-	dispmin = 0;
-/*
-		(MaxLine - MinLine >
-		 MAXDISP ? MinLine + ((MaxLine - MinLine - MAXDISP + 1) >> 1) : MinLine);
-*/
-	dispmax = 242;
-/*
-		(MaxLine - MinLine >
-		 MAXDISP ? MaxLine - ((MaxLine - MinLine - MAXDISP + 1) >> 1) : MaxLine);
-*/
-
-	scanline = (scanline + 1) % scanlines_per_frame;
-
-	ret = INT_NONE;
-
-#warning "Check if this doesn t create problems in some games"
-	// io.vdc_status &= ~VDC_RasHit;
-	io.vdc_status &= ~(VDC_RasHit | VDC_SATBfinish);
-
-	if (scanline > MaxLine)
-		io.vdc_status |= VDC_InVBlank;
-//			if (scanline==MinLine+scanlines_per_frame-1)
-//			else
-	if (scanline == MinLine)
-		{
-			io.vdc_status &= ~VDC_InVBlank;
-			prevline = dispmin;
-			ScrollYDiff = 0;
-			oldScrollYDiff = 0;
-//							if (io.vdc_iswrite_h)
-//							{
-//											io.vdc_iswrite_h = 0;
-//											ScrollY = io.VDC[BYR].W;
-//							}
-//							TRACE("\nFirstLine\n");
-		}
-	else if (scanline == MaxLine)
-		{
-			if (CheckSprites ())
-				io.vdc_status |= VDC_SpHit;
-			else
-				io.vdc_status &= ~VDC_SpHit;
-
-			if (UCount)
-				UCount--;
-			else
-				{
-
-					if (SpriteON && SPONSwitch)
-						RefreshSpriteExact (prevline, dispmax, 0);
-					RefreshLine (prevline, dispmax);
-					// RefreshLine (prevline, dispmax - 1);
-					if (SpriteON && SPONSwitch)
-						RefreshSpriteExact (prevline, dispmax, 1);
-					prevline = dispmax;
-					UCount = UPeriod;
-					RefreshScreen ();
-				}
-		}
-	if (scanline >= MinLine && scanline <= MaxLine)
-		{
-			if (scanline == (io.VDC[RCR].W & 1023) - 64)
-				{
-					if (RasHitON && !UCount && dispmin <= scanline
-							&& scanline <= dispmax)
-						{
-							if (SpriteON && SPONSwitch)
-								RefreshSpriteExact (prevline - 0, scanline, 0);
-							RefreshLine (prevline - 0, scanline - 1);
-							if (SpriteON && SPONSwitch)
-								RefreshSpriteExact (prevline - 0, scanline, 1);
-							prevline = scanline;
-						}
-					io.vdc_status |= VDC_RasHit;
-					if (RasHitON)
-						{
-							//TRACE("rcr=%d\n", scanline);
-							ret = INT_IRQ;
-						}
-				}
-			else if (scroll)
-				{
-					if (scanline - 1 > prevline && !UCount)
-						{
-							int tmpScrollX, tmpScrollY, tmpScrollYDiff;
-							tmpScrollX = ScrollX;
-							tmpScrollY = ScrollY;
-							tmpScrollYDiff = ScrollYDiff;
-							ScrollX = oldScrollX;
-							ScrollY = oldScrollY;
-							ScrollYDiff = oldScrollYDiff;
-							if (SpriteON && SPONSwitch)
-								RefreshSpriteExact (prevline, scanline - 1, 0);
-
-							RefreshLine (prevline, scanline - 2);
-							if (SpriteON && SPONSwitch)
-								RefreshSpriteExact (prevline, scanline - 1, 1);
-							prevline = scanline - 1;
-							ScrollX = tmpScrollX;
-							ScrollY = tmpScrollY;
-							ScrollYDiff = tmpScrollYDiff;
-						}
-				}
-		}
-	else
-		{
-			int rcr = (io.VDC[RCR].W & 1023) - 64;
-			if (scanline == rcr)
-				{
-					//ScrollYDiff = scanline;
-					if (RasHitON)
-						{
-							//TRACE("rcr=%d\n", scanline);
-							io.vdc_status |= VDC_RasHit;
-							ret = INT_IRQ;
-						}
-				}
-		}
-	scroll = 0;
-	if (scanline == MaxLine + 1)
-		{
-
-			if (osd_keyboard ())
-				return INT_QUIT;
-
-#if defined(GTK)
-			while (gtk_events_pending())
-			{
-				if (gtk_main_iteration())
-				{
-					return INT_QUIT;
-				}
-			}
-#endif
-
-			wait_next_vsync();
-
-			/* VRAM to SATB DMA */
-			if (io.vdc_satb == 1 || io.VDC[DCR].W & 0x0010)
-				{
-#if defined(WORDS_BIGENDIAN)
-					swab(VRAM + io.VDC[SATB].W * 2, SPRAM, 64 * 8);
-#else
-					memcpy (SPRAM, VRAM + io.VDC[SATB].W * 2, 64 * 8);
-#endif
-					io.vdc_satb = 1;
-					io.vdc_status &= ~VDC_SATBfinish;
-				}
-
-			if (ret == INT_IRQ)
-				io.vdc_pendvsync = 1;
-			else
-				{
-					//io.vdc_status|=VDC_InVBlank;
-					if (VBlankON)
-						{
-							ret = INT_IRQ;
-						}
-				}
-		}
-	else if (scanline == min (MaxLine + 5, scanlines_per_frame - 1))
-		{
-			if (io.vdc_satb)
-				{
-					io.vdc_status |= VDC_SATBfinish;
-					io.vdc_satb = 0;
-					if (SATBIntON)
-						{
-							ret = INT_IRQ;
-						}
-					/* } else {
-					io.vdc_status&=~VDC_SATBfinish;
-					io.vdc_satb = 0;
-					*/
-				}
-		}
-	else if (io.vdc_pendvsync && ret != INT_IRQ)
-		{
-			io.vdc_pendvsync = 0;
-			//io.vdc_status|=VDC_InVBlank;
-			if (VBlankON)
-				{
-					//TRACE("vsync=%d\n", scanline);
-					ret = INT_IRQ;
-				}
-		}
-	if (ret == INT_IRQ)
-		{
-			if (!(io.irq_mask & IRQ1))
-				{
-					io.irq_status |= IRQ1;
-					return ret;
-				}
-		}
-	return INT_NONE;
-}
-
-#endif
 
 UChar
 TimerInt ()
@@ -2962,139 +2627,12 @@ main (int argc, char *argv[])
 
 #endif
 
-/*
-####################################
-####################################
-####################################
-####################################
-2KILL :: BEGIN
-####################################
-####################################
-####################################
-####################################
-*/
-#if defined(EXTERNAL_DAT) && defined(ALLEGRO)
+	strcpy(tmp_path, short_exe_name);
+	strcat(tmp_path, "HUKU.TMP");
 
-#ifndef LINUX
-	strcpy (tmp_path, short_exe_name);
-	strcat (tmp_path, "HU-GO!.DAT");
-#else
-	strcpy (tmp_path, "/etc/hugo.dat");
-#endif
-	printf (" � Decrunching data file...");
-	if (!(datafile = load_datafile (tmp_path)))
-		{
-			printf ("\n � ERROR!!\n � Datafile %s not found\n", tmp_path);
-			exit (-1);
-		}
+	mkdir(tmp_path, 0);
 
-#endif
-/*
-####################################
-####################################
-####################################
-####################################
-2KILL :: END
-####################################
-####################################
-####################################
-####################################
-*/
-
-	strcpy (tmp_path, short_exe_name);
-	strcat (tmp_path, "HU-GO!.TMP");
-
-#ifndef WIN32
-	mkdir (tmp_path, 0);
-#else
-	mkdir (tmp_path);
-#endif
-
-#ifdef ALLEGRO
-
-#if defined(MSDOS) || defined(WIN32)
-
-	set_gfx_mode (GFX_AUTODETECT, 320, 200, 0, 0);
-
-#elif defined(LINUX)
-
-#if defined(ALLEGRO)
-	if (set_gfx_mode (GFX_SAFE, 320, 200, 0, 0))
-		{
-			printf ("Error setting mode!\n");
-			getchar ();
-			exit (-2);
-		}
-
-#endif // ALLEGRO
-
-#endif
-
-#endif // ALLEGRO
-
-/*
-####################################
-####################################
-####################################
-####################################
-2KILL :: BEGIN
-####################################
-####################################
-####################################
-####################################
-*/
-#ifdef ALLEGRO
-
-#if defined(EXTERNAL_DAT)
-
-	set_palette (datafile[INTRO_PAL].dat);
-
-
-	/*
-		 (*fade_in_proc[rand () % nb_fadein]) (datafile[INTRO_PICTURE].dat, 0, 0,
-		 320, 200);
-	 */
-	// Now the logo is displayed, let's be useful instead of wait
-
-#else
-
-	fixup_datafile (data);
-
-	set_palette (data[INTRO_PAL].dat);
-
-# ifndef LINUX
-
-	(*fade_in_proc[rand () % nb_fadein]) (data[INTRO_PICTURE].dat, 0, 0, 320,
-					200);
-	// Now the logo is displayed, let's be useful instead of waiting
-
-#else
-
-	// blit(data[INTRO_PICTURE].dat, screen, 0, 0, 0, 0, 320, 200);
-	{
-
-		PALETTE dum_pal;
-		BITMAP *dum = load_bitmap ("./hugo3.bmp", dum_pal);
-		(*fade_in_proc[rand () % nb_fadein]) (dum, 0, 0, 320, 200);
-		destroy_bitmap (dum);
-
-	}
-#endif
-#endif
-#endif
-/*
-####################################
-####################################
-####################################
-####################################
-2KILL :: END
-####################################
-####################################
-####################################
-####################################
-*/
-
-	parse_commandline (argc, argv);
+	parse_commandline(argc, argv);
 
 	if (!bmdefault)
 		bmdefault = _BACKUP_DAT;
@@ -3102,62 +2640,20 @@ main (int argc, char *argv[])
 	strcpy (backup_mem, short_exe_name);
 	strcat (backup_mem, bmdefault);
 
-#ifndef LINUX
-	sprintf (sav_path, "%sSAV/", short_exe_name);
-	sprintf (video_path, "%sVIDEO/", short_exe_name);
-#else
 	{
 		char tmp_home[256];
 		strcpy (tmp_home, getenv ("HOME"));
 
 		sprintf (sav_path, "%s/.hugo", tmp_home);
 	}
-#endif
 
-/*
-####################################
-####################################
-####################################
-####################################
-2KILL :: BEGIN
-####################################
-####################################
-####################################
-####################################
-*/
-	/* TODO: make this allegro independant */
-#ifdef ALLEGRO
+	// Create directory for save games
 	if (!file_exists (sav_path, FA_DIREC, 0))
-#ifndef WIN32
 		mkdir (sav_path, 0);
-#else
-		mkdir (sav_path);
-#endif
-	// Create a place for saved games if not exist
-#endif
 
-	/* TODO: make this allegro independant */
-#ifdef ALLEGRO
+	// Create directory for videos
 	if (!file_exists (video_path, FA_DIREC, 0))
-#ifndef WIN32
 		mkdir (video_path, 0);
-#else
-		mkdir (video_path);
-#endif
-	// Create a place for output images if not exist
-#endif
-/*
-####################################
-####################################
-####################################
-####################################
-2KILL :: END
-####################################
-####################################
-####################################
-####################################
-*/
-
 
 	atexit (TrashSound);
 
@@ -3238,17 +2734,15 @@ main (int argc, char *argv[])
 	/* TrashMachine (); */
 	osd_shut_machine ();
 
-	if (effectively_played)
-		{
-			if (builtin_system_used)
-	printf ("");
-				else if (NO_ROM < pce_romlist_size)
-	printf (MESSAGE[language][played], (pce_romlist + NO_ROM) ? pce_romlist[NO_ROM].name : "Unknown");
-			else
-	printf (MESSAGE[language][unknown_contact_me]);
-		}
-	else
-		printf (MESSAGE[language][C_ya]);
+	if (effectively_played) {
+		if (builtin_system_used)
+			printf ("");
+		else if (NO_ROM < pce_romlist_size)
+			printf (MESSAGE[language][played], (pce_romlist + NO_ROM) ? pce_romlist[NO_ROM].name : "Unknown");
+		else
+			printf (MESSAGE[language][unknown_contact_me]);
+		} else
+			printf (MESSAGE[language][C_ya]);
 
 #ifdef CHRONO
 	if (!(F = fopen ("RESULT.DAT", "wt+")))
@@ -3279,53 +2773,12 @@ main (int argc, char *argv[])
 		{
 			fprintf (stderr, MESSAGE[language][time_elapsed], (timer_60 / 60.0));
 			fprintf (stderr, MESSAGE[language][frame_per_sec],
-				 frame / (timer_60 / 60.0));
+				frame / (timer_60 / 60.0));
 		}
 
-#warning move to other osd_machine
-	/* Moved to osd_machine (only linux/sdl right now)
-	if (dump_snd)
-		fclose (out_snd);
-	*/
-/*
-####################################
-####################################
-####################################
-####################################
-2KILL :: BEGIN
-####################################
-####################################
-####################################
-####################################
-*/
-#if defined(EXTERNAL_DAT) && defined(ALLEGRO)
-	Log ("I'll unload datafile, @ = %p\n", datafile);
-//			if (datafile)
-//			unload_datafile(datafile);
-	Log ("I've unloaded datafile\n");
-#endif
-/*
-####################################
-####################################
-####################################
-####################################
-2KILL :: END
-####################################
-####################################
-####################################
-####################################
-*/
-
-	Log
-		("\n--[ END OF PROGRAM ]----------------------------------\nExecution completed successfully\n");
+	Log("Execution completed successfully!\n");
 	return 0;
 }
 
-
-#ifdef ALLEGRO
-
-END_OF_MAIN ();
-
-#endif
 
 #endif

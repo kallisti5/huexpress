@@ -34,13 +34,9 @@ int oldScrollX;
 int oldScrollY;
 int oldScrollYDiff;
 
-#if defined(NEW_GFX_ENGINE)
 // Actual memory area where the gfx functions are drawing sprites and tiles
 UChar SPM_raw[XBUF_WIDTH * XBUF_HEIGHT];
 static UChar *SPM = SPM_raw + XBUF_WIDTH * 64 + 32;
-#else
-UChar SPM[WIDTH * HEIGHT];
-#endif
 
 int frame = 0;
 // number of frame displayed
@@ -214,12 +210,7 @@ RefreshLine (int Y1, int Y2)
 		    Y2, ScrollX, ScrollY, ScrollYDiff);
 #endif
 
-#if defined(NEW_GFX_ENGINE)
   PP = osd_gfx_buffer + XBUF_WIDTH * Y1;
-#else
-  PP = osd_gfx_buffer + WIDTH * (HEIGHT - FC_H) / 2 + (WIDTH - FC_W) / 2 +
-    WIDTH * (Y1 + 0);
-#endif
 
   if (ScreenON && BGONSwitch)
     {
@@ -272,11 +263,7 @@ RefreshLine (int Y1, int Y2)
 	      C2 = (VRAM2 + (no * 8 + offset) * 4);
 	      C = VRAM + (no * 32 + offset * 2);
 	      P = PP;
-#if defined(NEW_GFX_ENGINE)
-	      for (i = 0; i < h; i++, P += XBUF_WIDTH, C2 += 4, C += 2)
-#else
-	      for (i = 0; i < h; i++, P += WIDTH, C2 += 4, C += 2)
-#endif
+	    for (i = 0; i < h; i++, P += XBUF_WIDTH, C2 += 4, C += 2)
 		{
 		  unsigned long L;
 		  UChar J;
@@ -303,11 +290,7 @@ RefreshLine (int Y1, int Y2)
 		}
 	    }
 	  Line += h;
-#if defined(NEW_GFX_ENGINE)
 	  PP += XBUF_WIDTH * h - XW * 8;
-#else
-	  PP += WIDTH * h - XW * 8;
-#endif
 	  offset = 0;
 	  h = Y2 - Line;
 	  if (h > 8)
@@ -340,11 +323,7 @@ PutSprite (UChar * P, UChar * C, UChar * C2, UChar * R, int h, int inc)
 {
   int i, J;
   UInt32 L;
-#if defined(NEW_GFX_ENGINE)
   for (i = 0; i < h; i++, C += inc, C2 += inc * 4, P += XBUF_WIDTH)
-#else
-  for (i = 0; i < h; i++, C += inc, C2 += inc * 4, P += WIDTH)
-#endif
     {
 
 #if defined(WORDS_BIGENDIAN)
@@ -399,13 +378,7 @@ PutSpriteHandleFull (UChar * P, UChar * C, unsigned long *C2, UChar * R,
 {
   int i, J;
   unsigned long L;
-#if defined(NEW_GFX_ENGINE)
-  for (i = 0; i < h; i++, C += inc, C2 += inc, P += XBUF_WIDTH)
-#else
-  for (i = 0; i < h; i++, C += inc, C2 += inc, P += WIDTH)
-#endif
-    {
-
+  for (i = 0; i < h; i++, C += inc, C2 += inc, P += XBUF_WIDTH) {
       J =
 	(C[0] + (C[1] << 8)) | (C[32] + (C[33] << 8)) | (C[64] +
 							 (C[65] << 8)) |
@@ -487,12 +460,8 @@ PutSpriteHflip (UChar * P, UChar * C, unsigned long *C2, UChar * R, int h,
 {
   int i, J;
   unsigned long L;
-#if defined(NEW_GFX_ENGINE)
   for (i = 0; i < h; i++, C += inc, C2 += inc, P += XBUF_WIDTH)
-#else
-  for (i = 0; i < h; i++, C += inc, C2 += inc, P += WIDTH)
-#endif
-    {
+  {
       J =
 	(C[0] + (C[1] << 8)) | (C[32] + (C[33] << 8)) | (C[64] +
 							 (C[65] << 8)) |
@@ -565,12 +534,8 @@ PutSpriteM (UChar * P, UChar * C, UChar * C2, UChar * R, int h, int inc,
 {
   int i, J;
   unsigned long L;
-#if defined(NEW_GFX_ENGINE)
   for (i = 0; i < h;
        i++, C += inc, C2 += inc * 4, P += XBUF_WIDTH, M += XBUF_WIDTH)
-#else
-  for (i = 0; i < h; i++, C += inc, C2 += inc * 4, P += WIDTH, M += WIDTH)
-#endif
     {
       J =
 	(C[0] + (C[1] << 8)) | (C[32] + (C[33] << 8)) | (C[64] +
@@ -630,12 +595,8 @@ PutSpriteHflipM (UChar * P, UChar * C, UChar * C2, UChar * R, int h,
 {
   int i, J;
   unsigned long L;
-#if defined(NEW_GFX_ENGINE)
   for (i = 0; i < h;
        i++, C += inc, C2 += inc * 4, P += XBUF_WIDTH, M += XBUF_WIDTH)
-#else
-  for (i = 0; i < h; i++, C += inc, C2 += inc * 4, P += WIDTH, M += WIDTH)
-#endif
     {
       J =
 	(C[0] + (C[1] << 8)) | (C[32] + (C[33] << 8)) | (C[64] +
@@ -694,12 +655,8 @@ PutSpriteMakeMask (UChar * P, UChar * C, UChar * C2, UChar * R, int h,
   int i;
   UInt16 J;
   unsigned long L;
-#if defined(NEW_GFX_ENGINE)
   for (i = 0; i < h;
        i++, C += inc, C2 += inc * 4, P += XBUF_WIDTH, M += XBUF_WIDTH)
-#else
-  for (i = 0; i < h; i++, C += inc, C2 += inc * 4, P += WIDTH, M += WIDTH)
-#endif
     {
       /*
          J =
@@ -819,12 +776,8 @@ PutSpriteHflipMakeMask (UChar * P, UChar * C, UChar * C2, UChar * R,
 {
   int i, J;
   unsigned long L;
-#if defined(NEW_GFX_ENGINE)
   for (i = 0; i < h;
        i++, C += inc, C2 += inc * 4, P += XBUF_WIDTH, M += XBUF_WIDTH)
-#else
-  for (i = 0; i < h; i++, C += inc, C2 += inc * 4, P += WIDTH, M += WIDTH)
-#endif
     {
       J =
 	(C[0] + (C[1] << 8)) | (C[32] + (C[33] << 8)) | (C[64] +
@@ -1001,13 +954,7 @@ RefreshSpriteExact (int Y1, int Y2, UChar bg)
 	}
       C = VRAM + (no * 128);
       C2 = VRAMS + (no * 32) * 4;	/* TEST */
-#if defined(NEW_GFX_ENGINE)
       pos = XBUF_WIDTH * (y + 0) + x;
-#else
-      pos =
-	WIDTH * (HEIGHT - FC_H) / 2 + (WIDTH - FC_W) / 2 + WIDTH * (y + 0) +
-	x;
-#endif
       inc = 2;
       if (atr & V_FLIP)
 	{
@@ -1026,11 +973,7 @@ RefreshSpriteExact (int Y1, int Y2, UChar bg)
 	      C += t * inc;
 	      C2 += (t * inc) * 4;
 	      h -= t;
-#if defined(NEW_GFX_ENGINE)
 	      pos += t * XBUF_WIDTH;
-#else
-	      pos += t * WIDTH;
-#endif
 
 	    }
 	  if (h > Y2 - y - y_sum)
@@ -1087,11 +1030,7 @@ RefreshSpriteExact (int Y1, int Y2, UChar bg)
 			       C2 + j * 32 * 4, R, h, inc);
 		}
 	    }
-#if defined(NEW_GFX_ENGINE)
 	  pos += h * XBUF_WIDTH;
-#else
-	  pos += h * WIDTH;
-#endif
 	  C += h * inc + 16 * 7 * inc;
 	  C2 += (h * inc + 16 * inc) * 4;
 	  y_sum += 16;
@@ -1205,13 +1144,7 @@ RefreshScreen (void)
    */
 #endif
 
-#if defined(NEW_GFX_ENGINE)
-  memset (osd_gfx_buffer, Pal[0], 240 * XBUF_WIDTH);	// We don't clear the part out of reach of the screen blitter
-  memset (SPM, 0, 240 * XBUF_WIDTH);
-#else
-  memset (osd_gfx_buffer + MinLine * WIDTH, Pal[0],
-	  (MaxLine - MinLine) * WIDTH);
-  memset (SPM + MinLine * WIDTH, 0, (MaxLine - MinLine) * WIDTH);
-#endif
-
+	memset (osd_gfx_buffer, Pal[0], 240 * XBUF_WIDTH);
+		// We don't clear the part out of reach of the screen blitter
+	memset (SPM, 0, 240 * XBUF_WIDTH);
 }

@@ -128,12 +128,8 @@ void osd_gfx_put_image_normal(void)
     Slock(screen);
 
     for (y = 0; y < io.screen_h; y++)
-		#if defined(NEW_GFX_ENGINE)
-			memmove(screen->pixels + y * io.screen_w, osd_gfx_buffer + y * XBUF_WIDTH, io.screen_w);	
-		#else
-      memmove(screen->pixels + y * io.screen_w, XBuf + y * WIDTH + (WIDTH - io.screen_w) / 2, io.screen_w);	
-		#endif
-
+		memmove(screen->pixels + y * io.screen_w,
+			osd_gfx_buffer + y * XBUF_WIDTH, io.screen_w);
     Sulock(screen);
 
     if (physical_screen->flags & SDL_FULLSCREEN)
@@ -152,15 +148,10 @@ void osd_gfx_put_image_normal(void)
 
     SDL_LockYUVOverlay(olay);
 
-    for (y = 0; y < io.screen_h; y++)
-    {
-		#if defined(NEW_GFX_ENGINE)
-			p = osd_gfx_buffer + y * XBUF_WIDTH;
-		#else
-      p = XBuf + y * XBUF_WIDTH + (WIDTH - io.screen_w) / 2;
-		#endif
-		
-      op = olay->pixels[0] + olay->pitches[0] * y;
+	for (y = 0; y < io.screen_h; y++)
+	{
+		p = osd_gfx_buffer + y * XBUF_WIDTH;
+		op = olay->pixels[0] + olay->pitches[0] * y;
 
       for (x = 0; x < io.screen_w; x++)
       {

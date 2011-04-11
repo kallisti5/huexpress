@@ -6,8 +6,6 @@
 #define	WIDTH	(360+64)
 #define	HEIGHT	256
 
-#if defined(NEW_GFX_ENGINE)
-
 // The extra 32's and 64's are linked to the way the sprite are blitted on screen, which can overlap to near memory
 // If only one pixel is drawn in the screen, the whole sprite is written, which can eventually overlap unexpected area
 // A sharper way of doing would probably reduce the amount of needed data from 220kb to 128kb (eventually smaller if restricting
@@ -17,13 +15,6 @@
 
 #define XBUF_WIDTH 	(536 + 32 + 32)
 #define	XBUF_HEIGHT	(240 + 64 + 64)
-
-#else
-
-#define XBUF_WIDTH 	(320+64+40)
-#define	XBUF_HEIGHT	240
-
-#endif
 
 #include "sprite.h"
 
