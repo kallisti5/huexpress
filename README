@@ -1,76 +1,54 @@
-            .  ___   ____                _________           ___
-             .|  `|_|   `| ___ ___  __ .|    ____/ _______ .|  `|
-           .:|     _     ||  `|  `|(__)|    (_  `|/   _  `\|____/:.
-      ...:::||____|:|____||_______/::::\_________/\_______/(____)::::...
-            `-*-- -  -   -    -      -            -              ^cls
+                    _______               __  __ _______ __ 
+                   |   |   |.--.--.______|  |/  |   |   |  |
+                   |       ||  |  |______|     <|   |   |__|
+                   |___|___||_____|      |__|\__|_______|__|
+
                 Core-GraphX / PC Engine / Turbo GraphX Emulator
-                             Version 2.10
-                             04 March 2003
-
-
-        N.B. When reading this .TXT - "(*)" indicates the main changes
-
---[ CONTACT INFORMATION ]----------------------------------------------------
-    E-Mail :   zeograd@zeograd.com 
-
-    ICQ UIN :  40632933
-
-    Homepage : http://www.zeograd.com
-
+                               Version 2.15
+                             April 11th, 2011
 
 --[ DISCLAIMER ]-------------------------------------------------------------
 
     I can't be held responsible for any misuse of this software, it comes
-    with absolutely no warranty. Use it at your own risks.
+    with absolutely no warranty. Use it at your own risk.
 
 --[ INTRODUCTION ]-----------------------------------------------------------
 
-    Hi everyone, Welcome to the Hu-Go! documentation.
-    I (Zeograd) am not really the author of this program. I discovered
-    sources of a PC Engine emulator at Bero's Homepage
-    (http://www.geocities.co.jp/Playtown/2004/)
+    This is the first release of Hu-KU!, a PC Engine emulator for the
+    Haiku operating system.
 
+    If you are looking for the original Hu-Go! PC Engine emulator, which runs
+    on Linux, Windows, etc... see http://zerograd.com
+
+--[ FORK ]-------------------------------------------------------------------
+
+    Hu-KU! is a fork of the great Hu-Go! machine emulator which is based on
+    a PC Engine emulator produced by "Bero"
+    (http://www.geocities.co.jp/Playtown/2004/)
+ 
     Plus improvements at Hmmx's Homepage
     (formerly, http://www.geocities.co.jp/SiliconValley/7052/).
 
-    Hmmx made XPCE (for DirectX) but I've been interested in continuing
-    their work under DOS and voila, you've got another emulator available
-    to burn your keyboard playing all night with great PCE games ;)
-
-    This one is free and you've got access to sources as Bero did with his
-    work. I'd like people interested in making a good emulator for free to
-    contact me to talk about what is missing in Hu-Go!. Don't hesitate
-    answering the poll on my webpage or filling the forum you can find there.
+    I decided to fork Hu-Go! because the Hu-Go! project seemed to be
+    abandoned (no updates since 2005), in addition to this the BeOS
+    support has been slowly breaking since 2.10.
 
 --[ HOW TO INSTALL IT ? ]----------------------------------------------------
 
-    Hu-Go! is now available in binary form for several platforms, such as
-	Microsoft windows, i386 debian, i386 Mandrake as well as in sources form
-	which can be compiled on various environments.
-	
-	Check the INSTALL file for further instructions concerning the source
-	distribution.
+    Check the INSTALL file for further instructions on compiling the source
+    distribution under Haiku.
 	
 --[ HOW TO USE IT ? ]--------------------------------------------------------
 
-    You can hardly make it easier (maybe with a direct synaptic link between
-    your brain and your computer to guess the name of the rom...) :
-	Just type hugo with no options to bring the gtk gui which is quite straight
-	forward. You can load a rom (or .iso) or fire a cd. You can load and save
-	file using the menu, or change the settings, which are those you can change
-	in the .ini file.
-    You can also use hugo without the gui, just type
-	hugo [ROM] [BACKUPMEM] [OPTION] where ROM is the name of the
-    ROM or ISO or ISQ or HCD. Check out the HCD section later for details.
-    you want to play with. If ROM has no extension, Hu-Go!
-    will look for ROM.PCE then ROM.ZIP. If the ROM has PCE extension, try it,
-    then try ROM in ROM.ZIP. Then if ROM has ZIP extension, look for the
-    PCE file with same basename as ROM...
-    ISO games must be specified with ISO extension to be recognized.
+    You can use hugo by just typing
+	hugo [ROM] [BACKUPMEM] [OPTION]
+    
+    where ROM is the name of the ROM, ISO, ISQ, or HCD.
 
-    (Recommended games - try SUPER STAR SOLDIER or NEUTOPIA 2, you won't
-    regret it!. If you don't have any rom, you can try the little demo
-    rom included made with Huc [www.zeograd.com])
+    Check out the HCD section later for details.
+    If ROM has no extension, Hu-KU! will look for ROM.PCE then ROM.ZIP.
+
+    ISO games must be specified with ISO extension to be recognized.
 
     For OPTIONS, see later...
 
@@ -98,17 +76,9 @@
 
     -- 8MB of RAM.
 
-    -- A Linux system or FreeBSD or Microsoft windows (only 95 to XP tested)
+    -- A Haiku system with libsdl (installoptionalpackage -a sdllib)
 
     -- A sound card (only if you want to hear sound, of course).
-
-    -- A small amount of brain cells (enough to control basic motor
-       functions. For Cheating and Disassembling, a few trillion more may be
-       required ;)
-
-    -- Fingers (may be replaced by a direct synaptic link, I'm working on it,
-       if you want to become a guinea pig, let me know too ;) Note - requires
-       brain cells specified above.
 
 --[ KEYBOARD CONTROLS ]------------------------------------------------------
 
@@ -165,7 +135,7 @@
 
 --[ OPTIONS ]----------------------------------------------------------------
 
-    There are two kinds of options. Command line or HU-GO!.INI options. The
+    There are two kinds of options. Command line or Hu-KU!.INI options. The
     emu first reads in the INI file then the command line, so you can
     over-ride general options.
 
@@ -302,7 +272,7 @@
 --[ HCD ]--------------------------------------------------------------------
 
    Then what is this new format.
-   HCD means : Hu-Go! Cd Definition. Such a file allow you to use multi-code
+   HCD means : Hu-KU! Cd Definition. Such a file allow you to use multi-code
    CDs and emulate audio tracks with MP3
    It's only a beginning and there are still troubles with ISQ to emulate
    Code tracks but it should work fine later.
@@ -425,7 +395,7 @@
 --[ CHEATING ]---------------------------------------------------------------
 
     I've pondered at length as to whether to include such an option. If I'm
-    not mistaken, Hu-Go! is the first emulator to propose this type of
+    not mistaken, Hu-KU! is the first emulator to propose this type of
     option. Cheating is very primitive and there is no visual help so you
     can't see what you type...
 
@@ -497,7 +467,7 @@
 
 --[ DEVELOPERS CORNER ]------------------------------------------------------
 
-	Hu-Go! now exposes a large part of the current game internal variables via
+	Hu-KU! now exposes a large part of the current game internal variables via
 	shared memory (only linux/freebsd for now, soon windows too).
 	You can use the shared memory of identifier 25679. It contains a structure
 	of type struct_hard_pce as defined in shared_memory.h (you should grab the
@@ -507,12 +477,13 @@
 	  -1 => Full speed
 	  0  => Emulation paused
 	 >0  => Number of opcodes to run before pausing
-	You have to recompile Hu-Go! using --enable-shared-memory to benefit this
+	You have to recompile Hu-KU! using --enable-shared-memory to benefit this
 	feature.
 
 --[ THANKS ]-----------------------------------------------------------------
 
    Special thanks :
+    -- Zerograd, for making Hu-GO! http://zerograd.com
  *> -- Bacon boy 99 (Ex-Planet Rom webmaster, the former logo,    <*
        having sent me some Cds and in fact, lots of things)
 	-- Ixion for the lots of bugs/improvements he worked on recently
@@ -563,20 +534,3 @@
        for trying to port Hu-Go! to a new OS of his own
     -- Mr Iceberg (www.multimania.com/pceaudit)
        for offering a PCE ROM manager based on FPCEID
-
-    Others I may have forgotten (Sorry!!!)
-    (send me a mail if you consider you should be credited...)
-
-    If you have any questions, suggestions, propositions for help or
-    mirroring, bug reporting, or non working games, don't hesitate,
-    send a e-mail (I love e-mails) to : ZEOGRAD@ZEOGRAD.COM
-
-    (You can also send money, car keys, credit card with PIN number,
-    video games, girlfriends, ask for snail mail address !! ;)
-
-      .  ___   ____                _________           ___
-       .|  `|_|   `| ___ ___  __ .|    ____/ _______ .|  `|
-     .:|     _     ||  `|  `|(__)|    (_  `|/   _  `\|____/:.
-...:::||____|:|____||_______/::::\_________/\_______/(____)::::...
-      `-*-- -  -   -    -      -            -              ^cls
-
