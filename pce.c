@@ -365,6 +365,7 @@ init_log_file ()
 
 extern int op6502_nb;
 
+
 void
 fill_cd_info ()
 {
@@ -1426,23 +1427,8 @@ TimerInt ()
 	return INT_NONE;
 }
 
-#ifdef ALLEGRO
-
-#ifdef EXTERNAL_DAT
-
-#define LOAD_INTEGRATED_SYS_FILE ROM_size = 48; ROM = malloc(48*0x2000 + 512 ); memcpy(ROM,datafile[Built_in_cdsystem].dat,48*0x2000 + 512); ROM += 512; builtin_system_used=1; return 0;
-
-#else
-
-#define LOAD_INTEGRATED_SYS_FILE ROM_size = 48; ROM = malloc(48*0x2000 + 512 ); memcpy(ROM,data[Built_in_cdsystem].dat,48*0x2000 + 512); ROM += 512; builtin_system_used=1; return 0;
-
-#endif
-
-#else
 
 #define LOAD_INTEGRATED_SYS_FILE return search_syscard();
-
-#endif
 
 static char syscard_filename[PATH_MAX];
 
@@ -1506,6 +1492,7 @@ search_possible_syscard()
 	return NULL;
 }
 
+
 /*****************************************************************************
 
 		Function: search_syscard
@@ -1520,25 +1507,23 @@ SInt32
 search_syscard()
 {
 	char* syscard_location;
-	
+
 	syscard_location = search_possible_syscard();
 
-	if (NULL == syscard_location)
-		{
-			return -1;
-		}
-	else
-		{
-			int CD_emulation_bak = CD_emulation;
-			int return_value;
-			
-			CD_emulation = 0;
-			return_value = CartLoad(cdsystem_path);
-			CD_emulation = CD_emulation_bak;
-			return return_value;
-		}
-	
+	if (NULL == syscard_location) {
+		return -1;
+	} else {
+		int CD_emulation_bak = CD_emulation;
+		int return_value;
+
+		CD_emulation = 0;
+		return_value = CartLoad(cdsystem_path);
+		CD_emulation = CD_emulation_bak;
+		return return_value;
+	}
+
 }
+
 
 /*****************************************************************************
 
@@ -1577,26 +1562,21 @@ CartLoad (char *name)
 
 		}
 
-	if (strcasestr (name, ".HCD"))
-		{
+	if (strcasestr (name, ".HCD")) {
+		// Enable Hu-Go! Cd Definition
+		CD_emulation = 5;
 
-			// Enable Hu-Go! Cd Definition
-			CD_emulation = 5;
+		Log ("HCD emulation enabled\n");
 
-			Log ("HCD emulation enabled\n");
+		// Load correct ISO filename
+		strcpy (ISO_filename, name);
 
-			// Load correct ISO filename
-			strcpy (ISO_filename, name);
+		if (!fill_HCD_info (name))
+			return 1;
 
-			if (!fill_HCD_info (name))
-	return 1;
+		LOAD_INTEGRATED_SYS_FILE;
 
-			LOAD_INTEGRATED_SYS_FILE;
-
-		}
-	else if (strcasestr (name, ".ISO"))
-		{
-
+	} else if (strcasestr (name, ".ISO")) {
 			// Enable ISO support
 			CD_emulation = 2;
 
@@ -1604,10 +1584,7 @@ CartLoad (char *name)
 			strcpy (ISO_filename, name);
 
 			LOAD_INTEGRATED_SYS_FILE;
-		}
-	else if (strcasestr (name, ".ISQ"))
-		{
-
+	} else if (strcasestr (name, ".ISQ")) {
 			// Enable ISQ support
 			CD_emulation = 3;
 
@@ -1615,10 +1592,7 @@ CartLoad (char *name)
 			strcpy (ISO_filename, name);
 
 			LOAD_INTEGRATED_SYS_FILE;
-		}
-	else if (strcasestr (name, ".BIN"))
-		{
-
+	} else if (strcasestr (name, ".BIN")) {
 			// Enable BIN support
 			CD_emulation = 4;
 
@@ -1626,127 +1600,87 @@ CartLoad (char *name)
 			strcpy (ISO_filename, name);
 
 			LOAD_INTEGRATED_SYS_FILE;
-		}
-	else if (strcasestr (name, ".ZIP"))
-		{
-#ifdef MSDOS
-			char tmp_char[128], tmp_char2[128], tmp_char3[128];
-			char *array_arg[6] =
-	{ tmp_char3, tmp_char, "-Cjoqq", tmp_char2, "*.pce", NULL };
-			sprintf (tmp_char, "%sHU-GO!.TMP/*.*", short_exe_name);
-			for_each_file (tmp_char, 32, delete_file_tmp, 0);
+	} else if (strcasestr (name, ".ZIP")) {
+		char* filename_in_archive = NULL;
 
-			sprintf (tmp_char, "-d%sHU-GO!.TMP", short_exe_name);
-			sprintf (tmp_char2, "%s", name);
-			sprintf (tmp_char3, "%sHU-GO!.TMP/REDIR.RDF", short_exe_name);
+		Log("Testing archive %s\n", name);
+		filename_in_archive = find_possible_filename_in_zip(name);
+		Log("Return value = (%p) %s\n", filename_in_archive, filename_in_archive);
+		if (strcmp(filename_in_archive, "")) {
+			char* unzipped_rom;
+			size_t unzipped_rom_size;
 
-			DecompressArchive (5, array_arg);
+			Log("Found %s in %s\n", filename_in_archive, name);
+			unzipped_rom = extract_file_in_memory(name, filename_in_archive, &unzipped_rom_size);
 
-
-			if (!strcmp (name_to_extract, ""))
-	sprintf (tmp_path, "%sHU-GO!.TMP/%sPCE", short_exe_name,
-		 short_cart_name);
-			else
-	sprintf (tmp_path, "%sHU-GO!.TMP/%s", short_exe_name,
-		 name_to_extract);
-#else
-			char* filename_in_archive = NULL;
-
-			Log("Testing archive %s\n", name);
-			filename_in_archive = find_possible_filename_in_zip(name);
-			Log("Return value = (%p) %s\n", filename_in_archive, filename_in_archive);
-			if (strcmp(filename_in_archive,""))
-				{
-		char* unzipped_rom;
-		size_t unzipped_rom_size;
-		
-					Log("Found %s in %s\n", filename_in_archive, name);
-					unzipped_rom = extract_file_in_memory(name, filename_in_archive, &unzipped_rom_size);
-
-		ROM_size = unzipped_rom_size / 0x2000;
+			ROM_size = unzipped_rom_size / 0x2000;
 
 #if defined(SHARED_MEMORY)
-		shm_rom_handle =
-			shmget ((key_t) SHM_ROM_HANDLE, unzipped_rom_size,
-				IPC_CREAT | IPC_EXCL | 0666);
-		
-		if (shm_rom_handle == -1) 
-			{
+			shm_rom_handle
+				= shmget ((key_t) SHM_ROM_HANDLE, unzipped_rom_size,
+					IPC_CREAT | IPC_EXCL | 0666);
+
+			if (shm_rom_handle == -1) {
 				fprintf (stderr, "Couldn't get shared memory (%d bytes)\n", fsize);
 				return 1;
-			}
-		else
-			{
+			} else {
 				ROM = (char *) shmat (shm_rom_handle, NULL, 0);
-				if (ROM == NULL)
-		{
-			fprintf (stderr, "Couldn't attach shared memory\n");
-			return 1;
-		}
-				else 
-		{
-			/* Copy into the shared memory, by skipping an eventual header
-			 */
-			memcpy(ROM,
-			 unzipped_rom + (unzipped_rom_size & 0x1FF),
-			 unzipped_rom_size & ~0x1FF);
-			free(unzipped_rom);
-		}
+				if (ROM == NULL) {
+					fprintf (stderr, "Couldn't attach shared memory\n");
+					return 1;
+				} else {
+					// Copy into the shared memory, by skipping an eventual header
+					memcpy(ROM,
+						unzipped_rom + (unzipped_rom_size & 0x1FF),
+						unzipped_rom_size & ~0x1FF);
+					free(unzipped_rom);
+				}
 			}
 #else
-		if ((unzipped_rom_size & 0x1FFF) == 0)
-			{
+			if ((unzipped_rom_size & 0x1FFF) == 0) {
 				/* No header */
 				ROM = unzipped_rom;
-			}
-		else
-			{
+			} else {
 				ROM = malloc(unzipped_rom_size & ~0x1FFF);
 				memcpy(ROM,
-				 unzipped_rom + (unzipped_rom_size & 0x1FFF),
-				 unzipped_rom_size & ~0x1FFF);
+					unzipped_rom + (unzipped_rom_size & 0x1FFF),
+					unzipped_rom_size & ~0x1FFF);
 				free(unzipped_rom);
 			}
 #endif
-	return 0;
-				}
-#endif
-
-			/*
-			strcpy (true_file_name, tmp_path);
-			fp = fopen (tmp_path, "rb");
-			*/
+			return 0;
 		}
-	else
-		{
-
+		/*
+		strcpy (true_file_name, tmp_path);
+		fp = fopen (tmp_path, "rb");
+		*/
+	} else {
+			// unknown media format
 			CD_emulation = 0;
 			strcpy (true_file_name, name);
 			fp = fopen (name, "rb");
+	}
+
+	if (fp == NULL) {
+		if (!check_char (name, '.')) {
+			// if dot omitted, we try with PCE extension
+			strcat (name, ".pce");
+			return CartLoad (name);
 		}
 
-	if (fp == NULL)
-		{
+		if (strcasestr (name, ".pce")) {
+			// if filename with .PCE doesn't exist, it may be in ZIP
+			strcpy (&name[strlen (name) - 4], ".zip");
+			return CartLoad (name);
+		};
 
-			if (!check_char (name, '.'))	//if dot omitted, we try with PCE extension
-				{
-					strcat (name, ".pce");
-					return CartLoad (name);
-				};
+		return -1;
+	}
 
-			if (strcasestr (name, ".pce"))	//if filename with .PCE doesn't exist, it may be in ZIP
-				{
-					strcpy (&name[strlen (name) - 4], ".zip");
-					return CartLoad (name);
-				};
-
-			return -1;
-		}
-
-	if (cart_name != name)
-	{	// Avoids warning when copying passing cart_name as parameter
+	if (cart_name != name) {
+		// Avoids warning when copying passing cart_name as parameter
 		#warning find where this weird call is done
-			strcpy (cart_name, name);
+		strcpy (cart_name, name);
 	}
 
 	// find file size
@@ -2079,9 +2013,7 @@ InitPCE (char *name, char *backmemname)
 			for (dummy = 0; dummy < pce_romlist_size; dummy++)
 	if (CRC == pce_romlist[dummy].CRC)
 		NO_ROM = dummy;
-		}
-	else
-		{
+		} else {
 			NO_ROM = 255;
 			printf("ROM not in database: CRC=%lx\n", CRC);
 		}
@@ -2116,41 +2048,39 @@ InitPCE (char *name, char *backmemname)
 
 	local_us_encoded_card = US_encoded_card;
 
-	 if ((NO_ROM != 0xFFFF) && (pce_romlist + NO_ROM) && (pce_romlist[NO_ROM].flags & US_ENCODED))
+	if ((NO_ROM != 0xFFFF) && (pce_romlist + NO_ROM)
+		&& (pce_romlist[NO_ROM].flags & US_ENCODED))
 		local_us_encoded_card = 1;
 
-	 if (ROM[0x1FFF] < 0xE0)
-	 {
-		 Log("This rom is probably US encrypted, decrypting ..\n");
+	if (ROM[0x1FFF] < 0xE0) {
+		Log("This rom is probably US encrypted, decrypting ..\n");
 #if !defined(FINAL_RELEASE)
-		 fprintf(stderr, "This rom is probably US encrypted, decrypting ..\n");
+		fprintf(stderr, "This rom is probably US encrypted, decrypting ..\n");
 #endif
 		local_us_encoded_card = 1;
-	 }
-
-	if (local_us_encoded_card)
-		{
-			UInt32 x;
-			UChar inverted_nibble[16] = { 0, 8, 4, 12,
-	2, 10, 6, 14,
-	1, 9, 5, 13,
-	3, 11, 7, 15
-			};
-
-			for (x = 0; x < ROM_size * 0x2000; x++)
-	{
-		UChar temp;
-
-		temp = ROM[x] & 15;
-
-		ROM[x] &= ~0x0F;
-		ROM[x] |= inverted_nibble[ROM[x] >> 4];
-
-		ROM[x] &= ~0xF0;
-		ROM[x] |= inverted_nibble[temp] << 4;
-
 	}
+
+	if (local_us_encoded_card) {
+		UInt32 x;
+		UChar inverted_nibble[16] = { 0, 8, 4, 12,
+			2, 10, 6, 14,
+			1, 9, 5, 13,
+			3, 11, 7, 15
+		};
+
+		for (x = 0; x < ROM_size * 0x2000; x++) {
+			UChar temp;
+
+			temp = ROM[x] & 15;
+
+			ROM[x] &= ~0x0F;
+			ROM[x] |= inverted_nibble[ROM[x] >> 4];
+
+			ROM[x] &= ~0xF0;
+			ROM[x] |= inverted_nibble[temp] << 4;
+
 		}
+	}
 /*
 	if (CD_emulation)
 		{
@@ -2171,45 +2101,11 @@ InitPCE (char *name, char *backmemname)
 		}
 */
 
-/*
-####################################
-####################################
-####################################
-####################################
-2KILL :: BEGIN
-####################################
-####################################
-####################################
-####################################
-*/
-#ifdef ALLEGRO
-
-	if ((NO_ROM != 0xFFFF) && (pce_romlist + NO_ROM) && (pce_romlist[NO_ROM].flags & PINBALL_KEY))
-
-		for (dummy = 0; dummy < 5; dummy++)
-			{
-	config[current_config].joy_mapping[dummy][J_II] = KEY_RSHIFT;
-	config[current_config].joy_mapping[dummy][J_LEFT] = KEY_LSHIFT;
-	config[current_config].joy_mapping[dummy][J_I] = KEY_STOP;
-	config[current_config].joy_mapping[dummy][J_RIGHT] = KEY_Z;
-			}
-
-#endif
-/*
-####################################
-####################################
-####################################
-####################################
-2KILL :: END
-####################################
-####################################
-####################################
-####################################
-*/
-
-	if ((NO_ROM != 0xFFFF) && (pce_romlist + NO_ROM) && (pce_romlist[NO_ROM].flags & TWO_PART_ROM))
+	if ((NO_ROM != 0xFFFF) && (pce_romlist + NO_ROM)
+		&& (pce_romlist[NO_ROM].flags & TWO_PART_ROM)) {
 		ROM_size = 0x30;
-	// Used for example with Devil Crush 512Ko
+		// Used for example with Devil Crush 512Ko
+	}
 
 	ROMmask = 1;
 	while (ROMmask < ROM_size)
@@ -2220,19 +2116,15 @@ InitPCE (char *name, char *backmemname)
 	fprintf (stderr, "ROMmask=%02X, ROM_size=%02X\n", ROMmask, ROM_size);
 #endif
 
-	for (i = 0; i < 0xFF; i++)
-		{
+	for (i = 0; i < 0xFF; i++) {
 			ROMMapR[i] = trap_ram_read;
 			ROMMapW[i] = trap_ram_write;
-		}
+	}
 
 #if ! defined(TEST_ROM_RELOCATED)
-	for (i = 0; i < 0x80; i++)
-		{
-			if (ROM_size == 0x30)
-				{
-					switch (i & 0x70)
-						{
+	for (i = 0; i < 0x80; i++) {
+			if (ROM_size == 0x30) {
+					switch (i & 0x70) {
 							case 0x00:
 							case 0x10:
 							case 0x50:
@@ -2249,18 +2141,17 @@ InitPCE (char *name, char *backmemname)
 							case 0x40:
 								ROMMapR[i] = ROM + ((i - 0x20) & ROMmask) * 0x2000;
 								break;
-						}
-				}
-			else
+					}
+			} else {
 				ROMMapR[i] = ROM + (i & ROMmask) * 0x2000;
-		}
+			}
+	}
 #else
 	for (i = 0x68; i < 0x88; i++)
 		{
 			if (ROM_size == 0x30)
 				{
-					switch (i & 0x70)
-						{
+					switch (i & 0x70) {
 							case 0x00:
 							case 0x10:
 							case 0x50:
@@ -2281,36 +2172,27 @@ InitPCE (char *name, char *backmemname)
 								ROMMapR[i] = ROM + (((i - 0x68) - 0x20) & ROMmask) * 0x2000;
 								ROMMapW[i] = ROM + (((i - 0x68) - 0x20) & ROMmask) * 0x2000;
 								break;
-						}
-				}
-			else
-				{
+					}
+				} else {
 					ROMMapR[i] = ROM + ((i - 0x68) & ROMmask) * 0x2000;
 					ROMMapW[i] = ROM + ((i - 0x68) & ROMmask) * 0x2000;
 				}
 		}
 #endif
 
-	if (NO_ROM != 0xFFFF)
-		{
-#ifndef FINAL_RELEASE
-			fprintf (stderr, "ROM NAME : %s\n", (pce_romlist + NO_ROM) ? pce_romlist[NO_ROM].name : "Unknown");
-#endif
-			osd_gfx_set_message((pce_romlist + NO_ROM) ? pce_romlist[NO_ROM].name : "Unknown");
-			message_delay = 60 * 5;
-		}
-	else
-		{
-			osd_gfx_set_message (MESSAGE[language][unknown_rom]);
-			message_delay = 60 * 5;
+	if (NO_ROM != 0xFFFF) {
+			MESSAGE_INFO("Rom Name: %s\n",
+				(pce_romlist + NO_ROM) ? pce_romlist[NO_ROM].name : "Unknown");
+		} else {
+			MESSAGE_ERROR("Unknown ROM\n");
 		}
 
-	if ((NO_ROM != 0xFFFF) && (pce_romlist + NO_ROM) && (pce_romlist[NO_ROM].flags & POPULOUS))
+	if ((NO_ROM != 0xFFFF)
+		&& (pce_romlist + NO_ROM) && (pce_romlist[NO_ROM].flags & POPULOUS))
 		{
 			populus = TRUE;
-#ifndef FINAL_RELEASE
-			fprintf (stderr, "POPULOUS DETECTED!!!\n");
-#endif
+
+			MESSAGE_INFO("Special Rom: Populous detected!\n");
 			if (!(PopRAM = (UChar *) malloc (PopRAMsize)))
 				perror (MESSAGE[language][no_mem]);
 
@@ -2324,16 +2206,13 @@ InitPCE (char *name, char *backmemname)
 			ROMMapR[0x42] = PopRAM + 0x4000;
 			ROMMapR[0x43] = PopRAM + 0x6000;
 
-		}
-	else
-		{
+		} else {
 			populus = FALSE;
 			PopRAM = NULL;
 		}
 
 	if (CD_emulation)
 		{
-
 			ROMMapR[0x80] = cd_extra_mem;
 			ROMMapR[0x81] = cd_extra_mem + 0x2000;
 			ROMMapR[0x82] = cd_extra_mem + 0x4000;
@@ -2366,16 +2245,15 @@ InitPCE (char *name, char *backmemname)
 	ROMMapR[0xF8] = RAM;
 	ROMMapW[0xF8] = RAM;
 
-	if (option.want_supergraphx_emulation)
-		{
-			ROMMapW[0xF9] = RAM + 0x2000;
-			ROMMapW[0xFA] = RAM + 0x4000;
-			ROMMapW[0xFB] = RAM + 0x6000;
+	if (option.want_supergraphx_emulation) {
+		ROMMapW[0xF9] = RAM + 0x2000;
+		ROMMapW[0xFA] = RAM + 0x4000;
+		ROMMapW[0xFB] = RAM + 0x6000;
 
-			ROMMapR[0xF9] = RAM + 0x2000;
-			ROMMapR[0xFA] = RAM + 0x4000;
-			ROMMapR[0xFB] = RAM + 0x6000;
-		}
+		ROMMapR[0xF9] = RAM + 0x2000;
+		ROMMapR[0xFA] = RAM + 0x4000;
+		ROMMapR[0xFB] = RAM + 0x6000;
+	}
 
 	/*
 	#warning REMOVE ME
@@ -2392,15 +2270,15 @@ InitPCE (char *name, char *backmemname)
 
 		if (fp == NULL)
 			fprintf (stderr, "Can't open %s\n", backmemname);
-		else
-			{
-	fread (WRAM, 0x2000, 1, fp);
-	fclose (fp);
-			}
+		else {
+			fread (WRAM, 0x2000, 1, fp);
+			fclose (fp);
+		}
 
 	}
 
-	if ((NO_ROM != 0xFFFF) && (pce_romlist + NO_ROM) && (pce_romlist[NO_ROM].flags & CD_SYSTEM))
+	if ((NO_ROM != 0xFFFF) && (pce_romlist + NO_ROM)
+		&& (pce_romlist[NO_ROM].flags & CD_SYSTEM))
 		{
 			UInt16 offset;
 			UChar new_val;
@@ -2410,7 +2288,6 @@ InitPCE (char *name, char *backmemname)
 
 			if (offset)
 				ROMMapW[0xE1][offset & 0x1fff] = new_val;
-
 		}
 
 	return 0;
@@ -2435,6 +2312,7 @@ RunPCE (void)
 }
 #endif
 
+
 void
 TrashPCE (char *backmemname)
 {
@@ -2442,28 +2320,21 @@ TrashPCE (char *backmemname)
 	char *tmp_buf = (char *) alloca (256);
 
 	// Save the backup ram into file
-	if (!(fp = fopen (backmemname, "wb")))
-		{
-			memset (WRAM, 0, 0x2000);
-			Log ("Can't open %s for saving RAM\n", backmemname);
-		}
-	else
-		{
-			fwrite (WRAM, 0x2000, 1, fp);
-			fclose (fp);
-			Log ("%s used for saving RAM\n", backmemname);
-		}
+	if (!(fp = fopen (backmemname, "wb"))) {
+		memset (WRAM, 0, 0x2000);
+		MESSAGE_ERROR("Can't open %s for saving RAM\n", backmemname);
+	} else {
+		fwrite (WRAM, 0x2000, 1, fp);
+		fclose (fp);
+		MESSAGE_INFO("%s used for saving RAM\n", backmemname);
+	}
 
 	// Set volume to zero
 	io.psg_volume = 0;
 
-#if defined(ALLEGRO)
-	sprintf (tmp_buf, "%s/HU-GO!.TMP/*.*", short_exe_name);
-	for_each_file (tmp_buf, 32, delete_file_tmp, 0);
-#elif defined(LINUX)
-		sprintf (tmp_buf, "rm -rf %s/HU-GO!.TMP/*", short_exe_name);
-			system(tmp_buf);
-#endif
+	sprintf(tmp_buf, "rm -rf %s/HU-GO!.TMP/*", short_exe_name);
+	system(tmp_buf);
+
 	sprintf (tmp_buf, "%s/HU-GO!.TMP", short_exe_name);
 	rmdir (tmp_buf);
 
@@ -2473,47 +2344,23 @@ TrashPCE (char *backmemname)
 	if ((CD_emulation == 2) || (CD_emulation == 4))
 		fclose (iso_FILE);
 
-/*
-####################################
-####################################
-####################################
-####################################
-2KILL :: BEGIN
-####################################
-####################################
-####################################
-####################################
-*/
-#ifdef ALLEGRO
-	if (CD_emulation == 3)
-		pack_fclose (packed_iso_FILE);
-#endif
-/*
-####################################
-####################################
-####################################
-####################################
-2KILL :: END
-####################################
-####################################
-####################################
-####################################
-*/
-
 	if (CD_emulation == 5)
-		HCD_shutdown ();
+		HCD_shutdown();
 
 	if (IOAREA)
 		free (IOAREA);
-	if (ROM)
-		{
+
+	if (ROM) {
+
 #if defined(SHARED_MEMORY)
 	if (shmctl (shm_rom_handle, IPC_RMID, NULL) == -1)
 		fprintf (stderr, "Couldn't destroy shared memory\n");
 #else
-			free(ROM);
+	free(ROM);
 #endif
-		}
+
+	}
+
 	if (PopRAM)
 		free (PopRAM);
 /*
@@ -2534,7 +2381,8 @@ TrashPCE (char *backmemname)
 	hard_term();
 
 	return;
-};
+}
+
 
 #ifdef CHRONO
 unsigned nb_used[256], time_used[256];
@@ -2548,237 +2396,6 @@ extern void write_psg_end ();
 extern void WriteBuffer (char *, int, unsigned);
 #endif
 
+
 FILE *out_snd;
 
-#ifdef OLD_MAIN
-
-int
-main (int argc, char *argv[])
-{
-	char backup_mem[80];
-	char _BACKUP_DAT[] = "BACKUP.DAT";
-	// Default name if none given
-
-	char i, tmp_path[80];
-
-#ifdef CHRONO
-	unsigned timax = 0, inst_max = 0;
-
-	for (vmode = 0; vmode < 256; vmode++)
-		time_used[vmode] = nb_used[vmode] = 0;
-
-#endif
-
-#ifdef LINUX
-	{
-		char* home_path;
-
-		home_path = getenv("HOME");
-
-		if (home_path)
-			{
-				sprintf(short_exe_name,"%s/.hugo/",home_path);
-				mkdir(short_exe_name,0777);
-				sprintf(log_filename,"%s%s",short_exe_name,LOG_NAME);
-			}
-		else
-			{
-				strcpy(short_exe_name,"./");
-				strcpy(home_path,LOG_NAME);
-			}
-	}
-#endif
-
-#ifdef WIN32
-	strcpy(log_filename,"c:\\hugo.log");
-#endif
-
-#ifdef MSDOS
-	_crt0_startup_flags |= _CRT0_FLAG_NO_LFN;
-	// Disable long filename to avoid mem waste in select_rom func.
-#endif
-
-	init_log_file ();
-
-	srand (time (NULL));
-
-	parse_INIfile ();
-
-#warning check if ALLEGRO is ok with initializing the machine here
-
-	if (!osd_init_machine ())
-		return -1;
-
-#ifndef LINUX
-
-	//	get_executable_name (short_exe_name, 256);
-	strncpy(short_exe_name,argv[0],PATH_MAX);
-	for (i = 0; short_exe_name[i]; i++)
-		if (short_exe_name[i] == '\\')
-			short_exe_name[i] = '/';
-
-	if (strrchr (short_exe_name, '/'))
-		*(char *) (strrchr (short_exe_name, '/') + 1) = 0;
-	// add a trailing slash
-
-#else
-
-	strcpy (short_exe_name, "./");
-
-#endif
-
-	strcpy(tmp_path, short_exe_name);
-	strcat(tmp_path, "HUKU.TMP");
-
-	mkdir(tmp_path, 0);
-
-	parse_commandline(argc, argv);
-
-	if (!bmdefault)
-		bmdefault = _BACKUP_DAT;
-
-	strcpy (backup_mem, short_exe_name);
-	strcat (backup_mem, bmdefault);
-
-	{
-		char tmp_home[256];
-		strcpy (tmp_home, getenv ("HOME"));
-
-		sprintf (sav_path, "%s/.hugo", tmp_home);
-	}
-
-	// Create directory for save games
-	if (!file_exists (sav_path, FA_DIREC, 0))
-		mkdir (sav_path, 0);
-
-	// Create directory for videos
-	if (!file_exists (video_path, FA_DIREC, 0))
-		mkdir (video_path, 0);
-
-	atexit (TrashSound);
-
-	// In case of crash, try to free as many resources as we can
-
-	//	getchar ();
-
-	// (*fade_out_proc[rand () % nb_fadeout]) (0, 0, 320, 200);
-
-	BaseClock = 7800000;		//7160000; //3.58-21.48;
-	//	7.8 Mhz	^
-
-#if defined(ALLEGRO)
-	LOCK_VARIABLE (key_delay);
-	LOCK_VARIABLE (timer_60);
-	LOCK_VARIABLE (can_blit);
-	LOCK_VARIABLE (RAM);
-	LOCK_VARIABLE (list_to_freeze);
-	LOCK_FUNCTION (interrupt_60hz);
-#endif
-
-	IPeriod = BaseClock / (scanlines_per_frame * 60);
-#ifndef FINAL_RELEASE
-	fprintf (stderr, "IPeriod = %d\n", IPeriod);
-#endif
-//			UPeriod = 0;
-	// TimerPeriod = BaseClock / 1000 * 3 * 1024 / 21480;
-#ifndef FINAL_RELEASE
-	fprintf (stderr, "TimerPeriod = %d\n", TimerPeriod);
-#endif
-
-/* TEST */
-	io.screen_h = 224;
-/* TEST */
-	io.screen_w = 256;
-
-	if (osd_init_input () != 0)
-	{
-		fprintf(stderr, "Initialization of input system failed\n");
-		exit(6);
-	}
-
-/*
-	if (!osd_init_machine ())
-		return -1;
-*/
-
-	do
-		{
-
-#warning reenable card selection without allegro
-#if defined(ALLEGRO)
-			if ((!cart_name[0]) && (CD_emulation != 1))
-	strcpy (cart_name, (char *) select_rom ("*.pce"));
-#endif
-
-			if (strcmp (cart_name, "NO FILE"))
-	if (!InitPCE (cart_name, backup_mem))
-		{
-			effectively_played = 1;
-			cart_reload = 0;
-
-#if defined(ALLEGRO)
-			install_int_ex (interrupt_60hz, BPS_TO_TIMER (60));
-#endif
-
-			RunPCE ();
-
-#if defined(ALLEGRO)
-			remove_int (interrupt_60hz);
-#endif
-
-			TrashPCE (backup_mem);
-		}
-		}
-	while (cart_reload);
-
-	/* TrashMachine (); */
-	osd_shut_machine ();
-
-	if (effectively_played) {
-		if (builtin_system_used)
-			printf ("");
-		else if (NO_ROM < pce_romlist_size)
-			printf (MESSAGE[language][played], (pce_romlist + NO_ROM) ? pce_romlist[NO_ROM].name : "Unknown");
-		else
-			printf (MESSAGE[language][unknown_contact_me]);
-		} else
-			printf (MESSAGE[language][C_ya]);
-
-#ifdef CHRONO
-	if (!(F = fopen ("RESULT.DAT", "wt+")))
-		return -1;
-	for (vmode = 0; vmode < 256; vmode++)
-		{
-			fprintf (F,
-				 "Inst 0X%02X : %10u calls, %10u (*840)ns => avr. of %10u (*840)ns\n",
-				 vmode, nb_used[vmode], time_used[vmode],
-				 (nb_used[vmode] ? time_used[vmode] / nb_used[vmode] : 0));
-			if (nb_used[vmode] >= timax)
-	{
-		inst_max = vmode;
-		timax = nb_used[vmode];
-	}
-		};
-	fprintf (F,
-		 "\nGreat Winner is inst 0X%02X with %10u calls and %10u (*840)ns elapsed => average of %10u",
-		 inst_max, nb_used[inst_max], time_used[inst_max],
-		 time_used[inst_max] / nb_used[inst_max]);
-	fclose (F);
-
-#endif
-
-	fprintf (stderr, exit_message);
-
-	if (timer_60)
-		{
-			fprintf (stderr, MESSAGE[language][time_elapsed], (timer_60 / 60.0));
-			fprintf (stderr, MESSAGE[language][frame_per_sec],
-				frame / (timer_60 / 60.0));
-		}
-
-	Log("Execution completed successfully!\n");
-	return 0;
-}
-
-
-#endif
