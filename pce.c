@@ -311,33 +311,6 @@ const char* joymap_reverse[J_MAX] = {
 	"PSELECT", "PRUN", "PAUTOI", "PAUTOII",
 	"PXAXIS", "PYAXIS"};
 
-
-/*
-####################################
-####################################
-####################################
-####################################
-2KILL :: BEGIN
-####################################
-####################################
-####################################
-####################################
-*/
-#ifdef ALLEGRO
-PACKFILE *packed_iso_FILE = NULL;
-#endif
-/*
-####################################
-####################################
-####################################
-####################################
-2KILL :: END
-####################################
-####################################
-####################################
-####################################
-*/
-
 UInt32 packed_iso_filesize = 0;
 
 UInt32 ISQ_position = 0;
@@ -386,87 +359,32 @@ read_sector_dummy,
 static char *
 check_char (char *s, char c)
 {
-  while ((*s) && (*s != c))
-    s++;
-  return *s == c ? s : NULL;
+	while ((*s) && (*s != c))
+		s++;
+
+	return *s == c ? s : NULL;
 }
 
 
-#if defined(ALLEGRO)
-void interrupt_60hz (void)
-#elif defined(SDL)
 UInt32 interrupt_60hz (UInt32 interval, void *param)
-#endif
 {
 
-  /* Refresh freezed values in RAM */
-  for (can_blit = 0; can_blit < current_freezed_values; can_blit++)
-    RAM[list_to_freeze[can_blit].position] = list_to_freeze[can_blit].value;
+	/* Refresh freezed values in RAM */
+	for (can_blit = 0; can_blit < current_freezed_values; can_blit++)
+		RAM[list_to_freeze[can_blit].position] = list_to_freeze[can_blit].value;
 
-  /* Make the system understand it can blit */
-  can_blit = 1;
+	/* Make the system understand it can blit */
+	can_blit = 1;
 
-  /* If we've displayed a message recently, make it less recent */
-  if (message_delay)
-    message_delay--;
+	/* If we've displayed a message recently, make it less recent */
+	if (message_delay)
+	message_delay--;
 
-  /* number of call of this function */
-  timer_60++;
+	/* number of call of this function */
+	timer_60++;
 
-#if defined(ALLEGRO)
-
-  /* If we've pressed a key recently, make it less recent =) */
-  if (key_delay)
-    key_delay--;
-
-  return;
-#elif defined(SDL)
-  return interval;
-#endif
+	return interval;
 };
-
-/*
-####################################
-####################################
-####################################
-####################################
-2KILL :: BEGIN
-####################################
-####################################
-####################################
-####################################
-*/
-#ifdef ALLEGRO
-
-/*
- * For allegro, when calling regulary a function trought the timer, we must
- * tell when does the function stops
- */
-
-END_OF_FUNCTION (interrupt_60hz);
-
-#endif
-/*
-####################################
-####################################
-####################################
-####################################
-2KILL :: END
-####################################
-####################################
-####################################
-####################################
-*/
-
-#if defined(ALLEGRO)
-
-void
-delete_file_tmp (char *name, int dummy, int dummy2)
-{
-  delete_file (name);
-};
-
-#endif
 
 /*****************************************************************************
 
@@ -480,32 +398,11 @@ delete_file_tmp (char *name, int dummy, int dummy2)
 void
 init_log_file ()
 {
-#ifdef MSDOS
-
-  struct time Time;
-  struct date Date;
-
-#endif
-
-  unlink (log_filename);
-  Log ("--[ INITIALISATION ]--------------------------------\n");
-
-#ifdef MSDOS
-
-  getdate (&Date);
-  gettime (&Time);
-  Log
-    ("Creating Dos Hu-Go! log file on %02d:%02d:%02d.%02d, the %d/%d/%d\nVersion 2.12 of %s\n",
-     Time.ti_hour, Time.ti_min, Time.ti_sec, Time.ti_hund, Date.da_day,
-     Date.da_mon, Date.da_year, __DATE__);
-
-#elif defined(LINUX)
-  Log ("Creating Linux log file version 2.12 of %s ($Revision: 1.66 $)\n", __DATE__);
-#elif defined(WIN32)
-  Log ("Creating Win32 log file version 2.12 of %s ($Revision: 1.66 $)\n", __DATE__);
-#endif
-
+	unlink (log_filename);
+	Log ("--[ INITIALISATION ]--------------------------------\n");
+	Log ("Creating log file %s\n", __DATE__);
 }
+
 
 extern int op6502_nb;
 
@@ -513,123 +410,115 @@ void
 fill_cd_info ()
 {
 
-  UChar Min, Sec, Fra;
-  UChar current_track;
+	UChar Min, Sec, Fra;
+	UChar current_track;
 
-  // Track 1 is almost always a audio avertising track
-  // 30 sec. seems usual
+	// Track 1 is almost always a audio avertising track
+	// 30 sec. seems usual
 
-  CD_track[1].beg_min = binbcd[00];
-  CD_track[1].beg_sec = binbcd[02];
-  CD_track[1].beg_fra = binbcd[00];
+	CD_track[1].beg_min = binbcd[00];
+	CD_track[1].beg_sec = binbcd[02];
+	CD_track[1].beg_fra = binbcd[00];
 
-  CD_track[1].type = 0;
-  CD_track[1].beg_lsn = 0;	// Number of sector since the
-  // beginning of track 1
+	CD_track[1].type = 0;
+	CD_track[1].beg_lsn = 0;	// Number of sector since the
+	// beginning of track 1
 
-  CD_track[1].length = 47 * CD_FRAMES + 65;	// Most common
+	CD_track[1].length = 47 * CD_FRAMES + 65;	// Most common
 
-  nb_sect2msf (CD_track[1].length, &Min, &Sec, &Fra);
+	nb_sect2msf (CD_track[1].length, &Min, &Sec, &Fra);
 
-  // Second track is the main code track
+	// Second track is the main code track
 
-  CD_track[2].beg_min = binbcd[bcdbin[CD_track[1].beg_min] + Min];
-  CD_track[2].beg_sec = binbcd[bcdbin[CD_track[1].beg_sec] + Sec];
-  CD_track[2].beg_fra = binbcd[bcdbin[CD_track[1].beg_fra] + Fra];
+	CD_track[2].beg_min = binbcd[bcdbin[CD_track[1].beg_min] + Min];
+	CD_track[2].beg_sec = binbcd[bcdbin[CD_track[1].beg_sec] + Sec];
+	CD_track[2].beg_fra = binbcd[bcdbin[CD_track[1].beg_fra] + Fra];
 
-  CD_track[2].type = 4;
-  CD_track[2].beg_lsn =
-    msf2nb_sect (bcdbin[CD_track[2].beg_min] - bcdbin[CD_track[1].beg_min],
-		 bcdbin[CD_track[2].beg_sec] - bcdbin[CD_track[1].beg_sec],
-		 bcdbin[CD_track[2].beg_fra] - bcdbin[CD_track[1].beg_fra]);
-  switch (CD_emulation)
-    {
-    case 2:
-      CD_track[0x02].length = filesize (iso_FILE) / 2048;
-      break;
-    case 3:
-      CD_track[0x02].length = packed_iso_filesize / 2048;
-      break;
-    case 4:
-      CD_track[0x02].length = 140000;
-      break;
-    default:
-      break;
-    }
+	CD_track[2].type = 4;
+	CD_track[2].beg_lsn
+		= msf2nb_sect(bcdbin[CD_track[2].beg_min] - bcdbin[CD_track[1].beg_min],
+			bcdbin[CD_track[2].beg_sec] - bcdbin[CD_track[1].beg_sec],
+			bcdbin[CD_track[2].beg_fra] - bcdbin[CD_track[1].beg_fra]);
 
+	switch (CD_emulation)
+	{
+		case 2:
+			CD_track[0x02].length = filesize (iso_FILE) / 2048;
+			break;
+		case 3:
+			CD_track[0x02].length = packed_iso_filesize / 2048;
+			break;
+		case 4:
+			CD_track[0x02].length = 140000;
+			break;
+		default:
+			break;
+	}
 
+	// Now most track are audio
 
+	for (current_track = 3; current_track < bcdbin[nb_max_track];
+		current_track++) {
 
-  // Now most track are audio
+		Fra = CD_track[current_track - 1].length % CD_FRAMES;
+		Sec = (CD_track[current_track - 1].length / CD_FRAMES) % CD_SECS;
+		Min = (CD_track[current_track - 1].length / CD_FRAMES) / CD_SECS;
 
-  for (current_track = 3; current_track < bcdbin[nb_max_track];
-       current_track++)
-    {
+		CD_track[current_track].beg_min
+			= binbcd[bcdbin[CD_track[current_track - 1].beg_min] + Min];
+		CD_track[current_track].beg_sec
+			= binbcd[bcdbin[CD_track[current_track - 1].beg_sec] + Sec];
+		CD_track[current_track].beg_fra
+			= binbcd[bcdbin[CD_track[current_track - 1].beg_fra] + Fra];
 
-      Fra = CD_track[current_track - 1].length % CD_FRAMES;
-      Sec = (CD_track[current_track - 1].length / CD_FRAMES) % CD_SECS;
-      Min = (CD_track[current_track - 1].length / CD_FRAMES) / CD_SECS;
+		CD_track[current_track].type = 0;
+		CD_track[current_track].beg_lsn
+			= msf2nb_sect (bcdbin[CD_track[current_track].beg_min]
+				- bcdbin[CD_track[1].beg_min],
+				bcdbin[CD_track[current_track].beg_sec]
+				- bcdbin[CD_track[1].beg_sec],
+				bcdbin[CD_track[current_track].beg_fra]
+				- bcdbin[CD_track[1].beg_fra]);
+		// 1 min for all
+		CD_track[current_track].length = 1 * CD_SECS * CD_FRAMES;
+	}
 
-      CD_track[current_track].beg_min =
-	binbcd[bcdbin[CD_track[current_track - 1].beg_min] + Min];
-      CD_track[current_track].beg_sec =
-	binbcd[bcdbin[CD_track[current_track - 1].beg_sec] + Sec];
-      CD_track[current_track].beg_fra =
-	binbcd[bcdbin[CD_track[current_track - 1].beg_fra] + Fra];
+	// And the last one is generally also code
 
-      CD_track[current_track].type = 0;
-      CD_track[current_track].beg_lsn =
-	msf2nb_sect (bcdbin[CD_track[current_track].beg_min] -
-		     bcdbin[CD_track[1].beg_min],
-		     bcdbin[CD_track[current_track].beg_sec] -
-		     bcdbin[CD_track[1].beg_sec],
-		     bcdbin[CD_track[current_track].beg_fra] -
-		     bcdbin[CD_track[1].beg_fra]);
-      // 1 min for all
-      CD_track[current_track].length = 1 * CD_SECS * CD_FRAMES;
+	Fra = CD_track[nb_max_track - 1].length % CD_FRAMES;
+	Sec = (CD_track[nb_max_track - 1].length / CD_FRAMES) % CD_SECS;
+	Min = (CD_track[nb_max_track - 1].length / CD_FRAMES) / CD_SECS;
 
-    }
+	CD_track[nb_max_track].beg_min
+		= binbcd[bcdbin[CD_track[nb_max_track - 1].beg_min] + Min];
+	CD_track[nb_max_track].beg_sec
+		= binbcd[bcdbin[CD_track[nb_max_track - 1].beg_sec] + Sec];
+	CD_track[nb_max_track].beg_fra
+		= binbcd[bcdbin[CD_track[nb_max_track - 1].beg_fra] + Fra];
 
-  // And the last one is generally also code
+	CD_track[nb_max_track].type = 4;
+	CD_track[nb_max_track].beg_lsn
+		= msf2nb_sect (bcdbin[CD_track[nb_max_track].beg_min]
+			- bcdbin[CD_track[1].beg_min],
+			bcdbin[CD_track[nb_max_track].beg_sec]
+			- bcdbin[CD_track[1].beg_sec],
+			bcdbin[CD_track[nb_max_track].beg_fra]
+			- bcdbin[CD_track[1].beg_fra]);
 
-
-  Fra = CD_track[nb_max_track - 1].length % CD_FRAMES;
-  Sec = (CD_track[nb_max_track - 1].length / CD_FRAMES) % CD_SECS;
-  Min = (CD_track[nb_max_track - 1].length / CD_FRAMES) / CD_SECS;
-
-  CD_track[nb_max_track].beg_min =
-    binbcd[bcdbin[CD_track[nb_max_track - 1].beg_min] + Min];
-  CD_track[nb_max_track].beg_sec =
-    binbcd[bcdbin[CD_track[nb_max_track - 1].beg_sec] + Sec];
-  CD_track[nb_max_track].beg_fra =
-    binbcd[bcdbin[CD_track[nb_max_track - 1].beg_fra] + Fra];
-
-  CD_track[nb_max_track].type = 4;
-  CD_track[nb_max_track].beg_lsn =
-    msf2nb_sect (bcdbin[CD_track[nb_max_track].beg_min] -
-		 bcdbin[CD_track[1].beg_min],
-		 bcdbin[CD_track[nb_max_track].beg_sec] -
-		 bcdbin[CD_track[1].beg_sec],
-		 bcdbin[CD_track[nb_max_track].beg_fra] -
-		 bcdbin[CD_track[1].beg_fra]);
-
-  /* Thank to Nyef for having localised a little bug there */
-  switch (CD_emulation)
-    {
-    case 2:
-      CD_track[nb_max_track].length = filesize (iso_FILE) / 2048;
-      break;
-    case 3:
-      CD_track[nb_max_track].length = packed_iso_filesize / 2048;
-      break;
-    case 4:
-      CD_track[nb_max_track].length = 14000;
-      break;
-    default:
-      break;
-    }
-
-  return;
+	/* Thank to Nyef for having localised a little bug there */
+	switch (CD_emulation) {
+		case 2:
+			CD_track[nb_max_track].length = filesize (iso_FILE) / 2048;
+			break;
+		case 3:
+			CD_track[nb_max_track].length = packed_iso_filesize / 2048;
+			break;
+		case 4:
+			CD_track[nb_max_track].length = 14000;
+			break;
+		default:
+			break;
+	}
 }
 
 
@@ -702,87 +591,22 @@ read_sector_BIN (unsigned char *p, UInt32 sector)
 
 }
 
+
 void
 read_sector_ISQ (unsigned char *p, UInt32 sector)
 {
-
-#ifdef ALLEGRO
-
-  int result;
-  UInt32 dummy;
-
-/*
-####################################
-####################################
-####################################
-####################################
-2KILL :: BEGIN
-####################################
-####################################
-####################################
-####################################
-*/
-
-  for (result = bcdbin[nb_max_track]; result > 0x01; result--)
-    {
-      if ((sector >= CD_track[binbcd[result]].beg_lsn) &&
-	  (sector <= CD_track[binbcd[result]].beg_lsn +
-	   CD_track[binbcd[result]].length))
-	break;
-    }
-
-  if (result != 0x02)
-    {
-      Log ("Read on non track 2\nTrack %d asked\nsector : 0x%x\n", result,
-	   pce_cd_sectoraddy);
-      exit (-10);
-    }
-
-#ifndef FINAL_RELEASE
-  fprintf (stderr, "Loading sector n�%d.\n", pce_cd_sectoraddy);
-#endif
-
-  dummy = (sector - CD_track[binbcd[result]].beg_lsn) * 2048;
-
-  if (ISQ_position > dummy)
-    {
-      pack_fclose (packed_iso_FILE);
-      packed_iso_FILE = pack_fopen (ISO_filename, F_READ_PACKED);
-      pack_fseek (packed_iso_FILE, dummy);
-      ISQ_position = dummy;
-    }
-  else if (ISQ_position < dummy)
-    {
-      pack_fseek (packed_iso_FILE, dummy - ISQ_position);
-      ISQ_position = dummy;
-    }
-
-  pack_fread (p, 2048, packed_iso_FILE);
-
-  ISQ_position += 2048;
-
-#endif
-/*
-####################################
-####################################
-####################################
-####################################
-2KILL :: END
-####################################
-####################################
-####################################
-####################################
-*/
-
+	// Only for allegro?
 }
+
 
 #define CD_BUF_LENGTH 8
 UInt32 first_sector = 0;
 
+
 void
 read_sector_CD (unsigned char *p, UInt32 sector)
 {
-  int i;
+	int i;
 #ifndef FINAL_RELEASE
   Log ("Reading sector : %d\n", sector);
 #endif
@@ -2295,387 +2119,165 @@ CartLoad (char *name)
 }
 
 
-#ifndef KERNEL_DS
-int
-ResetPCE (M6502 * M)
-{
-  int i;
-
-  memset (M, 0, sizeof (*M));
-  memset (SPRAM, 0, 64 * 8);
-
-  TimerCount = TimerPeriod;
-  M->IPeriod = IPeriod;
-  M->TrapBadOps = 1;
-  memset (&io, 0, sizeof (IO));
-  scanline = 0;
-  io.vdc_status = 0;
-  io.vdc_inc = 1;
-  io.minline = 0;
-  io.maxline = 255;
-  io.irq_mask = 0;
-  io.psg_volume = 0;
-  io.psg_ch = 0;
-
-/* TEST */
-  io.screen_w = 255;
-/* TEST */// normally 256
-
-/* TEST */
-//   io.screen_h = 214;
-/* TEST */
-
-/* TEST */
-//      io.screen_h = 240;
-/* TEST */
-
-  io.screen_h = 224;
-
-  {
-    UInt32 x, y = (WIDTH - io.screen_w) / 2 - 512 * WIDTH;
-    for (x = 0; x < 1024; x++)
-      {
-	spr_init_pos[x] = y;
-	y += WIDTH;
-      }
-    //pos = WIDTH*(HEIGHT-FC_H)/2+(WIDTH-FC_W)/2+WIDTH*y+x;
-  }
-
-  for (i = 0; i < 6; i++)
-    {
-      io.PSG[i][4] = 0x80;
-    }
-  CycleOld = 0;
-  Reset6502 (M);
-
-  if (debug_on_beginning)
-    {
-
-      Bp_list[GIVE_HAND_BP].position = M->PC.W;
-
-      Bp_list[GIVE_HAND_BP].original_op = Op6502 (M->PC.W);
-
-      Bp_list[GIVE_HAND_BP].flag = ENABLED;
-
-      Wr6502 (M->PC.W, 0xB + 0x10 * GIVE_HAND_BP);
-
-    }
-
-  if (((CD_emulation >= 2) && (CD_emulation <= 5))
-      && (!strcmp (ISO_filename, "")))
-    CD_emulation = 0;		// if no ISO name given, give up the emulation
-
-  if ((CD_emulation == 2) || (CD_emulation == 4))
-    {
-
-      if (!(iso_FILE = fopen (ISO_filename, "rb")))
-	{
-	  sprintf (exit_message, MESSAGE[language][iso_file_not_found],
-		   ISO_filename);
-	  return 1;
-	}
-
-      fill_cd_info ();
-
-    }
-/*
-####################################
-####################################
-####################################
-####################################
-2KILL :: BEGIN
-####################################
-####################################
-####################################
-####################################
-*/
-#ifdef ALLEGRO
-  else if (CD_emulation == 3)
-    {
-
-      if (!(packed_iso_FILE = pack_fopen (ISO_filename, F_READ_PACKED)))
-	{
-	  sprintf (exit_message, MESSAGE[language][iso_file_not_found],
-		   ISO_filename);
-	  return 1;
-	}
-
-      packed_iso_filesize = 0;
-      while (!pack_feof (packed_iso_FILE))
-	{
-	  pack_getc (packed_iso_FILE);
-	  packed_iso_filesize++;
-	}
-
-      Log ("packed filesize is %d\n", packed_iso_filesize);
-
-      pack_fclose (packed_iso_FILE);
-      packed_iso_FILE = pack_fopen (ISO_filename, F_READ_PACKED);
-
-      ISQ_position = 0;
-
-    }
-#endif
-/*
-####################################
-####################################
-####################################
-####################################
-2KILL :: END
-####################################
-####################################
-####################################
-####################################
-*/
-
-  Log ("Cd_emulation is %d\n", CD_emulation);
-
-  if (CD_emulation)
-    {
-      // We set illegal opcodes to handle CD Bios functions
-      UInt16 x;
-
-      Log ("Will hook cd functions\n");
-
-      if (!minimum_bios_hooking)
-	for (x = 0x01; x < 0x4D; x++)
-	  if (x != 0x22)	// the 0x22th jump is special, points to a one byte routine
-	    {
-	      UInt16 dest;
-	      dest = Op6502 (0xE000 + x * 3 + 1);
-	      dest += 256 * Op6502 (0xE000 + x * 3 + 2);
-
-	      CDBIOS_replace[x][0] = Op6502 (dest);
-	      CDBIOS_replace[x][1] = Op6502 (dest + 1);
-
-	      Wr6502 (dest, 0xFC);
-	      Wr6502 (dest + 1, x);
-
-	    }
-
-    }
-  return 0;
-}
-#else
 int
 ResetPCE ()
 {
-  int i;
+	int i;
 
-  memset (SPRAM, 0, 64 * 8);
+	memset (SPRAM, 0, 64 * 8);
 
-  TimerCount = TimerPeriod;
-  memset (&io, 0, sizeof (IO));
-  scanline = 0;
-  io.vdc_status = 0;
-  io.vdc_inc = 1;
-  io.minline = 0;
-  io.maxline = 255;
-  io.irq_mask = 0;
-  io.psg_volume = 0;
-  io.psg_ch = 0;
+	TimerCount = TimerPeriod;
+	memset (&io, 0, sizeof (IO));
+	scanline = 0;
+	io.vdc_status = 0;
+	io.vdc_inc = 1;
+	io.minline = 0;
+	io.maxline = 255;
+	io.irq_mask = 0;
+	io.psg_volume = 0;
+	io.psg_ch = 0;
 
-  zp_base = RAM;
-  sp_base = RAM + 0x100;
+	zp_base = RAM;
+	sp_base = RAM + 0x100;
 
-/* TEST */
-  io.screen_w = 255;
-/* TEST */// normally 256
+	/* TEST */
+	io.screen_w = 255;
+	/* TEST normally 256 */
 
-/* TEST */
-//   io.screen_h = 214;
-/* TEST */
+	/* TEST */
+	// io.screen_h = 214;
+	/* TEST */
 
-/* TEST */
-//      io.screen_h = 240;
-/* TEST */
+	/* TEST */
+	//  io.screen_h = 240;
+	/* TEST */
 
-  io.screen_h = 224;
+	io.screen_h = 224;
 
-  {
-    UInt32 x, y = (WIDTH - io.screen_w) / 2 - 512 * WIDTH;
-    for (x = 0; x < 1024; x++)
-      {
-	spr_init_pos[x] = y;
-	y += WIDTH;
-      }
-    //pos = WIDTH*(HEIGHT-FC_H)/2+(WIDTH-FC_W)/2+WIDTH*y+x;
-  }
+	{
+		UInt32 x, y = (WIDTH - io.screen_w) / 2 - 512 * WIDTH;
+		for (x = 0; x < 1024; x++) {
+			spr_init_pos[x] = y;
+			y += WIDTH;
+		}
+		// pos = WIDTH*(HEIGHT-FC_H)/2+(WIDTH-FC_W)/2+WIDTH*y+x;
+	}
 
-  for (i = 0; i < 6; i++)
-    {
-      io.PSG[i][4] = 0x80;
-    }
-  CycleOld = 0;
+	for (i = 0; i < 6; i++) {
+		io.PSG[i][4] = 0x80;
+	}
+
+	CycleOld = 0;
 
 #if !defined(TEST_ROM_RELOCATED)
-  mmr[7] = 0x00;
-  bank_set (7, 0x00);
+	mmr[7] = 0x00;
+	bank_set (7, 0x00);
 
-  mmr[6] = 0x05;
-  bank_set (6, 0x05);
+	mmr[6] = 0x05;
+	bank_set (6, 0x05);
 
-  mmr[5] = 0x04;
-  bank_set (5, 0x04);
+	mmr[5] = 0x04;
+	bank_set (5, 0x04);
 
-  mmr[4] = 0x03;
-  bank_set (4, 0x03);
+	mmr[4] = 0x03;
+	bank_set (4, 0x03);
 
-  mmr[3] = 0x02;
-  bank_set (3, 0x02);
+	mmr[3] = 0x02;
+	bank_set (3, 0x02);
 
-  mmr[2] = 0x01;
-  bank_set (2, 0x01);
-
+	mmr[2] = 0x01;
+	bank_set (2, 0x01);
 #else
-  mmr[7] = 0x68;
-  bank_set (7, 0x68);
+	mmr[7] = 0x68;
+	bank_set (7, 0x68);
 
-  mmr[6] = 0x05;
-  bank_set (6, 0x05 + 0x68);
+	mmr[6] = 0x05;
+	bank_set (6, 0x05 + 0x68);
 
-  mmr[5] = 0x04;
-  bank_set (5, 0x04 + 0x68);
+	mmr[5] = 0x04;
+	bank_set (5, 0x04 + 0x68);
 
-  mmr[4] = 0x03;
-  bank_set (4, 0x03 + 0x68);
+	mmr[4] = 0x03;
+	bank_set (4, 0x03 + 0x68);
 
-  mmr[3] = 0x02;
-  bank_set (3, 0x02 + 0x68);
+	mmr[3] = 0x02;
+	bank_set (3, 0x02 + 0x68);
 
-  mmr[2] = 0x01;
-  bank_set (2, 0x01 + 0x68);
+	mmr[2] = 0x01;
+	bank_set (2, 0x01 + 0x68);
+#endif /* TEST_ROM_RELOCATED */
 
-#endif
+	mmr[1] = 0xF8;
+	bank_set (1, 0xF8);
 
-  mmr[1] = 0xF8;
-  bank_set (1, 0xF8);
+	mmr[0] = 0xFF;
+	bank_set (0, 0xFF);
 
-  mmr[0] = 0xFF;
-  bank_set (0, 0xFF);
+	reg_a = reg_x = reg_y = 0x00;
+	reg_p = FL_TIQ;
 
-  reg_a = reg_x = reg_y = 0x00;
-  reg_p = FL_TIQ;
+	reg_s = 0xFF;
 
-  reg_s = 0xFF;
+	reg_pc = Op6502 (VEC_RESET) + 256 * Op6502 (VEC_RESET + 1);
 
-  reg_pc = Op6502 (VEC_RESET) + 256 * Op6502 (VEC_RESET + 1);
+	CycleNew = 0;
 
-  CycleNew = 0;
-
-  if (debug_on_beginning)
-    {
-
-      Bp_list[GIVE_HAND_BP].position = reg_pc;
-
-      Bp_list[GIVE_HAND_BP].original_op = Op6502 (reg_pc);
-
-      Bp_list[GIVE_HAND_BP].flag = ENABLED;
-
-      Wr6502 (
-				reg_pc,
-				0xB + 0x10 * GIVE_HAND_BP
-			);
-
-    }
-
-  if (((CD_emulation >= 2) && (CD_emulation <= 5))
-      && (!strcmp (ISO_filename, "")))
-    CD_emulation = 0;		// if no ISO name given, give up the emulation
-
-  if ((CD_emulation == 2) || (CD_emulation == 4))
-    {
-
-      if (!(iso_FILE = fopen (ISO_filename, "rb")))
-	{
-	  sprintf (exit_message, MESSAGE[language][iso_file_not_found],
-		   ISO_filename);
-	  return 1;
+	if (debug_on_beginning) {
+		Bp_list[GIVE_HAND_BP].position = reg_pc;
+		Bp_list[GIVE_HAND_BP].original_op = Op6502 (reg_pc);
+		Bp_list[GIVE_HAND_BP].flag = ENABLED;
+		Wr6502 (
+			reg_pc,
+			0xB + 0x10 * GIVE_HAND_BP
+		);
 	}
 
-      fill_cd_info ();
-
-    }
-/*
-####################################
-####################################
-####################################
-####################################
-2KILL :: END
-####################################
-####################################
-####################################
-####################################
-*/
-#ifdef ALLEGRO
-  else if (CD_emulation == 3)
-    {
-
-      if (!(packed_iso_FILE = pack_fopen (ISO_filename, F_READ_PACKED)))
-	{
-	  sprintf (exit_message, MESSAGE[language][iso_file_not_found],
-		   ISO_filename);
-	  return 1;
+	if (((CD_emulation >= 2) && (CD_emulation <= 5))
+		&& (!strcmp (ISO_filename, ""))) {
+		CD_emulation = 0;
+			// if no ISO name given, give up the emulation
 	}
 
-      packed_iso_filesize = 0;
-      while (!pack_feof (packed_iso_FILE))
-	{
-	  pack_getc (packed_iso_FILE);
-	  packed_iso_filesize++;
+	if ((CD_emulation == 2) || (CD_emulation == 4)) {
+
+		if (!(iso_FILE = fopen (ISO_filename, "rb"))) {
+			MESSAGE_ERROR("Provided ISO image not found\n");
+			TRACE("Input: %s\n", ISO_filename);
+			return 1;
+		}
+
+		fill_cd_info ();
 	}
 
-      Log ("packed filesize is %d\n", packed_iso_filesize);
+	TRACE("CD Emulation is %d\n", CD_emulation);
 
-      pack_fclose (packed_iso_FILE);
-      packed_iso_FILE = pack_fopen (ISO_filename, F_READ_PACKED);
+	if (CD_emulation) {
+		// We set illegal opcodes to handle CD Bios functions
+		UInt16 x;
 
-      ISQ_position = 0;
+		TRACE("Will hook CD functions\n");
 
-    }
-#endif
-/*
-####################################
-####################################
-####################################
-####################################
-2KILL :: END
-####################################
-####################################
-####################################
-####################################
-*/
+		/* TODO : reenable minimum_bios_hooking when bios hooking rewritten */
 
-  Log ("Cd_emulation is %d\n", CD_emulation);
+		if (!minimum_bios_hooking)
+			for (x = 0x01; x < 0x4D; x++)
+				if (x != 0x22) {
+					// the 0x22th jump is special, points to a one byte routine
+					UInt16 dest;
+					dest = Op6502 (0xE000 + x * 3 + 1);
+					dest += 256 * Op6502 (0xE000 + x * 3 + 2);
 
-  if (CD_emulation)
-    {
-      // We set illegal opcodes to handle CD Bios functions
-      UInt16 x;
+					CDBIOS_replace[x][0] = Op6502 (dest);
+					CDBIOS_replace[x][1] = Op6502 (dest + 1);
 
-      Log ("Will hook cd functions\n");
-/* TODO : reenable minimum_bios_hooking when bios hooking rewritten */
+					Wr6502 (dest, 0xFC);
+					Wr6502 (dest + 1, x);
+				}
 
-      if (!minimum_bios_hooking)
-	for (x = 0x01; x < 0x4D; x++)
-	  if (x != 0x22)	// the 0x22th jump is special, points to a one byte routine
-	    {
-	      UInt16 dest;
-	      dest = Op6502 (0xE000 + x * 3 + 1);
-	      dest += 256 * Op6502 (0xE000 + x * 3 + 2);
+	}
 
-	      CDBIOS_replace[x][0] = Op6502 (dest);
-	      CDBIOS_replace[x][1] = Op6502 (dest + 1);
-
-	      Wr6502 (dest, 0xFC);
-	      Wr6502 (dest + 1, x);
-
-	    }
-
-    }
-  return 0;
+	return 0;
 }
-#endif
 
 
 int
