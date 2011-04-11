@@ -16,7 +16,7 @@
 #ifndef _NETPLAY_H
 #define _NETPLAY_H
 
-#include "hugod.h"
+#include "hukud.h"
 
 #ifdef __cplusplus
 extern "C"

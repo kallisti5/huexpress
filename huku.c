@@ -1,4 +1,4 @@
-#include "hugo.h"
+#include "huku.h"
 
 
 //! name of the backup ram filename
@@ -14,7 +14,7 @@ struct hugo_options option;
  * \return zero on success else non zero value
  */
 int
-initialisation (int argc, char *argv[])
+init_host(int argc, char *argv[])
 {
 	memset (&option, 0, sizeof (option));
 
@@ -115,7 +115,7 @@ game_asked()
  * \return non zero if another game has to be launched
  */
 int
-play_game (void)
+play_game(void)
 {
 
 	// Initialise the target machine (pce)
@@ -129,7 +129,7 @@ play_game (void)
 		return 0;
 	}
 
-	if (!osd_snd_init_sound ())
+	if (!osd_snd_init_sound())
 	{
 		Log ("Couldn't open any sound hardware on the host machine.\n");
 		printf (MESSAGE[language][audio_init_failed]);
@@ -162,7 +162,8 @@ play_game (void)
 int
 main (int argc, char *argv[])
 {
-	int error = initialisation(argc, argv);
+	// initialize host emulator
+	int error = init_host(argc, argv);
 
 #if defined(GTK)
 	if (!error) {
@@ -177,7 +178,7 @@ main (int argc, char *argv[])
 		if (game_asked()) {
 			while (play_game());
 		} else {
-			printf("No game specified\n");
+			printf(" * No game specified\n");
 		}
 	}
 #endif

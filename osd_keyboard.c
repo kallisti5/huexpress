@@ -614,7 +614,7 @@ sdl_init_joypads (void)
   int n;
   int joypad_number = SDL_NumJoysticks();
 
-	printf("Found %d joypad%s\n", joypad_number, joypad_number > 1 ? "s" : "");
+	printf(" * Found %d joypad%s\n", joypad_number, joypad_number > 1 ? "s" : "");
 
   for (n = 0; n < joypad_number; n++)
     {
