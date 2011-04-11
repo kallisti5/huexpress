@@ -1,6 +1,8 @@
 #ifndef _INCLUDE_DEBUG_H
 #define _INCLUDE_DEBUG_H
 
+#include <stdio.h>
+
 #include "pce.h"
 #include "dis.h"
 #include "optable.h"
@@ -23,14 +25,16 @@
 #define ENABLED    1
 #define DISABLED   2
 
+#define TRACE(x...) printf("DD " x)
+#define MESSAGE_ERROR(x...) printf("!! " x)
+#define MESSAGE_INFO(x...) printf(" * " x)
 
 typedef struct
 {
-  UInt16 position;
-  UChar flag;
-  UChar original_op;
-}
-Breakpoint;
+	UInt16 position;
+	UChar flag;
+	UChar original_op;
+} Breakpoint;
 
 extern UInt16 Bp_pos_to_restore;
 // Used in RESTORE_BP to know where we must restore a BP

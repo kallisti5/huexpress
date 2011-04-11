@@ -75,7 +75,7 @@ init_host(int argc, char *argv[])
 	// Initialise the input devices
 	if (osd_init_input () != 0)
 	{
-		fprintf (stderr, "Initialization of input system failed\n");
+		MESSAGE_ERROR("Initialization of input system failed\n");
 		return (-2);
 	}
 
@@ -124,17 +124,15 @@ play_game(void)
 
 	if (!(*osd_gfx_driver_list[video_driver].init) ())
 	{
-		Log("Can't set graphic mode\n");
-		printf (MESSAGE[language][cant_set_gmode]);
+		MESSAGE_ERROR("Can't set graphic resolution\n");
 		return 0;
 	}
 
 	if (!osd_snd_init_sound())
 	{
-		Log ("Couldn't open any sound hardware on the host machine.\n");
-		printf (MESSAGE[language][audio_init_failed]);
+		MESSAGE_ERROR("Couldn't open any sound hardware on the host machine.\n");
 	} else
-		printf (MESSAGE[language][audio_inited], 8, "SDL compatible soundcard",
+		MESSAGE_INFO("Initilized audio, SDL compatible soundcard. %dHz\n",
 			host.sound.freq);
 
 #if defined(ENABLE_NETPLAY)
@@ -162,6 +160,7 @@ play_game(void)
 int
 main (int argc, char *argv[])
 {
+	MESSAGE_INFO("Hu-KU!, the PCEngine emulator for Haiku\n");
 	// initialize host emulator
 	int error = init_host(argc, argv);
 
@@ -178,7 +177,7 @@ main (int argc, char *argv[])
 		if (game_asked()) {
 			while (play_game());
 		} else {
-			printf(" * No game specified\n");
+			MESSAGE_ERROR("No game specified\n");
 		}
 	}
 #endif

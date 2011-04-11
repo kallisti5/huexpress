@@ -39,49 +39,41 @@ UInt32 interrupt_60hz(UInt32, void*);
 
 int osd_init_machine(void)
 {
+	MESSAGE_INFO("Emulator initialization\n");
 
-  Log ("\n--[ INITIALISE MACHINE ]--------------------------\n");
-		
-  if (SDL_Init(SDL_INIT_TIMER)) {
-	  Log("Could not initialise SDL : %s\n",SDL_GetError());
-	  return 0;
-  }
+	if (SDL_Init(SDL_INIT_TIMER)) {
+		MESSAGE_ERROR("Could not initialise SDL : %s\n", SDL_GetError());
+		return 0;
+	}
 
-  atexit(SDL_Quit);
+	atexit(SDL_Quit);
 
-  printf (MESSAGE[language][init_allegro]);
+	if (!(XBuf = (UChar*)malloc(XBUF_WIDTH * XBUF_HEIGHT)))
+	{
+		MESSAGE_ERROR("Initialization failed...\n");
+		TRACE("%s, couldn't malloc XBuf\n", __func__);
+		return (0);
+	}
 
-  printf (MESSAGE[language][translated_by]);
+	printf (MESSAGE[language][clear_buffer]);
+	MESSAGE_INFO("Clearing buffers...\n");
+	bzero(XBuf, XBUF_WIDTH * XBUF_HEIGHT);
 
-  if (!(XBuf = (UChar*)malloc(XBUF_WIDTH * XBUF_HEIGHT)))
-    {
-      printf (MESSAGE[language][failed_init]);
-      return (0);
-    }
+	MESSAGE_INFO("Initiating sound...\n");
+	InitSound();
 
-  printf (MESSAGE[language][clear_buffer]);
-  bzero (XBuf, XBUF_WIDTH * XBUF_HEIGHT);
+	osd_gfx_buffer = XBuf + 32 + 64 * XBUF_WIDTH;
+		// We skip the left border of 32 pixels and the 64 first top lines
 
-  Log ("Initiating sound\n");
-  printf (MESSAGE[language][init_sound]);
-  InitSound();
+	timerId = SDL_AddTimer(1000 / 60, interrupt_60hz, NULL);
+	if (timerId)
+		MESSAGE_INFO("SDL timer initialization successful\n");
+	else {
+		MESSAGE_ERROR("SDL timer initialization failed...\n");
+		TRACE("Couldn't SDL_AddTimer in %s\n", __func__);
+	}
 
-#ifndef SDL
-  /* Opening joypad number 0 */
-  (int)fd[0] = open ("/dev/js0", O_NONBLOCK);
-#endif
-
-  osd_gfx_buffer = XBuf + 32 + 64 * XBUF_WIDTH; // We skip the left border of 32 pixels and the 64 first top lines
-
-  timerId = SDL_AddTimer(1000 / 60, interrupt_60hz, NULL);
-  if (timerId)
-	  Log("Timer initialised\n");
-  else
-	  Log("Timer non initialised\n");
-	
-  Log ("End of initialisation of the machine\n");
-
-  return 1;
+	return 1;
 }
 
 

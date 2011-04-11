@@ -1,13 +1,16 @@
-#ifndef _INCLUDE_LINUX_OSD_INIT_MACHINE
-#define _INCLUDE_LINUX_OSD_INIT_MACHINE
-
 #include <SDL.h>
 #include <SDL_keysym.h>
+
+#include "debug.h"
 
 #include "sys_dep.h"
 #include "lang.h"
 #include "pce.h"
 #include "osd_sdl_gfx.h"
+
+
+#ifndef _INCLUDE_HAIKU_OSD_INIT_MACHINE
+#define _INCLUDE_HAIKU_OSD_INIT_MACHINE
 
 extern UChar gamepad;
 // gamepad detected ?
@@ -26,4 +29,4 @@ extern int test_parameter;
 
 #endif
 
-#endif
+#endif // end _INCLUDE_HAIKU_OSD_INIT_MACHINE
