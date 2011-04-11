@@ -354,18 +354,12 @@ set_arg (char nb_arg, const char *val)
       US_encoded_card = atoi (val);
       Log ("US Card encoding set to %d\n", US_encoded_card);
       return 0;
-#if defined(ALLEGRO)
-    case 'v':
-      vmode = atoi (val);
-      Log ("Video mode set to %d\n", vmode);
-      return 0;
-#endif
     case 't':
       nb_max_track = atoi (val);
       Log ("Number of tracks set to %d\n", nb_max_track);
       return 0;
     case 'w':
-      option.window_size = max (1, min (4, atoi (val)));
+      option.window_size = max(1, min (4, atoi (val)));
       Log ("Window size set to %d\n", option.window_size);
       return 0;
 
@@ -491,12 +485,6 @@ parse_opt (int key, char *arg, struct argp_state *state)
       US_encoded_card = (arg == NULL ? 1 : atoi (arg));
       Log ("US Card encoding set to %d\n", US_encoded_card);
       break;
-#if defined(ALLEGRO)
-    case 'v':
-      vmode = atoi (arg);
-      Log ("Video mode set to %d\n", vmode);
-      break;
-#endif
     case 't':
       nb_max_track = atoi (arg);
       Log ("Number of tracks set to %d\n", nb_max_track);
@@ -549,35 +537,23 @@ static struct argp argp = { options, parse_opt, args_doc, doc };
 void
 parse_commandline (int argc, char **argv)
 {
-#if defined(WIN32) || defined(SOLARIS) || defined(__HAIKU__)
   char next_arg, i, arg_error = 0;
-#endif
 
-  Log ("--[ PARSING COMMAND LINE ]--------------------------\n");
-
-#if !defined(WIN32) && !defined(SOLARIS) && !defined(__HAIKU__)
-  argp_parse (&argp, argc, argv, 0, 0, &option);
-#else
   next_arg = 0;
   for (i = 1; i < argc; i++)
-    if (!next_arg)
-      {
-	if (argv[i][0] == '-')
-	  {
-	    if (strlen (argv[i]) == 2)
-	      {
-		switch (argv[i][1])
-		  {
-		  default:
-		    next_arg = argv[i][1];
-		    break;
-		  }
-	      }
-	    else
-	      arg_error |= set_arg (argv[i][1], (char *) &argv[i][2]);
-	  }
-	else
-	  {
+    if (!next_arg) {
+		if (argv[i][0] == '-') {
+	    	if (strlen (argv[i]) == 2) {
+				switch (argv[i][1])
+		 		{
+		  			default:
+		    			next_arg = argv[i][1];
+		    			break;
+		  		}
+	      	} else {
+				arg_error |= set_arg (argv[i][1], (char *) &argv[i][2]);
+			}
+	  	} else {
 	    if (!cart_name[0])
 	      {
 		strcpy (cart_name, argv[i]);
@@ -614,8 +590,6 @@ parse_commandline (int argc, char **argv)
       arg_error = 1;
     };
 
-#endif
-
   Log ("End of parsing command line\n");
 
   video_driver = 0;
@@ -645,15 +619,6 @@ parse_INIfile_raw ()
 
   Log ("Setting initial path to %s\n", initial_path);
 
-#if defined(ALLEGRO)
-
-  strcpy (skin_filename, get_config_string ("main", "skin", "skin_h~1.bmp"));
-  // skin filename to look for
-
-  Log ("Skin filename set to %s\n", skin_filename);
-
-#endif
-
   current_config = get_config_int ("main", "config", 0);
   // choose input config
 
@@ -663,19 +628,6 @@ parse_INIfile_raw ()
   // language setting
 
   Log ("Setting language to %d\n", language);
-
-#if defined(ALLEGRO)
-  vmode = get_config_int ("main", "vmode", 0);
-  // video mode setting
-
-  Log ("Setting video mode to %d\n", vmode);
-
-  static_refresh = get_config_int ("main", "static_refresh", 0);
-  // file selector refreshment
-
-  Log ("Setting static refresh to %d\n", static_refresh);
-
-#endif
 
   smode = get_config_int ("main", "smode", -1);
   // sound mode setting
@@ -716,14 +668,6 @@ parse_INIfile_raw ()
 
   Log ("Setting sound driver to %d\n", sound_driver);
 
-#if defined(ALLEGRO)
-
-  zip_support_in_fs = get_config_int ("main", "zip_support", 1);
-
-  Log ("Setting zip support in File Selector to %d\n", zip_support_in_fs);
-
-#endif
-
   synchro = get_config_int ("main", "limit_fps", 0);
 
   Log ("Setting fps limitation to %d\n", synchro);
@@ -737,14 +681,14 @@ parse_INIfile_raw ()
 
   Log ("Setting fullscreen aspect to %d\n", option.want_fullscreen_aspect);
 
-  option.want_hardware_scaling = get_config_int ("main", "use_overlay", 0);
+  option.want_hardware_scaling = get_config_int ("main", "use_overlay", 1);
   Log ("Setting hardware scaling to %d\n", option.want_hardware_scaling);
 
   option.want_stereo = get_config_int ("main", "stereo_sound", 0);
 
   Log ("Setting stereo sound to %d\n", option.want_stereo);
 
-  option.window_size = get_config_int ("main", "window_size", 1);
+  option.window_size = get_config_int ("main", "window_size", 2);
 
   Log ("Setting window size to %d\n", option.window_size);
 

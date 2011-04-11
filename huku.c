@@ -24,7 +24,8 @@ init_host(int argc, char *argv[])
 	option.configure_joypads = FALSE;
 	option.want_hardware_scaling = FALSE;
 
-	option.window_size = 1;
+	// 2 is a good default multiplier for modern desktops
+	option.window_size = 2;
 
 #if defined(ENABLE_NETPLAY)
 	option.local_input_mapping[0] = 0;
