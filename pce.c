@@ -356,8 +356,8 @@ UInt32 interrupt_60hz (UInt32 interval, void *param)
 void
 init_log_file ()
 {
-	unlink (log_filename);
-	Log ("Creating log file %s\n", __DATE__);
+	unlink(log_filename);
+	Log("Creating log file %s\n", __DATE__);
 }
 
 

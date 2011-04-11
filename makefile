@@ -38,7 +38,7 @@ SRCS=pce.c pcecd.c hard_pce.c sprite.c h6280.c view_zp.c edit_ram.c debug.c form
 
 #	specify the resource definition files to use
 #	full path or a relative path to the resource file can be used.
-RDEFS= 
+RDEFS=HuKU.rdef
 	
 #	specify the resource files to use. 
 #	full path or a relative path to the resource file can be used.
