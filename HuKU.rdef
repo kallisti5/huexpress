@@ -1,5 +1,5 @@
 
-resource app_signature "application/x-vnd.HuKU";
+resource app_signature "application/x-SDL-executable";
 
 resource app_version {
 	major  = 0,
