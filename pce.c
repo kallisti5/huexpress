@@ -367,7 +367,6 @@ extern int op6502_nb;
 void
 fill_cd_info ()
 {
-
 	UChar Min, Sec, Fra;
 	UChar current_track;
 
@@ -401,7 +400,7 @@ fill_cd_info ()
 	switch (CD_emulation)
 	{
 		case 2:
-			CD_track[0x02].length = filesize (iso_FILE) / 2048;
+			CD_track[0x02].length = filesize(iso_FILE) / 2048;
 			break;
 		case 3:
 			CD_track[0x02].length = packed_iso_filesize / 2048;
@@ -1825,6 +1824,7 @@ ResetPCE ()
 			// if no ISO name given, give up the emulation
 	}
 
+
 	if ((CD_emulation == 2) || (CD_emulation == 4)) {
 
 		if (!(iso_FILE = fopen (ISO_filename, "rb"))) {
@@ -1916,61 +1916,33 @@ InitPCE (char *name, char *backmemname)
 		i++;
 	}
 
-	if (strlen (short_iso_name))
-		if (short_iso_name[strlen (short_iso_name) - 1] != '.')
-			{
+	if (strlen (short_iso_name)) {
+		if (short_iso_name[strlen (short_iso_name) - 1] != '.') {
 				short_iso_name[strlen (short_iso_name) + 1] = 0;
 				short_iso_name[strlen (short_iso_name)] = '.';
-			}
+		}
+	}
 
-#ifdef WIN32
+	char home_directory[256];
 
-	switch (CD_emulation)
-		{
+	strcpy (home_directory, getenv ("HOME"));
+
+	switch (CD_emulation) {
 		case 0:
-			sprintf (sav_path, "%s%ssav", sav_basepath, short_cart_name);
+			sprintf (sav_path, "%s/.huku/%ssav", home_directory, short_cart_name);
 			break;
 		case 1:
-			sprintf (sav_path, "%scd_sav", sav_basepath);
+			sprintf (sav_path, "%s/cd_sav", short_exe_name);
 			break;
 		case 2:
 		case 3:
 		case 4:
 		case 5:
-			sprintf (sav_path, "%s%ssvi", sav_basepath, short_iso_name);
+			sprintf (sav_path, "%s/cd.svi", short_exe_name);
 			break;
 		}
 
-	Log ("Saved path is %s\n", sav_path);
-
-#else
-
-	{
-		char home_directory[256];
-
-		strcpy (home_directory, getenv ("HOME"));
-
-		switch (CD_emulation)
-			{
-			case 0:
-	sprintf (sav_path, "%s/.huku/%ssav", home_directory, short_cart_name);
-	break;
-			case 1:
-	sprintf (sav_path, "%s/.huku/cd_sav", short_exe_name);
-	break;
-			case 2:
-			case 3:
-			case 4:
-			case 5:
-	sprintf (sav_path, "%s/.huku/%ssvi", short_exe_name, short_iso_name);
-	break;
-			}
-
-		Log ("Saved path is %s\n", sav_path);
-
-	}
-
-#endif
+	MESSAGE_INFO("Saved path is %s\n", sav_path);
 
 	// Set the base frequency
 	BaseClock = 7800000;
@@ -2286,15 +2258,15 @@ int
 RunPCE (void)
 {
 	if (!ResetPCE (&M))
-		Run6502 ();
+		Run6502();
 	return 1;
 }
 #else
 int
 RunPCE (void)
 {
-	if (!ResetPCE ())
-		exe_go ();
+	if (!ResetPCE())
+		exe_go();
 	return 1;
 }
 #endif

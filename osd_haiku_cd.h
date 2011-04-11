@@ -1,5 +1,5 @@
-#ifndef _INCLUDE_BEOS_OSD_CD_H
-#define _INCLUDE_BEOS_OSD_CD_H
+#ifndef _INCLUDE_HAIKU_OSD_CD_H
+#define _INCLUDE_HAIKU_OSD_CD_H
 
 #include <stdio.h>
 #include <sys/types.h>
@@ -9,5 +9,7 @@
 #include "sys_dep.h"
 #include "cd.h"
 
+#include "debug.h"
 
-#endif
+
+#endif /* _INCLUDE_HAIKU_OSD_CD_H */

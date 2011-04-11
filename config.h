@@ -4,7 +4,7 @@
 #define BSD_CD_HARDWARE_SUPPORT 1
 
 /* for hugo developers working on the cd subsystem */
-#undef CD_DEBUG
+#define CD_DEBUG 1
 
 /* Define to one of `_getb67', `GETB67', `getb67' for Cray-2 and Cray-YMP
    systems. This function is required for `alloca.c' support on those systems.
@@ -18,7 +18,7 @@
 /* #undef ENABLE_NETPLAY */
 
 /* defined if user wants a 'clean' binary ( = not for hugo developpers) */
-#define FINAL_RELEASE 1
+#undef FINAL_RELEASE
 
 /* for hugo developers working on the graphics subsystem */
 /* #undef GFX_DEBUG */
@@ -58,7 +58,7 @@
 #define HAVE_LIBSDL 1
 
 /* Define to 1 if you have the `SDL_mixer' library (-lSDL_mixer). */
-#define HAVE_LIBSDL_MIXER 1
+#undef HAVE_LIBSDL_MIXER
 
 /* Define to 1 if you have the SDL_net library */
 #undef HAVE_LIBSDL_NET

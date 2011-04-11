@@ -2,6 +2,7 @@
 
 int osd_cd_init(char *device)
 {
+	MESSAGE_INFO("%s load\n", __func__);
 	return 1;
 }
 

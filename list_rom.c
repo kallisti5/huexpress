@@ -9673,14 +9673,13 @@ ROM_TYPE ROM_LIST[NB_ROM] = {
 #endif
 
 unsigned long
-filesize (FILE * F)
+filesize(FILE *fp)
 {
-  unsigned long old_pos, end;
-  fgetpos (F, (fpos_t *) &old_pos);
-  fseek (F, 0, SEEK_END);
-  fgetpos (F, (fpos_t *) &end);
-  fseek (F, old_pos, SEEK_SET);
-  return end;
+	int prev = ftell(fp);
+	fseek(fp, 0, SEEK_END);
+	int size = ftell(fp);
+	fseek(fp, prev, SEEK_SET);
+	return size;
 }
 
 /*
