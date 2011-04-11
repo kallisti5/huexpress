@@ -14,6 +14,8 @@
 
 #include "pce.h"
 
+#include "debug.h"
+
 #define SUPER_GRAPHX 0x0001
 #define TWO_PART_ROM 0x0002
 #define PINBALL_KEY  0x0004

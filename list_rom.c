@@ -9757,19 +9757,20 @@ void pce_build_romlist(void)
 
   if ((rlf = fopen(rlf_path, "r")) == NULL)
   {
-    perror("Couldn't open ~/.hugo/roms.db for reading");
+	MESSAGE_ERROR("Couldn't open rom database at %s\n", rlf_path);
     return;
   }
 
   if (fscanf(rlf, "%d\n", &pce_romlist_size) == EOF)
   {
-    perror("Failed to read the numeric value heading roms.db");
+	MESSAGE_ERROR("Format of roms database at %s is invalid\n", rlf_path);
     return;
   }
 
   if (pce_romlist_size < 1)
   {
-    fprintf(stdout, "Invalid number of roms specified in roms.db (%d)\n", i);
+	MESSAGE_ERROR("Invalid number of records in rom database at %s\n", rlf_path);
+	TRACE("Records: %d\n", i);
     return;
   }
 

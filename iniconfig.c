@@ -388,7 +388,7 @@ const char *argp_program_bug_address = "<zeograd@zeograd.com>";
 
 //! Program documentation
 static char doc[] =
-  "hugo -- a program to play pc engine games (roms, cds and various kind of dumps)";
+  "huku -- a program to play pc engine games (roms, cds and various kind of dumps)";
 
 //! A description of the arguments we accept
 static char args_doc[] = "<rom filename> <BRAM filename>";
@@ -820,14 +820,14 @@ parse_INIfile ()
   Log ("--[ PARSING INI FILE ]------------------------------\n");
 
 #ifndef LINUX
-  sprintf (config_file, "%shugo.ini", short_exe_name);
+  sprintf (config_file, "%s/huku.ini", short_exe_name);
 #else
   {
 
     char tmp_home[256];
     FILE *f;
 
-    sprintf (tmp_home, "%shugo.ini", short_exe_name);
+    sprintf (tmp_home, "%s/huku.ini", short_exe_name);
 
     f = fopen (tmp_home, "rb");
 
@@ -837,7 +837,7 @@ parse_INIfile ()
 	fclose (f);
       }
     else
-      strcpy (config_file, "/etc/hugo.ini");
+      strcpy (config_file, "/etc/huku.ini");
   }
 #endif
 
@@ -1035,7 +1035,7 @@ save_config (void)
   qsort (config_ar, config_ar_index, sizeof (config_var), config_var_cmp);
 
   // Dump the configuration into a file
-  sprintf (config_name, "%shugo.ini", short_exe_name);
+  sprintf (config_name, "%s/huku.ini", short_exe_name);
   dump_config (config_name);
 
   dispose_config ();

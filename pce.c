@@ -34,7 +34,7 @@
 #include "pcecd.h"
 #endif
 
-#define LOG_NAME "hugo.log"
+#define LOG_NAME "huku.log"
 
 #define CD_FRAMES 75
 #define CD_SECS 60
@@ -279,8 +279,6 @@ UInt32 ISQ_position = 0;
 // struct cdrom_tocentry pce_cd_tocentry;
 
 UChar nb_max_track = 24;	//(NO MORE BCD!!!!!)
-
-//char cdsystem_path[256];
 
 //extern char	 *pCartName;
 
@@ -1445,11 +1443,12 @@ static char syscard_filename[PATH_MAX];
 char*
 search_possible_syscard()
 {
+	MESSAGE_INFO("We need a syscard to load a CD, begining search...\n");
 	FILE* f;
 
-#define POSSIBLE_LOCATION_COUNT 5
+#define POSSIBLE_LOCATION_COUNT 4
 	const char* POSSIBLE_LOCATION[POSSIBLE_LOCATION_COUNT] = {
-		"./","../","/usr/local/lib/hugo/","/usr/lib/hugo/","c:/"
+		"./","../","/usr/local/lib/huku/","/boot/common/data/huku/"
 	};
 
 #define POSSIBLE_FILENAME_COUNT	4
@@ -1460,35 +1459,24 @@ search_possible_syscard()
 	int location, filename;
 	char temp_buffer[PATH_MAX];
 
-	if ((cdsystem_path != NULL) && (strcmp(cdsystem_path, "")))
-		{
-			Log("Testing syscard location : %s\n",cdsystem_path);
-			if ((f = fopen(cdsystem_path,"rb")) != NULL)
-				{
-		fclose(f);
-		return cdsystem_path;
-	}
-		}
-
-
 	for (location = 0; location <= POSSIBLE_LOCATION_COUNT; location++)
-		for (filename = 0; filename < POSSIBLE_FILENAME_COUNT; filename++)
-			{
+		for (filename = 0; filename < POSSIBLE_FILENAME_COUNT; filename++) {
 
 				if (location < POSSIBLE_LOCATION_COUNT)
 					strcpy(temp_buffer, POSSIBLE_LOCATION[location]);
 				else
-					strcpy(temp_buffer, short_exe_name);
+					strcpy(temp_buffer, strcat(short_exe_name, '/'));
 
 				strcat(temp_buffer, POSSIBLE_FILENAME[filename]);
-				Log("Testing syscard location : %s\n",temp_buffer);
-				if ((f = fopen(temp_buffer,"rb")) != NULL)
-					{
-						fclose(f);
-			strncpy(syscard_filename, temp_buffer, sizeof(syscard_filename));
-			return syscard_filename;
-					}
+				TRACE("Checking for CD syscard at : %s\n", temp_buffer);
+				if ((f = fopen(temp_buffer,"rb")) != NULL) {
+					fclose(f);
+					strncpy(syscard_filename, temp_buffer, sizeof(syscard_filename));
+					MESSAGE_INFO("Found CD system card at %s\n", syscard_filename);
+					return syscard_filename;
+				}
 			}
+
 	return NULL;
 }
 
@@ -1511,13 +1499,14 @@ search_syscard()
 	syscard_location = search_possible_syscard();
 
 	if (NULL == syscard_location) {
+		MESSAGE_ERROR("No CD system cards were found, can not continue.\n");
 		return -1;
 	} else {
 		int CD_emulation_bak = CD_emulation;
 		int return_value;
 
 		CD_emulation = 0;
-		return_value = CartLoad(cdsystem_path);
+		return_value = CartLoad(syscard_location);
 		CD_emulation = CD_emulation_bak;
 		return return_value;
 	}
@@ -1535,20 +1524,16 @@ search_syscard()
 								 set true_file_name or builtin_system
 
 *****************************************************************************/
-SInt32
-CartLoad (char *name)
+int
+CartLoad(char *name)
 {
 	FILE *fp = NULL;
 	int fsize;
-#ifdef MSDOS
-	char tmp_path[80];
-#endif
 
 	Log("Trying to load %s\n", name);
+	MESSAGE_INFO("Loading %s\n", name);
 
-	if (CD_emulation == 1)
-		{
-
+	if (CD_emulation == 1) {
 /*
  *			 CD_emulation = 0;
  *
@@ -1559,14 +1544,12 @@ CartLoad (char *name)
  *			 return 0;
  */
 			LOAD_INTEGRATED_SYS_FILE;
-
-		}
+	}
 
 	if (strcasestr (name, ".HCD")) {
 		// Enable Hu-Go! Cd Definition
 		CD_emulation = 5;
-
-		Log ("HCD emulation enabled\n");
+		MESSAGE_INFO("Using Hu-Go! CD definition emulation\n");
 
 		// Load correct ISO filename
 		strcpy (ISO_filename, name);
@@ -1577,31 +1560,36 @@ CartLoad (char *name)
 		LOAD_INTEGRATED_SYS_FILE;
 
 	} else if (strcasestr (name, ".ISO")) {
-			// Enable ISO support
-			CD_emulation = 2;
+		// Enable ISO support
+		CD_emulation = 2;
+		MESSAGE_INFO("Using CD ISO emulation\n");
 
-			// Load correct ISO filename
-			strcpy (ISO_filename, name);
+		// Load correct ISO filename
+		strcpy(ISO_filename, name);
 
-			LOAD_INTEGRATED_SYS_FILE;
+		LOAD_INTEGRATED_SYS_FILE;
 	} else if (strcasestr (name, ".ISQ")) {
-			// Enable ISQ support
-			CD_emulation = 3;
+		// Enable ISQ support
+		CD_emulation = 3;
+		MESSAGE_INFO("Using CD ISQ emulation\n");
 
-			// Load correct ISO filename
-			strcpy (ISO_filename, name);
+		// Load correct ISO filename
+		strcpy (ISO_filename, name);
 
-			LOAD_INTEGRATED_SYS_FILE;
+		LOAD_INTEGRATED_SYS_FILE;
 	} else if (strcasestr (name, ".BIN")) {
-			// Enable BIN support
-			CD_emulation = 4;
+		// Enable BIN support
+		CD_emulation = 4;
+		MESSAGE_INFO("Using CD BIN emulation\n");
 
-			// Load correct ISO filename
-			strcpy (ISO_filename, name);
+		// Load correct ISO filename
+		strcpy (ISO_filename, name);
 
-			LOAD_INTEGRATED_SYS_FILE;
+		LOAD_INTEGRATED_SYS_FILE;
 	} else if (strcasestr (name, ".ZIP")) {
 		char* filename_in_archive = NULL;
+
+		MESSAGE_INFO("Parsing possible ZIP archive\n");
 
 		Log("Testing archive %s\n", name);
 		filename_in_archive = find_possible_filename_in_zip(name);
@@ -1840,12 +1828,11 @@ ResetPCE ()
 	if ((CD_emulation == 2) || (CD_emulation == 4)) {
 
 		if (!(iso_FILE = fopen (ISO_filename, "rb"))) {
-			MESSAGE_ERROR("Provided ISO image not found\n");
-			TRACE("Input: %s\n", ISO_filename);
+			MESSAGE_ERROR("Couldn't read ISO at %s\n", ISO_filename);
 			return 1;
 		}
 
-		fill_cd_info ();
+		fill_cd_info();
 	}
 
 	TRACE("CD Emulation is %d\n", CD_emulation);
@@ -1888,10 +1875,10 @@ InitPCE (char *name, char *backmemname)
 	char *tmp_dummy;
 	char local_us_encoded_card = 0;
 
-	if ((!strcmp (name, "")) && (CD_emulation != 1))
-		return -1;
+	//if ((!strcmp(name, "")) && (CD_emulation != 1))
+	//	return -1;
 
-	if (CartLoad (name))
+	if (CartLoad(name))
 		return -1;
 
 	osd_fix_filename_slashes(cart_name);
@@ -1966,16 +1953,16 @@ InitPCE (char *name, char *backmemname)
 		switch (CD_emulation)
 			{
 			case 0:
-	sprintf (sav_path, "%s/.hugo/%ssav", home_directory, short_cart_name);
+	sprintf (sav_path, "%s/.huku/%ssav", home_directory, short_cart_name);
 	break;
 			case 1:
-	sprintf (sav_path, "%s/.hugo/cd_sav", short_exe_name);
+	sprintf (sav_path, "%s/.huku/cd_sav", short_exe_name);
 	break;
 			case 2:
 			case 3:
 			case 4:
 			case 5:
-	sprintf (sav_path, "%s/.hugo/%ssvi", short_exe_name, short_iso_name);
+	sprintf (sav_path, "%s/.huku/%ssvi", short_exe_name, short_iso_name);
 	break;
 			}
 
@@ -2314,7 +2301,7 @@ RunPCE (void)
 
 
 void
-TrashPCE (char *backmemname)
+TrashPCE(char *backmemname)
 {
 	FILE *fp;
 	char *tmp_buf = (char *) alloca (256);

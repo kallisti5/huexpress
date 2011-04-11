@@ -63,10 +63,10 @@ init_host(int argc, char *argv[])
 
 	// If backup memory name hasn't been overriden on command line, use the default
 	if ((bmdefault) && (strcmp (bmdefault, "")))
-		snprintf (backup_mem, sizeof (backup_mem), "%s%s", short_exe_name,
+		snprintf (backup_mem, sizeof (backup_mem), "%s/%s", short_exe_name,
 			bmdefault);
 	else
-		snprintf (backup_mem, sizeof (backup_mem), "%sbackup.dat",
+		snprintf (backup_mem, sizeof (backup_mem), "%s/backup.dat",
 			short_exe_name);
 
 	// In case of crash, try to free audio related ressources if possible
@@ -119,7 +119,7 @@ play_game(void)
 {
 
 	// Initialise the target machine (pce)
-	if (InitPCE (cart_name, backup_mem) != 0)
+	if (InitPCE(cart_name, backup_mem) != 0)
 		return 0;
 
 	if (!(*osd_gfx_driver_list[video_driver].init) ())
@@ -151,7 +151,7 @@ play_game(void)
 	(*osd_gfx_driver_list[video_driver].shut) ();
 
 	// Free the target machine (pce)
-	TrashPCE (backup_mem);
+	TrashPCE(backup_mem);
 
 	return cart_reload;
 }

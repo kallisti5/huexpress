@@ -194,7 +194,7 @@ osd_init_paths(int argc, char* argv[])
 	// path (when HOME environment variable is available)
 	if (home_path)
 		{			
-			sprintf(short_exe_name,"%s/.hugo/",home_path);
+			sprintf(short_exe_name,"%s/.huku",home_path);
 			
 			// Create directory if not existing
 			mkdir(short_exe_name,0777);			
@@ -204,18 +204,18 @@ osd_init_paths(int argc, char* argv[])
 			strcpy(short_exe_name,"./");
 		}
 	
-  sprintf(log_filename,"%s%s",short_exe_name,"hugo.log");	
+  sprintf(log_filename,"%s/%s",short_exe_name,"huku.log");	
 		
 	// Set a temporary path per user (should it be by process ?)
-	sprintf(tmp_basepath, "%shugo.tmp", short_exe_name);
+	sprintf(tmp_basepath, "%s/hugo.tmp", short_exe_name);
 	mkdir(tmp_basepath, 0777);
 	
 	// Set the saved game directory
-	sprintf (sav_basepath, "%ssav/", short_exe_name);
+	sprintf (sav_basepath, "%s/sav/", short_exe_name);
 	mkdir(sav_basepath, 0777);
 		
 	// Set the video output directory
-  sprintf (video_path, "%svideo/", short_exe_name);
+  sprintf (video_path, "%s/video/", short_exe_name);
 	mkdir(video_path, 0777);
 
 }
