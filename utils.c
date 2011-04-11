@@ -448,13 +448,6 @@ unsigned long TAB_CONST[256] = {
    0X2D02EF8D
 };
 
-#if defined(SOLARIS)
-u_short htons(u_short arg)
-{
-  return (arg >> 8) | ((arg & 0xFF) << 8);
-}
-#endif
-
 void patch_rom(char* filename, int offset, UChar value)
 {
   FILE* f;
@@ -486,7 +479,6 @@ strupr(char *s)
   return t;
 }
 
-#if !defined(FREEBSD)
 char *
 strcasestr (const char *s1, const char *s2)
 {
@@ -500,9 +492,6 @@ strcasestr (const char *s1, const char *s2)
 
   return result;
 }
-#endif
-
-#if !defined(WIN32)
 
 int
 stricmp (char *s1, char *s2)
@@ -517,17 +506,12 @@ stricmp (char *s1, char *s2)
 
   return result;
 }
-#endif
 
 void
 get_directory_from_filename(char* filename)
 {
 	struct stat file_stat;
-#if defined(UNIX)
-	lstat(filename, &file_stat);
-#else
 	stat(filename, &file_stat);
-#endif
 	
 	if (S_ISDIR(file_stat.st_mode))
 	{
