@@ -87,7 +87,7 @@ int InitSound(void)
 
 /* SDL Audio / Mixer Begin */
 /*
-#if defined(SDL) && !defined(SDL_mixer)
+#if !defined(SDL_mixer)
 	  SDL_AudioSpec obtained;
       Log ("Initialisation of SDL sound... ");
       wanted.freq = option.want_snd_freq; // Frequency
@@ -102,14 +102,14 @@ int InitSound(void)
       
       if (SDL_OpenAudio(&wanted,&obtained) < 0) {
 		  printf("Couldn't Open SDL Audio: %s\n",SDL_GetError());
-#endif // driver = 3 && SDL_mixer
+#endif // !SDL_mixer
       if (Mix_OpenAudio(option.want_snd_freq,AUDIO_U8,1,512) < 0) {
 		  printf("Couldn't Open SDL Mixer: %s\n",Mix_GetError());
 
 	return FALSE;
       }
 
-#if defined(SDL) && !defined(SDL_mixer)
+#if !defined(SDL_mixer)
       Log ("OK\nObtained frequency = %d\n",obtained.freq);
       SDL_PauseAudio(0);
 #endif
@@ -169,47 +169,37 @@ write_psg (int ch)
 	}
   }
 */
-  
-  if (sound_driver == 2) // || sound_driver == 3) /* Added 3 (SDL) */
-    {
-      if (dwNewPos > (UInt32) host.sound.freq * SOUND_BUF_MS / 1000)
-        {
+	if (sound_driver == 2) // || sound_driver == 3) /* Added 3 (SDL) */
+	{
+		if (dwNewPos > (UInt32) host.sound.freq * SOUND_BUF_MS / 1000) {
 #ifdef SOUND_DEBUG
-          fprintf (stderr, "sound buffer overrun\n");
+			fprintf (stderr, "sound buffer overrun\n");
 #endif
-          dwNewPos = host.sound.freq * SOUND_BUF_MS / 1000;
-          // Ask it to fill the buffer
-        }
-      else if (sound_driver == 1)
-        {
+			dwNewPos = host.sound.freq * SOUND_BUF_MS / 1000;
+				// Ask it to fill the buffer
+		} else if (sound_driver == 1) {
 #ifdef SOUND_DEBUG
-          Log ("dwNewPos = %d / %d\n", dwNewPos, sbuf_size);
+			Log ("dwNewPos = %d / %d\n", dwNewPos, sbuf_size);
 #endif
-          if (dwNewPos > sbuf_size)
-            {
+			if (dwNewPos > sbuf_size) {
 #ifdef SOUND_DEBUG
-              fprintf (stderr, "sound buffer overrun\n");
+				fprintf (stderr, "sound buffer overrun\n");
 #endif
-              dwNewPos = sbuf_size;
-              // Ask it to fill the buffer
-            }
-
+				dwNewPos = sbuf_size;
+				// Ask it to fill the buffer
+			}
 #ifdef SOUND_DEBUG
-          Log ("After correction, dwNewPos = %d\n", dwNewPos);
+			Log ("After correction, dwNewPos = %d\n", dwNewPos);
 #endif
-
 		}
 	}
 
-#ifdef SOUND_DEBUG
-  Log ("Buffer %d will be filled\n", ch);
-#endif
-  Log ("Buffer %d will be filled\n", ch);
-  WriteBuffer (&sbuf[ch][0], ch, dwNewPos * ds_nChannels);
-  // write DATA 'til dwNewPos
+	Log ("Buffer %d will be filled\n", ch);
+	WriteBuffer(&sbuf[ch][0], ch, dwNewPos * ds_nChannels);
+	// write DATA 'til dwNewPos
 
 #ifdef SOUND_DEBUG
-  Log ("Buffer %d has been filled\n", ch);
+	Log ("Buffer %d has been filled\n", ch);
 #endif
 
 

@@ -640,7 +640,7 @@ read_sector_dummy (unsigned char *p, UInt32 sector)
 
 
 void
-pce_cd_read_sector (void)
+pce_cd_read_sector(void)
 {
 	/* Avoid sound jiggling when accessing some sectors */
 	if (sound_driver == 1)
@@ -1522,7 +1522,7 @@ search_syscard()
 		Description: load a card
 		Parameters: char* name (the filename to load)
 		Return: -1 on error else 0
-								 set true_file_name or builtin_system
+		set true_file_name or builtin_system
 
 *****************************************************************************/
 int
@@ -1531,8 +1531,7 @@ CartLoad(char *name)
 	FILE *fp = NULL;
 	int fsize;
 
-	Log("Trying to load %s\n", name);
-	MESSAGE_INFO("Loading %s\n", name);
+	MESSAGE_INFO("Opening %s...\n", name);
 
 	if (CD_emulation == 1) {
 /*
@@ -1547,7 +1546,12 @@ CartLoad(char *name)
 			LOAD_INTEGRATED_SYS_FILE;
 	}
 
-	if (strcasestr (name, ".HCD")) {
+	if (strcasestr(name, ".PCE")) {
+		// ROM Image
+		CD_emulation = 0;
+		strcpy (true_file_name, name);
+		fp = fopen(name, "rb");
+	} else if (strcasestr (name, ".HCD")) {
 		// Enable Hu-Go! Cd Definition
 		CD_emulation = 5;
 		MESSAGE_INFO("Using Hu-Go! CD definition emulation\n");
@@ -1559,7 +1563,6 @@ CartLoad(char *name)
 			return 1;
 
 		LOAD_INTEGRATED_SYS_FILE;
-
 	} else if (strcasestr (name, ".ISO")) {
 		// Enable ISO support
 		CD_emulation = 2;
@@ -1643,12 +1646,14 @@ CartLoad(char *name)
 		strcpy (true_file_name, tmp_path);
 		fp = fopen (tmp_path, "rb");
 		*/
-	} else {
-			// unknown media format
-			CD_emulation = 0;
-			strcpy (true_file_name, name);
-			fp = fopen (name, "rb");
 	}
+	/*else {
+		// unknown media format
+		CD_emulation = 0;
+		strcpy (true_file_name, name);
+		fp = fopen(name, "rb");
+	}
+	*/
 
 	if (fp == NULL) {
 		if (!check_char (name, '.')) {
@@ -1682,8 +1687,8 @@ CartLoad(char *name)
 
 	// read ROM
 #if defined(SHARED_MEMORY)
-	shm_rom_handle =
-		shmget ((key_t) SHM_ROM_HANDLE, fsize,
+	shm_rom_handle
+		= shmget ((key_t) SHM_ROM_HANDLE, fsize,
 			IPC_CREAT | IPC_EXCL | 0666);
 
 	if (shm_rom_handle == -1)
@@ -1696,7 +1701,7 @@ CartLoad(char *name)
 	}
 
 #else
-	ROM = (UChar *) malloc (fsize);
+	ROM = (UChar *) malloc(fsize);
 #endif
 	ROM_size = fsize / 0x2000;
 	fread (ROM, 1, fsize, fp);

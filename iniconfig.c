@@ -495,7 +495,7 @@ parse_INIfile_raw ()
 
   Log ("Setting fullscreen aspect to %d\n", option.want_fullscreen_aspect);
 
-  option.want_hardware_scaling = get_config_int ("main", "use_overlay", 1);
+  option.want_hardware_scaling = get_config_int ("main", "use_overlay", 0);
   Log ("Setting hardware scaling to %d\n", option.want_hardware_scaling);
 
   option.want_stereo = get_config_int ("main", "stereo_sound", 0);
