@@ -39,9 +39,9 @@ int config_ar_index = 0;
 
 typedef struct
 {
-  char *section;
-  char *variable;
-  char *value;
+	char *section;
+	char *variable;
+	char *value;
 } config_var;
 
 config_var *config_ar;
@@ -51,554 +51,368 @@ config_var *config_ar;
 int
 config_var_cmp (const void *lhs, const void *rhs)
 {
-  int section_cmp =
-    stricmp (((config_var *) lhs)->section, ((config_var *) rhs)->section);
+	int section_cmp
+		= stricmp(((config_var *) lhs)->section, ((config_var *) rhs)->section);
 
-  if (section_cmp != 0)
-    return section_cmp;
+	if (section_cmp != 0)
+		return section_cmp;
 
-  return stricmp (((config_var *) lhs)->variable,
-		  ((config_var *) rhs)->variable);
+	return stricmp(((config_var *) lhs)->variable,
+		((config_var *) rhs)->variable);
 }
+
 
 void
 set_config_file (const char *filename)
 {
-  strcpy (config_file_tmp, config_file);
-  strcpy (config_file, filename);
+	strcpy (config_file_tmp, config_file);
+	strcpy (config_file, filename);
 }
+
 
 void
 set_config_file_back (void)
 {
-  strcpy (config_file, config_file_tmp);
+	strcpy (config_file, config_file_tmp);
 }
+
 
 char
 init_config (void)
 {
-  FILE *FCfgFile = NULL;
-  char *pWrd = NULL;
-  char *pRet;
-  char *pTmp;
-  char *section = NULL;
+	FILE *FCfgFile = NULL;
+	char *pWrd = NULL;
+	char *pRet;
+	char *pTmp;
+	char *section = NULL;
 
-  config_ar_index = 0;
-  if ((config_ar =
-       (config_var *) malloc (sizeof (config_var) * config_ar_size_max)) ==
-      NULL)
-    return 0;
+	config_ar_index = 0;
+	if ((config_ar
+		= (config_var *) malloc (sizeof (config_var) * config_ar_size_max))
+			== NULL)
+		return 0;
 
-  /* open config file for reading */
-  if ((FCfgFile = fopen (config_file, "r")) != NULL)
-    {
-      do
-	{
-	  memset (sCfgFileLine, '\0', BUFSIZ);
-	  /* note.. line must NOT be a comment */
-	  pRet = fgets (sCfgFileLine, BUFSIZ, FCfgFile);
+	/* open config file for reading */
+	if ((FCfgFile = fopen (config_file, "r")) != NULL) {
+		do {
+			memset (sCfgFileLine, '\0', BUFSIZ);
+			/* note.. line must NOT be a comment */
+			pRet = fgets (sCfgFileLine, BUFSIZ, FCfgFile);
 
-	  if (sCfgFileLine[0] == '#')
-	    continue;
+			if (sCfgFileLine[0] == '#')
+				continue;
 
-	  if (sCfgFileLine[0] == '[')
-	    {
-	      int section_size;
-	      pWrd = strrchr (sCfgFileLine, ']');
-	      if (pWrd == NULL)	/* Badly formed section line */
-		continue;
+			if (sCfgFileLine[0] == '[') {
+				int section_size;
+				pWrd = strrchr (sCfgFileLine, ']');
+				if (pWrd == NULL)	/* Badly formed section line */
+					continue;
 
-	      if (section != NULL)
+				if (section != NULL)
+					free (section);
+
+				section_size = pWrd - sCfgFileLine;
+				section = (char *) malloc (section_size);
+				strncpy (section, sCfgFileLine + 1, section_size - 1);
+				section[section_size - 1] = '\0';
+				continue;
+			}
+
+			pWrd = strchr (sCfgFileLine, '=');
+			if (pWrd == NULL)
+				continue;
+
+			pTmp = strchr (pWrd, '\n');
+			if (pTmp != NULL)
+				*pTmp = '\0';
+
+			if (config_ar_index < config_ar_size_max) {
+				config_ar[config_ar_index].section = (char *) strdup (section);
+
+				*pWrd = '\0';
+				pTmp = pWrd - 1;
+				while (*pTmp == '\t' || *pTmp == ' ')
+					*(pTmp--) = '\0';
+
+				config_ar[config_ar_index].variable
+					= (char *) strdup (sCfgFileLine);
+
+				while (*pWrd == '\t' || *pWrd == ' ')
+					pWrd++;
+
+				config_ar[config_ar_index].value = (char *) strdup (pWrd + 1);
+
+				config_ar_index++;
+			}
+
+		} while (pRet != NULL);
+
+	fclose (FCfgFile);
+	}
+
+	if (section != NULL)
 		free (section);
 
-	      section_size = pWrd - sCfgFileLine;
-	      section = (char *) malloc (section_size);
-	      strncpy (section, sCfgFileLine + 1, section_size - 1);
-	      section[section_size - 1] = '\0';
-	      continue;
-	    }
+	qsort(config_ar, config_ar_index, sizeof (config_var), config_var_cmp);
 
-	  pWrd = strchr (sCfgFileLine, '=');
-	  if (pWrd == NULL)
-	    continue;
-
-	  pTmp = strchr (pWrd, '\n');
-	  if (pTmp != NULL)
-	    *pTmp = '\0';
-
-	  if (config_ar_index < config_ar_size_max)
-	    {
-	      config_ar[config_ar_index].section = (char *) strdup (section);
-
-	      *pWrd = '\0';
-	      pTmp = pWrd - 1;
-	      while (*pTmp == '\t' || *pTmp == ' ')
-		*(pTmp--) = '\0';
-	      config_ar[config_ar_index].variable =
-		(char *) strdup (sCfgFileLine);
-
-	      while (*pWrd == '\t' || *pWrd == ' ')
-		pWrd++;
-
-	      config_ar[config_ar_index].value = (char *) strdup (pWrd + 1);
-
-	      config_ar_index++;
-	    }
-
-	}
-      while (pRet != NULL);
-
-      fclose (FCfgFile);
-    }
-
-  if (section != NULL)
-    free (section);
-
-  qsort (config_ar, config_ar_index, sizeof (config_var), config_var_cmp);
-
-  return 1;
+	return 1;
 }
 
 
 void
 dispose_config (void)
 {
-  int index;
+	int index;
 
-  for (index = 0; index < config_ar_index; index++)
-    {
-      free (config_ar[index].section);
-      free (config_ar[index].variable);
-      free (config_ar[index].value);
-    }
+	for (index = 0; index < config_ar_index; index++) {
+		free (config_ar[index].section);
+		free (config_ar[index].variable);
+		free (config_ar[index].value);
+	}
 
-  free (config_ar);
+	free (config_ar);
 }
 
 
 char *
-get_config_var (char *section, char *variable)
+get_config_var(char *section, char *variable)
 {
-  config_var key, *result;
+	config_var key, *result;
 
-  key.section = section;
-  key.variable = variable;
+	key.section = section;
+	key.variable = variable;
 
-  result =
-    bsearch (&key, config_ar, config_ar_index, sizeof (config_var),
-	     config_var_cmp);
+	result
+		= bsearch (&key, config_ar, config_ar_index, sizeof (config_var),
+			config_var_cmp);
 
-  if (result != NULL)
-    {
-      strcpy (temp_result, result->value);
-      return temp_result;
-    }
+	if (result != NULL) {
+		strcpy (temp_result, result->value);
+		return temp_result;
+	}
 
-  return NULL;
+	return NULL;
 }
 
-
-#if !defined(ALLEGRO)
 
 // Let's redefine the old allegro parsing function
 
 int
 get_config_int (char *section, char *keyword, int default_value)
 {
-  char *p = get_config_var (section, keyword);
-  if (p == NULL)
-    return default_value;
-  return atoi (p);
+	char *p = get_config_var (section, keyword);
+	if (p == NULL)
+		return default_value;
+
+	return atoi (p);
 }
+
 
 char *
 get_config_string (char *section, char *keyword, char *default_value)
 {
-  char *p = get_config_var (section, keyword);
+	char *p = get_config_var (section, keyword);
 
-  return (p == NULL ? default_value : p);
+	return (p == NULL ? default_value : p);
 }
 
-#endif
 
 void
 read_joy_mapping (void)
 {
-  char tmp_str[10], tmp_str2[10], section_name[10];
-  unsigned char x, y, z;
-  unsigned short temp_val;
+	char tmp_str[10], tmp_str2[10], section_name[10];
+	unsigned char x, y, z;
+	unsigned short temp_val;
 
-  Log ("--[ JOYPAD MAPPING ]-------------------------------\n");
-  Log ("Loading default values\n");
+	Log ("--[ JOYPAD MAPPING ]-------------------------------\n");
+	Log ("Loading default values\n");
 
-  memset (tmp_str, 0, 10);
+	memset (tmp_str, 0, 10);
 
-  strcpy (section_name, "CONFIG1");
-  for (z = 0; z < 16; z++)
-    {
-      if (z < 10)
-	section_name[6] = '0' + z;
-      else
-	section_name[6] = (z - 10) + 'a';
+	strcpy (section_name, "CONFIG1");
+	for (z = 0; z < 16; z++) {
+		if (z < 10)
+			section_name[6] = '0' + z;
+		else
+			section_name[6] = (z - 10) + 'a';
 
-      Log (" * Looking for section %s\n", section_name);
+		Log (" * Looking for section %s\n", section_name);
 
-      for (x = 0; x < 5; x++)
-	{			// for each player
+		for (x = 0; x < 5; x++) {
+			// for each player
 
-	  config[z].individual_config[x].joydev = 0;
-	  strcpy (tmp_str2, "joydev1");
-	  tmp_str2[6] = '0' + x;
+			config[z].individual_config[x].joydev = 0;
+			strcpy (tmp_str2, "joydev1");
+			tmp_str2[6] = '0' + x;
 
-	  strncpy (tmp_str, get_config_string (section_name, tmp_str2, "0"),
-		   10);
-	  config[z].individual_config[x].joydev = atoi (tmp_str);
+			strncpy (tmp_str, get_config_string (section_name, tmp_str2, "0"),
+				10);
+			config[z].individual_config[x].joydev = atoi (tmp_str);
 
-	  for (y = 0; y < J_MAX; y++)
-	    {
-	      strncpy (tmp_str, joymap_reverse[y], 10);
-	      tmp_str[strlen (tmp_str) + 1] = 0;
-	      tmp_str[strlen (tmp_str)] = '0' + x;
-	      temp_val = get_config_int (section_name, tmp_str, 0xffff);
-	      
-	      if (0xffff != temp_val)
-	      {
-	      	config[z].individual_config[x].joy_mapping[y] = temp_val;
-	      	Log ("    %s set to %d\n", joymap_reverse[y], temp_val);
-	      }
-	    }
+			for (y = 0; y < J_MAX; y++) {
+				strncpy (tmp_str, joymap_reverse[y], 10);
+				tmp_str[strlen (tmp_str) + 1] = 0;
+				tmp_str[strlen (tmp_str)] = '0' + x;
+				temp_val = get_config_int (section_name, tmp_str, 0xffff);
 
+				if (0xffff != temp_val) {
+					config[z].individual_config[x].joy_mapping[y] = temp_val;
+					Log ("    %s set to %d\n", joymap_reverse[y], temp_val);
+				}
+			}
+
+		}
 	}
-    }
 
-  Log ("End of joypad mapping\n\n");
+	Log ("End of joypad mapping\n\n");
 }
+
 
 char
-set_arg (char nb_arg, const char *val)
-{
+set_arg(char nb_arg, const char *val) {
 
-  if (!val)
-    {
-#ifndef FINAL_RELEASE
-      fprintf (stderr, "No value for %c arg\n", nb_arg);
-#endif
-      Log ("No value for arg %c\n", nb_arg);
-      return 1;
-    }
+	if (!val
+		&& (nb_arg == 'i' || nb_arg == 't' || nb_arg == 'w' || nb_arg == 'c')) {
+		MESSAGE_ERROR("No value provided for %c arg\n", nb_arg);
+		return 1;
+	}
 
-  switch (nb_arg)
-    {
-    case 'a':
-      option.want_fullscreen_aspect = min (1, max (0, atoi (val)));
-      Log ("Fullscreen aspect mode set to %d\n",
-	   option.want_fullscreen_aspect);
-      return 0;
+	switch (nb_arg)
+	{
+		case 'a':
+			option.want_fullscreen_aspect = 1;
+			MESSAGE_INFO("Option: Fullscreen aspect ratio enabled\n");
+			return 0;
 
-    case 'c':
-      CD_emulation = atoi (val);
-      Log ("CD emulation set to %d\n", CD_emulation);
-      return 0;
+		case 'c':
+			CD_emulation = atoi(val);
+			MESSAGE_INFO("Option: Forcing CD emulation to mode %d\n", atoi(val));
+			return 0;
 
-    case 'd':
-      debug_on_beginning = atoi (val);
-      Log ("Debug on beginning set to %d\n", debug_on_beginning);
-      return 0;
+		case 'd':
+			debug_on_beginning = atoi(val);
+			Log ("Option: Debug on beginning set to %d\n", debug_on_beginning);
+			return 0;
 
-    case 'e':
-      use_eagle = atoi (val);
-      Log ("Eagle mode set to %d\n", use_eagle);
-      return 0;
+		case 'e':
+			use_eagle = atoi(val);
+			Log ("Eagle mode set to %d\n", use_eagle);
+			return 0;
 
-    case 'f':
-      option.want_fullscreen = min (1, max (0, atoi (val)));
-      Log ("Start in fullscreen mode set to %d\n", option.want_fullscreen);
-      return 0;
+		case 'f':
+			option.want_fullscreen = 1;
+			MESSAGE_INFO("Option: Fullscreen mode enabled\n");
+			return 0;
 
-    case 'i':
-      strcpy (ISO_filename, val);
-      Log ("ISO filename is %s\n", ISO_filename);
-      return 0;
-      
-    case 'm':
-      minimum_bios_hooking = atoi (val);
-      Log ("Minimum Bios hooking set to %d\n", minimum_bios_hooking);
-      return 0;
+		case 'i':
+			strcpy (ISO_filename, val);
+			Log ("ISO filename is %s\n", ISO_filename);
+			return 0;
 
-    case 'o':
-      option.want_hardware_scaling = min (1, max (0, atoi (val)));
-      Log ("Hardware scaling %srequested.\n",
-	   option.want_hardware_scaling ? "" : "not ");
-      return 0;
+		case 'm':
+			minimum_bios_hooking = atoi (val);
+			Log ("Minimum Bios hooking set to %d\n", minimum_bios_hooking);
+			return 0;
+
+		case 'o':
+			option.want_hardware_scaling = 1;
+			MESSAGE_INFO("Option: Hardware overlay requested\n");
+			return 0;
 
 #if defined(ENABLE_NETPLAY)
-    case 'n':
+		case 'n':
 #warning hardcoding of netplay protocol
 /*       option.want_netplay = LAN_PROTOCOL; */
-      option.want_netplay = INTERNET_PROTOCOL;
-      strncpy(option.server_hostname, val, sizeof(option.server_hostname));
-      Log ("Netplay mode enabled\nServer hostname set to %s\n",
-	   option.server_hostname);
-      return 0;
+			option.want_netplay = INTERNET_PROTOCOL;
+			strncpy(option.server_hostname, val, sizeof(option.server_hostname));
+			Log ("Netplay mode enabled\nServer hostname set to %s\n",
+				option.server_hostname);
+			return 0;
 #endif // NETPLAY
 
-    case 's':
-      option.want_stereo = min (1, max (0, atoi (val)));
-      Log ("Stereo mode set to %d\n", option.want_stereo);
-      return 0;
-    case 'S':
-      use_scanline = min (1, max (0, atoi (val)));
-      Log ("Scanline mode set to %d\n", use_scanline);
-      return 0;
-    case 'u':
-      US_encoded_card = atoi (val);
-      Log ("US Card encoding set to %d\n", US_encoded_card);
-      return 0;
-    case 't':
-      nb_max_track = atoi (val);
-      Log ("Number of tracks set to %d\n", nb_max_track);
-      return 0;
-    case 'w':
-      option.window_size = max(1, min (4, atoi (val)));
-      Log ("Window size set to %d\n", option.window_size);
-      return 0;
+		case 's':
+			option.want_stereo = 1;
+			MESSAGE_INFO("Option: Stereo sound enabled\n");
+			return 0;
+		case 'S':
+			use_scanline = min (1, max (0, atoi (val)));
+			Log ("Scanline mode set to %d\n", use_scanline);
+			return 0;
+		case 'u':
+			US_encoded_card = atoi (val);
+			Log ("US Card encoding set to %d\n", US_encoded_card);
+			return 0;
+		case 't':
+			nb_max_track = atoi (val);
+			Log ("Number of tracks set to %d\n", nb_max_track);
+			return 0;
+		case 'z':
+			option.window_size = max(1, min (4, atoi (val)));
+			return 0;
+		case 'h':
+			printf(
+				"\nHuKU, the PCEngine emulator for Haiku\n"
+				"2011 Alexander von Gluck IV\n"
+				"Based on HuGO! by Zerograd and others\n\n"
+				" Usage: HuKU <GAME> [arguments]\n\n"
+				" Where <GAME> is an pce|iso|zip\n"
+				" Where [arguments] are:\n"
+				"	-cX	Force CD Emulation mode X\n"
+				"	-f	Fullscreen mode\n"
+				"	-o	Enable overlay mode\n"
+				"	-s	Enable Stereo sound\n"
+				"	-zX	Zoom level X (1-4)\n"
+				"\n");
+			return 1;
 
-    default:
-#ifndef FINAL_RELEASE
-      fprintf (stderr, "Unrecognized option : %c\n", nb_arg);
-#endif
-      Log ("Unrecognize option : %c\n", nb_arg);
-      return 1;
-    }
+		default:
+			MESSAGE_ERROR("Unrecognized option : %c\n", nb_arg);
+			return 1;
+	}
 }
 
-#if !defined(WIN32) && !defined(SOLARIS) && !defined(__HAIKU__)
 
-//! program header for GNU argp function
-const char *argp_program_version = "Hu-Go! 2.12";
-
-//! bug report address for GNU argp function
-const char *argp_program_bug_address = "<zeograd@zeograd.com>";
-
-//! Program documentation
-static char doc[] =
-  "huku -- a program to play pc engine games (roms, cds and various kind of dumps)";
-
-//! A description of the arguments we accept
-static char args_doc[] = "<rom filename> <BRAM filename>";
-
-//! The options we understand
-static struct argp_option options[] = {
-  {"aspect-ratio", 'a', "0/1", OPTION_ARG_OPTIONAL,
-   "Keep aspect ratio of pc engine in fullscreen mode (default is 0)"},
-  {"cd-emulation", 'c', "<CD emulation level>", 0,
-   "CD emulation mode (default is 0, rom only)"},
-  {"debug-startup", 'd', "0/1", OPTION_ARG_OPTIONAL,
-   "Launch debugger on startup (default is 0)"},
-  {"eagle", 'e', "0/1", OPTION_ARG_OPTIONAL,
-   "Use eagle mode for rendering, if available (default is 0)"},
-  {"fullscreen", 'f', "0/1", OPTION_ARG_OPTIONAL,
-   "Start game in fullscreen (default is 0)"},
-  {"cd-device", 'i', "<CD device>", 0,
-   "CD device to use (if CD emulation mode = 1, default is /dev/cdrom)"},
-  {"no-bios-hooking", 'm', "0/1", OPTION_ARG_OPTIONAL,
-   "No hard bios hooking (slower but more compatible, default is 0)"},
-  {"overlay", 'o', "0/1", OPTION_ARG_OPTIONAL,
-   "Use hardware scaling mode for rendering, if available (default is 0)"},
-#if defined(ENABLE_NETPLAY)
-  {"netplay", 'n', "<server ip or hostname>", 0,
-   "Enable Netplay and set server name"},
-#endif
-  {"stereo", 's', "0/1", OPTION_ARG_OPTIONAL,
-   "Render sound in stereo (default is 0)"},
-  {"scanline", 'S', "0/1", OPTION_ARG_OPTIONAL,
-   "Use scanline mode for rendering, if available (default is 0)"},
-  {"us-decryption", 'u', "0/1", OPTION_ARG_OPTIONAL,
-   "Decrypt roms using the US -> JAP decryption algorythm (default is 0)"},
-  {"tracks-number", 't', "<track number>", 0,
-   "Number of tracks when emulating a single iso (default is 22)"},
-  {"window-size", 'w', "<zoom factor>", 0,
-   "Zoom factor when in windowed mode (Between 1 and 4, default is 1)"},
-  {0}
-};
-
-static error_t
-parse_opt (int key, char *arg, struct argp_state *state)
+int
+parse_commandline(int argc, char **argv)
 {
-  switch (key)
-    {
-    case 'a':
-      option.want_fullscreen_aspect =
-	(arg == NULL ? 1 : (min (1, max (0, atoi (arg)))));
-      Log ("Fullscreen aspect mode set to %d\n",
-	   option.want_fullscreen_aspect);
-      break;
-    case 'c':
-      CD_emulation = atoi (arg);
-      Log ("CD emulation set to %d\n", CD_emulation);
-      break;
-    case 'd':
-      debug_on_beginning = (arg == NULL ? 1 : atoi (arg));
-      Log ("Debug on beginning set to %d\n", debug_on_beginning);
-      break;
-    case 'e':
-      use_eagle = (arg == NULL ? 1 : atoi (arg));
-      Log ("Eagle mode set to %d\n", use_eagle);
-      break;
-    case 'f':
-      option.want_fullscreen =
-	(arg == NULL ? 1 : min (1, max (0, atoi (arg))));
-      Log ("Start in fullscreen mode set to %d\n", option.want_fullscreen);
-      break;
-    case 'i':
-      strcpy (ISO_filename, arg);
-      Log ("ISO filename is %s\n", ISO_filename);
-      break;
-    case 'm':
-      minimum_bios_hooking = (arg == NULL ? 1 : atoi (arg));
-      Log ("Minimum Bios hooking set to %d\n", minimum_bios_hooking);
-      break;
-    case 'o':
-      option.want_hardware_scaling =
-	(arg == NULL ? 1 : min (1, max (0, atoi (arg))));
-      Log ("Hardware scaling %srequested.\n",
-	   option.want_hardware_scaling ? "" : "not ");
-      break;
-#if defined(ENABLE_NETPLAY)
-    case 'n':
-/*       option.want_netplay = LAN_PROTOCOL; */
-      option.want_netplay = INTERNET_PROTOCOL;
-      strncpy(option.server_hostname, arg, sizeof(option.server_hostname));
-      Log ("Netplay mode enabled\nServer hostname set to %s\n",
-	   option.server_hostname);
-      break;
-#endif // NETPLAY
-    case 's':
-      option.want_stereo = (arg == NULL ? 1 : min (1, max (0, atoi (arg))));
-      Log ("Stereo mode set to %d\n", option.want_stereo);
-      break;
-    case 'S':
-      use_scanline = (arg == NULL ? 1 : min (1, max (0, atoi (arg))));
-      Log ("Scanline mode set to %d\n", use_scanline);
-      break;
-    case 'u':
-      US_encoded_card = (arg == NULL ? 1 : atoi (arg));
-      Log ("US Card encoding set to %d\n", US_encoded_card);
-      break;
-    case 't':
-      nb_max_track = atoi (arg);
-      Log ("Number of tracks set to %d\n", nb_max_track);
-      break;
-    case 'w':
-      option.window_size = max (1, min (4, atoi (arg)));
-      Log ("Window size set to %d\n", option.window_size);
-      break;
-    case ARGP_KEY_ARG:
-      if (state->arg_num >= 2)
-	{
-	  /* Too many arguments. */
-	  argp_usage (state);
-	  break;
-	}
+	char arg_value, i, arg_error = 0;
 
-      switch (state->arg_num)
-	{
-	case 0:
-	  strcpy (cart_name, arg);
-	  Log ("Setting card name to %s\n", cart_name);
-	  {
-	    int x;
-	    for (x = 0; x < strlen (cart_name); x++)
-	      if (cart_name[x] == '\\')
-		cart_name[x] = '/';
-	  }
-	  break;
-	case 1:
-	  bmdefault = arg;
-	  Log ("Setting backup mem file name to %s\n", bmdefault);
-	  break;
-	default:
-	  Log
-	    ("Internal error when parsing command line, state->arg_num = %d\n",
-	     state->arg_num);
-	}
-      break;
-    default:
-      return ARGP_ERR_UNKNOWN;
-    }
-  return 0;
-}
-
-//! Our argp parser
-static struct argp argp = { options, parse_opt, args_doc, doc };
-
-#endif
-
-void
-parse_commandline (int argc, char **argv)
-{
-  char next_arg, i, arg_error = 0;
-
-  next_arg = 0;
-  for (i = 1; i < argc; i++)
-    if (!next_arg) {
-		if (argv[i][0] == '-') {
-	    	if (strlen (argv[i]) == 2) {
-				switch (argv[i][1])
-		 		{
-		  			default:
-		    			next_arg = argv[i][1];
-		    			break;
-		  		}
-	      	} else {
-				arg_error |= set_arg (argv[i][1], (char *) &argv[i][2]);
+	for (i = 1; i < argc; i++) {
+		// first option should always be our game
+		if (i == 1 && argv[i][0] != '-') {
+			strcpy (cart_name, argv[i]);
+			int x;
+			for (x = 0; x < strlen (cart_name); x++)
+				if (cart_name[x] == '\\')
+					cart_name[x] = '/';
+		} else {
+			if (argv[i][0] == '-') {
+				// if argument
+				if (strlen(argv[i]) > 2) {
+					arg_error |= set_arg(argv[i][1], (char *) &argv[i][2]);
+				} else {
+					arg_error |= set_arg(argv[i][1], NULL);
+				}
+			} else {
+				MESSAGE_ERROR("Unknown option: %s\n", argv[i]);
+				arg_error = 1;
 			}
-	  	} else {
-	    if (!cart_name[0])
-	      {
-		strcpy (cart_name, argv[i]);
-		Log ("Setting card name to %s\n", cart_name);
-		{
-		  int x;
-		  for (x = 0; x < strlen (cart_name); x++)
-		    if (cart_name[x] == '\\')
-		      cart_name[x] = '/';
 		}
-	      }
-	    else if (!bmdefault)
-	      {
-		Log ("Setting backup mem file name to %s\n", argv[i]);
-		bmdefault = argv[i];
-	      }
-	    else
-	      {
-		Log ("Unrecognized option : %s\n", argv[i]);
-		arg_error = 1;
-	      };
-	  }
-      }
-    else
-      {
-	arg_error |= set_arg (next_arg, argv[i]);
-	next_arg = 0;
-      }
+	}
 
-  if (next_arg)
-    {
-      Log ("No value for last arg : %c\n", next_arg);
-      next_arg = 0;
-      arg_error = 1;
-    };
+	if (arg_error)
+		return 1;
 
-  Log ("End of parsing command line\n");
+	video_driver = 0;
 
-  video_driver = 0;
+	if (use_eagle)
+		video_driver = 1;
+	else if (use_scanline)
+		video_driver = 2;
 
-  if (use_eagle)
-    video_driver = 1;
-  else if (use_scanline)
-    video_driver = 2;
+	return 0;
 }
+
 
 void
 parse_INIfile_raw ()

@@ -44,19 +44,22 @@ init_host(int argc, char *argv[])
 	option.want_snd_freq = 21963;
 
 	// Initialise paths
-	osd_init_paths (argc, argv);
+	osd_init_paths(argc, argv);
 
 	// Create the log file
-	init_log_file ();
+	init_log_file();
 
 	// Init the random seed
-	srand ((unsigned int) time (NULL));
+	srand((unsigned int) time (NULL));
 
 	// Read configuration in ini file
-	parse_INIfile ();
+	parse_INIfile();
 
 	// Read the command line
-	parse_commandline (argc, argv);
+	if (parse_commandline(argc, argv))
+		return -1;
+
+	MESSAGE_INFO("Hu-KU!, the PCEngine emulator for Haiku\n");
 
 	// Initialise the host machine
 	if (!osd_init_machine ())
@@ -161,7 +164,6 @@ play_game(void)
 int
 main (int argc, char *argv[])
 {
-	MESSAGE_INFO("Hu-KU!, the PCEngine emulator for Haiku\n");
 	// initialize host emulator
 	int error = init_host(argc, argv);
 

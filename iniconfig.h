@@ -36,7 +36,7 @@ void parse_INIfile();
 /* check the configuration file for options
    also make some global initialisations */
 
-void parse_commandline(int argc, char** argv);
+int parse_commandline(int argc, char** argv);
 /* check the command line for options */
 
 extern unsigned char joy_mapping[5][16];
