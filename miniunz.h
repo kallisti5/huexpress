@@ -17,10 +17,10 @@
 #define MINIUNZ_H
 
 //! Look for possible filename in zip archive
-char *find_possible_filename_in_zip (char *zipfilename);
+char* find_possible_filename_in_zip (char *zipfilename);
 
 //! Extract file content from zip archive
-int extract_file_in_memory (char *zipfilename, char *archivedfile,
+char* extract_file_in_memory (char *zipfilename, char *archivedfile,
 			    size_t * unzipped_size);
 
 #endif
