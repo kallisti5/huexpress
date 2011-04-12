@@ -455,7 +455,7 @@ PutSpriteHandleFull (UChar * P, UChar * C, unsigned long *C2, UChar * R,
 
 
 static void
-PutSpriteHflip (UChar * P, UChar * C, UChar *C2, UChar * R, int h,
+PutSpriteHflip (UChar * P, UChar * C, unsigned long *C2, UChar * R, int h,
 		int inc)
 {
   int i, J;
