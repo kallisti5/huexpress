@@ -15,14 +15,10 @@
 #include "utils.h"
 #include "pce.h"
 
+#ifdef INLINED_ACCESSORS
 #undef INLINED_ACCESSORS
-
-#if !defined(INLINED_ACCESSORS)
-
 #define get_8bit_addr(addr) Rd6502((UInt16)(addr))
-
 #define put_8bit_addr(addr,byte) Wr6502((addr),(byte))
-
 #endif
 
 /* CD related functions */

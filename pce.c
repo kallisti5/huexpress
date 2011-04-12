@@ -1464,7 +1464,7 @@ search_possible_syscard()
 				if (location < POSSIBLE_LOCATION_COUNT)
 					strcpy(temp_buffer, POSSIBLE_LOCATION[location]);
 				else
-					strcpy(temp_buffer, strcat(short_exe_name, '/'));
+					strcpy(temp_buffer, strcat(short_exe_name, "/"));
 
 				strcat(temp_buffer, POSSIBLE_FILENAME[filename]);
 				TRACE("Checking for CD syscard at : %s\n", temp_buffer);
