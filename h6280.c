@@ -63,15 +63,8 @@ inline UChar imm_operand(UInt16 addr) {
   return( (UChar) (PageR[memreg][addr]));
 }
 
-#if !defined(INLINED_ACCESSORS)
 
-#define get_8bit_addr(addr) Rd6502((addr))
-
-#define put_8bit_addr(addr,byte) Wr6502((addr),(byte))
-
-#define get_16bit_addr(addr) (Rd6502(addr) + (Rd6502((UInt16)(addr + 1)) << 8))
-
-#else
+#ifdef INLINED_ACCESSORS
 
 
 // This is the more generalized access routine:

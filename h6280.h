@@ -273,6 +273,7 @@ inline UChar get_8bit_zp(UChar zp_addr);
 inline UInt16 get_16bit_zp(UChar zp_addr);
 inline void put_8bit_zp(UChar zp_addr, UChar byte);
 
+
 #if !defined(INLINED_ACCESSORS)
 #define get_8bit_addr(addr) Rd6502((addr))
 #define put_8bit_addr(addr,byte) Wr6502((addr),(byte))
