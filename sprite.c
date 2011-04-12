@@ -455,7 +455,7 @@ PutSpriteHandleFull (UChar * P, UChar * C, unsigned long *C2, UChar * R,
 
 
 static void
-PutSpriteHflip (UChar * P, UChar * C, unsigned long *C2, UChar * R, int h,
+PutSpriteHflip (UChar * P, UChar * C, UChar *C2, UChar * R, int h,
 		int inc)
 {
   int i, J;
@@ -1020,7 +1020,7 @@ RefreshSpriteExact (int Y1, int Y2, UChar bg)
 	      if (atr & H_FLIP)
 		{
 		  for (j = 0; j <= cgx; j++)
-		    PutSpriteHflip (osd_gfx_buffer + pos + (cgx - j) * 16,
+		    PutSpriteHflip(osd_gfx_buffer + pos + (cgx - j) * 16,
 				    C + j * 128, C2 + j * 32 * 4, R, h, inc);
 		}
 	      else
