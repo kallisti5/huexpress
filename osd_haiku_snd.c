@@ -1,5 +1,5 @@
 #include "utils.h"
-#include "osd_linux_snd.h"
+#include "osd_haiku_snd.h"
 
 #if defined(ALLEGRO)
 
