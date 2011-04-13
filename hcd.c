@@ -18,60 +18,33 @@ char HCD_cover_filename[256] = "";
 
 FILE *HCD_iso_FILE = 0;
 
-#ifdef ALLEGRO
-PACKFILE *HCD_packed_iso_FILE = 0;
-#endif
-
 UInt32 HCD_current_subtitle = 0;
-
 UInt32 HCD_frame_at_beginning_of_track = 0;
-
 UChar HCD_current_played_track = 0;
 
+
 int
-fill_HCD_info (char *name)
-{
+fill_HCD_info(char *name) {
 
-#if defined(ALLEGRO) || defined(SDL_mixer)
+#ifdef SDL_mixer
+	// If we can handle MP3/OGG tracks
 
-  int current_track;
+	int current_track;
+	char *MP3_path, *ISO_path;
+	char MP3_path_tmp[256], ISO_path_tmp[256], cw_dir[256];
 
+	set_config_file (name);
 
+	init_config();
+	HCD_first_track = get_config_int("main", "first_track", 1);
+	HCD_last_track = get_config_int("main", "last_track", 22);
 
-  char *MP3_path, *ISO_path;
+	current_track = get_config_int("main", "minimum_bios", -1);
 
-
-
-  char MP3_path_tmp[256], ISO_path_tmp[256], cw_dir[256];
-
-
-
-  set_config_file (name);
-
-
-  init_config();
-  HCD_first_track = get_config_int ("main", "first_track", 1);
+	MP3_path = get_config_string ("main", "MP3_path", "");
 
 
-
-  HCD_last_track = get_config_int ("main", "last_track", 22);
-
-
-
-  current_track = get_config_int ("main", "minimum_bios", -1);
-
-
-
-  MP3_path = get_config_string ("main", "MP3_path", "");
-
-
-  if (!strcmp (MP3_path, ""))
-
-    {
-
-#ifdef ALLEGRO
-      fix_filename_path (MP3_path_tmp, name, 256);
-#else
+	if (!strcmp (MP3_path, "")) {
 		memset(MP3_path_tmp,0,256);
 		memset(cw_dir,0,256);
 		strcpy (MP3_path_tmp, name);
@@ -80,622 +53,270 @@ fill_HCD_info (char *name)
 		// getcwd +name = gives the full path the hcd
 		//1. MP3_path_tmp==name          => current dir + MP3_path_tmp=.
 		//2. MP3_path begins with '.'    =>
-#endif
-//      {
-// because dirname is GNU C only ?
-	int i;
+		// dirname is GNU C only
+		int i;
 
-	for (i = 0; MP3_path_tmp[i]; i++)
+		for (i = 0; MP3_path_tmp[i]; i++) {
+			if (MP3_path_tmp[i] == '\\') {
+				MP3_path_tmp[i] = '/';
+			}
+		}
 
-	  if (MP3_path_tmp[i] == '\\')
-
-	    MP3_path_tmp[i] = '/';
-
-
-
-//      }
+		if (strrchr (MP3_path_tmp, '/'))
+			*(strrchr (MP3_path_tmp, '/') + 1) = 0;
 
 
+		if ((strcmp(MP3_path_tmp, name)==0)
+			|| (strncmp (MP3_path_tmp, ".", 1)==0)) {
+			if (strcmp(MP3_path_tmp, name)==0) {
+				strcpy(MP3_path_tmp, "/");
+				getcwd(cw_dir, 256);
+				// Log("%s\n", cw_dir);
+				strncat(cw_dir, MP3_path_tmp, 256);
+				MP3_path = cw_dir;
+				// Log("%s\n", MP3_path);
+			}else{
+				MP3_path = MP3_path_tmp;
+			}
 
-      if (strrchr (MP3_path_tmp, '/'))
-
-	*(strrchr (MP3_path_tmp, '/') + 1) = 0;
-
-
-
-	if ((strcmp(MP3_path_tmp,name)==0)||(strncmp (MP3_path_tmp, ".",1)==0))
-		{
-		if (strcmp(MP3_path_tmp,name)==0)
-#if defined(MSDOS)||defined(WIN32)||defined(DJGPP)
-						 strcpy(MP3_path_tmp,"\\");
-#else
-						 strcpy(MP3_path_tmp,"/");
-#endif
-		getcwd(cw_dir,256);
-		//Log("%s\n", cw_dir);
-		strncat(cw_dir,MP3_path_tmp,256);
-		MP3_path = cw_dir;
-		//Log("%s\n", MP3_path);
 		}else{
-		MP3_path = MP3_path_tmp;
+			strcpy(MP3_path_tmp, MP3_path);
+			MP3_path = MP3_path_tmp;
 		}
 
-    }else{
-		strcpy (MP3_path_tmp, MP3_path);
-		MP3_path = MP3_path_tmp;
-	}
+		ISO_path = get_config_string("main", "ISO_path", "");
+
+		if (!strcmp (ISO_path, "")) {
+			memset(ISO_path_tmp, 0, 256);
+			memset(cw_dir, 0, 256);
+			strcpy(ISO_path_tmp, name);
+		// {
+			int i;
+			for (i = 0; ISO_path_tmp[i]; i++) {
+				if (ISO_path_tmp[i] == '\\')
+					ISO_path_tmp[i] = '/';
+			}
+		// }
+
+			if (strrchr (ISO_path_tmp, '/'))
+				*(strrchr (ISO_path_tmp, '/') + 1) = 0;
+
+			if ((strcmp(ISO_path_tmp, name)==0)
+				|| (strncmp (ISO_path_tmp, ".", 1)==0)) {
+
+				if (strcmp(ISO_path_tmp, name)==0)
+					strcpy(ISO_path_tmp, "/");
+
+				getcwd(cw_dir, 256);
+				// Log("%s\n", cw_dir);
+				strncat(cw_dir, ISO_path_tmp, 256);
+				ISO_path = cw_dir;
+				// Log("%s\n", ISO_path);
+			}else{
+				ISO_path = ISO_path_tmp;
+			}
 
 
-
-
-  ISO_path = get_config_string ("main", "ISO_path", "");
-
-
-
-
-
-  if (!strcmp (ISO_path, ""))
-
-    {
-
-
-#ifdef ALLEGRO
-      fix_filename_path (ISO_path_tmp, name, 256);
-#else
-		memset(ISO_path_tmp,0,256);
-		memset(cw_dir,0,256);
-		strcpy(ISO_path_tmp, name);
-#endif
-
-
-//      {
-
-	int i;
-
-	for (i = 0; ISO_path_tmp[i]; i++)
-
-	  if (ISO_path_tmp[i] == '\\')
-
-	    ISO_path_tmp[i] = '/';
-
-
-
-//      }
-
-
-
-      if (strrchr (ISO_path_tmp, '/'))
-
-	*(strrchr (ISO_path_tmp, '/') + 1) = 0;
-
-
-	if ((strcmp(ISO_path_tmp,name)==0)||(strncmp (ISO_path_tmp, ".",1)==0))
-		{
-		if (strcmp(ISO_path_tmp,name)==0)
-#if defined(MSDOS)||defined(WIN32)||defined(DJGPP)
-						 strcpy(ISO_path_tmp,"\\");
-#else
-						 strcpy(ISO_path_tmp,"/");
-#endif
-		getcwd(cw_dir,256);
-		//Log("%s\n", cw_dir);
-		strncat(cw_dir,ISO_path_tmp,256);
-		ISO_path = cw_dir;
-		//Log("%s\n", ISO_path);
 		}else{
-		ISO_path = ISO_path_tmp;
+			strcpy(ISO_path_tmp, ISO_path);
+			ISO_path = ISO_path_tmp;
 		}
 
+	if (current_track != -1)
+		minimum_bios_hooking = current_track;
 
+	for (current_track = HCD_first_track;
+		current_track <= HCD_last_track; current_track++) {
 
+		char *section_name = (char *) alloca (100);
+		char *tmp_buf = (char *) alloca (100);
 
-    }else{
-		strcpy(ISO_path_tmp, ISO_path);
-		ISO_path = ISO_path_tmp;
-	}
+		sprintf (section_name, "track%d", current_track);
 
 
+// ----- Init patch section -----
 
-  if (current_track != -1)
+		CD_track[current_track].patch_number = 0;
+		CD_track[current_track].patch = NULL;
 
-    minimum_bios_hooking = current_track;
+// ----- find beginning ---------
 
+		strcpy (tmp_buf,
+			strupr (get_config_string (section_name, "begin", "")));
 
+		if (strcasestr (tmp_buf, "MSF")) {
+			int min = (tmp_buf[4] - '0') * 10 + (tmp_buf[5] - '0');
+			int sec = (tmp_buf[7] - '0') * 10 + (tmp_buf[8] - '0');
+			int fra = (tmp_buf[10] - '0') * 10 + (tmp_buf[11] - '0');
 
-  for (current_track = HCD_first_track;
-
-       current_track <= HCD_last_track; current_track++)
-
-    {
-
-      char *section_name = (char *) alloca (100);
-
-      char *tmp_buf = (char *) alloca (100);
-
-
-
-      sprintf (section_name, "track%d", current_track);
-
-
-
-      //----- Init patch section -----
-
-
-
-      CD_track[current_track].patch_number = 0;
-
-
-
-      CD_track[current_track].patch = NULL;
-
-
-
-      //----- find beginning ---------
-
-
-
-      strcpy (tmp_buf,
-
-	      strupr (get_config_string (section_name, "begin", "")));
-
-
-
-      if (strcasestr (tmp_buf, "MSF"))
-
-	{
-
-
-
-	  int min = (tmp_buf[4] - '0') * 10 + (tmp_buf[5] - '0');
-
-	  int sec = (tmp_buf[7] - '0') * 10 + (tmp_buf[8] - '0');
-
-	  int fra = (tmp_buf[10] - '0') * 10 + (tmp_buf[11] - '0');
-
-
-
-	  CD_track[current_track].beg_lsn = fra + 75 * (sec + 60 * min);
-
-
-
-	  CD_track[current_track].beg_lsn -= 150;
-
-
-
-	}
-
-      else if (strcasestr (tmp_buf, "LSN"))
-
-	{
-
-
-
-	  CD_track[current_track].beg_lsn = atoi (&tmp_buf[4]) - 150;
-
-
-
-	}
-
-      else if (strcasestr (tmp_buf, "LBA"))
-
-	{
-
-
-
-	  CD_track[current_track].beg_lsn = atoi (&tmp_buf[4]);
-
-
-
-	}
-
-      else
-
-	CD_track[current_track].beg_lsn = 0;
-
-
-
-      //----- determine type ---------
-
-
-
-      strcpy (tmp_buf,
-
-	      strupr (get_config_string (section_name, "type", "AUDIO")));
-
-
-
-      if (strcmp (tmp_buf, "CODE") == 0)
-
-	{
-
-
-
-	  //----- track is code ---------
-
-
-
-	  CD_track[current_track].type = 4;	// Code track
-
-
-
-	  //----- emulated track will use a regular file ---------
-
-
-
-	  CD_track[current_track].source_type = HCD_SOURCE_REGULAR_FILE;
-
-
-
-	  //----- search filename of ISO ---------
-
-
-
-	  strcpy (tmp_buf, ISO_path);
-
-
-
-	  strcat (tmp_buf, get_config_string (section_name, "filename", ""));
-
-
-
-	  strcpy (CD_track[current_track].filename, tmp_buf);
-
-
-#ifdef ALLEGRO
-	  if (!exists (tmp_buf))
-	  {
-
-	      Log ("Missing ISO file : %s\nUsed to emulate track %d.",
-
-		   tmp_buf, current_track);
-
-	      return 0;
-
-	    }
-#elif defined (SDL_mixer) && defined (LINUX)
-		struct stat rom_file_buf;
-
-	  if (stat(tmp_buf, &rom_file_buf) != 0)
-	  {
-				Log("Error : %X when stating %s\n", errno, tmp_buf);
-		  return 0;
-	  }
-#endif
-
-
-
-	  //----- determine file length of track ---------
-
-
-
-	  CD_track[current_track].length = file_size (tmp_buf) / 2048;
-
-
-
-	  //----- search for patch -----------------------
-
-
-
-	  CD_track[current_track].patch_number =
-
-	    get_config_int (section_name, "patch_number", 0);
-
-
-
-	  if (CD_track[current_track].patch_number)
-
-	    {
-
-	      UInt32 i;
-
-	      char tmp_str[256];
-
-
-
-	      CD_track[current_track].patch =
-
-		(PatchEntry *) malloc (sizeof (PatchEntry)
-
-				       *
-
-				       CD_track[current_track].patch_number);
-
-
-
-	      for (i = 0; i < CD_track[current_track].patch_number; i++)
-
-		{
-
-
-
-		  sprintf (tmp_str, "patch%d", i);
-
-
-
-		  strcpy (tmp_str, get_config_string (section_name,
-
-						      tmp_str,
-
-						      "0XFFFFFFFF,0XFF"));
-
-
-
-		  sscanf (tmp_str, "%X,%X",
-
-			  &CD_track[current_track].patch[i].offset,
-
-			  &CD_track[current_track].patch[i].new_val);
-
-
-
-		  Log
-
-		    ("Patch #%d makes bytes at offset 0x%X replaced by 0x%X\n",
-
-		     i, CD_track[current_track].patch[i].offset,
-
-		     CD_track[current_track].patch[i].new_val);
-
-
-
-
-
+			CD_track[current_track].beg_lsn = fra + 75 * (sec + 60 * min);
+			CD_track[current_track].beg_lsn -= 150;
+		} else if (strcasestr (tmp_buf, "LSN")) {
+			CD_track[current_track].beg_lsn = atoi(&tmp_buf[4]) - 150;
+		} else if (strcasestr (tmp_buf, "LBA")) {
+			CD_track[current_track].beg_lsn = atoi(&tmp_buf[4]);
+		} else {
+			CD_track[current_track].beg_lsn = 0;
 		}
 
-	    }
+		strcpy (tmp_buf,
+			strupr(get_config_string(section_name, "type", "AUDIO")));
 
+		if (strcmp(tmp_buf, "CODE") == 0) {
+			// FOUND: CODE TRACK
 
+			CD_track[current_track].type = 4;
+				// emulated track will use a regular file
 
-	}
+			CD_track[current_track].source_type = HCD_SOURCE_REGULAR_FILE;
 
-      else if (strcmp (tmp_buf, "CD") == 0)
+			strcpy(tmp_buf, ISO_path);
+				// search filename of ISO
 
-	{
+			strcat(tmp_buf, get_config_string(section_name, "filename", ""));
+			strcpy (CD_track[current_track].filename, tmp_buf);
 
+			struct stat rom_file_buf;
 
+			if (stat(tmp_buf, &rom_file_buf) != 0) {
+				MESSAGE_ERROR("Error : %X when stating %s\n", errno, tmp_buf);
+				return 0;
+			}
 
-	  int min, sec, fra, control;
+			CD_track[current_track].length = file_size (tmp_buf) / 2048;
+				// Determine file length of track
 
-	  int min_end, sec_end, fra_end, control_end;
+			CD_track[current_track].patch_number
+				= get_config_int(section_name, "patch_number", 0);
+				// Search for patch
 
+			if (CD_track[current_track].patch_number) {
+				UInt32 i;
+				char tmp_str[256];
 
+				CD_track[current_track].patch
+					= (PatchEntry*)malloc(sizeof (PatchEntry)
+						* CD_track[current_track].patch_number);
 
-	  //------- track is extracted from CD ----------------
+				for (i = 0; i < CD_track[current_track].patch_number; i++) {
+					sprintf(tmp_str, "patch%d", i);
+					strcpy(tmp_str, get_config_string (section_name, tmp_str,
+						"0XFFFFFFFF, 0XFF"));
+					sscanf(tmp_str, "%X,%X",
+						&CD_track[current_track].patch[i].offset,
+						&CD_track[current_track].patch[i].new_val);
+					MESSAGE_INFO("PATCH #%d replaced bytes at offset 0x%X with 0x%X\n",
+						i, CD_track[current_track].patch[i].offset,
+						CD_track[current_track].patch[i].new_val);
+				}
+			}
 
+			MESSAGE_INFO("Code track #%d - %s\n",
+				current_track, CD_track[current_track].filename);
 
+		} else if (strcmp(tmp_buf, "CD") == 0) {
+			// FOUND: HARDWARE CD
+			int min, sec, fra, control;
+			int min_end, sec_end, fra_end, control_end;
 
-	  CD_track[current_track].source_type = HCD_SOURCE_CD_TRACK;
+			CD_track[current_track].source_type = HCD_SOURCE_CD_TRACK;
 
+			strcpy (tmp_buf, get_config_string(section_name, "drive", "0"));
+			osd_cd_init(tmp_buf);
 
+	//------- looking for the index of the track to use for emulation ----
 
-	  //------- initializing the drive --------------------
+			CD_track[current_track].filename[0]
+				= get_config_int (section_name, "track", current_track);
 
+	//------- looking for the control byte and deducing type ------
 
+			osd_cd_track_info (CD_track[current_track].filename[0],
+				&min, &sec, &fra, &control);
 
-	  strcpy (tmp_buf, get_config_string (section_name, "drive", "0"));
+	/* TODO : add support if track is in last position */
 
+			osd_cd_track_info (CD_track[current_track].filename[0] + 1,
+				&min_end, &sec_end, &fra_end, &control_end);
 
+			CD_track[current_track].length = Time2Frame (min_end,
+				sec_end, fra_end) - Time2Frame (min, sec, fra);
 
-	  osd_cd_init (tmp_buf);
+			CD_track[current_track].type = (control & 4);
+		} else {
+			// FOUND: OTHER (AUDIO)
+			CD_track[current_track].type = 0;	// Audio track
+			CD_track[current_track].source_type = HCD_SOURCE_REGULAR_FILE;
 
+			strcpy (tmp_buf, MP3_path);
+			strcat (tmp_buf, get_config_string (section_name, "filename", ""));
+			strcpy (CD_track[current_track].filename, tmp_buf);
 
+			// START Search for subtitles
+			CD_track[current_track].subtitle_synchro_type
+				= get_config_int (section_name, "synchro_mode", 0);
 
-	  //------- looking for the index of the track to use for emulation ----
+			CD_track[current_track].subtitle_number
+				= get_config_int (section_name, "subtitle_number", 0);
 
-
-
-	  CD_track[current_track].filename[0] =
-
-	    get_config_int (section_name, "track", current_track);
-
-
-
-	  //------- looking for the control byte and deducing type ------
-
-
-
-	  osd_cd_track_info (CD_track[current_track].filename[0],
-
-			     &min, &sec, &fra, &control);
-
-
-
-	  /* TODO : add support if track is in last position */
-
-
-
-	  osd_cd_track_info (CD_track[current_track].filename[0] + 1,
-
-			     &min_end, &sec_end, &fra_end, &control_end);
-
-
-
-	  CD_track[current_track].length = Time2Frame (min_end,
-
-						       sec_end,
-
-						       fra_end)
-
-	    - Time2Frame (min, sec, fra);
-
-
-
-	  CD_track[current_track].type = (control & 4);
-
-
-
-	}
-
-      else
-
-	{
-
-
-
-	  //----- track is audio ---------
-
-
-
-	  CD_track[current_track].type = 0;	// Audio track
-
-
-
-	  //----- emulated track will use a regular file ---------
-
-
-
-	  CD_track[current_track].source_type = HCD_SOURCE_REGULAR_FILE;
-
-
-
-	  //----- search filename ---------
-
-
-
-	  strcpy (tmp_buf, MP3_path);
-
-
-
-	  strcat (tmp_buf, get_config_string (section_name, "filename", ""));
-
-
-
-	  strcpy (CD_track[current_track].filename, tmp_buf);
-
-
-
-	  //----- search for subtitles -----------------------
-
-
-
-	  CD_track[current_track].subtitle_synchro_type =
-
-	    get_config_int (section_name, "synchro_mode", 0);
-
-
-
-	  CD_track[current_track].subtitle_number =
-
-	    get_config_int (section_name, "subtitle_number", 0);
-
-
-
-	  if (CD_track[current_track].subtitle_number)
-
-	    {
-
-	      UInt32 i;
-
-	      char tmp_str[256];
-
-
-
-	      CD_track[current_track].subtitle =
-
-		(SubtitleEntry *) malloc (sizeof (SubtitleEntry)
-
-					  *
-
-					  CD_track
-
-					  [current_track].subtitle_number);
-
-
-
-	      for (i = 0; i < CD_track[current_track].subtitle_number; i++)
-
-		{
-
-
-
-		  sprintf (tmp_str, "subtitle%d", i);
-
-
-
-		  strcpy (tmp_str, get_config_string (section_name,
-
-						      tmp_str, "0,0,"));
-
-
-
-		  sscanf (tmp_str, "%d,%d",
-
-			  &CD_track[current_track].subtitle[i].StartTime,
-
-			  &CD_track[current_track].subtitle[i].Duration);
-
-
-
-		  if (strrchr (tmp_str, ','))
-
-		    {
-
-		      memset (CD_track[current_track].subtitle[i].data, 0,
-
-			      32);
-
-		      strncpy (CD_track[current_track].subtitle[i].data,
-
-			       strrchr (tmp_str, ',') + 1, 31);
-
-		    }
-
-
-
-		  Log
-
-		    ("Subtitle #%d begins at %d, lasts %d 60th of sec and is %s\n",
-
-		     i, CD_track[current_track].subtitle[i].StartTime,
-
-		     CD_track[current_track].subtitle[i].Duration,
-
-		     CD_track[current_track].subtitle[i].data);
-
-
-
-		}
-
-	    }
-
-
-
-
+			if (CD_track[current_track].subtitle_number) {
+				UInt32 i;
+				char tmp_str[256];
+
+				CD_track[current_track].subtitle
+					= (SubtitleEntry *)malloc(sizeof (SubtitleEntry)
+						* CD_track[current_track].subtitle_number);
+
+				for (i = 0; i < CD_track[current_track].subtitle_number; i++) {
+					sprintf(tmp_str, "subtitle%d", i);
+					strcpy(tmp_str, get_config_string (section_name,
+						tmp_str, "0,0,"));
+
+					sscanf(tmp_str, "%d,%d",
+						&CD_track[current_track].subtitle[i].StartTime,
+						&CD_track[current_track].subtitle[i].Duration);
+
+					if (strrchr(tmp_str, ',')) {
+						memset(CD_track[current_track].subtitle[i].data, 0, 32);
+						strncpy (CD_track[current_track].subtitle[i].data,
+							strrchr (tmp_str, ',') + 1, 31);
+					}
+
+					MESSAGE_INFO("Subtitle #%d begins at %d, "
+						"lasts %d ms and is %s\n",
+						i, CD_track[current_track].subtitle[i].StartTime,
+						CD_track[current_track].subtitle[i].Duration,
+						CD_track[current_track].subtitle[i].data);
+				}
+			}
+			// END Search for Subtitles
 
 	  //----- use Tormod's work to guess MP3 length ---------
 
+			if (strcasestr(CD_track[current_track].filename, ".mp3")) {
+				CD_track[current_track].length
+					= (int)(MP3_length(CD_track[current_track].filename) * 75.0);
 
-	  if (strcasestr(CD_track[current_track].filename, ".mp3")) {
-	  CD_track[current_track].length =
+				MESSAGE_INFO("MP3 Audio #%d - %s is %d 75th of a second long\n",
+					current_track, CD_track[current_track].filename,
+					CD_track[current_track].length);
+			}
 
-	    (int) (MP3_length (CD_track[current_track].filename) * 75.0);
+			#ifdef OGG_SUPPORT
+			// littletux: use ogginfo hack to guess OGG length
+			if (strcasestr(CD_track[current_track].filename, ".ogg")) {
+				CD_track[current_track].length
+					= (int)(OGG_length(CD_track[current_track].filename));
 
+				MESSAGE_INFO("OGG Audio #%d - %s is %d 75th of a second long\n",
+					current_track, CD_track[current_track].filename,
+					CD_track[current_track].length);
+			}
+			#endif
 
-
-	  Log ("After MP3 length guessing, size of %s is %d 75th of second\n",
-
-	       CD_track[current_track].filename,
-
-	       CD_track[current_track].length);
-	}
-
-	  #ifdef OGG_SUPPORT
-	  //----- littletux: use ogginfo hack to guess OGG length ---------
-	  if (strcasestr(CD_track[current_track].filename, ".ogg")) {
-		CD_track[current_track].length = (int) (OGG_length(CD_track[current_track].filename));
-	    Log ("After OGG length guessing, size of %s is %d 75th of second\n", CD_track[current_track].filename, CD_track[current_track].length);
-  	  }
-	  #endif
-
-	  if (CD_track[current_track].length == 0)
-
-	    CD_track[current_track].length = 30 * 75;	// 30 sec track
-
-
-
-	}
-
-
+			if (CD_track[current_track].length == 0)
+				CD_track[current_track].length = 30 * 75;	// 30 sec track
+			}
 
       //----- if begin hasn't been specified ---------
 
@@ -758,7 +379,6 @@ set_config_file_back();
 
 
 }
-
 
 
 void

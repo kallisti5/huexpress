@@ -1547,19 +1547,19 @@ CartLoad(char *name)
 	}
 
 	if (strcasestr(name, ".PCE")) {
-		// ROM Image
+		// ROM Image or CD system card
 		CD_emulation = 0;
 		strcpy (true_file_name, name);
 		fp = fopen(name, "rb");
 	} else if (strcasestr (name, ".HCD")) {
-		// Enable Hu-Go! Cd Definition
+		// HuGO! CD definition provided
 		CD_emulation = 5;
 		MESSAGE_INFO("Using Hu-Go! CD definition emulation\n");
 
 		// Load correct ISO filename
-		strcpy (ISO_filename, name);
+		strcpy(ISO_filename, name);
 
-		if (!fill_HCD_info (name))
+		if (!fill_HCD_info(name))
 			return 1;
 
 		LOAD_INTEGRATED_SYS_FILE;
@@ -1578,7 +1578,7 @@ CartLoad(char *name)
 		MESSAGE_INFO("Using CD ISQ emulation\n");
 
 		// Load correct ISO filename
-		strcpy (ISO_filename, name);
+		strcpy(ISO_filename, name);
 
 		LOAD_INTEGRATED_SYS_FILE;
 	} else if (strcasestr (name, ".BIN")) {
@@ -1587,7 +1587,7 @@ CartLoad(char *name)
 		MESSAGE_INFO("Using CD BIN emulation\n");
 
 		// Load correct ISO filename
-		strcpy (ISO_filename, name);
+		strcpy(ISO_filename, name);
 
 		LOAD_INTEGRATED_SYS_FILE;
 	} else if (strcasestr (name, ".ZIP")) {
@@ -1603,7 +1603,8 @@ CartLoad(char *name)
 			size_t unzipped_rom_size;
 
 			Log("Found %s in %s\n", filename_in_archive, name);
-			unzipped_rom = extract_file_in_memory(name, filename_in_archive, &unzipped_rom_size);
+			unzipped_rom = extract_file_in_memory(name, filename_in_archive,
+				&unzipped_rom_size);
 
 			ROM_size = unzipped_rom_size / 0x2000;
 
@@ -1662,9 +1663,9 @@ CartLoad(char *name)
 			return CartLoad (name);
 		}
 
-		if (strcasestr (name, ".pce")) {
+		if (strcasestr(name, ".pce")) {
 			// if filename with .PCE doesn't exist, it may be in ZIP
-			strcpy (&name[strlen (name) - 4], ".zip");
+			strcpy(&name[strlen (name) - 4], ".zip");
 			return CartLoad (name);
 		};
 
