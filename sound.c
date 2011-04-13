@@ -23,7 +23,7 @@ extern void sdl_fill_audio(void *data, Uint8 *stream, int len);
 
 /* Variables definition */
 
-UChar sound_driver = 1;
+UChar sound_driver = 3;
 // 0 =-¯ No sound driver
 // 1 =-¯ Allegro sound driver
 // 2 =-¯ Seal sound driver

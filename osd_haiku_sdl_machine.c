@@ -91,9 +91,6 @@ osd_shut_machine (void)
 {
  
 	free(XBuf);
-  
-  if (sound_driver == 1)
-    osd_snd_set_volume (0);
 
   if (timerId != NULL)
 	  SDL_RemoveTimer(timerId);

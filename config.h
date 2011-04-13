@@ -72,7 +72,7 @@
 #define SDL 1
 
 /* defined if user wants SDL_mixer as library */
-#undef SDL_mixer
+#define SDL_mixer 1
 
 /* defined if user wants open memory openness */
 #undef SHARED_MEMORY
@@ -90,7 +90,7 @@
 #define SIZEOF_SHORT_INT 2
 
 /* for hugo developers working on the cd subsystem */
-/* #undef SOUND_DEBUG */
+#define SOUND_DEBUG 1
 
 /* If using the C implementation of alloca, define if you know the
    direction of stack growth for your system; otherwise it will be

@@ -98,8 +98,7 @@ cleanup ()
 	osd_shutdown_input();
 
 	// Deinitialise the host machine
-	osd_shut_machine ();
-
+	osd_shut_machine();
 }
 
 
@@ -150,7 +149,7 @@ play_game(void)
 	osd_shutdown_netplay();
 #endif
 
-	osd_snd_trash_sound ();
+	osd_snd_trash_sound();
 
 	(*osd_gfx_driver_list[video_driver].shut) ();
 
@@ -185,6 +184,6 @@ main (int argc, char *argv[])
 	}
 #endif
 
-	cleanup ();
+	cleanup();
 	return 0;
 }

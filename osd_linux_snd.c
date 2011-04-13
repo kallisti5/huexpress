@@ -162,6 +162,9 @@ void osd_snd_trash_sound(void)
 	SDL_CloseAudio();
 	
 #else //SDL_mixer
+	if (sound_driver == 1)
+		osd_snd_set_volume(0);
+
 	//needed to stop properly...
 	Callback_Stop=TRUE;
 	//SDL_Delay(1000);
