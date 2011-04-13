@@ -2,8 +2,12 @@
 /*                                                                        */
 /*             'Hu-Go! Compact disk Definition' handling code             */
 /*                                                                        */
-/* This is 'copyleft'. Use and abuse it as you want.                      */
+/*            This is 'copyleft'. Use and abuse it as you want.           */
 /*                                                                        */
+/**************************************************************************/
+/* Authors:                                                               */
+/*		1999 - Zerograd?                                                  */
+/*		2011 - Alexander von Gluck, kallisti5@unixzen.com                 */
 /**************************************************************************/
 
 #include "iniconfig.h"
@@ -207,13 +211,14 @@ fill_HCD_info(char *name) {
 					sscanf(tmp_str, "%X,%X",
 						&CD_track[current_track].patch[i].offset,
 						&CD_track[current_track].patch[i].new_val);
-					MESSAGE_INFO("PATCH #%d replaced bytes at offset 0x%X with 0x%X\n",
+					MESSAGE_INFO("Track #%d - Patch - replaced bytes at offset"
+						" 0x%X with 0x%X\n",
 						i, CD_track[current_track].patch[i].offset,
 						CD_track[current_track].patch[i].new_val);
 				}
 			}
 
-			MESSAGE_INFO("Code track #%d - %s\n",
+			MESSAGE_INFO("Track #%d - Program Code - %s\n",
 				current_track, CD_track[current_track].filename);
 
 		} else if (strcmp(tmp_buf, "CD") == 0) {
@@ -286,11 +291,12 @@ fill_HCD_info(char *name) {
 							strrchr (tmp_str, ',') + 1, 31);
 					}
 
-					MESSAGE_INFO("Subtitle #%d begins at %d, "
-						"lasts %d ms and is %s\n",
-						i, CD_track[current_track].subtitle[i].StartTime,
-						CD_track[current_track].subtitle[i].Duration,
-						CD_track[current_track].subtitle[i].data);
+					MESSAGE_INFO("Track #%d - Subtitle #%d - %s begins at %d, "
+						"lasts %d ms\n",
+						current_track, i,
+						CD_track[current_track].subtitle[i].data,
+						CD_track[current_track].subtitle[i].StartTime,
+						CD_track[current_track].subtitle[i].Duration);
 				}
 			}
 			// END Search for Subtitles
@@ -301,7 +307,7 @@ fill_HCD_info(char *name) {
 				CD_track[current_track].length
 					= (int)(MP3_length(CD_track[current_track].filename) * 75.0);
 
-				MESSAGE_INFO("MP3 Audio #%d - %s is %d 75th of a second long\n",
+				MESSAGE_INFO("Track #%d - MP3 Audio - %d 75th of a second long\n",
 					current_track, CD_track[current_track].filename,
 					CD_track[current_track].length);
 			}
@@ -312,7 +318,7 @@ fill_HCD_info(char *name) {
 				CD_track[current_track].length
 					= (int)(OGG_length(CD_track[current_track].filename));
 
-				MESSAGE_INFO("OGG Audio #%d - %s is %d 75th of a second long\n",
+				MESSAGE_INFO("Track #%d - OGG Audio - %s is %d 75th of a second long\n",
 					current_track, CD_track[current_track].filename,
 					CD_track[current_track].length);
 			}
@@ -321,7 +327,7 @@ fill_HCD_info(char *name) {
 			if (CD_track[current_track].length == 0)
 				CD_track[current_track].length = 30 * 75;	// 30 sec track
 #else
-			MESSAGE_INFO("Audio #%d ignored due to lack of SDL_mixer\n",
+			MESSAGE_INFO("Track #%d - Audio - ignored due to lack of SDL_mixer\n",
 				current_track);
 #endif // END SDL_mixer
 		}
