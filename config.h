@@ -45,7 +45,7 @@
 #undef NETPLAY_DEBUG
 
 /* defined if user wants ogg support in hcd */
-#undef OGG_SUPPORT
+#define OGG_SUPPORT 1
 
 /* Name of package */
 #undef PACKAGE

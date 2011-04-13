@@ -460,7 +460,7 @@ parse_INIfile_raw ()
 
   Log ("Setting default frequency to %d\n", option.want_snd_freq);
 
-  sbuf_size = get_config_int ("main", "buffer_size", 1024);
+  sbuf_size = get_config_int ("main", "buffer_size", 512);
   // size of the sound buffer
 
   Log ("Setting sound buffer size to %d bytes\n", sbuf_size);
