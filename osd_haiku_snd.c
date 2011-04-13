@@ -105,9 +105,9 @@ numopened=Mix_QuerySpec(&frequency,&format,&channels);
     if (channels == 2) {
 		Log("Mixer obtained stereo.\n");
 		};
-    if (frequency == 44100) {
-		Log("Mixer obtained frequency 44100.\n");
-		};
+
+	Log("Mixer obtained frequency %d.\n", frequency);
+
     if (format == AUDIO_U8) {
 		Log("Mixer obtained format U8.\n");
 		};

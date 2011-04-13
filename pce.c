@@ -1190,7 +1190,7 @@ IO_write (UInt16 A, UChar V)
 							if (io.psg_da_count[io.psg_ch]++ > (PSG_DIRECT_ACCESS_BUFSIZE - 1))
 								{
 									if (!io.psg_channel_disabled[io.psg_ch])
-										printf("Audio being stuffed into the direct access buffer faster than it's being played.\n");
+										MESSAGE_INFO("Audio being put into the direct access buffer faster than it's being played.\n");
 									io.psg_da_count[io.psg_ch] = 0;
 								}
 						}
