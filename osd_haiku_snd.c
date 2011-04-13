@@ -1,15 +1,6 @@
 #include "utils.h"
 #include "osd_haiku_snd.h"
 
-#if defined(ALLEGRO)
-
- void osd_snd_set_volume(UChar v)
-{
-	set_volume(v);
-}
-
-#endif // ALLEGRO
-
 #if defined (SDL)
   #include <SDL.h>
 

@@ -25,19 +25,72 @@ UInt32 HCD_current_subtitle = 0;
 UInt32 HCD_frame_at_beginning_of_track = 0;
 UChar HCD_current_played_track = 0;
 
+char*
+get_HCD_path(char *name, char *var) {
+
+	char *path;
+	char path_tmp[256];
+	char cw_dir[256];
+
+	path = get_config_string ("main", var, "");
+
+		memset(path_tmp,0,256);
+		memset(cw_dir,0,256);
+		strcpy(path_tmp, name);
+		//Log("path_tmp:%s#\n",MP3_path_tmp);
+		//if filepath to .hcd is relative...?
+		// getcwd +name = gives the full path the hcd
+		//1. path_tmp==name          => current dir + path_tmp=.
+		//2. path begins with '.'    =>
+		// dirname is GNU C only
+		int i;
+
+		for (i = 0; path_tmp[i]; i++) {
+			if (path_tmp[i] == '\\') {
+				path_tmp[i] = '/';
+			}
+		}
+
+		if (strrchr (path_tmp, '/'))
+			*(strrchr (path_tmp, '/') + 1) = 0;
+
+		// path_tmp is now the root of the hcd dir
+
+	if (strcmp(path, "")) {
+		// We found an override within the HCD
+		// Override paths are relative to the HCD directory
+		strncat(path_tmp, path, 256);
+	}
+
+	path = path_tmp;
+
+	/*
+	if (!strcmp(path, "")) {
+		if ((strcmp(path_tmp, name)==0)
+			|| (strncmp(path_tmp, ".", 1)==0)) {
+
+			if (strcmp(path_tmp, name)==0) {
+				strcpy(path_tmp, "/");
+				getcwd(cw_dir, 256);
+				strncat(cw_dir, path_tmp, 256);
+				path = cw_dir;
+			} else {
+				path = path_tmp;
+			}
+		}
+	} else {
+		strcpy(path_tmp, path);
+		path = path_tmp;
+	}
+	*/
+
+	return path;
+}
+
 
 int
 fill_HCD_info(char *name) {
 	int current_track;
-	char *ISO_path;
-	char ISO_path_tmp[256];
-	char cw_dir[256];
-
-#ifdef SDL_mixer
-	// If we can handle MP3/OGG tracks
-	char *MP3_path;
-	char MP3_path_tmp[256];
-#endif
 
 	set_config_file(name);
 
@@ -46,88 +99,6 @@ fill_HCD_info(char *name) {
 	HCD_last_track = get_config_int("main", "last_track", 22);
 
 	current_track = get_config_int("main", "minimum_bios", -1);
-
-#ifdef SDL_mixer
-	MP3_path = get_config_string ("main", "MP3_path", "");
-
-	if (!strcmp(MP3_path, "")) {
-		memset(MP3_path_tmp,0,256);
-		memset(cw_dir,0,256);
-		strcpy(MP3_path_tmp, name);
-		//Log("MP3_path_tmp:%s#\n",MP3_path_tmp);
-		//if filepath to .hcd is relative...?
-		// getcwd +name = gives the full path the hcd
-		//1. MP3_path_tmp==name          => current dir + MP3_path_tmp=.
-		//2. MP3_path begins with '.'    =>
-		// dirname is GNU C only
-		int i;
-
-		for (i = 0; MP3_path_tmp[i]; i++) {
-			if (MP3_path_tmp[i] == '\\') {
-				MP3_path_tmp[i] = '/';
-			}
-		}
-
-		if (strrchr (MP3_path_tmp, '/'))
-			*(strrchr (MP3_path_tmp, '/') + 1) = 0;
-
-
-		if ((strcmp(MP3_path_tmp, name)==0)
-			|| (strncmp (MP3_path_tmp, ".", 1)==0)) {
-			if (strcmp(MP3_path_tmp, name)==0) {
-				strcpy(MP3_path_tmp, "/");
-				getcwd(cw_dir, 256);
-				// Log("%s\n", cw_dir);
-				strncat(cw_dir, MP3_path_tmp, 256);
-				MP3_path = cw_dir;
-				// Log("%s\n", MP3_path);
-			} else {
-				MP3_path = MP3_path_tmp;
-			}
-
-		} else {
-			strcpy(MP3_path_tmp, MP3_path);
-			MP3_path = MP3_path_tmp;
-		}
-	}
-#endif
-
-		ISO_path = get_config_string("main", "ISO_path", "");
-
-		if (!strcmp(ISO_path, "")) {
-			memset(ISO_path_tmp, 0, 256);
-			memset(cw_dir, 0, 256);
-			strcpy(ISO_path_tmp, name);
-
-			int i;
-			for (i = 0; ISO_path_tmp[i]; i++) {
-				if (ISO_path_tmp[i] == '\\')
-					ISO_path_tmp[i] = '/';
-			}
-
-			if (strrchr (ISO_path_tmp, '/'))
-				*(strrchr (ISO_path_tmp, '/') + 1) = 0;
-
-			if ((strcmp(ISO_path_tmp, name)==0)
-				|| (strncmp (ISO_path_tmp, ".", 1)==0)) {
-
-				if (strcmp(ISO_path_tmp, name)==0)
-					strcpy(ISO_path_tmp, "/");
-
-				getcwd(cw_dir, 256);
-				// Log("%s\n", cw_dir);
-				strncat(cw_dir, ISO_path_tmp, 256);
-				ISO_path = cw_dir;
-				// Log("%s\n", ISO_path);
-			}else{
-				ISO_path = ISO_path_tmp;
-			}
-
-
-		}else{
-			strcpy(ISO_path_tmp, ISO_path);
-			ISO_path = ISO_path_tmp;
-		}
 
 	if (current_track != -1)
 		minimum_bios_hooking = current_track;
@@ -171,6 +142,9 @@ fill_HCD_info(char *name) {
 		if (strcmp(tmp_buf, "CODE") == 0) {
 			// FOUND: CODE TRACK
 
+			char *ISO_path = get_HCD_path(name, "ISO_path");
+				// find where ISO's live
+
 			CD_track[current_track].type = 4;
 				// emulated track will use a regular file
 
@@ -180,7 +154,7 @@ fill_HCD_info(char *name) {
 				// search filename of ISO
 
 			strcat(tmp_buf, get_config_string(section_name, "filename", ""));
-			strcpy (CD_track[current_track].filename, tmp_buf);
+			strcpy(CD_track[current_track].filename, tmp_buf);
 
 			struct stat rom_file_buf;
 
@@ -254,6 +228,10 @@ fill_HCD_info(char *name) {
 
 #ifdef SDL_mixer
 			// FOUND: OTHER (AUDIO)
+
+			char *MP3_path = get_HCD_path(name, "MP3_path");
+				//find where audio tracks live
+
 			CD_track[current_track].type = 0;	// Audio track
 			CD_track[current_track].source_type = HCD_SOURCE_REGULAR_FILE;
 
@@ -307,7 +285,7 @@ fill_HCD_info(char *name) {
 				CD_track[current_track].length
 					= (int)(MP3_length(CD_track[current_track].filename) * 75.0);
 
-				MESSAGE_INFO("Track #%d - MP3 Audio - %d 75th of a second long\n",
+				MESSAGE_INFO("Track #%d - MP3 Audio - %s is %d 75th of a second long\n",
 					current_track, CD_track[current_track].filename,
 					CD_track[current_track].length);
 			}
@@ -768,10 +746,10 @@ label_are_bad:
 	  fseek (HCD_iso_FILE, (long)((pce_cd_sectoraddy - CD_track[result].beg_lsn)
 		 * 2048), SEEK_SET);
 
-	  if (fread (p, 2048, 1, HCD_iso_FILE) != 2048)
-			Log("Error when reading sector %d in hcd", pce_cd_sectoraddy);
+	  if(fread(p, 2048, 1, HCD_iso_FILE) != 2048)
+			Log("Error when reading sector %d in hcd\n", pce_cd_sectoraddy);
 
-	  current_position = ftell (HCD_iso_FILE);	// not useful
+	  current_position = ftell(HCD_iso_FILE);	// not useful
 
 	}
 
