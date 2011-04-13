@@ -25,9 +25,6 @@ char cdsystem_path[PATH_MAX];
 char sCfgFileLine[BUFSIZ];
 // line buffer for config reading
 
-char temp_result[BUFSIZ];
-// temporary return value for get_config_var function
-
 char config_file[PATH_MAX], config_file_tmp[PATH_MAX];
 // name of the config file
 
@@ -49,7 +46,7 @@ config_var *config_ar;
 
 
 int
-config_var_cmp (const void *lhs, const void *rhs)
+config_var_cmp(const void *lhs, const void *rhs)
 {
 	int section_cmp
 		= stricmp(((config_var *) lhs)->section, ((config_var *) rhs)->section);
@@ -63,7 +60,7 @@ config_var_cmp (const void *lhs, const void *rhs)
 
 
 void
-set_config_file (const char *filename)
+set_config_file(const char *filename)
 {
 	strcpy (config_file_tmp, config_file);
 	strcpy (config_file, filename);
@@ -71,14 +68,14 @@ set_config_file (const char *filename)
 
 
 void
-set_config_file_back (void)
+set_config_file_back(void)
 {
 	strcpy (config_file, config_file_tmp);
 }
 
 
 char
-init_config (void)
+init_config(void)
 {
 	FILE *FCfgFile = NULL;
 	char *pWrd = NULL;
@@ -160,7 +157,7 @@ init_config (void)
 
 
 void
-dispose_config (void)
+dispose_config(void)
 {
 	int index;
 
@@ -178,16 +175,17 @@ char *
 get_config_var(char *section, char *variable)
 {
 	config_var key, *result;
+	char temp_result[BUFSIZ];
 
 	key.section = section;
 	key.variable = variable;
 
 	result
-		= bsearch (&key, config_ar, config_ar_index, sizeof (config_var),
+		= bsearch(&key, config_ar, config_ar_index, sizeof (config_var),
 			config_var_cmp);
 
 	if (result != NULL) {
-		strcpy (temp_result, result->value);
+		strcpy(temp_result, result->value);
 		return temp_result;
 	}
 
@@ -198,9 +196,9 @@ get_config_var(char *section, char *variable)
 // Let's redefine the old allegro parsing function
 
 int
-get_config_int (char *section, char *keyword, int default_value)
+get_config_int(char *section, char *keyword, int default_value)
 {
-	char *p = get_config_var (section, keyword);
+	char *p = get_config_var(section, keyword);
 	if (p == NULL)
 		return default_value;
 
@@ -209,10 +207,9 @@ get_config_int (char *section, char *keyword, int default_value)
 
 
 char*
-get_config_string (char *section, char *keyword, char *default_value)
+get_config_string(char *section, char *keyword, char *default_value)
 {
-	char *p = get_config_var (section, keyword);
-
+	char *p = get_config_var(section, keyword);
 	return (p == NULL ? default_value : p);
 }
 

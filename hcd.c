@@ -25,7 +25,6 @@ UChar HCD_current_played_track = 0;
 
 int
 fill_HCD_info(char *name) {
-
 	int current_track;
 	char *ISO_path;
 	char ISO_path_tmp[256];
@@ -37,7 +36,7 @@ fill_HCD_info(char *name) {
 	char MP3_path_tmp[256];
 #endif
 
-	set_config_file (name);
+	set_config_file(name);
 
 	init_config();
 	HCD_first_track = get_config_int("main", "first_track", 1);
@@ -132,11 +131,10 @@ fill_HCD_info(char *name) {
 	for (current_track = HCD_first_track;
 		current_track <= HCD_last_track; current_track++) {
 
-		char *section_name = (char *) alloca (100);
-		char *tmp_buf = (char *) alloca (100);
+		char *section_name = (char *)alloca(100);
+		char *tmp_buf = (char *)alloca(100);
 
-		sprintf (section_name, "track%d", current_track);
-
+		sprintf(section_name, "track%d", current_track);
 
 // ----- Init patch section -----
 
@@ -145,8 +143,8 @@ fill_HCD_info(char *name) {
 
 // ----- find beginning ---------
 
-		strcpy (tmp_buf,
-			strupr (get_config_string (section_name, "begin", "")));
+		strcpy(tmp_buf,
+			strupr(get_config_string(section_name, "begin", "")));
 
 		if (strcasestr (tmp_buf, "MSF")) {
 			int min = (tmp_buf[4] - '0') * 10 + (tmp_buf[5] - '0');
@@ -163,7 +161,7 @@ fill_HCD_info(char *name) {
 			CD_track[current_track].beg_lsn = 0;
 		}
 
-		strcpy (tmp_buf,
+		strcpy(tmp_buf,
 			strupr(get_config_string(section_name, "type", "AUDIO")));
 
 		if (strcmp(tmp_buf, "CODE") == 0) {
@@ -322,8 +320,9 @@ fill_HCD_info(char *name) {
 
 			if (CD_track[current_track].length == 0)
 				CD_track[current_track].length = 30 * 75;	// 30 sec track
-
-#endif	// END SDL_mixer
+#else
+			MESSAGE_INFO("Audio #%d ignored due to lack of SDL_mixer\n");
+#endif // END SDL_mixer
 		}
 
 

@@ -494,12 +494,9 @@ UChar pce_cd_handle_read_1800(UInt16 A)
               cd_read_buffer = 0;
               if (!--cd_sectorcnt)
                 {
-#ifndef FINAL_RELEASE
-                  fprintf (stderr,
-                           "Sector data count over.\n");
-#endif
-                  io.cd_port_1800 |= 0x10;
-                  pce_cd_curcmd = 0;
+					MESSAGE_ERROR("Sector data count over, incomplete CD?\n");
+					io.cd_port_1800 |= 0x10;
+					pce_cd_curcmd = 0;
                 }
               else
                 {

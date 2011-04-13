@@ -3186,8 +3186,5 @@ void exe_go(void) {
       }
 
   }
-#if !defined(FINAL_RELEASE)
-  fprintf(stderr,"Abnormal exit from the cpu loop\n");
-#endif
-  Log("Abnormal exit from the cpu loop\n");
+  MESSAGE_ERROR("Abnormal exit from the cpu loop\n");
 }
