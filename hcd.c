@@ -11,7 +11,6 @@
 #include "hcd.h"
 
 UInt32 HCD_first_track;
-
 UInt32 HCD_last_track;
 
 char HCD_cover_filename[256] = "";
@@ -47,10 +46,10 @@ fill_HCD_info(char *name) {
 #ifdef SDL_mixer
 	MP3_path = get_config_string ("main", "MP3_path", "");
 
-	if (!strcmp (MP3_path, "")) {
+	if (!strcmp(MP3_path, "")) {
 		memset(MP3_path_tmp,0,256);
 		memset(cw_dir,0,256);
-		strcpy (MP3_path_tmp, name);
+		strcpy(MP3_path_tmp, name);
 		//Log("MP3_path_tmp:%s#\n",MP3_path_tmp);
 		//if filepath to .hcd is relative...?
 		// getcwd +name = gives the full path the hcd
@@ -78,14 +77,15 @@ fill_HCD_info(char *name) {
 				strncat(cw_dir, MP3_path_tmp, 256);
 				MP3_path = cw_dir;
 				// Log("%s\n", MP3_path);
-			}else{
+			} else {
 				MP3_path = MP3_path_tmp;
 			}
 
-		}else{
+		} else {
 			strcpy(MP3_path_tmp, MP3_path);
 			MP3_path = MP3_path_tmp;
 		}
+	}
 #endif
 
 		ISO_path = get_config_string("main", "ISO_path", "");
@@ -321,7 +321,8 @@ fill_HCD_info(char *name) {
 			if (CD_track[current_track].length == 0)
 				CD_track[current_track].length = 30 * 75;	// 30 sec track
 #else
-			MESSAGE_INFO("Audio #%d ignored due to lack of SDL_mixer\n");
+			MESSAGE_INFO("Audio #%d ignored due to lack of SDL_mixer\n",
+				current_track);
 #endif // END SDL_mixer
 		}
 
@@ -960,7 +961,5 @@ HCD_cd_read_sector(unsigned char *p, UInt32 dum, UInt32 result)
 
 
  osd_cd_read(p, dum - CD_track[result].beg_lsn + Time2HSG((int)min, (int)sec, (int)fra));
-
-
 
 }

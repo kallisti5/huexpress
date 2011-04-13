@@ -2299,10 +2299,10 @@ TrashPCE(char *backmemname)
 	// Set volume to zero
 	io.psg_volume = 0;
 
-	sprintf(tmp_buf, "rm -rf %s/HU-GO!.TMP/*", short_exe_name);
+	sprintf(tmp_buf, "rm -rf %s/tmp/*", short_exe_name);
 	system(tmp_buf);
 
-	sprintf (tmp_buf, "%s/HU-GO!.TMP", short_exe_name);
+	sprintf (tmp_buf, "%s/tmp", short_exe_name);
 	rmdir (tmp_buf);
 
 	if (CD_emulation == 1)

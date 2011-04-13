@@ -207,7 +207,7 @@ osd_init_paths(int argc, char* argv[])
   sprintf(log_filename,"%s/%s",short_exe_name,"huku.log");	
 		
 	// Set a temporary path per user (should it be by process ?)
-	sprintf(tmp_basepath, "%s/hugo.tmp", short_exe_name);
+	sprintf(tmp_basepath, "%s/tmp", short_exe_name);
 	mkdir(tmp_basepath, 0777);
 	
 	// Set the saved game directory
