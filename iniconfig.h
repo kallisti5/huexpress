@@ -4,11 +4,6 @@
 #include "pce.h"
 #include "debug.h"
 
-/*
-#include "osd_keyboard.h"
-#include "osd_cd.h"
-*/
-
 #include "interf.h"
 #include "lang.h"
 
@@ -23,14 +18,11 @@
 
 #endif
 
-#if defined(LINUX)
-
-#include "sys/param.h"
-
-#endif
-
 void set_config_file (const char *filename);
 void set_config_file_back (void);
+
+char*
+get_config_string(char *section, char *keyword, char *default_value);
 
 void parse_INIfile();
 /* check the configuration file for options

@@ -26,12 +26,16 @@ UChar HCD_current_played_track = 0;
 int
 fill_HCD_info(char *name) {
 
+	int current_track;
+	char *ISO_path;
+	char ISO_path_tmp[256];
+	char cw_dir[256];
+
 #ifdef SDL_mixer
 	// If we can handle MP3/OGG tracks
-
-	int current_track;
-	char *MP3_path, *ISO_path;
-	char MP3_path_tmp[256], ISO_path_tmp[256], cw_dir[256];
+	char *MP3_path;
+	char MP3_path_tmp[256];
+#endif
 
 	set_config_file (name);
 
@@ -41,8 +45,8 @@ fill_HCD_info(char *name) {
 
 	current_track = get_config_int("main", "minimum_bios", -1);
 
+#ifdef SDL_mixer
 	MP3_path = get_config_string ("main", "MP3_path", "");
-
 
 	if (!strcmp (MP3_path, "")) {
 		memset(MP3_path_tmp,0,256);
@@ -83,20 +87,20 @@ fill_HCD_info(char *name) {
 			strcpy(MP3_path_tmp, MP3_path);
 			MP3_path = MP3_path_tmp;
 		}
+#endif
 
 		ISO_path = get_config_string("main", "ISO_path", "");
 
-		if (!strcmp (ISO_path, "")) {
+		if (!strcmp(ISO_path, "")) {
 			memset(ISO_path_tmp, 0, 256);
 			memset(cw_dir, 0, 256);
 			strcpy(ISO_path_tmp, name);
-		// {
+
 			int i;
 			for (i = 0; ISO_path_tmp[i]; i++) {
 				if (ISO_path_tmp[i] == '\\')
 					ISO_path_tmp[i] = '/';
 			}
-		// }
 
 			if (strrchr (ISO_path_tmp, '/'))
 				*(strrchr (ISO_path_tmp, '/') + 1) = 0;
@@ -244,6 +248,8 @@ fill_HCD_info(char *name) {
 
 			CD_track[current_track].type = (control & 4);
 		} else {
+
+#ifdef SDL_mixer
 			// FOUND: OTHER (AUDIO)
 			CD_track[current_track].type = 0;	// Audio track
 			CD_track[current_track].source_type = HCD_SOURCE_REGULAR_FILE;
@@ -316,75 +322,42 @@ fill_HCD_info(char *name) {
 
 			if (CD_track[current_track].length == 0)
 				CD_track[current_track].length = 30 * 75;	// 30 sec track
-			}
 
-      //----- if begin hasn't been specified ---------
+#endif	// END SDL_mixer
+		}
 
 
+	// ----- if begin hasn't been specified ---------
+		if (!CD_track[current_track].beg_lsn) {
+			if (current_track == 1)
+				CD_track[current_track].beg_lsn = 0;
+			else
+				CD_track[current_track].beg_lsn
+					= CD_track[current_track - 1].beg_lsn
+					+ CD_track[current_track - 1].length;
+		}
 
-      if (!CD_track[current_track].beg_lsn)
+	// ----- convert beginning in PCE msf format ---------
+		{
+		int min, sec, fra;
+		Frame2Time(CD_track[current_track].beg_lsn + 150, &min, &sec, &fra);
 
-	{
-
-	  if (current_track == 1)
-
-	    CD_track[current_track].beg_lsn = 0;
-
-	  else
-
-	    CD_track[current_track].beg_lsn =
-
-	      CD_track[current_track - 1].beg_lsn +
-
-	      CD_track[current_track - 1].length;
+		CD_track[current_track].beg_min = binbcd[min];
+		CD_track[current_track].beg_sec = binbcd[sec];
+		CD_track[current_track].beg_fra = binbcd[fra];
+		}
 
 	}
 
+	// restores right file for hugo config
+	set_config_file_back();
 
-
-      //----- convert beginning in PCE msf format ---------
-
-
-
-      {
-
-	int min, sec, fra;
-
-
-
-	Frame2Time (CD_track[current_track].beg_lsn + 150, &min, &sec, &fra);
-
-
-
-	CD_track[current_track].beg_min = binbcd[min];
-
-	CD_track[current_track].beg_sec = binbcd[sec];
-
-	CD_track[current_track].beg_fra = binbcd[fra];
-
-      }
-
-    }
-
-
-
-
-#endif
-
-//restores right file for hugo config
-set_config_file_back();
-
-  return 1;
-
-
-
+	return 1;
 }
 
 
 void
-
 HCD_pause_playing ()
-
 {
 
 

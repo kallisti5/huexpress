@@ -208,7 +208,7 @@ get_config_int (char *section, char *keyword, int default_value)
 }
 
 
-char *
+char*
 get_config_string (char *section, char *keyword, char *default_value)
 {
 	char *p = get_config_var (section, keyword);
