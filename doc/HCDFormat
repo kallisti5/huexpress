@@ -49,22 +49,25 @@ Items ending in a * are required.
 
 [main]
 id=<CATALOGID>
-name=My Game
 media=SuperCDRom2
 country=Japan
+title=My Game
+developer=Studio Developer
 release=1992-03-29
 price=7800 Yen
-first_track=1 *
-last_track=3 *
+genere=unknown
+first_track=1
+last_track=3
+minimum_bios=1
 
 [artwork]
 front=CATALOGID_1.png
 back=CATALOGID_2.png
 disc=CATALOGID_3.png
 
-[track1] *
-type=AUDIO *
-filename=Track01.ogg *
+[track1]
+type=AUDIO
+filename=Track01.ogg
 
 [track2]
 type=CODE
@@ -73,5 +76,4 @@ filename=Track02.iso
 [track3]
 type=AUDIO
 filename=Track03.ogg
-
 
