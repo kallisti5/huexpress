@@ -1,0 +1,77 @@
+   ............................................................
+    ......__               .___                               .
+     ....|  |__   ____   __| _/   ____________   ____   ____  ..
+      ...|  |  \_/ ___\ / __ |   /  ___/\____ \_/ __ \_/ ___\ ..
+       ..|   Y  \  \___/ /_/ |   \___ \ |  |_> >  ___/\  \___ ...
+       ..|___|  /\___  >____ |  /____  >|   __/ \___  >\___  >....
+        .     \/     \/     \/       \/ |__|        \/     \/ .....
+        ............................................................
+                      HCD, PCEngine CDRom² Definition
+                          Revision 1.0, Zerograd?
+                   Revision 1.1, 2011 Alexander von Gluck
+
+The HCD format defines the track contents of PCEngine / Turbografx 
+CDRom² and SuperCDRom² disk images.
+
+The HCD format used by HuKU should be fully compatible with the version
+used by HuGO!, although some optional enhancements exist within the
+HuKU format.
+
+CD File Layout
+^^^^^^^^^^^^^^
+The standard filesystem layout of HCD enabled archive/game is as follows:
+(items with a * are required)
+
++My Game - CATALOGID.zip
+  *|-CATALOGID.hcd   - HCD, PCEngine CDRom² Definition
+   |-CATALOGID.cue   - Cue file so disc can be burned
+   |-CATALOGID_X.png - Disc images, artwork, etc
+   |-Track01.ogg|mp3 - MP3/OGG AUDIO Track
+  *|-Track02.iso     - ISO CODE Track
+   |-TrackXX.ogg|mp3 - MP3/OGG AUDIO Track (XX = 03-XX)
+
+
+CD Audio Tracks
+^^^^^^^^^^^^^^^
+Using ogg encoding for the audio tracks is recommended as it provides better
+performance (and is more opensource friendly), although mp3 is also supported.
+
+CDRom² discs will have standard audio tracks for audio storage, it is required
+to encode these with ogg or mp3 as the space savings will be *substantial*.
+A 600MB disk image can be brought down to ~50-100MB by simply encoding the audio
+tracks. (even compressing the wav's with zip/rar/xz can't even get close to this)
+
+
+HCD File Format
+^^^^^^^^^^^^^^^
+Below is an example HCD CD Definition
+Items ending in a * are required.
+
+[main]
+id=<CATALOGID>
+name=My Game
+media=SuperCDRom2
+country=Japan
+release=1992-03-29
+price=7800 Yen
+first_track=1 *
+last_track=3 *
+
+[artwork]
+front=CATALOGID_1.png
+back=CATALOGID_2.png
+disc=CATALOGID_3.png
+
+[track1] *
+type=AUDIO *
+filename=Track01.ogg *
+
+[track2]
+type=CODE
+filename=Track02.iso
+
+[track3]
+type=AUDIO
+filename=Track03.ogg
+
+
