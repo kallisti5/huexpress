@@ -142,8 +142,7 @@
 
 int testadpcm = 0;
 
-#ifdef CD_DEBUG
-
+#if ENABLE_TRACING_CD
 const char *cdbios_functions(int index)
 {
   switch(index) {
@@ -315,13 +314,12 @@ const char *cdbios_functions(int index)
 
   return "?UNKNOWN?";
 }
-
 #endif
 
 
 void handle_bios(void)
 {
-#ifdef CD_DEBUG
+#if ENABLE_TRACING_CD
   static int last_op = -1, last_ax = -1, last_bx = -1, last_cx = -1, last_dx = -1;
   int this_op = imm_operand(reg_pc + 1), this_ax = get_16bit_zp(_ax), this_bx = get_16bit_zp(_bx),
       this_cx = get_16bit_zp(_cx), this_dx = get_16bit_zp(_dx);
@@ -559,7 +557,7 @@ void handle_bios(void)
                */
               put_8bit_addr(0x2273, 0);
               reg_pc += 2;
-#ifdef CD_DEBUG
+#if ENABLE_TRACING_CD
               fprintf(stderr, "Reading mode not supported : %d\n_AX=0x%04x\n_BX=0x%04x\n_CX=0x%04x\n_DX=0x%04x\n",
                       mode, get_16bit_zp(_ax), get_16bit_zp(_bx), get_16bit_zp(_cx), get_16bit_zp(_dx));
 #endif
@@ -994,7 +992,7 @@ void handle_bios(void)
       break;
     }
 
-#ifdef CD_DEBUG
+#if ENABLE_TRACING_CD
     case MA_MUL8U:
     {
       UInt16 res;

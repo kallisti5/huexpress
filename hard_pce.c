@@ -598,7 +598,7 @@ IO_read_raw (UInt16 A)
 			 */
 
 
-#if defined(CD_DEBUG) && !defined(FINAL_RELEASE)
+#if ENABLE_TRACING_CD
 			printf("Reading from AC main port. ac_port = %d. %suse offset. %sincrement. %sincrement base\n",
 				ac_port,
 				io.ac_control[ac_port] & AC_USE_OFFSET ? "": "not ",
@@ -630,7 +630,7 @@ IO_read_raw (UInt16 A)
 						 ac_incr[ac_port]) & 0xffff);
 			}
 
-#if defined(CD_DEBUG) && !defined(FINAL_RELEASE)
+#if ENABLE_TRACING_CD
 			printf("Returned 0x%02x. now, base = 0x%x. offset = 0x%x, increment = 0x%x\n", ret, io.ac_base[ac_port], io.ac_offset[ac_port], io.ac_incr[ac_port]);
 #endif
 			return ret;
@@ -697,7 +697,7 @@ void
 bank_set (UChar P, UChar V)
 {
 
-#if defined(CD_DEBUG)
+#if ENABLE_TRACING_CD
   if (V >= 0x40 && V <= 0x43)
 		printf("AC pseudo bank switching !!! (mmr[%d] = %d)\n", P, V);
 #endif
@@ -780,7 +780,7 @@ void write_memory_arcade_card(UInt16 A, UChar V)
 	  if ((mmr[A >> 13] >= 0x40)  && (mmr[A >> 13] <= 0x43))
 			{
 				/*
-				#if defined(CD_DEBUG)
+				#if ENABLE_TRACING_CD
 				fprintf(stderr, "writing 0x%02x to AC pseudo bank (%d)\n", V, mmr[A >> 13] - 0x40);
 				#endif
 				*/
@@ -806,7 +806,7 @@ UChar read_memory_arcade_card(UInt16 A)
 		if ((mmr[A >> 13] >= 0x40)  && (mmr[A >> 13] <= 0x43))
 			{
 				/*
-				#if defined(CD_DEBUG)
+				#if ENABLE_TRACING_CD
 				fprintf(stderr, "reading AC pseudo bank (%d)\n", mmr[A >> 13] - 0x40);
 				#endif
 				*/

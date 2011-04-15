@@ -49,354 +49,301 @@ UChar cd_fade;
 static void
 pce_cd_set_sector_address (void)
 {
-  pce_cd_sectoraddy = pce_cd_sectoraddress[0] << 16;
-  pce_cd_sectoraddy += pce_cd_sectoraddress[1] << 8;
-  pce_cd_sectoraddy += pce_cd_sectoraddress[2];
+	pce_cd_sectoraddy = pce_cd_sectoraddress[0] << 16;
+	pce_cd_sectoraddy += pce_cd_sectoraddress[1] << 8;
+	pce_cd_sectoraddy += pce_cd_sectoraddress[2];
 }
+
 
 static void
-pce_cd_handle_command (void)
+pce_cd_handle_command(void)
 {
 
-  if (pce_cd_cmdcnt)
-    {
-#ifdef CD_DEBUG
-      fprintf (stderr, "Command arg received: 0x%02x.\n", io.cd_port_1801);
+	if (pce_cd_cmdcnt) {
+#if ENABLE_TRACING_CD
+		TRACE("Command arg received: 0x%02x.\n", io.cd_port_1801);
 #endif
 
-      if (--pce_cd_cmdcnt)
-	io.cd_port_1800 = 0xd0;
-      else
-	io.cd_port_1800 = 0xc8;
+	if (--pce_cd_cmdcnt)
+		io.cd_port_1800 = 0xd0;
+	else
+		io.cd_port_1800 = 0xc8;
 
-      switch (pce_cd_curcmd)
+	switch (pce_cd_curcmd)
 	{
-	case 0x08:
-	  if (!pce_cd_cmdcnt)
-	    {
-#ifdef CD_DEBUG
-	      fprintf (stderr, "Read command: %d sectors.\n", io.cd_port_1801);
-	      fprintf (stderr, "Starting at %02x:%02x:%02x.\n",
-		       pce_cd_sectoraddress[0], pce_cd_sectoraddress[1],
-		       pce_cd_sectoraddress[2]);
-	      fprintf (stderr, "MODE : %x\n", Rd6502 (0x20FF));
+		case 0x08:
+			if (!pce_cd_cmdcnt) {
+#if ENABLE_TRACING_CD
+				TRACE("Read command: %d sectors.\n", io.cd_port_1801);
+				TRACE("Starting at %02x:%02x:%02x.\n",
+					pce_cd_sectoraddress[0],
+					pce_cd_sectoraddress[1],
+					pce_cd_sectoraddress[2]);
+				TRACE("MODE : %x\n", Rd6502(0x20FF));
+#endif
+				cd_sectorcnt = io.cd_port_1801;
+				if (cd_sectorcnt == 0) {
+					MESSAGE_ERROR("%s, cd_sectorcnt == 0 !!!\n",
+						__func__);
+					Log("cd_sectorcnt == 0 !!!");
+				}
+
+				pce_cd_set_sector_address ();
+				pce_cd_read_sector ();
+
+
+				/* TEST */
+				// cd_port_1800 = 0xD0; // Xanadu 2 doesn't block but still crash
+				/* TEST */
+
+#if ENABLE_TRACING_CD
+				TRACE("Result of reading : $1800 = 0X%02X\n",
+					io.cd_port_1800);
 #endif
 
-	      cd_sectorcnt = io.cd_port_1801;
+				/* TEST ZEO
+				if (Rd6502(0x20ff)==0xfe)
+					cd_port_1800 = 0x98;
+				else
+					cd_port_1800 = 0xc8;
+				* ******** */
+			} else
+				pce_cd_sectoraddress[3 - pce_cd_cmdcnt] = io.cd_port_1801;
 
-              if (cd_sectorcnt == 0)
-                {
-                  fprintf(stderr, "cd_sectorcnt == 0 !!!");
-                  Log("cd_sectorcnt == 0 !!!");
-                }
+			break;
+		case 0xd8:
+			pce_cd_temp_play[pce_cd_cmdcnt] = io.cd_port_1801;
 
-	      pce_cd_set_sector_address ();
-	      pce_cd_read_sector ();
+			if (!pce_cd_cmdcnt) {
+				io.cd_port_1800 = 0xd8;
+			}
+			break;
+		case 0xd9:
+			pce_cd_temp_stop[pce_cd_cmdcnt] = io.cd_port_1801;
 
-
-	      /* TEST */
-	      // cd_port_1800 = 0xD0; // Xanadu 2 doesn't block but still crash
-	      /* TEST */
-
-#ifdef CD_DEBUG
-	      fprintf (stderr, "Result of reading : $1800 = 0X%02X\n\n\n",
-		       io.cd_port_1800);
-#endif
-
-/* TEST ZEO
-    if (Rd6502(0x20ff)==0xfe)
-     cd_port_1800 = 0x98;
-    else
-     cd_port_1800 = 0xc8;
- * ******** */
-
-	    }
-	  else
-	    pce_cd_sectoraddress[3 - pce_cd_cmdcnt] = io.cd_port_1801;
-
-	  break;
-	case 0xd8:
-
-	  pce_cd_temp_play[pce_cd_cmdcnt] = io.cd_port_1801;
-
-	  if (!pce_cd_cmdcnt)
-	    {
-	      io.cd_port_1800 = 0xd8;
-	    }
-	  break;
-	case 0xd9:
-
-	  pce_cd_temp_stop[pce_cd_cmdcnt] = io.cd_port_1801;
-
-	  if (!pce_cd_cmdcnt)
-	    {
-	      io.cd_port_1800 = 0xd8;
+			if (!pce_cd_cmdcnt) {
+				io.cd_port_1800 = 0xd8;
 /*
-               if (pce_cd_temp_stop[3] == 1)
-                 osd_cd_play_audio_track(bcdbin[pce_cd_temp_play[2]]);
-               else
+				if (pce_cd_temp_stop[3] == 1)
+					osd_cd_play_audio_track(bcdbin[pce_cd_temp_play[2]]);
+				else
 */
-	      if ((pce_cd_temp_play[0] |
-		   pce_cd_temp_play[1] |
-		   pce_cd_temp_stop[0] | pce_cd_temp_stop[1]) == 0)
-		{
-		  if (CD_emulation == 5)
-		    HCD_play_track (bcdbin[pce_cd_temp_play[2]], 1);
-		  else
-		    osd_cd_play_audio_track (bcdbin[pce_cd_temp_play[2]]);
-		}
-	      else
-		{
-		  if (CD_emulation == 5)
-		    HCD_play_sectors (Time2Frame (bcdbin[pce_cd_temp_play[2]],
-						  bcdbin[pce_cd_temp_play[1]],
-						  bcdbin[pce_cd_temp_play[0]]),
-				      Time2Frame (bcdbin[pce_cd_temp_stop[2]],
-						  bcdbin[pce_cd_temp_stop[1]],
-						  bcdbin[pce_cd_temp_stop[0]]),
-				      pce_cd_temp_stop[3] == 1);
-		  else
-		    osd_cd_play_audio_range (bcdbin[pce_cd_temp_play[2]],
-					     bcdbin[pce_cd_temp_play[1]],
-					     bcdbin[pce_cd_temp_play[0]],
-					     bcdbin[pce_cd_temp_stop[2]],
-					     bcdbin[pce_cd_temp_stop[1]],
-					     bcdbin[pce_cd_temp_stop[0]]);
-		}
-	      Log ("play from %d:%d:%d:(%d) to %d:%d:%d:(%d)\nloop = %d\n",
-		   bcdbin[pce_cd_temp_play[2]],
-		   bcdbin[pce_cd_temp_play[1]],
-		   bcdbin[pce_cd_temp_play[0]],
-		   pce_cd_temp_play[3],
-		   bcdbin[pce_cd_temp_stop[2]],
-		   bcdbin[pce_cd_temp_stop[1]],
-		   bcdbin[pce_cd_temp_stop[0]],
-		   pce_cd_temp_stop[3], pce_cd_temp_stop[3] == 1);
+				if ((pce_cd_temp_play[0] |
+					pce_cd_temp_play[1] |
+					pce_cd_temp_stop[0] | pce_cd_temp_stop[1]) == 0) {
+					if (CD_emulation == 5)
+						HCD_play_track (bcdbin[pce_cd_temp_play[2]], 1);
+					else
+						osd_cd_play_audio_track (bcdbin[pce_cd_temp_play[2]]);
+				} else {
+					if (CD_emulation == 5) {
+						HCD_play_sectors(Time2Frame (bcdbin[pce_cd_temp_play[2]],
+							bcdbin[pce_cd_temp_play[1]],
+							bcdbin[pce_cd_temp_play[0]]),
+							Time2Frame (bcdbin[pce_cd_temp_stop[2]],
+							bcdbin[pce_cd_temp_stop[1]],
+							bcdbin[pce_cd_temp_stop[0]]),
+							pce_cd_temp_stop[3] == 1);
+					} else {
+						osd_cd_play_audio_range (bcdbin[pce_cd_temp_play[2]],
+							bcdbin[pce_cd_temp_play[1]],
+							bcdbin[pce_cd_temp_play[0]],
+							bcdbin[pce_cd_temp_stop[2]],
+							bcdbin[pce_cd_temp_stop[1]],
+							bcdbin[pce_cd_temp_stop[0]]);
+					}
+				}
 
-	    }
-	  break;
-	case 0xde:
-
-#ifdef CD_DEBUG
-	  Log (" Arg for 0xde command is %X, command count is %d\n",
-	       io.cd_port_1801, pce_cd_cmdcnt);
+#if ENABLE_TRACING_CD
+				Log ("Play from %d:%d:%d:(%d) to %d:%d:%d:(%d)\nloop = %d\n",
+					bcdbin[pce_cd_temp_play[2]],
+					bcdbin[pce_cd_temp_play[1]],
+					bcdbin[pce_cd_temp_play[0]],
+					pce_cd_temp_play[3],
+					bcdbin[pce_cd_temp_stop[2]],
+					bcdbin[pce_cd_temp_stop[1]],
+					bcdbin[pce_cd_temp_stop[0]],
+					pce_cd_temp_stop[3], pce_cd_temp_stop[3] == 1);
 #endif
 
-	  if (pce_cd_cmdcnt)
-	    pce_cd_temp_dirinfo[pce_cd_cmdcnt] = io.cd_port_1801;
-	  else
-	    {
-	      // We have received two arguments in pce_cd_temp_dirinfo
-	      // We can use only one
-	      // There's an argument indicating the kind of info we want
-	      // and an optional argument for track number
-
-	      pce_cd_temp_dirinfo[0] = io.cd_port_1801;
-
-#ifdef CD_DEBUG
-	      Log
-		(" I'll answer to 0xde command request\nArguments are %x, %x, %x, %x\n",
-		 pce_cd_temp_dirinfo[0], pce_cd_temp_dirinfo[1],
-		 pce_cd_temp_dirinfo[2], pce_cd_temp_dirinfo[3]);
-#endif
-
-	      switch (pce_cd_temp_dirinfo[1])
-		{
-		case 0:
-		  // We want info on number of first and last track
-
-		  switch (CD_emulation)
-		    {
-		    case 2:
-		    case 3:
-		    case 4:
-		      pce_cd_dirinfo[0] = binbcd[01];	// Number of first track  (BCD)
-		      pce_cd_dirinfo[1] = binbcd[nb_max_track];	// Number of last track (BCD)
-		      break;
-		    case 1:
-		      {
-			int first_track, last_track;
-			osd_cd_nb_tracks (&first_track, &last_track);
-			pce_cd_dirinfo[0] = binbcd[first_track];
-			pce_cd_dirinfo[1] = binbcd[last_track];
-		      }
-		      break;
-		    case 5:
-		      Log ("HCD: first track %d, last track %d\n",
-			   HCD_first_track, HCD_last_track);
-		      pce_cd_dirinfo[0] = binbcd[HCD_first_track];
-		      pce_cd_dirinfo[1] = binbcd[HCD_last_track];
-		      break;
-		    }		// switch CD emulation
-
-		  cd_read_buffer = pce_cd_dirinfo;
-		  pce_cd_read_datacnt = 2;
-
-#ifdef CD_DEBUG
-		  Log (" Data resulting of 0xde request is %x and %x\n",
-		       cd_read_buffer[0], cd_read_buffer[1]);
-#endif
-		  break;
-
-		case 2:
-
-		  // We want info on the track whose number is pce_cd_temp_dirinfo[0]
-
-		  switch (CD_emulation)
-		    {
-		    case 2:
-		    case 3:
-		    case 4:
-		    case 5:
-
-		      pce_cd_dirinfo[0] =
-			CD_track[bcdbin[pce_cd_temp_dirinfo[0]]].beg_min;
-		      pce_cd_dirinfo[1] =
-			CD_track[bcdbin[pce_cd_temp_dirinfo[0]]].beg_sec;
-		      pce_cd_dirinfo[2] =
-			CD_track[bcdbin[pce_cd_temp_dirinfo[0]]].beg_fra;
-		      pce_cd_dirinfo[3] =
-			CD_track[bcdbin[pce_cd_temp_dirinfo[0]]].type;
-
-#ifdef CD_DEBUG
-		      Log ("Type of track %d is %d\n",
-			   bcdbin[pce_cd_temp_dirinfo[0]],
-			   CD_track[bcdbin[pce_cd_temp_dirinfo[0]]].type);
-#endif
-		      break;
-		    case 1:
-		      {
-			int Min, Sec, Fra, Ctrl;
-			osd_cd_track_info (bcdbin[pce_cd_temp_dirinfo[0]],
-					   &Min, &Sec, &Fra, &Ctrl);
-
-			pce_cd_dirinfo[0] = binbcd[Min];
-			pce_cd_dirinfo[1] = binbcd[Sec];
-			pce_cd_dirinfo[2] = binbcd[Fra];
-			pce_cd_dirinfo[3] = Ctrl;
-
-			Log
-			  ("The control byte of the audio track #%d is 0x%02X\n",
-			   bcdbin[pce_cd_temp_dirinfo[0]], pce_cd_dirinfo[3]);
-
+			}
 			break;
-
-		      }		// case CD emulation = 1
-
-		    }		// switch CD emulation
-
-		  pce_cd_read_datacnt = 3;
-		  cd_read_buffer = pce_cd_dirinfo;
-
-		  break;
-
-		case 1:
-
-		  switch (CD_emulation)
-		    {
-		    case 1:
-		      {
-
-			int min, sec, fra;
-
-			osd_cd_length (&min, &sec, &fra);
-
-			pce_cd_dirinfo[0] = binbcd[min];
-			pce_cd_dirinfo[1] = binbcd[sec];
-			pce_cd_dirinfo[2] = binbcd[fra];
-
-			break;
-		      }		// case Cd emulation = 1
-		    default:
-		      pce_cd_dirinfo[0] = 0x25;
-		      pce_cd_dirinfo[1] = 0x06;
-		      pce_cd_dirinfo[2] = 0x00;
-		    }		// switch CD emulation
-
-		  pce_cd_read_datacnt = 3;
-		  cd_read_buffer = pce_cd_dirinfo;
-
-		  break;
-
-		}		// switch command of request 0xde
-
-	    }			// end if of request 0xde (receiving command or executing them)
-
-	}			// switch of request
-
-    }				// end if of command arg or new request
-  else
-    {
-
-      // it's a command ID we're receiving
-
-#ifdef CD_DEBUG
-      fprintf (stderr, "Command byte received: 0x%02x.\n", io.cd_port_1801);
+		case 0xde:
+#if ENABLE_TRACING_CD
+			Log ("Arg for 0xde command is %X, command count is %d\n",
+				io.cd_port_1801, pce_cd_cmdcnt);
+			TRACE("Arg for 0xde command is %X, command count is %d\n",
+				io.cd_port_1801, pce_cd_cmdcnt);
 #endif
 
-      switch (io.cd_port_1801)
-	{
-	case 0x00:
-	  io.cd_port_1800 = 0xD8;
-	  break;
-	case 0x08:
-	  pce_cd_curcmd = io.cd_port_1801;
-	  pce_cd_cmdcnt = 4;
-	  break;
-	case 0xD8:
-	  pce_cd_curcmd = io.cd_port_1801;
-	  pce_cd_cmdcnt = 4;
-	  break;
-	case 0xD9:
-	  pce_cd_curcmd = io.cd_port_1801;
-	  pce_cd_cmdcnt = 4;
-	  break;
-	case 0xDA:
-	  pce_cd_curcmd = io.cd_port_1801;
-	  pce_cd_cmdcnt = 0;
+			if (pce_cd_cmdcnt)
+				pce_cd_temp_dirinfo[pce_cd_cmdcnt] = io.cd_port_1801;
+			else {
+				// We have received two arguments in pce_cd_temp_dirinfo
+				// We can use only one
+				// There's an argument indicating the kind of info we want
+				// and an optional argument for track number
+				pce_cd_temp_dirinfo[0] = io.cd_port_1801;
 
-	  if (CD_emulation == 1)
-	    osd_cd_stop_audio ();
-	  else if (CD_emulation == 5)
-	    HCD_pause_playing ();
+#if ENABLE_TRACING_CD
+				Log
+				("I'll answer to 0xde command request\n"
+					"Arguments are %x, %x, %x, %x\n",
+					pce_cd_temp_dirinfo[0], pce_cd_temp_dirinfo[1],
+					pce_cd_temp_dirinfo[2], pce_cd_temp_dirinfo[3]);
+#endif
 
-	  break;
-	case 0xDE:
-	  /* Get CD directory info */
-	  /* First arg is command? */
-	  /* Second arg is track? */
-	  io.cd_port_1800 = 0xd0;
-	  pce_cd_cmdcnt = 2;
-	  pce_cd_read_datacnt = 3;	/* 4 bytes */
-	  pce_cd_curcmd = io.cd_port_1801;
-	  break;
+				switch (pce_cd_temp_dirinfo[1]) {
+					case 0:
+						// We want info on number of first and last track
+						switch (CD_emulation) {
+							case 2:
+							case 3:
+							case 4:
+								pce_cd_dirinfo[0] = binbcd[01];
+									// Number of first track  (BCD)
+								pce_cd_dirinfo[1] = binbcd[nb_max_track];
+									// Number of last track (BCD)
+								break;
+							case 1:
+								{
+								int first_track, last_track;
+								osd_cd_nb_tracks (&first_track, &last_track);
+								pce_cd_dirinfo[0] = binbcd[first_track];
+								pce_cd_dirinfo[1] = binbcd[last_track];
+								}
+								break;
+							case 5:
+								Log ("HCD: first track %d, last track %d\n",
+									HCD_first_track, HCD_last_track);
+								pce_cd_dirinfo[0] = binbcd[HCD_first_track];
+								pce_cd_dirinfo[1] = binbcd[HCD_last_track];
+								break;
+						}	// switch CD emulation
+						cd_read_buffer = pce_cd_dirinfo;
+						pce_cd_read_datacnt = 2;
+
+						#if ENABLE_TRACING_CD
+						Log (" Data resulting of 0xde request is %x and %x\n",
+							cd_read_buffer[0], cd_read_buffer[1]);
+						#endif
+						break;
+					case 2:
+						// We want info on the track whose number is pce_cd_temp_dirinfo[0]
+						switch (CD_emulation) {
+							case 2:
+							case 3:
+							case 4:
+							case 5:
+								pce_cd_dirinfo[0]
+									= CD_track[bcdbin[pce_cd_temp_dirinfo[0]]].beg_min;
+								pce_cd_dirinfo[1]
+									= CD_track[bcdbin[pce_cd_temp_dirinfo[0]]].beg_sec;
+								pce_cd_dirinfo[2]
+									= CD_track[bcdbin[pce_cd_temp_dirinfo[0]]].beg_fra;
+								pce_cd_dirinfo[3]
+									= CD_track[bcdbin[pce_cd_temp_dirinfo[0]]].type;
+								#if ENABLE_TRACING_CD
+								Log("Type of track %d is %d\n",
+									bcdbin[pce_cd_temp_dirinfo[0]],
+									CD_track[bcdbin[pce_cd_temp_dirinfo[0]]].type);
+								#endif
+								break;
+							case 1:
+								{
+								int Min, Sec, Fra, Ctrl;
+								osd_cd_track_info (bcdbin[pce_cd_temp_dirinfo[0]],
+									&Min, &Sec, &Fra, &Ctrl);
+
+								pce_cd_dirinfo[0] = binbcd[Min];
+								pce_cd_dirinfo[1] = binbcd[Sec];
+								pce_cd_dirinfo[2] = binbcd[Fra];
+								pce_cd_dirinfo[3] = Ctrl;
+
+								Log
+									("The control byte of the audio track #%d is 0x%02X\n",
+									bcdbin[pce_cd_temp_dirinfo[0]], pce_cd_dirinfo[3]);
+
+								break;
+
+								} // case CD emulation = 1
+
+						}	// switch CD emulation
+
+						pce_cd_read_datacnt = 3;
+						cd_read_buffer = pce_cd_dirinfo;
+						break;
+
+					case 1:
+						switch (CD_emulation) {
+							case 1:
+								{
+								int min, sec, fra;
+
+								osd_cd_length (&min, &sec, &fra);
+
+								pce_cd_dirinfo[0] = binbcd[min];
+								pce_cd_dirinfo[1] = binbcd[sec];
+								pce_cd_dirinfo[2] = binbcd[fra];
+
+								break;
+								} // case Cd emulation = 1
+							default:
+								pce_cd_dirinfo[0] = 0x25;
+								pce_cd_dirinfo[1] = 0x06;
+								pce_cd_dirinfo[2] = 0x00;
+						} // switch CD emulation
+
+						pce_cd_read_datacnt = 3;
+						cd_read_buffer = pce_cd_dirinfo;
+						break;
+				} // switch command of request 0xde
+			} // end if of request 0xde (receiving command or executing them)
+		} // switch of request
+	} else { // end if of command arg or new request
+		// it's a command ID we're receiving
+
+#if ENABLE_TRACING_CD
+		TRACE("CDRom2 Command byte received: 0x%02x.\n", io.cd_port_1801);
+#endif
+
+		switch (io.cd_port_1801) {
+			case 0x00:
+				io.cd_port_1800 = 0xD8;
+				break;
+			case 0x08:
+				pce_cd_curcmd = io.cd_port_1801;
+				pce_cd_cmdcnt = 4;
+				break;
+			case 0xD8:
+				pce_cd_curcmd = io.cd_port_1801;
+				pce_cd_cmdcnt = 4;
+				break;
+			case 0xD9:
+				pce_cd_curcmd = io.cd_port_1801;
+				pce_cd_cmdcnt = 4;
+				break;
+			case 0xDA:
+				pce_cd_curcmd = io.cd_port_1801;
+				pce_cd_cmdcnt = 0;
+				if (CD_emulation == 1)
+					osd_cd_stop_audio();
+				else if (CD_emulation == 5)
+					HCD_pause_playing();
+				break;
+			case 0xDE:
+				/* Get CD directory info */
+				/* First arg is command? */
+				/* Second arg is track? */
+				io.cd_port_1800 = 0xd0;
+				pce_cd_cmdcnt = 2;
+				pce_cd_read_datacnt = 3; /* 4 bytes */
+				pce_cd_curcmd = io.cd_port_1801;
+				break;
+		}
 	}
-
-/*
-        if (cd_port_1801 == 0x00) {
-            cd_port_1800 = 0xd8;
-        } else if (cd_port_1801 == 0x08) {
-            pce_cd_curcmd = cd_port_1801;
-            pce_cd_cmdcnt = 4;
-        } else if (cd_port_1801 == 0xd8) {
-            pce_cd_cmdcnt = 4;
-            pce_cd_curcmd = cd_port_1801;
-        } else if (cd_port_1801 == 0xd9) {
-            pce_cd_cmdcnt = 4;
-            pce_cd_curcmd = cd_port_1801;
-        } else if (cd_port_1801 == 0xde) {
-            // Get CD directory info
-            // First arg is command?
-            // Second arg is track?
-            cd_port_1800 = 0xd0;
-            pce_cd_cmdcnt = 2;
-            pce_cd_read_datacnt = 3; // 4 bytes
-            pce_cd_curcmd = cd_port_1801;
-        }
-*/
-
-    }
 }
+
 
 UChar pce_cd_handle_read_1800(UInt16 A)
 {

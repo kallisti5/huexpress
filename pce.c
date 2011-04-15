@@ -39,6 +39,8 @@
 #define CD_FRAMES 75
 #define CD_SECS 60
 
+#define ENABLE_TRACING 0
+
 /* Variable section */
 
 UChar minimum_bios_hooking = 0;
@@ -529,8 +531,8 @@ read_sector_BIN (unsigned char *p, UInt32 sector)
 		exit (-10);
 	}
 
-#ifndef FINAL_RELEASE
-	fprintf (stderr, "Loading sector n�%d.\n", pce_cd_sectoraddy);
+#if ENABLE_TRACING
+	TRACE("BIN: Loading sector number %d\n", pce_cd_sectoraddy);
 #endif
 
 	fseek(iso_FILE, second_track_sector
@@ -555,8 +557,8 @@ void
 read_sector_CD(unsigned char *p, UInt32 sector)
 {
 	int i;
-#ifndef FINAL_RELEASE
-	Log ("Reading sector : %d\n", sector);
+#if ENABLE_TRACING
+	Log("Reading sector : %d\n", sector);
 #endif
 
 	if (cd_buf != NULL)
@@ -592,15 +594,15 @@ read_sector_ISO (unsigned char *p, UInt32 sector)
 	break;
 		}
 
-#ifndef FINAL_RELEASE
-	fprintf (stderr, "Loading sector n�%d.\n", pce_cd_sectoraddy);
+#if ENABLE_TRACING
+	TRACE("ISO: Loading sector number %d\n", pce_cd_sectoraddy);
 	Log
 		("Loading sector n�%d.\nAX=%02x%02x\nBX=%02x%02x\nCX=%02x%02x\nDX=%02x%02x\n\n",
-		 pce_cd_sectoraddy, RAM[0xf9], RAM[0xf8], RAM[0xfb], RAM[0xfa], RAM[0xfd],
-		 RAM[0xfc], RAM[0xff], RAM[0xfe]);
+			pce_cd_sectoraddy, RAM[0xf9], RAM[0xf8], RAM[0xfb], RAM[0xfa], RAM[0xfd],
+			RAM[0xfc], RAM[0xff], RAM[0xfe]);
 	Log("temp+2-5 = %x %x %x\ntemp + 1 = %02x\n",RAM[5], RAM[6], RAM[7], RAM[4]);
-	Log ("ISO : seek at %d\n", (sector - CD_track[result].beg_lsn) * 2048);
-	Log ("Track n�%d begin at %d\n", result, CD_track[result].beg_lsn);
+	Log("ISO : seek at %d\n", (sector - CD_track[result].beg_lsn) * 2048);
+	Log("Track n�%d begin at %d\n", result, CD_track[result].beg_lsn);
 #endif
 
 	if (result != 0x02) {
@@ -626,8 +628,8 @@ read_sector_ISO (unsigned char *p, UInt32 sector)
 		}
 	}
 
-	fseek (iso_FILE, (sector - CD_track[result].beg_lsn) * 2048, SEEK_SET);
-	fread (p, 2048, 1, iso_FILE);
+	fseek(iso_FILE, (sector - CD_track[result].beg_lsn) * 2048, SEEK_SET);
+	fread(p, 2048, 1, iso_FILE);
 
 }
 
@@ -646,10 +648,9 @@ pce_cd_read_sector(void)
 	if (sound_driver == 1)
 		osd_snd_set_volume (0);
 
-#ifdef CD_DEBUG
+#if ENABLE_TRACING_CD
 	Log ("Will read sectors using function #%d\n", CD_emulation);
-
-	printf("Reading sector %d (in pce_cd_read_sector)\n", pce_cd_sectoraddy);
+	TRACE("Reading sector %d (in pce_cd_read_sector)\n", pce_cd_sectoraddy);
 #endif
 
 	(*read_sector_method[CD_emulation]) (cd_sector_buffer, pce_cd_sectoraddy);
@@ -1303,21 +1304,9 @@ IO_write (UInt16 A, UChar V)
 
 		if (io.ac_control[ac_port] & AC_USE_OFFSET)
 			{
-#if defined(CD_DEBUG)
-				// fprintf(stderr,"Write %d to 0x%04X (base + offset)\n",V,
-				//					 io.ac_offset[ac_port] + io.ac_base[ac_port]);
-#endif
-				// Log("Write %d to 0x%04X (base + offset)\n",V,
-				//					 io.ac_offset[ac_port] + io.ac_base[ac_port]);
-				ac_extra_mem[((io.ac_base[ac_port] +
-					 io.ac_offset[ac_port]) & 0x1fffff)] = V;
-			}
-		else
-			{
-#if defined(CD_DEBUG)
-				// fprintf(stderr, "Write %d to 0x%04X (base)\n",V, io.ac_base[ac_port]);
-#endif
-				// Log("Write %d to 0x%04X (base)\n",V, io.ac_base[ac_port]);
+				ac_extra_mem[((io.ac_base[ac_port]
+					+ io.ac_offset[ac_port]) & 0x1fffff)] = V;
+			} else {
 				ac_extra_mem[((io.ac_base[ac_port]) & 0x1fffff)] = V;
 			}
 
@@ -1660,13 +1649,14 @@ CartLoad(char *name)
 		if (!check_char (name, '.')) {
 			// if dot omitted, we try with PCE extension
 			strcat (name, ".pce");
-			return CartLoad (name);
+			return CartLoad(name);
 		}
 
-		if (strcasestr(name, ".pce")) {
+		if (strcasestr(name, ".pce")
+			|| strcasestr(name, ".iso")) {
 			// if filename with .PCE doesn't exist, it may be in ZIP
 			strcpy(&name[strlen (name) - 4], ".zip");
-			return CartLoad (name);
+			return CartLoad(name);
 		};
 
 		return -1;

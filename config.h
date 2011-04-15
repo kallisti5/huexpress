@@ -1,10 +1,8 @@
-/* config.h.in.  Generated from configure.ac by autoheader.  */
-
 /* modified bsd pce cd hardware support (old one) */
 #define BSD_CD_HARDWARE_SUPPORT 1
 
-/* for hugo developers working on the cd subsystem */
-#undef CD_DEBUG
+/* Trace settings for debug purposes */
+#define ENABLE_TRACING_CD 0
 
 /* Define to one of `_getb67', `GETB67', `getb67' for Cray-2 and Cray-YMP
    systems. This function is required for `alloca.c' support on those systems.

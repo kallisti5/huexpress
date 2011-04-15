@@ -2457,7 +2457,7 @@ int tai(void) {
   len  = get_16bit_addr(reg_pc+5);
   alternate = 0;
 
-#if defined(CD_DEBUG) && defined(INLINED_ACCESSORS)
+#if ENABLE_TRACING_CD && defined(INLINED_ACCESSORS)
   fprintf(stderr, "Transfert from bank 0x%02x to bank 0x%02x\n", mmr[from >> 13], mmr[to >> 13]);
 #endif
 
@@ -2522,7 +2522,7 @@ int tdd(void) {
   to   = get_16bit_addr(reg_pc+3);
   len  = get_16bit_addr(reg_pc+5);
 
-#if defined(CD_DEBUG) && defined(INLINED_ACCESSORS)
+#if ENABLE_TRACING_CD && defined(INLINED_ACCESSORS)
   fprintf(stderr, "Transfert from bank 0x%02x to bank 0x%02x\n", mmr[from >> 13], mmr[to >> 13]);
 #endif
 
@@ -2543,7 +2543,7 @@ int tia(void) {
   len  = get_16bit_addr(reg_pc+5);
   alternate = 0;
 
-#if defined(CD_DEBUG) && defined(INLINED_ACCESSORS)
+#if ENABLE_TRACING_CD && defined(INLINED_ACCESSORS)
   fprintf(stderr, "Transfert from bank 0x%02x to bank 0x%02x\n", mmr[from >> 13], mmr[to >> 13]);
 #endif
 
@@ -2564,7 +2564,7 @@ int tii(void) {
   to   = get_16bit_addr(reg_pc+3);
   len  = get_16bit_addr(reg_pc+5);
 
-#if defined(CD_DEBUG) && defined(INLINED_ACCESSORS)
+#if ENABLE_TRACING_CD && defined(INLINED_ACCESSORS)
   fprintf(stderr, "Transfert from bank 0x%02x to bank 0x%02x\n", mmr[from >> 13], mmr[to >> 13]);
 #endif
 
@@ -2584,7 +2584,7 @@ int tin(void) {
   to   = get_16bit_addr(reg_pc+3);
   len  = get_16bit_addr(reg_pc+5);
 
-#if defined(CD_DEBUG) && defined(INLINED_ACCESSORS)
+#if ENABLE_TRACING_CD && defined(INLINED_ACCESSORS)
   fprintf(stderr, "Transfert from bank 0x%02x to bank 0x%02x\n", mmr[from >> 13], mmr[to >> 13]);
 #endif
 
