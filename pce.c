@@ -595,8 +595,8 @@ read_sector_ISO (unsigned char *p, UInt32 sector)
 
 	#if ENABLE_TRACING_CD
 	TRACE("CDRom2: Loading ISO sector %d...\n"
-		"        AX=%02x%02x; BX=%02x%02x; CX=%02x%02x; DX=%02x%02x\n"
-		"        Track #%d begins at %d\n",
+		"           AX=%02x%02x; BX=%02x%02x; CX=%02x%02x; DX=%02x%02x\n"
+		"           Track #%d begins at %d\n",
 		pce_cd_sectoraddy,
 		RAM[0xf9], RAM[0xf8], RAM[0xfb], RAM[0xfa],
 		RAM[0xfd], RAM[0xfc], RAM[0xff], RAM[0xfe],
