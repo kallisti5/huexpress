@@ -26,7 +26,12 @@
 #define ENABLED    1
 #define DISABLED   2
 
-#define TRACE(x...) printf("DD " x)
+#if ENABLE_TRACING
+	#define TRACE(x...) printf("DD " x)
+#else
+	#define TRACE(x...)
+#endif
+
 #define MESSAGE_ERROR(x...) printf("!! " x)
 #define MESSAGE_INFO(x...) printf(" * " x)
 

@@ -583,7 +583,7 @@ void pce_cd_handle_write_1800(UInt16 A, UChar V)
 
 				switch (CD_emulation) {
 					case 1:
-						if (osd_cd_init (ISO_filename) != 0) {
+						if (osd_cd_init(ISO_filename) != 0) {
 							MESSAGE_ERROR("CDRom2: "
 								"CD Drive couldn't be initialised\n");
 							exit (4);

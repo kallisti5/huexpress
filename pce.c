@@ -39,8 +39,6 @@
 #define CD_FRAMES 75
 #define CD_SECS 60
 
-#define ENABLE_TRACING 0
-
 /* Variable section */
 
 UChar minimum_bios_hooking = 0;
@@ -1526,23 +1524,16 @@ CartLoad(char *name)
 
 	MESSAGE_INFO("Opening %s...\n", name);
 
-	if (CD_emulation == 1) {
-/*
- *			 CD_emulation = 0;
- *
- *			 CartLoad("h:/jeu/pce/cd_ge_93.pce");
- *
- *			 CD_emulation = 1;
- *
- *			 return 0;
- */
-			LOAD_INTEGRATED_SYS_FILE;
-	}
-
-	if (strcasestr(name, ".PCE")) {
+	if (CD_emulation == 1
+		|| strstr(name, "/dev/disk/atapi/")) {
+		MESSAGE_INFO("Using Hardware CD Device to load CDRom2\n");
+		CD_emulation = 1;
+		LOAD_INTEGRATED_SYS_FILE;
+		return 1;
+	} else if (strcasestr(name, ".PCE")) {
 		// ROM Image or CD system card
 		CD_emulation = 0;
-		strcpy (true_file_name, name);
+		strcpy(true_file_name, name);
 		fp = fopen(name, "rb");
 	} else if (strcasestr (name, ".HCD")) {
 		// HuGO! CD definition provided
@@ -1877,8 +1868,8 @@ InitPCE (char *name, char *backmemname)
 	char *tmp_dummy;
 	char local_us_encoded_card = 0;
 
-	//if ((!strcmp(name, "")) && (CD_emulation != 1))
-	//	return -1;
+	if ((!strcmp(name, "")) && (CD_emulation != 1))
+		return -1;
 
 	if (CartLoad(name))
 		return -1;
