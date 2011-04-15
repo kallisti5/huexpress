@@ -3,6 +3,7 @@
 
 /* Trace settings for debug purposes */
 #define ENABLE_TRACING_CD 0
+#define ENABLE_TRACING_GFX 0
 
 /* Define to one of `_getb67', `GETB67', `getb67' for Cray-2 and Cray-YMP
    systems. This function is required for `alloca.c' support on those systems.
@@ -17,9 +18,6 @@
 
 /* defined if user wants a 'clean' binary ( = not for hugo developpers) */
 #define FINAL_RELEASE 1
-
-/* for hugo developers working on the graphics subsystem */
-/* #undef GFX_DEBUG */
 
 /* defined if user have GTK2 installed */
 /* #undef GTK */

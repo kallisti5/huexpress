@@ -857,7 +857,7 @@ IO_write (UInt16 A, UChar V)
 				ScrollYDiff = scanline - 1;
 				ScrollYDiff -= io.VDC[VPR].B.h + io.VDC[VPR].B.l;
 
-#if defined(GFX_DEBUG)
+#if ENABLE_TRACING_GFX
 				gfx_debug_printf("ScrollY = %d (l)", ScrollY);
 #endif
 				return;
@@ -911,7 +911,7 @@ IO_write (UInt16 A, UChar V)
 		// all others reg just need to get the value, without additional stuff
 
 
-#if defined(GFX_DEBUG) && !defined(FINAL_RELEASE)
+#if ENABLE_TRACING_GFX
 					gfx_debug_printf("VDC[%02x]=0x%02x", io.vdc_reg, V);
 #endif
 
@@ -1018,7 +1018,7 @@ IO_write (UInt16 A, UChar V)
 				/* TODO : well, maybe we should implement it */
 				//io.screen_w = (io.VDC_ratch[HDR]+1)*8;
 				//TRACE0("HDRh\n");
-#if defined(GFX_DEBUG)
+#if ENABLE_TRACING_GFX
 							gfx_debug_printf("VDC[HDR].h = %d", V);
 #endif
 				break;
@@ -1042,12 +1042,9 @@ IO_write (UInt16 A, UChar V)
 				scroll = 1;
 				ScrollYDiff = scanline - 1;
 				ScrollYDiff -= io.VDC[VPR].B.h + io.VDC[VPR].B.l;
-#if defined(GFX_DEBUG)
+#if ENABLE_TRACING_GFX
 							if (ScrollYDiff < 0)
 								gfx_debug_printf("ScrollYDiff went negative when substraction VPR.h/.l (%d,%d)", io.VDC[VPR].B.h, io.VDC[VPR].B.l);
-#endif
-
-#if defined(GFX_DEBUG)
 							gfx_debug_printf("ScrollY = %d (h)", ScrollY);
 #endif
 

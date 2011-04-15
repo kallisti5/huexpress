@@ -346,8 +346,8 @@ int osd_gfx_init_normal_mode()
   else
     SDL_FreeYUVOverlay(olay);
 
-#ifdef GFX_DEBUG
-  printf("Mode change: %dx%d\n", io.screen_w, io.screen_h);
+#if ENABLE_TRACING_GFX
+  printf("GFX: Mode change: %dx%d\n", io.screen_w, io.screen_h);
 #endif
 
   if (io.screen_w == 0)

@@ -148,14 +148,13 @@ void change_pce_screen_height()
   int temp_vdw = (int)io.VDC[VDW].W;
   int temp_vcr = (int)io.VDC[VCR].W;
 
-#if defined(GFX_DEBUG)
-  printf("Changing pce screen mode\nVDS = %04x VSW = %04x VDW = %04x VCR = %04x\n",
-         temp_vds,
-         temp_vsw,
-         temp_vdw,
-         temp_vcr
-         );
-  // getchar();
+#if ENABLE_TRACING_GFX
+	TRACE("GFX: Changing pce screen mode\nVDS = %04x VSW = %04x VDW = %04x VCR = %04x\n",
+		temp_vds,
+		temp_vsw,
+		temp_vdw,
+		temp_vcr);
+	// getchar();
 #endif
 
   if (temp_vdw == 0)
@@ -171,8 +170,8 @@ void change_pce_screen_height()
 
       cur_display += 3 + temp_vcr;
 
-#if defined(GFX_DEBUG)
-      printf("Adding vdw to the height of graphics, cur_display = %d\n", cur_display);
+#if ENABLE_TRACING_GFX
+TRACE("GFX: Adding vdw to the height of graphics, cur_display = %d\n", cur_display);
 #endif
     }
 
@@ -198,15 +197,11 @@ void change_pce_screen_height()
   io.vdc_min_display = (UInt16)min_display;
   io.vdc_max_display = (UInt16)max_display;
 
-#if defined(GFX_DEBUG)
-  // printf("min_display = %d\tmax_display = %d\n", min_display, max_display);
-#endif
-
   //! Number of lines to render
   io.screen_h = max_display - min_display + 1;
 
-#if defined(GFX_DEBUG)
-  // printf("%d lines to render\n", io.screen_h);
+#if ENABLE_TRACING_GFX
+	//TRACE("GFX: %d lines to render\n", io.screen_h);
 #endif
 
   (*osd_gfx_driver_list[video_driver].mode) ();
@@ -243,7 +238,7 @@ save_gfx_context(int slot_number)
           (destination_context->scroll_y_diff == ScrollYDiff) &&
           (destination_context->cr == io.VDC[CR].W))
         {
-#if defined(GFX_DEBUG)
+#if ENABLE_TRACING_GFX
           gfx_debug_printf("Canceled primary context saving, nothing changed");
 #endif
           return;
@@ -254,8 +249,8 @@ save_gfx_context(int slot_number)
         gfx_need_redraw = 1;
       else // Context is already saved and we haven't render the lines using it
         {
-#if defined(GFX_DEBUG)
-          gfx_debug_printf("Canceled context saving as a previous one wasn't consumed yet");
+#if ENABLE_TRACING_GFX
+		gfx_debug_printf("Canceled context saving as a previous one wasn't consumed yet\n");
 #endif
           return;
         }
@@ -272,13 +267,13 @@ save_gfx_context(int slot_number)
       return;
     }
 
-#if defined(GFX_DEBUG)
-  gfx_debug_printf("Saving context %d, scroll = (%d,%d,%d), CR = 0x%02d",
-                   slot_number,
-                   ScrollX,
-                   ScrollY,
-                   ScrollYDiff,
-                   io.VDC[CR].W);
+#if ENABLE_TRACING_GFX
+	gfx_debug_printf("Saving context %d, scroll = (%d,%d,%d), CR = 0x%02d",
+		slot_number,
+		ScrollX,
+		ScrollY,
+		ScrollYDiff,
+		io.VDC[CR].W);
 #endif
 
   destination_context->scroll_x = ScrollX;
@@ -312,13 +307,13 @@ load_gfx_context(int slot_number)
   ScrollYDiff = source_context->scroll_y_diff;
   io.VDC[CR].W = source_context->cr;
 
-#if defined(GFX_DEBUG)
-  gfx_debug_printf("Restoring context %d, scroll = (%d,%d,%d), CR = 0x%02d",
-                   slot_number,
-                   ScrollX,
-                   ScrollY,
-                   ScrollYDiff,
-                   io.VDC[CR].W);
+#if ENABLE_TRACING_GFX
+	gfx_debug_printf("Restoring context %d, scroll = (%d,%d,%d), CR = 0x%02d",
+		slot_number,
+		ScrollX,
+		ScrollY,
+		ScrollYDiff,
+		io.VDC[CR].W);
 #endif
 
 }
@@ -433,8 +428,9 @@ Loop6502()
 
           // Signal that we've left the VBlank area
           io.vdc_status &= ~VDC_InVBlank;
-#if defined(GFX_DEBUG)
-          gfx_debug_printf("Cleaning VBlank bit from vdc_status (now, 0x%02x)", io.vdc_status);
+#if ENABLE_TRACING_GFX
+			gfx_debug_printf("Cleaning VBlank bit from vdc_status (now, 0x%02x)",
+				io.vdc_status);
 #endif
         }
 
@@ -444,8 +440,8 @@ Loop6502()
 
           save_gfx_context(0);
 
-#if defined(GFX_DEBUG) && !defined(FINAL_RELEASE)
-          printf("FORCED SAVE OF GFX CONTEXT\n");
+#if ENABLE_TRACING_GFX
+		TRACE("GFX: FORCED SAVE OF GFX CONTEXT\n");
 #endif
 
         }
@@ -1093,7 +1089,7 @@ void stop_dump_video()
 
 #endif
 
-#if defined(GFX_DEBUG)
+#if ENABLE_TRACING_GFX
 void gfx_debug_printf(char *format, ...)
 {
   FILE *log_file;

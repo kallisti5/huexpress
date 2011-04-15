@@ -86,35 +86,35 @@ plane2pixel (int no)
   UInt32 L;
   UChar *C2 = VRAM2 + no * 8 * 4;
   int j;
-#ifdef GFX_DEBUG
-  Log ("Planing tile %d\n", no);
+#if ENABLE_TRACING_GFX
+	TRACE("Planing tile %d\n", no);
 #endif
   for (j = 0; j < 8; j++, C += 2, C2 += 4)
     {
       M = C[0];
-#ifdef GFX_DEBUG
-      Log ("C[0]=%02X\n", M);
+#if ENABLE_TRACING_GFX
+	TRACE("C[0]=%02X\n", M);
 #endif
       L =
 	((M & 0x88) >> 3) | ((M & 0x44) << 6) | ((M & 0x22) << 15) |
 	((M & 0x11) << 24);
       M = C[1];
-#ifdef GFX_DEBUG
-      Log ("C[1]=%02X\n", M);
+#if ENABLE_TRACING_GFX
+	TRACE("C[1]=%02X\n", M);
 #endif
       L |=
 	((M & 0x88) >> 2) | ((M & 0x44) << 7) | ((M & 0x22) << 16) |
 	((M & 0x11) << 25);
       M = C[16];
-#ifdef GFX_DEBUG
-      Log ("C[16]=%02X\n", M);
+#if ENABLE_TRACING_GFX
+	TRACE("C[16]=%02X\n", M);
 #endif
       L |=
 	((M & 0x88) >> 1) | ((M & 0x44) << 8) | ((M & 0x22) << 17) |
 	((M & 0x11) << 26);
       M = C[17];
-#ifdef GFX_DEBUG
-      Log ("C[17]=%02X\n", M);
+#if ENABLE_TRACING_GFX
+	TRACE("C[17]=%02X\n", M);
 #endif
       L |=
 	((M & 0x88)) | ((M & 0x44) << 9) | ((M & 0x22) << 18) | ((M & 0x11) <<
@@ -124,8 +124,8 @@ plane2pixel (int no)
       C2[1] = (L >> 8) & 0xff;
       C2[2] = (L >> 16) & 0xff;
       C2[3] = (L >> 24) & 0xff;
-#ifdef GFX_DEBUG
-      Log ("L=%04X\n", L);
+#if ENABLE_TRACING_GFX
+	TRACE("L=%04X\n", L);
 #endif
 
     }
@@ -200,7 +200,7 @@ RefreshLine (int Y1, int Y2)
   UChar *PP;
   Y2++;
 
-#if defined(GFX_DEBUG)
+#if ENABLE_TRACING_GFX
   if (Y1 == 0)
     {
       gfx_debug_printf
@@ -244,13 +244,12 @@ RefreshLine (int Y1, int Y2)
 
 	      R = &Pal[(no >> 12) * 16];
 
-#if defined(GFX_DEBUG)
-	      // Old code was only no &= 0xFFF
-	      if ((no & 0xFFF) > 0x800)
-		{
-		  fprintf (stderr,
-			   "Access to an invalid VRAM area (tile pattern 0x%04x).\n",
-			   no);
+#if ENABLE_TRACING_GFX
+		// Old code was only no &= 0xFFF
+		if ((no & 0xFFF) > 0x800) {
+			TRACE(
+				"GFX: Access to an invalid VRAM area (tile pattern 0x%04x).\n",
+				no);
 		}
 #endif
 	      no &= 0x7FF;
@@ -922,7 +921,7 @@ RefreshSpriteExact (int Y1, int Y2, UChar bg)
       // 4095 is for supergraphx only
       // no = (unsigned int)(spr->no & 4095);
 
-#if defined(GFX_DEBUG)
+#if ENABLE_TRACING_GFX
       /*
          Log("Sprite 0x%02X : X = %d, Y = %d, atr = 0x%04X, no = 0x%03X\n",
          n,
@@ -1092,7 +1091,7 @@ RefreshScreen (void)
   if (!silent)
     (*update_sound[sound_driver]) ();
 
-#if defined(GFX_DEBUG)
+#if ENABLE_TRACING_GFX
   /*
      Log("VRAM: %02x%02x%02x%02x %02x%02x%02x%02x\n",
      VRAM[0],

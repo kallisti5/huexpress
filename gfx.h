@@ -65,7 +65,7 @@ void dump_video_frame();
 
 UChar Loop6502();
 
-#if defined(GFX_DEBUG)
+#if ENABLE_TRACING_GFX
 void gfx_debug_printf(char *format, ...);
 #endif														
 
