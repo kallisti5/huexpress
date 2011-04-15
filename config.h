@@ -2,6 +2,7 @@
 #define BSD_CD_HARDWARE_SUPPORT 1
 
 /* Trace settings for debug purposes */
+#define ENABLE_TRACING_AUDIO 0
 #define ENABLE_TRACING_CD 0
 #define ENABLE_TRACING_GFX 0
 
@@ -84,9 +85,6 @@
 
 /* The size of a `short int', as computed by sizeof. */
 #define SIZEOF_SHORT_INT 2
-
-/* for hugo developers working on the cd subsystem */
-#define SOUND_DEBUG 1
 
 /* If using the C implementation of alloca, define if you know the
    direction of stack growth for your system; otherwise it will be

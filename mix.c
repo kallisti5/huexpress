@@ -120,7 +120,7 @@ void sdl_fill_audio(void *data, Uint8 *stream, int len)
   UChar lvol, rvol;
   int i;
   UChar center;
-#ifdef SOUND_DEBUG
+#if ENABLE_TRACING_AUDIO
   UChar first_chan;
 
 //IXION

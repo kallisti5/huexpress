@@ -157,8 +157,8 @@ write_psg (int ch)
 	};
 
 
-#ifdef SOUND_DEBUG
-  Log ("Nouvelle pos : %d\n", dwNewPos);
+#if ENABLE_TRACING_AUDIO
+	TRACE("AUDIO: New Position: %d\n", dwNewPos);
 #endif
 
 /*  SDL makes clipping automagicaly
@@ -172,35 +172,35 @@ write_psg (int ch)
 	if (sound_driver == 2) // || sound_driver == 3) /* Added 3 (SDL) */
 	{
 		if (dwNewPos > (UInt32) host.sound.freq * SOUND_BUF_MS / 1000) {
-#ifdef SOUND_DEBUG
-			fprintf (stderr, "sound buffer overrun\n");
-#endif
+			#if ENABLE_TRACING_AUDIO
+			TRACE("AUDIO: Sound buffer overrun\n");
+			#endif
 			dwNewPos = host.sound.freq * SOUND_BUF_MS / 1000;
 				// Ask it to fill the buffer
 		} else if (sound_driver == 1) {
-#ifdef SOUND_DEBUG
-			Log ("dwNewPos = %d / %d\n", dwNewPos, sbuf_size);
-#endif
+			#if ENABLE_TRACING_AUDIO
+			TRACE("AUDIO: dwNewPos = %d / %d\n", dwNewPos, sbuf_size);
+			#endif
 			if (dwNewPos > sbuf_size) {
-#ifdef SOUND_DEBUG
-				fprintf (stderr, "sound buffer overrun\n");
-#endif
+				#if ENABLE_TRACING_AUDIO
+				TRACE("AUDIO: Sound buffer overrun\n");
+				#endif
 				dwNewPos = sbuf_size;
 				// Ask it to fill the buffer
 			}
-#ifdef SOUND_DEBUG
-			Log ("After correction, dwNewPos = %d\n", dwNewPos);
-#endif
+			#if ENABLE_TRACING_AUDIO
+			TRACE("AUDIO: After correction, dwNewPos = %d\n", dwNewPos);
+			#endif
 		}
 	}
 
-	Log ("Buffer %d will be filled\n", ch);
+	Log("Buffer %d will be filled\n", ch);
 	WriteBuffer(&sbuf[ch][0], ch, dwNewPos * ds_nChannels);
 	// write DATA 'til dwNewPos
 
-#ifdef SOUND_DEBUG
-	Log ("Buffer %d has been filled\n", ch);
-#endif
+	#if ENABLE_TRACING_AUDIO
+	TRACE("AUDIO: Buffer %d has been filled\n", ch);
+	#endif
 
 
 };
@@ -250,8 +250,8 @@ void write_adpcm(void)
 	 * able to play one, so we stop the adpcm playing
 	 */
 
-#ifdef SOUND_DEBUG
-//  Log ("size = %d\n", io.adpcm_psize);
+#if ENABLE_TRACING_AUDIO
+//  Log("size = %d\n", io.adpcm_psize);
 #endif
 
 };

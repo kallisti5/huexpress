@@ -1168,7 +1168,7 @@ IO_write (UInt16 A, UChar V)
 
 	case 4:
 		io.PSG[io.psg_ch][4] = V;
-#ifdef SOUND_DEBUG
+#if ENABLE_TRACING_AUDIO
 		if ((V & 0xC0) == 0x40)
 						io.PSG[io.psg_ch][PSG_DATA_INDEX_REG] = 0;
 #endif
