@@ -342,127 +342,121 @@ pce_cd_handle_command(void)
 }
 
 
-UChar pce_cd_handle_read_1800(UInt16 A)
-{
-  switch (A & 15)
-    {
-    case 0:
-      return io.cd_port_1800;
-    case 1:
-      {
-        UChar retval;
+UChar
+pce_cd_handle_read_1800(UInt16 A) {
 
-        if (cd_read_buffer)
-          {
-            retval = *cd_read_buffer++;
-            if (pce_cd_read_datacnt == 2048)
-              {
-                pce_cd_read_datacnt--;
+	switch (A & 15) {
+		case 0:
+			return io.cd_port_1800;
+		case 1:
+		{
+			UChar retval;
 
-#ifndef FINAL_RELEASE
-                fprintf (stderr, "Data count fudge\n");
-#endif
-
-              }
-            if (!pce_cd_read_datacnt)
-              cd_read_buffer = 0;
-          }
-        else
-          retval = 0;
-        return retval;
-      }
-
-    case 2:
-      return io.cd_port_1802;
-
-    case 3:
-
-      {
-
-        static UChar tmp_res = 0x02;
-
-        tmp_res = 0x02 - tmp_res;
-
-        io.backup = DISABLE;
-
-        /* TEST */// return 0x20;
-
-        return tmp_res | 0x20;
-
-      }
-
-      /* TEST */
-    case 4:
-      return io.cd_port_1804;
-
-      /* TEST */
-    case 5:
-      return 0x50;
-
-      /* TEST */
-    case 6:
-      return 0x05;
-
-    case 0x0A:
-#ifndef FINAL_RELEASE
-      Log ("HARD : Read %x from ADPCM[%04X] to VRAM : 0X%04X\n", PCM[io.adpcm_rptr], io.adpcm_rptr, io.VDC[MAWR].W * 2);
-#endif
-
-      if (!io.adpcm_firstread)
-        return PCM[io.adpcm_rptr++];
-      else
-        {
-          io.adpcm_firstread--;
-          return NODATA;
-        }
-
-    case 0x0B:	/* TEST */
-      return 0x00;
-    case 0x0C:	/* TEST */
-      return 0x01;	// 0x89
-    case 0x0D:	/* TEST */
-      return 0x00;
-
-    case 8:
-      if (pce_cd_read_datacnt)
-        {
-          UChar retval;
-
-          if (cd_read_buffer)
-            retval = *cd_read_buffer++;
-          else
-            retval = 0;
-
-          if (!--pce_cd_read_datacnt)
-            {
-              cd_read_buffer = 0;
-              if (!--cd_sectorcnt) {
+			if (cd_read_buffer) {
+				retval = *cd_read_buffer++;
+				if (pce_cd_read_datacnt == 2048) {
+					pce_cd_read_datacnt--;
 					#if ENABLE_TRACING_CD
-					TRACE("CDRom2: Sector data count over.\n");
+					TRACE("CDRom2: Data count error\n");
 					#endif
-					io.cd_port_1800 |= 0x10;
-					pce_cd_curcmd = 0;
-				} else {
-					#if ENABLE_TRACING_CD
-					TRACE("CDRom2: Sector data count: %d\n",
-						cd_sectorcnt);
-					#endif
-					pce_cd_read_sector ();
-                }
-            }
-          return retval;
-        }
-      break;
-    }
-  // FIXME: what to return here?
-  return 0;
+				}
+				if (!pce_cd_read_datacnt)
+					cd_read_buffer = 0;
+			} else
+				retval = 0;
+
+			return retval;
+		}
+
+		case 2:
+			return io.cd_port_1802;
+
+		case 3:
+		{
+			static UChar tmp_res = 0x02;
+
+			tmp_res = 0x02 - tmp_res;
+
+			io.backup = DISABLE;
+
+			/* TEST */// return 0x20;
+
+			return tmp_res | 0x20;
+		}
+
+		/* TEST */
+		case 4:
+			return io.cd_port_1804;
+
+		/* TEST */
+		case 5:
+			return 0x50;
+
+		/* TEST */
+		case 6:
+			return 0x05;
+
+		case 0x0A:
+			#if ENABLE_TRACING_CD
+			Log ("HARD : Read %x from ADPCM[%04X] to VRAM : 0X%04X\n", PCM[io.adpcm_rptr], io.adpcm_rptr, io.VDC[MAWR].W * 2);
+			#endif
+
+			if (!io.adpcm_firstread)
+				return PCM[io.adpcm_rptr++];
+			else {
+				io.adpcm_firstread--;
+				return NODATA;
+			}
+
+		case 0x0B:	/* TEST */
+			return 0x00;
+		case 0x0C:	/* TEST */
+			return 0x01; // 0x89
+		case 0x0D:	/* TEST */
+			return 0x00;
+
+		case 8:
+			if (pce_cd_read_datacnt) {
+				UChar retval;
+
+				if (cd_read_buffer)
+					retval = *cd_read_buffer++;
+				else
+					retval = 0;
+
+				if (!--pce_cd_read_datacnt) {
+					cd_read_buffer = 0;
+					if (!--cd_sectorcnt) {
+						#if ENABLE_TRACING_CD
+						TRACE("CDRom2: Sector data count over.\n");
+						#endif
+						io.cd_port_1800 |= 0x10;
+						pce_cd_curcmd = 0;
+					} else {
+						#if ENABLE_TRACING_CD
+						// not really needed unless troubleshooting sector reading
+						// TRACE("CDRom2: Sector data left count: %d\n",
+						// 	cd_sectorcnt);
+						#endif
+						pce_cd_read_sector ();
+					}
+				}
+				return retval;
+			}
+			break;
+	}
+
+	// FIXME: what to return here?
+	#if ENABLE_TRACING_CD
+	TRACE("CDRom2: FIXME: %s: A is not known at 0x%X\n");
+	#endif
+	return 0;
 }
 
 
 void pce_cd_handle_write_1800(UInt16 A, UChar V)
 {
 	switch (A & 15) {
-
 		case 7:
 			io.backup = ENABLE;
 			return;
@@ -524,222 +518,185 @@ void pce_cd_handle_write_1800(UInt16 A, UChar V)
 				}
 			return;
 		case 2:
-#ifndef FINAL_RELEASE
-      // fprintf(stderr,"trying to access port 1802 in write\n");
-#endif
+			#if ENABLE_TRACING_CD
+			TRACE("CDRom2: Trying to access port 1802 in write\n");
+			#endif
 
-	if ((!(io.cd_port_1802 & 0x80)) && (V & 0x80))
-        {
-          io.cd_port_1800 &= ~0x40;
-        }
-      else if ((io.cd_port_1802 & 0x80) && (!(V & 0x80)))
-        {
-          io.cd_port_1800 |= 0x40;
+			if ((!(io.cd_port_1802 & 0x80)) && (V & 0x80)) {
+				io.cd_port_1800 &= ~0x40;
+			} else if ((io.cd_port_1802 & 0x80) && (!(V & 0x80))) {
+				io.cd_port_1800 |= 0x40;
 
-#ifndef FINAL_RELEASE
-          Log ("ADPCM trans = %d\n", pce_cd_adpcm_trans_done);
-#endif
-          if (pce_cd_adpcm_trans_done)
-            {
+				#if ENABLE_TRACING_CD
+				TRACE("CDRom2: ADPCM trans done = %d\n", pce_cd_adpcm_trans_done);
+				#endif
+				if (pce_cd_adpcm_trans_done) {
+					#if ENABLE_TRACING_CD
+					TRACE("CDRom2: acknowledge DMA transfer for ADPCM data\n");
+					#endif
+					io.cd_port_1800 |= 0x10;
+					pce_cd_curcmd = 0x00;
+					pce_cd_adpcm_trans_done = 0;
+				}
 
-#ifndef FINAL_RELEASE
-              Log ("ack the DMA transfert of ADPCM data\n");
-#endif
-
-              io.cd_port_1800 |= 0x10;
-              pce_cd_curcmd = 0x00;
-              pce_cd_adpcm_trans_done = 0;
-
-            }
-
-          if (io.cd_port_1800 & 0x08)
-            {
-              /*              deb_printf("pce_cd: data byte acknowledged.\n"); */
-              if (io.cd_port_1800 & 0x20)
-                {
-                  io.cd_port_1800 &= ~0x80;
-                }
-              else if (!pce_cd_read_datacnt)
-                {
-				if (pce_cd_curcmd == 0x08) {
-					if (!--cd_sectorcnt) {
-						#if ENABLE_TRACING_CD
-						TRACE("CDRom2: Sector data count over.\n");
-						#endif
-						io.cd_port_1800 |= 0x10;	/* wrong */
-						pce_cd_curcmd = 0x00;
+				if (io.cd_port_1800 & 0x08) {
+					if (io.cd_port_1800 & 0x20) {
+						io.cd_port_1800 &= ~0x80;
+					} else if (!pce_cd_read_datacnt) {
+						if (pce_cd_curcmd == 0x08) {
+							if (!--cd_sectorcnt) {
+								#if ENABLE_TRACING_CD
+								TRACE("CDRom2: Sector data count over.\n");
+								#endif
+								io.cd_port_1800 |= 0x10;	/* wrong */
+								pce_cd_curcmd = 0x00;
+							} else {
+								#if ENABLE_TRACING_CD
+								TRACE("CDRom2: Sector data count: %d\n",
+									cd_sectorcnt);
+								#endif
+								pce_cd_read_sector ();
+							}
+						} else {
+							if (io.cd_port_1800 & 0x10) {
+								io.cd_port_1800 |= 0x20;
+							} else {
+								io.cd_port_1800 |= 0x10;
+							}
+						}
 					} else {
-						#if ENABLE_TRACING_CD
-						TRACE("CDRom2: Sector data count: %d\n",
-							cd_sectorcnt);
-						#endif
-						pce_cd_read_sector ();
+						pce_cd_read_datacnt--;
 					}
 				} else {
-					if (io.cd_port_1800 & 0x10) {
-						io.cd_port_1800 |= 0x20;
-					} else {
-						io.cd_port_1800 |= 0x10;
-					}
+					pce_cd_handle_command();
 				}
-			} else {
-				pce_cd_read_datacnt--;
 			}
-		} else {
-			pce_cd_handle_command ();
-		}
-	}
 
-      io.cd_port_1802 = V;
-      return;
-    case 4:
-      if (V & 2)
-        {			// Reset asked
-          // do nothing for now
-#ifndef FINAL_RELEASE
-          fprintf (stderr, "Reset mode for CD asked\n");
-#endif
+			io.cd_port_1802 = V;
+			return;
+		case 4:
+			if (V & 2) {
+				// Reset asked, for now do nothing
+				#if ENABLE_TRACING_CD
+				TRACE("CDRom2: Reset mode for CD asked\n");
+				#endif
 
-          switch (CD_emulation)
-            {
-            case 1:
-              if (osd_cd_init (ISO_filename) != 0)
-                {
-                  Log ("CD rom drive couldn't be initialised\n");
-                  exit (4);
-                }
-              break;
-            case 2:
-            case 3:
-            case 4:
-              fill_cd_info ();
-              break;
+				switch (CD_emulation) {
+					case 1:
+						if (osd_cd_init (ISO_filename) != 0) {
+							MESSAGE_ERROR("CDRom2: "
+								"CD Drive couldn't be initialised\n");
+							exit (4);
+						}
+						break;
+					case 2:
+					case 3:
+					case 4:
+						fill_cd_info();
+						break;
+					case 5:
+						fill_HCD_info(ISO_filename);
+						break;
+				}
 
-            case 5:
-              fill_HCD_info(ISO_filename);
-              break;
-            }
+				Wr6502 (0x222D, 1);
+					// This byte is set to 1 if a disc if present
 
-          Wr6502 (0x222D, 1);
-          // This byte is set to 1 if a disc if present
+				// cd_port_1800 &= ~0x40;
+				io.cd_port_1804 = V;
+			} else {
+				#if ENABLE_TRACING_CD
+				TRACE("CDRom2: Normal mode for CD asked\n");
+				#endif
+				io.cd_port_1804 = V;
+				// cd_port_1800 |= 0x40; // Maybe the previous reset is enough
+				// cd_port_1800 |= 0xD0;
+				// Indicates that the Hardware is ready after such a reset
+			}
+			return;
 
-          //cd_port_1800 &= ~0x40;
-          io.cd_port_1804 = V;
-        }
-      else
-        {			// Normal utilisation
-#ifndef FINAL_RELEASE
-          fprintf (stderr, "Normal mode for CD asked\n");
-#endif
-          io.cd_port_1804 = V;
-          // cd_port_1800 |= 0x40; // Maybe the previous reset is enough
-          // cd_port_1800 |= 0xD0;
-          // Indicates that the Hardware is ready after such a reset
-        }
-      return;
+		case 8:
+			io.adpcm_ptr.B.l = V;
+			return;
+		case 9:
+			io.adpcm_ptr.B.h = V;
+			return;
 
-    case 8:
-      io.adpcm_ptr.B.l = V;
-      return;
-    case 9:
-      io.adpcm_ptr.B.h = V;
-      return;
+		case 0x0A:
+			PCM[io.adpcm_wptr++] = V;
+			#if ENABLE_TRACING_CD
+			TRACE("CDRom2: Wrote %02X to ADPCM buffer[%04X]\n",
+				V, io.adpcm_wptr - 1);
+			#endif
+			return;
 
-    case 0x0A:
-      PCM[io.adpcm_wptr++] = V;
-#ifndef FINAL_RELEASE
-      fprintf (stderr, "Wrote %02X to ADPCM buffer[%04X]\n", V,
-               io.adpcm_wptr - 1);
-      Log ("wrote to ADPCM, %02X at PCM[0X%04X]\n", V, io.adpcm_wptr - 1);
-#endif
-      return;
-    case 0x0B:		// DMA enable ?
+		case 0x0B:	// DMA enable ?
 
-      if ((V & 2) && (!(cd_port_180b & 2)))
-        {
-          issue_ADPCM_dma ();
-          cd_port_180b = V;
-          return;
-        }
+			if ((V & 2) && (!(cd_port_180b & 2))) {
+				issue_ADPCM_dma ();
+				cd_port_180b = V;
+				return;
+			}
 
+			/* TEST */
+			if (!V) {
+				io.cd_port_1800 &= ~0xF8;
+				io.cd_port_1800 |= 0xD8;
+			}
+			cd_port_180b = V;
+			return;
 
-      /* TEST */
-      if (!V)
-        {
-          io.cd_port_1800 &= ~0xF8;
-          io.cd_port_1800 |= 0xD8;
-        }
+		case 0x0D:
+			if ((V & 0x03) == 0x03) {
+				io.adpcm_dmaptr = io.adpcm_ptr.W; // set DMA pointer
+				#if ENABLE_TRACING_CD
+				TRACE("CDRom2: Set DMA pointer to 0x%X\n", io.adpcm_dmaptr);
+				#endif
+			}
 
-      cd_port_180b = V;
+			if (V & 0x04) {
+				io.adpcm_wptr = io.adpcm_ptr.W;	// set write pointer
+				#if ENABLE_TRACING_CD
+				TRACE("CDRom2: Set write pointer to 0x%X\n", io.adpcm_wptr);
+				#endif
+			}
 
-      return;
+			if (V & 0x08) {
+				io.adpcm_rptr = io.adpcm_ptr.W; // set read pointer
+				io.adpcm_firstread = 2;
+				#if ENABLE_TRACING_CD
+				TRACE("CDRom2: Set read pointer to 0x%X\n", io.adpcm_rptr);
+				#endif
+			}
+			/* TEST
+			else { io.adpcm_rptr = io.adpcm_ptr.W; io.adpcm_firstread = TRUE; }
+			*/
+			/* TEST */
+			// if (V & 0x08) io.
 
-    case 0x0D:
+			if (V & 0x80) {
+				#if ENABLE_TRACING_CD
+				TRACE("CDRom2: Reset mode for ADPCM\n");
+				#endif
+			} else {
+				#if ENABLE_TRACING_CD
+				TRACE("CDRom2: Normal mode for ADPCM\n");
+				#endif
+			}
+			return;
 
-      if ((V & 0x03) == 0x03)
-        {
-          io.adpcm_dmaptr = io.adpcm_ptr.W;	// set DMA pointer
-#ifndef FINAL_RELEASE
-          fprintf (stderr, "Set DMA pointer to %x\n", io.adpcm_dmaptr);
-#endif
-        }
+		case 0xe:
+			io.adpcm_rate = 32 / (16 - (V & 15)); // Set ADPCM playback rate
+			#if ENABLE_TRACING_CD
+			TRACE("CDRom2: ADPCM rate set to %d kHz\n", io.adpcm_rate);
+			#endif
+			return;
 
-      if (V & 0x04)
-        {
-          io.adpcm_wptr = io.adpcm_ptr.W;	// set write pointer
-#ifndef FINAL_RELEASE
-          fprintf (stderr, "Set write pointer to %x\n", io.adpcm_wptr);
-#endif
-        }
-
-      if (V & 0x08)		// set read pointer
-        {
-          io.adpcm_rptr = io.adpcm_ptr.W;
-          io.adpcm_firstread = 2;
-
-#ifndef FINAL_RELEASE
-          fprintf (stderr, "Set read pointer to %x\n", io.adpcm_rptr);
-#endif
-
-        }
-
-      /* TEST
-         else { io.adpcm_rptr = io.adpcm_ptr.W; io.adpcm_firstread = TRUE; }
-      */
-      /* TEST */
-      //if (V&0x08) io.
-
-      if (V & 0x80)
-        {			// ADPCM reset
-#ifndef FINAL_RELEASE
-          fprintf (stderr, "Reset mode for ADPCM\n");
-#endif
-        }
-      else
-        {			// Normal ADPCM utilisation
-#ifndef FINAL_RELEASE
-          fprintf (stderr, "Normal mode for ADPCM\n");
-#endif
-        }
-
-
-
-      return;
-
-    case 0xe:		// Set ADPCM playback rate
-      io.adpcm_rate = 32 / (16 - (V & 15));
-
-#ifndef FINAL_RELEASE
-      fprintf (stderr, "ADPCM rate set to %d kHz\n", io.adpcm_rate);
-#endif
-      return;
-
-    case 0xf:		// don't know how to use it
-#ifndef FINAL_RELEASE
-      fprintf (stderr, "Fade setting to %d\n", V);
-#endif
-
-      cd_fade = V;
-      return;
-    }			// A&15 switch, i.e. CD ports
+		case 0xf:		// don't know how to use it
+			cd_fade = V;
+			#if ENABLE_TRACING_CD
+			TRACE("CDRom2: Fade Setting to %d\n", V);
+			#endif
+			return;
+	}			// A&15 switch, i.e. CD ports
 }
