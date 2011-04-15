@@ -58,11 +58,10 @@ pce_cd_set_sector_address (void)
 static void
 pce_cd_handle_command(void)
 {
-
 	if (pce_cd_cmdcnt) {
-#if ENABLE_TRACING_CD
-		TRACE("Command arg received: 0x%02x.\n", io.cd_port_1801);
-#endif
+		#if ENABLE_TRACING_CD
+		TRACE("CDRom2: Command arg received: 0x%02x.\n", io.cd_port_1801);
+		#endif
 
 	if (--pce_cd_cmdcnt)
 		io.cd_port_1800 = 0xd0;
@@ -73,19 +72,18 @@ pce_cd_handle_command(void)
 	{
 		case 0x08:
 			if (!pce_cd_cmdcnt) {
-#if ENABLE_TRACING_CD
-				TRACE("Read command: %d sectors.\n", io.cd_port_1801);
-				TRACE("Starting at %02x:%02x:%02x.\n",
+				#if ENABLE_TRACING_CD
+				TRACE("CDRom2: Read command: %d sectors.\n", io.cd_port_1801);
+				TRACE("CDRom2: Starting at %02x:%02x:%02x.\n",
 					pce_cd_sectoraddress[0],
 					pce_cd_sectoraddress[1],
 					pce_cd_sectoraddress[2]);
-				TRACE("MODE : %x\n", Rd6502(0x20FF));
-#endif
+				TRACE("CDRom2: MODE: %x\n", Rd6502(0x20FF));
+				#endif
 				cd_sectorcnt = io.cd_port_1801;
 				if (cd_sectorcnt == 0) {
 					MESSAGE_ERROR("%s, cd_sectorcnt == 0 !!!\n",
 						__func__);
-					Log("cd_sectorcnt == 0 !!!");
 				}
 
 				pce_cd_set_sector_address ();
@@ -96,10 +94,10 @@ pce_cd_handle_command(void)
 				// cd_port_1800 = 0xD0; // Xanadu 2 doesn't block but still crash
 				/* TEST */
 
-#if ENABLE_TRACING_CD
+				#if ENABLE_TRACING_CD
 				TRACE("Result of reading : $1800 = 0X%02X\n",
 					io.cd_port_1800);
-#endif
+				#endif
 
 				/* TEST ZEO
 				if (Rd6502(0x20ff)==0xfe)
@@ -123,11 +121,11 @@ pce_cd_handle_command(void)
 
 			if (!pce_cd_cmdcnt) {
 				io.cd_port_1800 = 0xd8;
-/*
+				/*
 				if (pce_cd_temp_stop[3] == 1)
 					osd_cd_play_audio_track(bcdbin[pce_cd_temp_play[2]]);
 				else
-*/
+				*/
 				if ((pce_cd_temp_play[0] |
 					pce_cd_temp_play[1] |
 					pce_cd_temp_stop[0] | pce_cd_temp_stop[1]) == 0) {
@@ -154,7 +152,7 @@ pce_cd_handle_command(void)
 					}
 				}
 
-#if ENABLE_TRACING_CD
+				#if ENABLE_TRACING_CD
 				Log ("Play from %d:%d:%d:(%d) to %d:%d:%d:(%d)\nloop = %d\n",
 					bcdbin[pce_cd_temp_play[2]],
 					bcdbin[pce_cd_temp_play[1]],
@@ -164,17 +162,17 @@ pce_cd_handle_command(void)
 					bcdbin[pce_cd_temp_stop[1]],
 					bcdbin[pce_cd_temp_stop[0]],
 					pce_cd_temp_stop[3], pce_cd_temp_stop[3] == 1);
-#endif
+				#endif
 
 			}
 			break;
 		case 0xde:
-#if ENABLE_TRACING_CD
+			#if ENABLE_TRACING_CD
 			Log ("Arg for 0xde command is %X, command count is %d\n",
 				io.cd_port_1801, pce_cd_cmdcnt);
 			TRACE("Arg for 0xde command is %X, command count is %d\n",
 				io.cd_port_1801, pce_cd_cmdcnt);
-#endif
+			#endif
 
 			if (pce_cd_cmdcnt)
 				pce_cd_temp_dirinfo[pce_cd_cmdcnt] = io.cd_port_1801;
@@ -185,13 +183,13 @@ pce_cd_handle_command(void)
 				// and an optional argument for track number
 				pce_cd_temp_dirinfo[0] = io.cd_port_1801;
 
-#if ENABLE_TRACING_CD
+				#if ENABLE_TRACING_CD
 				Log
 				("I'll answer to 0xde command request\n"
 					"Arguments are %x, %x, %x, %x\n",
 					pce_cd_temp_dirinfo[0], pce_cd_temp_dirinfo[1],
 					pce_cd_temp_dirinfo[2], pce_cd_temp_dirinfo[3]);
-#endif
+				#endif
 
 				switch (pce_cd_temp_dirinfo[1]) {
 					case 0:
@@ -214,7 +212,7 @@ pce_cd_handle_command(void)
 								}
 								break;
 							case 5:
-								Log ("HCD: first track %d, last track %d\n",
+								TRACE("CDRom2:HCD: first track %d, last track %d\n",
 									HCD_first_track, HCD_last_track);
 								pce_cd_dirinfo[0] = binbcd[HCD_first_track];
 								pce_cd_dirinfo[1] = binbcd[HCD_last_track];
@@ -224,7 +222,7 @@ pce_cd_handle_command(void)
 						pce_cd_read_datacnt = 2;
 
 						#if ENABLE_TRACING_CD
-						Log (" Data resulting of 0xde request is %x and %x\n",
+						TRACE("CDRom2: Data resulting of 0xde request is %x and %x\n",
 							cd_read_buffer[0], cd_read_buffer[1]);
 						#endif
 						break;
@@ -244,7 +242,7 @@ pce_cd_handle_command(void)
 								pce_cd_dirinfo[3]
 									= CD_track[bcdbin[pce_cd_temp_dirinfo[0]]].type;
 								#if ENABLE_TRACING_CD
-								Log("Type of track %d is %d\n",
+								TRACE("CDRom2: Type of track %d is %d\n",
 									bcdbin[pce_cd_temp_dirinfo[0]],
 									CD_track[bcdbin[pce_cd_temp_dirinfo[0]]].type);
 								#endif
@@ -260,8 +258,7 @@ pce_cd_handle_command(void)
 								pce_cd_dirinfo[2] = binbcd[Fra];
 								pce_cd_dirinfo[3] = Ctrl;
 
-								Log
-									("The control byte of the audio track #%d is 0x%02X\n",
+								TRACE("CDRom2: The control byte of audio track #%d is 0x%02X\n",
 									bcdbin[pce_cd_temp_dirinfo[0]], pce_cd_dirinfo[3]);
 
 								break;
@@ -303,9 +300,9 @@ pce_cd_handle_command(void)
 	} else { // end if of command arg or new request
 		// it's a command ID we're receiving
 
-#if ENABLE_TRACING_CD
-		TRACE("CDRom2 Command byte received: 0x%02x.\n", io.cd_port_1801);
-#endif
+		#if ENABLE_TRACING_CD
+		TRACE("CDRom2: Command byte received: 0x%02x.\n", io.cd_port_1801);
+		#endif
 
 		switch (io.cd_port_1801) {
 			case 0x00:
@@ -439,20 +436,18 @@ UChar pce_cd_handle_read_1800(UInt16 A)
           if (!--pce_cd_read_datacnt)
             {
               cd_read_buffer = 0;
-              if (!--cd_sectorcnt)
-                {
-					MESSAGE_ERROR("Sector data count over, incomplete CD?\n");
+              if (!--cd_sectorcnt) {
+					#if ENABLE_TRACING_CD
+					TRACE("CDRom2: Sector data count over.\n");
+					#endif
 					io.cd_port_1800 |= 0x10;
 					pce_cd_curcmd = 0;
-                }
-              else
-                {
-#ifndef FINAL_RELEASE
-                  fprintf (stderr,
-                           "Sector data count %d.\n",
-                           cd_sectorcnt);
-#endif
-                  pce_cd_read_sector ();
+				} else {
+					#if ENABLE_TRACING_CD
+					TRACE("CDRom2: Sector data count: %d\n",
+						cd_sectorcnt);
+					#endif
+					pce_cd_read_sector ();
                 }
             }
           return retval;
@@ -466,100 +461,74 @@ UChar pce_cd_handle_read_1800(UInt16 A)
 
 void pce_cd_handle_write_1800(UInt16 A, UChar V)
 {
-  switch (A & 15)
-    {
+	switch (A & 15) {
 
-    case 7:
-      io.backup = ENABLE;
-      return;
-
-    case 0:
-      if (V == 0x81)
-        io.cd_port_1800 = 0xD0;
-      return;
-    case 1:
-      io.cd_port_1801 = V;
-      if (!pce_cd_cmdcnt)
-        switch (V)
-          {
-          case 0:
-            /*
-              #ifndef FINAL_RELEASE
-              fprintf(stderr,"RESET? command at 1801\n");
-              #endif
-            */
-            return;
-          case 3:
-            /*
-              #ifndef FINAL_RELEASE
-              fprintf(stderr,"GET SYSTEM STATUS? command at 1801\n");
-              #endif
-            */
-            return;
-          case 8:
-            /*
-              #ifndef FINAL_RELEASE
-              fprintf(stderr,"READ SECTOR command at 1801\n");
-              #endif*/
-            return;
-          case 0x81:
-            /*
-              #ifndef FINAL_RELEASE
-              fprintf(stderr,"ANOTHER RESET? command at 1801\n");
-              #endif
-            */
-            io.cd_port_1800 = 0x40;
-            return;
-          case 0xD8:
-          case 0xD9:
-            /*
-              #ifndef FINAL_RELEASE
-              fprintf(stderr,"PLAY AUDIO? command at 1801\n");
-              #endif
-            */
-            return;
-
-          case 0xDA:
-            /*
-              #ifndef FINAL_RELEASE
-              fprintf(stderr,"PAUSE AUDIO PLAYING? command at 1801\n");
-              #endif
-            */
-            return;
-
-          case 0xDD:
-            /*
-              #ifndef FINAL_RELEASE
-              fprintf(stderr,"READ Q CHANNEL? command at 1801\n");
-              #endif
-            */
-            return;
-          case 0xDE:
-            /*
-              #ifndef FINAL_RELEASE
-              fprintf(stderr,"GET DIRECTORY INFO? command at 1801\n");
-              #endif
-            */
-            return;
-
-          default:
-            /*
-              #ifndef FINAL_RELEASE
-              if (!pce_cd_cmdcnt)
-              fprintf(stderr,"ERROR, unknown command %x at 1801\n",V);
-              #endif
-            */
-            return;
-          }
-
-      return;
-
-    case 2:
+		case 7:
+			io.backup = ENABLE;
+			return;
+		case 0:
+			if (V == 0x81)
+				io.cd_port_1800 = 0xD0;
+			return;
+		case 1:
+			io.cd_port_1801 = V;
+			if (!pce_cd_cmdcnt)
+				switch (V) {
+					case 0:
+						#if ENABLE_TRACING_CD
+						TRACE("CDRom2: RESET? command at 1801\n");
+						#endif
+						return;
+					case 3:
+						#if ENABLE_TRACING_CD
+						TRACE("CDRom2: GET SYSTEM STATUS? command at 1801\n");
+						#endif
+						return;
+					case 8:
+						#if ENABLE_TRACING_CD
+						TRACE("CDRom2: READ SECTOR command at 1801\n");
+						#endif
+						return;
+					case 0x81:
+						#if ENABLE_TRACING_CD
+						TRACE("CDRom2: ANOTHER RESET? command at 1801\n");
+						#endif
+						io.cd_port_1800 = 0x40;
+						return;
+					case 0xD8:
+					case 0xD9:
+						#if ENABLE_TRACING_CD
+						TRACE("CDRom2: PLAY AUDIO? command at 1801\n");
+						#endif
+						return;
+					case 0xDA:
+						#if ENABLE_TRACING_CD
+						TRACE("CDRom2: PAUSE AUDIO PLAYING? command at 1801\n");
+						#endif
+						return;
+					case 0xDD:
+						#if ENABLE_TRACING_CD
+						TRACE("CDRom2: READ Q CHANNEL? command at 1801\n");
+						#endif
+						return;
+					case 0xDE:
+						#if ENABLE_TRACING_CD
+						TRACE("CDRom2: GET DIRECTORY INFO? command at 1801\n");
+						#endif
+						return;
+					default:
+						#if ENABLE_TRACING_CD
+						TRACE("CDRom2: ERROR, unknown command %x at 1801\n", V);
+						#endif
+						return;
+				}
+			return;
+		case 2:
 #ifndef FINAL_RELEASE
       // fprintf(stderr,"trying to access port 1802 in write\n");
 #endif
 
-      if ((!(io.cd_port_1802 & 0x80)) && (V & 0x80))
+	if ((!(io.cd_port_1802 & 0x80)) && (V & 0x80))
         {
           io.cd_port_1800 &= ~0x40;
         }
@@ -592,47 +561,34 @@ void pce_cd_handle_write_1800(UInt16 A, UChar V)
                 }
               else if (!pce_cd_read_datacnt)
                 {
-                  if (pce_cd_curcmd == 0x08)
-                    {
-                      if (!--cd_sectorcnt)
-                        {
-#ifndef FINAL_RELEASE
-                          fprintf (stderr, "sector data count over.\n");
-#endif
-                          io.cd_port_1800 |= 0x10;	/* wrong */
-                          pce_cd_curcmd = 0x00;
-                        }
-                      else
-                        {
-#ifndef FINAL_RELEASE
-                          fprintf (stderr, "sector data count %d.\n",
-                                   cd_sectorcnt);
-#endif
-                          pce_cd_read_sector ();
-                        }
-                    }
-                  else
-                    {
-                      if (io.cd_port_1800 & 0x10)
-                        {
-                          io.cd_port_1800 |= 0x20;
-                        }
-                      else
-                        {
-                          io.cd_port_1800 |= 0x10;
-                        }
-                    }
-                }
-              else
-                {
-                  pce_cd_read_datacnt--;
-                }
-            }
-          else
-            {
-              pce_cd_handle_command ();
-            }
-        }
+				if (pce_cd_curcmd == 0x08) {
+					if (!--cd_sectorcnt) {
+						#if ENABLE_TRACING_CD
+						TRACE("CDRom2: Sector data count over.\n");
+						#endif
+						io.cd_port_1800 |= 0x10;	/* wrong */
+						pce_cd_curcmd = 0x00;
+					} else {
+						#if ENABLE_TRACING_CD
+						TRACE("CDRom2: Sector data count: %d\n",
+							cd_sectorcnt);
+						#endif
+						pce_cd_read_sector ();
+					}
+				} else {
+					if (io.cd_port_1800 & 0x10) {
+						io.cd_port_1800 |= 0x20;
+					} else {
+						io.cd_port_1800 |= 0x10;
+					}
+				}
+			} else {
+				pce_cd_read_datacnt--;
+			}
+		} else {
+			pce_cd_handle_command ();
+		}
+	}
 
       io.cd_port_1802 = V;
       return;

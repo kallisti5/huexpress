@@ -1,8 +1,8 @@
-#include "mix.h"
-
 #include <SDL_audio.h>
 
 #include "osd_haiku_sdl_machine.h"
+#include "mix.h"
+
 
 void update_sound_null(void)
 {

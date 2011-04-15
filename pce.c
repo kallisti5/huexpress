@@ -557,9 +557,9 @@ void
 read_sector_CD(unsigned char *p, UInt32 sector)
 {
 	int i;
-#if ENABLE_TRACING
-	Log("Reading sector : %d\n", sector);
-#endif
+	#if ENABLE_TRACING_CD
+	TRACE("CDRom2: Reading sector %d\n", sector);
+	#endif
 
 	if (cd_buf != NULL)
 		if ((sector >= first_sector)
@@ -587,15 +587,21 @@ read_sector_ISO (unsigned char *p, UInt32 sector)
 {
 	int result;
 
-	for (result = nb_max_track; result > 0x01; result--)
-		{
-			if ((sector >= CD_track[result].beg_lsn) &&
-		(sector <= CD_track[result].beg_lsn + CD_track[result].length))
-	break;
-		}
+	for (result = nb_max_track; result > 0x01; result--) {
+		if ((sector >= CD_track[result].beg_lsn)
+			&& (sector <= CD_track[result].beg_lsn + CD_track[result].length))
+			break;
+	}
 
-#if ENABLE_TRACING
-	TRACE("ISO: Loading sector number %d\n", pce_cd_sectoraddy);
+	#if ENABLE_TRACING_CD
+	TRACE("CDRom2: Loading ISO sector %d...\n"
+		"        AX=%02x%02x; BX=%02x%02x; CX=%02x%02x; DX=%02x%02x\n"
+		"        Track #%d begins at %d\n",
+		pce_cd_sectoraddy,
+		RAM[0xf9], RAM[0xf8], RAM[0xfb], RAM[0xfa],
+		RAM[0xfd], RAM[0xfc], RAM[0xff], RAM[0xfe],
+		result, CD_track[result].beg_lsn);
+	/*
 	Log
 		("Loading sector n�%d.\nAX=%02x%02x\nBX=%02x%02x\nCX=%02x%02x\nDX=%02x%02x\n\n",
 			pce_cd_sectoraddy, RAM[0xf9], RAM[0xf8], RAM[0xfb], RAM[0xfa], RAM[0xfd],
@@ -603,7 +609,8 @@ read_sector_ISO (unsigned char *p, UInt32 sector)
 	Log("temp+2-5 = %x %x %x\ntemp + 1 = %02x\n",RAM[5], RAM[6], RAM[7], RAM[4]);
 	Log("ISO : seek at %d\n", (sector - CD_track[result].beg_lsn) * 2048);
 	Log("Track n�%d begin at %d\n", result, CD_track[result].beg_lsn);
-#endif
+	*/
+	#endif
 
 	if (result != 0x02) {
 		int i;
@@ -649,8 +656,8 @@ pce_cd_read_sector(void)
 		osd_snd_set_volume (0);
 
 #if ENABLE_TRACING_CD
-	Log ("Will read sectors using function #%d\n", CD_emulation);
-	TRACE("Reading sector %d (in pce_cd_read_sector)\n", pce_cd_sectoraddy);
+	TRACE("CDRom2: %s reading sector %d (via CDEmulation mode %d)\n",
+		__func__, pce_cd_sectoraddy, CD_emulation);
 #endif
 
 	(*read_sector_method[CD_emulation]) (cd_sector_buffer, pce_cd_sectoraddy);

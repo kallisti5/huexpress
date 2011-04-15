@@ -2,6 +2,7 @@
 #define _SOUND_H_
 
 #include "pce.h"
+#include "debug.h"
 
 extern UChar sound_driver;
 

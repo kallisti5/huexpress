@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 
+#include "config.h"
 #include "pce.h"
 #include "dis.h"
 #include "optable.h"
