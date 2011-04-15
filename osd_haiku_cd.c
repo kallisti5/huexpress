@@ -50,7 +50,7 @@ void osd_cd_read(UChar *p, UInt32 sector)
 	int retries = 0;
 	char buf[128];
 
-	TRACE("CDRom2: Read\n");
+	TRACE("CDRom2: %s\n", __func__);
 
 	while ((lseek(cd_drive_handle, 2048 * sector, SEEK_SET) < 0)
 		&& (retries < 3)) {
@@ -69,41 +69,68 @@ void osd_cd_read(UChar *p, UInt32 sector)
 
 void osd_cd_subchannel_info(unsigned short offset)
 {
+	TRACE("CDRom2: %s\n", __func__);
 }
+
 
 void osd_cd_status(int *status)
 {
+	TRACE("CDRom2: %s\n", __func__);
 	*status = 0;
 }
 
+
 void osd_cd_track_info(UChar track, int *min, int *sec, int *fra, int *control)
 {
+	TRACE("CDRom2: %s\n", __func__);
 	*min = 0; *sec = 0; *fra = 0; *control = 0;
 }
 
+
 void osd_cd_nb_tracks(int *first, int *last)
 {
-	*first = 0; *last = 0;
+	scsi_toc toc;
+	status_t result = ioctl(cd_drive_handle, B_SCSI_GET_TOC, &toc);
+
+	if (result != B_OK) {
+		MESSAGE_ERROR("CDRom2: Error counting CD Tracks\n");
+		*first = 0;
+		*last = 0;
+	} else {
+		*first = 0;
+		*last = toc.toc_data[3];
+		MESSAGE_INFO("CDRom2: Found %d tracks on CD\n", &last);
+	}
 }
+
 
 void osd_cd_length(int *min, int *sec, int *fra)
 {
+	TRACE("CDRom2: %s\n", __func__);
 	*min = 0; *sec = 0; *fra = 0;
 }
 
+
 void osd_cd_pause(void)
 {
+	TRACE("CDRom2: %s\n", __func__);
 }
+
 
 void osd_cd_resume(void)
 {
+	TRACE("CDRom2: %s\n", __func__);
 }
+
 
 void osd_cd_play_audio_track(UChar track)
 {
+	TRACE("CDRom2: %s\n", __func__);
 }
 
+
 void osd_cd_play_audio_range(UChar min_from, UChar sec_from, UChar fra_from,
-                             UChar min_to, UChar sec_to, UChar fra_to)
+	UChar min_to, UChar sec_to, UChar fra_to)
 {
+	TRACE("CDRom2: %s\n", __func__);
 }

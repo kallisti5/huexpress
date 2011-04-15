@@ -631,9 +631,9 @@ void WriteBuffer(char *buf, int ch, unsigned dwSize)
 //                      }
 //                      else  // MONO
 
-    vol = max((io.psg_volume >> 3) & 0x1E, (io.psg_volume << 1) & 0x1E) +
+    vol = MAX((io.psg_volume >> 3) & 0x1E, (io.psg_volume << 1) & 0x1E) +
           (io.PSG[ch][4] & PSG_DDA_VOICE_VOLUME) +
-          max((io.PSG[ch][5] >> 3) & 0x1E, (io.PSG[ch][5] << 1) & 0x1E);
+          MAX((io.PSG[ch][5] >> 3) & 0x1E, (io.PSG[ch][5] << 1) & 0x1E);
     //average sound level
 
     if ((vol -= 60) < 0)

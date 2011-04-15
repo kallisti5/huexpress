@@ -332,7 +332,7 @@ set_arg(char nb_arg, const char *val) {
 			MESSAGE_INFO("Option: Stereo sound enabled\n");
 			return 0;
 		case 'S':
-			use_scanline = min (1, max (0, atoi (val)));
+			use_scanline = MIN(1, MAX(0, atoi (val)));
 			Log ("Scanline mode set to %d\n", use_scanline);
 			return 0;
 		case 'u':
@@ -344,7 +344,7 @@ set_arg(char nb_arg, const char *val) {
 			Log ("Number of tracks set to %d\n", nb_max_track);
 			return 0;
 		case 'z':
-			option.window_size = max(1, min (4, atoi (val)));
+			option.window_size = MIN(1, MAX(4, atoi (val)));
 			return 0;
 		case 'h':
 			printf(
@@ -435,7 +435,7 @@ parse_INIfile_raw ()
 
   Log ("Setting joypad config number to %d\n", current_config);
 
-  language = min (get_config_int ("main", "language", 0), NB_LANG - 1);
+  language = MIN(get_config_int ("main", "language", 0), NB_LANG - 1);
   // language setting
 
   Log ("Setting language to %d\n", language);

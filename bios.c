@@ -495,7 +495,7 @@ void handle_bios(void)
               nb_sector = (nb_to_read >> 11) + ((nb_to_read & 2047) ? 1 : 0);
 
               while (nb_sector) {
-                int x, index = min(2048, (int)nb_to_read);
+                int x, index = MIN(2048, (int)nb_to_read);
 
                 pce_cd_read_sector();
 

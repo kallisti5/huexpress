@@ -93,13 +93,13 @@ zp_key ()
 
   if (selected_byte >= frame_down - 3 * NB_BYTE_LINE)
     {
-      frame_down = min (0x100, (selected_byte + 3 * NB_BYTE_LINE) & 0xF8);
+      frame_down = MIN(0x100, (selected_byte + 3 * NB_BYTE_LINE) & 0xF8);
       frame_up = frame_down - NB_BYTE_LINE * NB_LINE;
     }
 
   if (selected_byte < frame_up + 3 * NB_BYTE_LINE)
     {
-      frame_up = max (0, (int) ((selected_byte - 3 * NB_BYTE_LINE) & 0xF8));
+      frame_up = MAX(0, (int) ((selected_byte - 3 * NB_BYTE_LINE) & 0xF8));
       frame_down = frame_up + NB_BYTE_LINE * NB_LINE;
     }
 
