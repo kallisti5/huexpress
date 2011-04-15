@@ -24,6 +24,7 @@
 
 #include "utils.h"
 #include "unzip.h"
+#include "debug.h"
 
 #define CASESENSITIVITY (0)
 #define WRITEBUFFERSIZE (8192)
@@ -79,27 +80,22 @@ find_possible_filename_in_zip (char *zipfilename)
 		char filename_inzip[256];
 		unz_file_info file_info;
 
-#if !defined(FINAL_RELEASE)
-		fprintf (stderr, "Testing entry #%ld\n", i);
-#endif
-
 		err = unzGetCurrentFileInfo (uf, &file_info, filename_inzip,
 			sizeof (filename_inzip), NULL, 0, NULL, 0);
 
 		if (err != UNZ_OK)
 			return NULL;
 
-#if !defined(FINAL_RELEASE)
-		fprintf (stderr, "Filename for this entry is %s\n", filename_inzip);
-#endif
-
-		if (strcasestr (filename_inzip, ".PCE")) {
-			strncpy (possible_filename_in_zip, filename_inzip, PATH_MAX);
+		if (strcasestr(filename_inzip, ".HCD")
+			|| strcasestr(filename_inzip, ".PCE")) {
+			MESSAGE_INFO("Found a valid game within zip file: %s\n",
+				filename_inzip);
+			strncpy(possible_filename_in_zip, filename_inzip, PATH_MAX);
 			return possible_filename_in_zip;
 		}
 
 		if ((i + 1) < gi.number_entry) {
-			err = unzGoToNextFile (uf);
+			err = unzGoToNextFile(uf);
 			if (err != UNZ_OK)
 				return NULL;
 		}
@@ -161,7 +157,7 @@ do_extract_currentfile_in_memory(unzFile uf, size_t * unzipped_size)
 
 		err = unzOpenCurrentFile (uf);
 		if (err != UNZ_OK) {
-			Log ("error %d with zipfile in unzOpenCurrentFile\n", err);
+			Log("error %d with zipfile in unzOpenCurrentFile\n", err);
 			return NULL;
 		}
 
@@ -170,7 +166,7 @@ do_extract_currentfile_in_memory(unzFile uf, size_t * unzipped_size)
 		do {
 			err = unzReadCurrentFile (uf, buf, size_buf);
 			if (err < 0) {
-				Log ("error %d with zipfile in unzReadCurrentFile\n", err);
+				Log("error %d with zipfile in unzReadCurrentFile\n", err);
 				break;
 			}
 			if (err > 0) {
