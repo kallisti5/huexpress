@@ -165,6 +165,19 @@ void osd_cd_resume(void)
 void osd_cd_play_audio_track(UChar track)
 {
 	TRACE("CDRom2: %s\n", __func__);
+	scsi_play_track playtrack;
+
+	playtrack.start_track = track;
+	playtrack.start_index = 1;
+	playtrack.end_track = track;
+	playtrack.end_index = 1;
+
+	status_t result = ioctl(cd_drive_handle, B_SCSI_PLAY_TRACK, &playtrack);
+	if (result != B_OK) {
+		MESSAGE_ERROR("CDRom2: ioctl error, couldn't play track %d\n",
+			track);
+		return;
+	}
 }
 
 

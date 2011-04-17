@@ -462,14 +462,13 @@ pce_cd_handle_read_1800(UInt16 A) {
 void pce_cd_handle_write_1800(UInt16 A, UChar V)
 {
 	switch (A & 15) {
-		case 7:
-			io.backup = ENABLE;
-			return;
 		case 0:
+			// $1800 - CDC status
 			if (V == 0x81)
 				io.cd_port_1800 = 0xD0;
 			return;
 		case 1:
+			// $1801 - CDC command / status / data
 			io.cd_port_1801 = V;
 			if (!pce_cd_cmdcnt)
 				switch (V) {
@@ -523,10 +522,7 @@ void pce_cd_handle_write_1800(UInt16 A, UChar V)
 				}
 			return;
 		case 2:
-			#if ENABLE_TRACING_CD
-			// TRACE("CDRom2: Trying to access port 1802 in write\n");
-			#endif
-
+			// $1802 - ADPCM / CD control
 			if ((!(io.cd_port_1802 & 0x80)) && (V & 0x80)) {
 				io.cd_port_1800 &= ~0x40;
 			} else if ((io.cd_port_1802 & 0x80) && (!(V & 0x80))) {
@@ -579,7 +575,11 @@ void pce_cd_handle_write_1800(UInt16 A, UChar V)
 
 			io.cd_port_1802 = V;
 			return;
+		case 3:
+			// TODO $1803 - BRAM lock / CD status
+			return;
 		case 4:
+			// $1804 - CD reset
 			if (V & 2) {
 				// Reset asked, for now do nothing
 				#if ENABLE_TRACING_CD
@@ -620,14 +620,29 @@ void pce_cd_handle_write_1800(UInt16 A, UChar V)
 			}
 			return;
 
+		case 5:
+		case 6:
+			// TODO $1805 - Convert PCM data / PCM data
+			// TODO $1806 - PCM data
+			return;
+
+		case 7:
+			// $1807 - BRAM unlock / CD status
+			io.backup = ENABLE;
+			return;
+
 		case 8:
+			// $1808 - ADPCM address (LSB) / CD data
 			io.adpcm_ptr.B.l = V;
 			return;
+
 		case 9:
+			// $1809 - ADPCM address (MSB)
 			io.adpcm_ptr.B.h = V;
 			return;
 
 		case 0x0A:
+			// $180A - ADPCM RAM data port
 			PCM[io.adpcm_wptr++] = V;
 			#if ENABLE_TRACING_CD
 			TRACE("CDRom2: Wrote %02X to ADPCM buffer[%04X]\n",
@@ -635,8 +650,8 @@ void pce_cd_handle_write_1800(UInt16 A, UChar V)
 			#endif
 			return;
 
-		case 0x0B:	// DMA enable ?
-
+		case 0x0B:
+			// $180B - ADPCM DMA control
 			if ((V & 2) && (!(cd_port_180b & 2))) {
 				issue_ADPCM_dma ();
 				cd_port_180b = V;
@@ -651,7 +666,12 @@ void pce_cd_handle_write_1800(UInt16 A, UChar V)
 			cd_port_180b = V;
 			return;
 
+		case 0x0C:
+			// TODO $180C - ADPCM status
+			return;
+
 		case 0x0D:
+			// $180D - ADPCM address control
 			if ((V & 0x03) == 0x03) {
 				io.adpcm_dmaptr = io.adpcm_ptr.W; // set DMA pointer
 				#if ENABLE_TRACING_CD
@@ -691,13 +711,15 @@ void pce_cd_handle_write_1800(UInt16 A, UChar V)
 			return;
 
 		case 0xe:
+			// $180E - ADPCM playback rate
 			io.adpcm_rate = 32 / (16 - (V & 15)); // Set ADPCM playback rate
 			#if ENABLE_TRACING_CD
 			TRACE("CDRom2: ADPCM rate set to %d kHz\n", io.adpcm_rate);
 			#endif
 			return;
 
-		case 0xf:		// don't know how to use it
+		case 0xf:
+			// $180F - ADPCM and CD audio fade timer
 			cd_fade = V;
 			#if ENABLE_TRACING_CD
 			TRACE("CDRom2: Fade Setting to %d\n", V);
