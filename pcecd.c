@@ -59,7 +59,7 @@ static void
 pce_cd_handle_command(void)
 {
 	if (pce_cd_cmdcnt) {
-		#if ENABLE_TRACING_CD
+		#if ENABLE_TRACING_CD_2
 		TRACE("CDRom2: Command arg received: 0x%02x.\n", io.cd_port_1801);
 		#endif
 
@@ -72,7 +72,7 @@ pce_cd_handle_command(void)
 	{
 		case 0x08:
 			if (!pce_cd_cmdcnt) {
-				#if ENABLE_TRACING_CD
+				#if ENABLE_TRACING_CD_2
 				TRACE("CDRom2: Read command: %d sectors.\n", io.cd_port_1801);
 				TRACE("CDRom2: Starting at %02x:%02x:%02x.\n",
 					pce_cd_sectoraddress[0],
@@ -94,7 +94,7 @@ pce_cd_handle_command(void)
 				// cd_port_1800 = 0xD0; // Xanadu 2 doesn't block but still crash
 				/* TEST */
 
-				#if ENABLE_TRACING_CD
+				#if ENABLE_TRACING_CD_2
 				TRACE("Result of reading : $1800 = 0X%02X\n",
 					io.cd_port_1800);
 				#endif
@@ -167,10 +167,8 @@ pce_cd_handle_command(void)
 			}
 			break;
 		case 0xde:
-			#if ENABLE_TRACING_CD
-			Log ("Arg for 0xde command is %X, command count is %d\n",
-				io.cd_port_1801, pce_cd_cmdcnt);
-			TRACE("Arg for 0xde command is %X, command count is %d\n",
+			#if ENABLE_TRACING_CD_2
+			TRACE("CDRom2: Arg for 0xde command is %X, command count is %d\n",
 				io.cd_port_1801, pce_cd_cmdcnt);
 			#endif
 
@@ -183,10 +181,9 @@ pce_cd_handle_command(void)
 				// and an optional argument for track number
 				pce_cd_temp_dirinfo[0] = io.cd_port_1801;
 
-				#if ENABLE_TRACING_CD
-				Log
-				("I'll answer to 0xde command request\n"
-					"Arguments are %x, %x, %x, %x\n",
+				#if ENABLE_TRACING_CD_2
+				TRACE("CDRom2: I'll answer to 0xde command request\n");
+				TRACE("CDRom2:   Arguments are:  %x, %x, %x, %x\n",
 					pce_cd_temp_dirinfo[0], pce_cd_temp_dirinfo[1],
 					pce_cd_temp_dirinfo[2], pce_cd_temp_dirinfo[3]);
 				#endif
@@ -223,7 +220,7 @@ pce_cd_handle_command(void)
 						cd_read_buffer = pce_cd_dirinfo;
 						pce_cd_read_datacnt = 2;
 
-						#if ENABLE_TRACING_CD
+						#if ENABLE_TRACING_CD_2
 						TRACE("CDRom2: Data resulting of 0xde request is %x and %x\n",
 							cd_read_buffer[0], cd_read_buffer[1]);
 						#endif
@@ -281,6 +278,12 @@ pce_cd_handle_command(void)
 
 								osd_cd_length (&min, &sec, &fra);
 
+								#if ENABLE_TRACING_CD
+								TRACE("CDRom2: CD Length - "
+									"Min: %d, Sec: %d, Frames: %d\n",
+									min, sec, fra);
+								#endif
+
 								pce_cd_dirinfo[0] = binbcd[min];
 								pce_cd_dirinfo[1] = binbcd[sec];
 								pce_cd_dirinfo[2] = binbcd[fra];
@@ -302,7 +305,7 @@ pce_cd_handle_command(void)
 	} else { // end if of command arg or new request
 		// it's a command ID we're receiving
 
-		#if ENABLE_TRACING_CD
+		#if ENABLE_TRACING_CD_2
 		TRACE("CDRom2: Command byte received: 0x%02x.\n", io.cd_port_1801);
 		#endif
 
@@ -521,7 +524,7 @@ void pce_cd_handle_write_1800(UInt16 A, UChar V)
 			return;
 		case 2:
 			#if ENABLE_TRACING_CD
-			TRACE("CDRom2: Trying to access port 1802 in write\n");
+			// TRACE("CDRom2: Trying to access port 1802 in write\n");
 			#endif
 
 			if ((!(io.cd_port_1802 & 0x80)) && (V & 0x80)) {
@@ -529,7 +532,7 @@ void pce_cd_handle_write_1800(UInt16 A, UChar V)
 			} else if ((io.cd_port_1802 & 0x80) && (!(V & 0x80))) {
 				io.cd_port_1800 |= 0x40;
 
-				#if ENABLE_TRACING_CD
+				#if ENABLE_TRACING_CD_2
 				TRACE("CDRom2: ADPCM trans done = %d\n", pce_cd_adpcm_trans_done);
 				#endif
 				if (pce_cd_adpcm_trans_done) {

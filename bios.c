@@ -901,6 +901,10 @@ void handle_bios(void)
 					int min, sec, frame;
 
 					osd_cd_length(&min, &sec, &frame);
+					#if ENABLE_TRACING_BIOS
+					TRACE("BIOS: CD length - Min: %d, Sec: %d, Frame: %d\n",
+						min, sec, frame);
+					#endif
 
 					put_8bit_addr( (UInt16)(buf_offset), binbcd[min]);
 					put_8bit_addr( (UInt16)(buf_offset + 1), binbcd[sec]);

@@ -84,6 +84,31 @@ void osd_cd_track_info(UChar track, int *min, int *sec, int *fra, int *control)
 {
 	TRACE("CDRom2: %s\n", __func__);
 	*min = 0; *sec = 0; *fra = 0; *control = 0;
+
+	scsi_toc toc;
+	status_t result = ioctl(cd_drive_handle, B_SCSI_GET_TOC, &toc);
+
+	if (result != B_OK) {
+		MESSAGE_ERROR("CDRom2: %s, Error accessing CD Drive\n", __func__);
+		return;
+	}
+
+	int16 trackcount = toc.toc_data[3] - toc.toc_data[2] + 1;
+
+	if ((track + 1) < 1 || track > trackcount) {
+		MESSAGE_ERROR("CDRom2: %s, Invalid track provided: %d of %d\n",
+			__func__,
+			track, trackcount);
+		return;
+	}
+
+	TrackDescriptor *desc = (TrackDescriptor*)&(toc.toc_data[4]);
+
+	int32 tracktime = (desc[track].min * 60) + desc[track].sec;
+	tracktime -= (desc[track - 1].min * 60) + desc[track - 1].sec;
+
+	*min = tracktime / 60;
+	*sec = tracktime % 60;
 }
 
 
@@ -93,7 +118,7 @@ void osd_cd_nb_tracks(int *first, int *last)
 	status_t result = ioctl(cd_drive_handle, B_SCSI_GET_TOC, &toc);
 
 	if (result != B_OK) {
-		MESSAGE_ERROR("CDRom2: Error counting CD Tracks\n");
+		MESSAGE_ERROR("CDRom2: %s, Error accessing CD Drive\n", __func__);
 		*first = 0;
 		*last = 0;
 	} else {
@@ -107,6 +132,21 @@ void osd_cd_length(int *min, int *sec, int *fra)
 {
 	TRACE("CDRom2: %s\n", __func__);
 	*min = 0; *sec = 0; *fra = 0;
+
+	scsi_toc toc;
+	status_t result = ioctl(cd_drive_handle, B_SCSI_GET_TOC, &toc);
+
+	if (result != B_OK) {
+		MESSAGE_ERROR("CDRom2: ioctl error on %s\n", __func__);
+		return;
+	}
+
+	int16 trackcount = toc.toc_data[3] - toc.toc_data[2] + 1;
+	TrackDescriptor *desc = (TrackDescriptor*)&(toc.toc_data[4]);
+
+	*min = desc[trackcount].min;
+	*sec = desc[trackcount].sec;
+	*fra = desc[trackcount].frame;
 }
 
 
