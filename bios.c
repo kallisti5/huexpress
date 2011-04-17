@@ -858,6 +858,9 @@ void handle_bios(void)
 
 			case CD_DINFO_NB_TRACKS:
 				{
+					#if ENABLE_TRACING_BIOS
+					TRACE("BIOS: Request for number of CDRom2 tracks\n");
+					#endif
 					UInt16 buf_offset = get_16bit_zp(_bx);
 
 					switch(CD_emulation) {

@@ -9,11 +9,11 @@ int osd_cd_init(char *device)
 {
 	char *device_buffer;
 
-	MESSAGE_INFO("CDRom2: Opening physical CD Drive...\n");
+	MESSAGE_INFO("CDRom2: Opening physical CD Drive... '%s'\n", device);
 
-	if (strcmp(device, ""))
+	if (strcmp(device, "")) {
 		device_buffer = device;
-	else {
+	} else {
 		// Just a guess
 		device_buffer = "/dev/disk/atapi/0/slave/raw";
 	}
@@ -99,7 +99,6 @@ void osd_cd_nb_tracks(int *first, int *last)
 	} else {
 		*first = 0;
 		*last = toc.toc_data[3];
-		MESSAGE_INFO("CDRom2: Found %d tracks on CD\n", &last);
 	}
 }
 

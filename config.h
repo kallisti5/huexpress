@@ -4,6 +4,7 @@
 /* Trace settings for debug purposes */
 #define ENABLE_TRACING 1
 #define ENABLE_TRACING_AUDIO 0
+#define ENABLE_TRACING_BIOS 1
 #define ENABLE_TRACING_CD 0
 #define ENABLE_TRACING_GFX 0
 

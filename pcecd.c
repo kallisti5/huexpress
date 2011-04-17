@@ -206,16 +206,18 @@ pce_cd_handle_command(void)
 							case 1:
 								{
 								int first_track, last_track;
-								osd_cd_nb_tracks (&first_track, &last_track);
+								osd_cd_nb_tracks(&first_track, &last_track);
+								TRACE("CDRom2: CD: first track %d, last track %d\n",
+									first_track, last_track);
 								pce_cd_dirinfo[0] = binbcd[first_track];
 								pce_cd_dirinfo[1] = binbcd[last_track];
 								}
 								break;
 							case 5:
-								TRACE("CDRom2:HCD: first track %d, last track %d\n",
-									HCD_first_track, HCD_last_track);
 								pce_cd_dirinfo[0] = binbcd[HCD_first_track];
 								pce_cd_dirinfo[1] = binbcd[HCD_last_track];
+								TRACE("CDRom2: HCD: first track %d, last track %d\n",
+									HCD_first_track, HCD_last_track);
 								break;
 						}	// switch CD emulation
 						cd_read_buffer = pce_cd_dirinfo;
