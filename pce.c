@@ -1528,6 +1528,9 @@ CartLoad(char *name)
 		|| strstr(name, "/dev/disk/atapi/")) {
 		MESSAGE_INFO("Using Hardware CD Device to load CDRom2\n");
 		CD_emulation = 1;
+
+		strcpy(ISO_filename, name);
+
 		LOAD_INTEGRATED_SYS_FILE;
 		return 1;
 	} else if (strcasestr(name, ".PCE")) {

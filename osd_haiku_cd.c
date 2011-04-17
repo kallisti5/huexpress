@@ -7,6 +7,7 @@ int cd_drive_handle = 0;
 
 int osd_cd_init(char *device)
 {
+	TRACE("CDRom2: %s\n", __func__);
 	char *device_buffer;
 
 	MESSAGE_INFO("CDRom2: Opening physical CD Drive... '%s'\n", device);
@@ -15,6 +16,7 @@ int osd_cd_init(char *device)
 		device_buffer = device;
 	} else {
 		// Just a guess
+		// TODO : Search for first cdrom if none was provided
 		device_buffer = "/dev/disk/atapi/0/slave/raw";
 	}
 
@@ -35,11 +37,13 @@ int osd_cd_init(char *device)
 
 void osd_cd_stop_audio()
 {
+	TRACE("CDRom2: %s\n", __func__);
 }
 
 
 void osd_cd_close()
 {
+	TRACE("CDRom2: %s\n", __func__);
 	osd_cd_stop_audio();
 	close(cd_drive_handle);
 }
@@ -54,15 +58,13 @@ void osd_cd_read(UChar *p, UInt32 sector)
 
 	while ((lseek(cd_drive_handle, 2048 * sector, SEEK_SET) < 0)
 		&& (retries < 3)) {
-		sprintf(buf, "osd_cd_read:lseek (sector=%d, retry=%d)", sector, retries);
-		perror(buf);
+		TRACE("osd_cd_read:lseek (sector=%d, retry=%d)\n", sector, retries);
 		retries++;
 	}
 
 	while ((read(cd_drive_handle, p, 2048) < 0)
 		&& (retries++ < 3)) {
-		sprintf(buf, "osd_cd_read:read (sector=%d, retry=%d)", sector, retries);
-		perror(buf);
+		TRACE("osd_cd_read:read (sector=%d, retry=%d)\n", sector, retries);
 	}
 }
 
@@ -77,12 +79,44 @@ void osd_cd_status(int *status)
 {
 	TRACE("CDRom2: %s\n", __func__);
 	*status = 0;
+//
+//	struct cdrom_subchnl subc;
+//
+//	subc.cdsc_format = CDROM_MSF;
+//
+//	if (ioctl(cd_drive_handle, CDROMSUBCHNL, &subc) == -1)
+//		perror("osd_cd_status");
+//
+//	*status = subc.cdsc_audiostatus - 0x10;
+	scsi_position pos;
+	status_t media_status = B_DEV_NO_MEDIA;
+
+	ioctl(cd_drive_handle, B_GET_MEDIA_STATUS,
+		&media_status, sizeof(media_status));
+	if (media_status != B_OK) {
+		MESSAGE_ERROR("CDRom2: No CD found\n");
+		return;
+	}
+
+	status_t result = ioctl(cd_drive_handle, B_SCSI_GET_POSITION, &pos);
+
+	//*status = pos.position - 0x10;
+
+	//if (result != B_OK)
+	//	return kNoCD;
+	//else if ((!pos.position[1]) || (pos.position[1] >= 0x13) ||
+	//       ((pos.position[1] == 0x12) && (!pos.position[6])))
+	//    return kStopped;
+	//else if (pos.position[1] == 0x11)
+	//    return kPlaying;
+	//else
+	//    return kPaused;
+
 }
 
 
 void osd_cd_track_info(UChar track, int *min, int *sec, int *fra, int *control)
 {
-	TRACE("CDRom2: %s\n", __func__);
 	*min = 0; *sec = 0; *fra = 0; *control = 0;
 
 	scsi_toc toc;
@@ -95,7 +129,7 @@ void osd_cd_track_info(UChar track, int *min, int *sec, int *fra, int *control)
 
 	int16 trackcount = toc.toc_data[3] - toc.toc_data[2] + 1;
 
-	if ((track + 1) < 1 || track > trackcount) {
+	if ((track) < 0 || track > trackcount) {
 		MESSAGE_ERROR("CDRom2: %s, Invalid track provided: %d of %d\n",
 			__func__,
 			track, trackcount);
@@ -107,13 +141,19 @@ void osd_cd_track_info(UChar track, int *min, int *sec, int *fra, int *control)
 	int32 tracktime = (desc[track].min * 60) + desc[track].sec;
 	tracktime -= (desc[track - 1].min * 60) + desc[track - 1].sec;
 
+	int32 trackframes = desc[track].frame;
+	trackframes -= desc[track - 1].frame;
+
 	*min = tracktime / 60;
 	*sec = tracktime % 60;
+	*fra = trackframes;
+	*control = desc[track].adr_control & 0xFF;
 }
 
 
 void osd_cd_nb_tracks(int *first, int *last)
 {
+	TRACE("CDRom2: %s\n", __func__);
 	scsi_toc toc;
 	status_t result = ioctl(cd_drive_handle, B_SCSI_GET_TOC, &toc);
 
@@ -122,7 +162,7 @@ void osd_cd_nb_tracks(int *first, int *last)
 		*first = 0;
 		*last = 0;
 	} else {
-		*first = 0;
+		*first = 1;
 		*last = toc.toc_data[3];
 	}
 }

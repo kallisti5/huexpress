@@ -60,7 +60,7 @@ pce_cd_handle_command(void)
 {
 	if (pce_cd_cmdcnt) {
 		#if ENABLE_TRACING_CD_2
-		TRACE("CDRom2: Command arg received: 0x%02x.\n", io.cd_port_1801);
+		TRACE("CDRom2: Command received: 0x%02x.\n", io.cd_port_1801);
 		#endif
 
 	if (--pce_cd_cmdcnt)
@@ -71,6 +71,7 @@ pce_cd_handle_command(void)
 	switch (pce_cd_curcmd)
 	{
 		case 0x08:
+			// SCSI CD READ
 			if (!pce_cd_cmdcnt) {
 				#if ENABLE_TRACING_CD_2
 				TRACE("CDRom2: Read command: %d sectors.\n", io.cd_port_1801);
@@ -110,6 +111,7 @@ pce_cd_handle_command(void)
 
 			break;
 		case 0xd8:
+			// PLAY AUDIO CD TRACK
 			pce_cd_temp_play[pce_cd_cmdcnt] = io.cd_port_1801;
 
 			if (!pce_cd_cmdcnt) {
@@ -117,6 +119,7 @@ pce_cd_handle_command(void)
 			}
 			break;
 		case 0xd9:
+			// PLAY AUDO CD TRACK SECTION
 			pce_cd_temp_stop[pce_cd_cmdcnt] = io.cd_port_1801;
 
 			if (!pce_cd_cmdcnt) {
@@ -167,6 +170,7 @@ pce_cd_handle_command(void)
 			}
 			break;
 		case 0xde:
+			// GET CD INFORMATION
 			#if ENABLE_TRACING_CD_2
 			TRACE("CDRom2: Arg for 0xde command is %X, command count is %d\n",
 				io.cd_port_1801, pce_cd_cmdcnt);
@@ -249,7 +253,7 @@ pce_cd_handle_command(void)
 							case 1:
 								{
 								int Min, Sec, Fra, Ctrl;
-								osd_cd_track_info (bcdbin[pce_cd_temp_dirinfo[0]],
+								osd_cd_track_info(bcdbin[pce_cd_temp_dirinfo[0]],
 									&Min, &Sec, &Fra, &Ctrl);
 
 								pce_cd_dirinfo[0] = binbcd[Min];
@@ -257,9 +261,13 @@ pce_cd_handle_command(void)
 								pce_cd_dirinfo[2] = binbcd[Fra];
 								pce_cd_dirinfo[3] = Ctrl;
 
-								TRACE("CDRom2: The control byte of audio track #%d is 0x%02X\n",
-									bcdbin[pce_cd_temp_dirinfo[0]], pce_cd_dirinfo[3]);
-
+								//#if ENABLE_TRACING_CD
+								TRACE("CDRom2: Track #%d length - Min: %d,"
+									" Sec: %d, Frames: %d, Control: 0x%X\n",
+									bcdbin[pce_cd_temp_dirinfo[0]],
+									pce_cd_dirinfo[0], pce_cd_dirinfo[1],
+									pce_cd_dirinfo[2], pce_cd_dirinfo[3]);
+								//#endif
 								break;
 
 								} // case CD emulation = 1
@@ -311,21 +319,26 @@ pce_cd_handle_command(void)
 
 		switch (io.cd_port_1801) {
 			case 0x00:
+				// TEST UNIT READY
 				io.cd_port_1800 = 0xD8;
 				break;
 			case 0x08:
+				// READ
 				pce_cd_curcmd = io.cd_port_1801;
 				pce_cd_cmdcnt = 4;
 				break;
 			case 0xD8:
+				// PLAY
 				pce_cd_curcmd = io.cd_port_1801;
 				pce_cd_cmdcnt = 4;
 				break;
 			case 0xD9:
+				// PLAY
 				pce_cd_curcmd = io.cd_port_1801;
 				pce_cd_cmdcnt = 4;
 				break;
 			case 0xDA:
+				// PAUSE
 				pce_cd_curcmd = io.cd_port_1801;
 				pce_cd_cmdcnt = 0;
 				if (CD_emulation == 1)
