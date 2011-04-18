@@ -462,12 +462,13 @@ osd_keyboard (void)
 		switch (event.type) {
 			case SDL_KEYDOWN:
 				switch (event.key.keysym.sym) {
+					case SDLK_F12:
 					case SDLK_ASTERISK:
 					{
 						UInt32 sav_timer = timer_60;
 						osd_snd_set_volume(0);
 						disass_menu();
-						osd_snd_set_volume (gen_vol);
+						osd_snd_set_volume(gen_vol);
 						timer_60 = sav_timer;
 						key_delay = 10;
 						break;
@@ -482,7 +483,7 @@ osd_keyboard (void)
 							UInt32 sav_timer = timer_60;
 							osd_snd_set_volume (0);
 							searchbyte ();
-							osd_snd_set_volume (gen_vol);
+							osd_snd_set_volume(gen_vol);
 							timer_60 = sav_timer;
 							return 0;
 						}
@@ -555,7 +556,6 @@ osd_keyboard (void)
 						SDL_ShowCursor(ToggleFullScreen());
 						break;
 
-					case SDLK_F12:
 					case SDLK_ESCAPE:
 						return 1;
 
