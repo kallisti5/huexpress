@@ -1,3 +1,13 @@
+/*****************************************/
+/* SDL Graphics Engine                   */
+/* Released under the GPL license        */
+/*                                       */
+/* Original Author:                      */
+/*		Zerograd? - Hu-GO!               */
+/* Reworked for HuKU by:                 */
+/*		Alexander von Gluck, kallisti5   */
+/*****************************************/
+
 #include "osd_sdl_gfx.h"
 
 //! PC Engine rendered screen
@@ -13,6 +23,7 @@ SDL_Surface *physical_screen = NULL;
 SDL_Surface *osd_text = NULL;
 SDL_Color osd_color = {0, 255, 0, 0}; // Green
 SDL_Rect osd_rect = {10, 5, 0, 0};
+TTF_Font *osd_font;
 
 SDL_Rect physical_screen_rect;
 
@@ -166,6 +177,7 @@ void osd_gfx_put_image_normal(void)
 			memmove(physical_screen->pixels, screen->pixels,
 				io.screen_w * io.screen_h);
 
+		// After drawing the game, throw in any onscreen text
 		if (message_delay && osd_text) {
 			SDL_BlitSurface(osd_text, NULL, physical_screen, &osd_rect);
 			message_delay--;
@@ -617,8 +629,27 @@ int ToggleFullScreen(void)
 }
 
 
-char
-drawVolume(int volume)
+/* drawVolume */
+/* Given a string, and a value between 0 and 255, */
+/* draw a 'volume' style bar */
+void
+drawVolume(char* name, int volume)
 {
+	int i;
+	char template[] = "[---------------]";
+	char result[255];
 
+	// Load result with the bar title
+	strcat(result, name);
+
+	// 17 rounds easily into 255 and gives us 15 bars
+	for (i = 1; i < 16; i++) {
+		if ((i * 17) <= volume)
+			template[i] = '|';
+	}
+
+	strcat(result, template);
+
+	osd_gfx_set_message(result);
 }
+

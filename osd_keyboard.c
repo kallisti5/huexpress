@@ -801,9 +801,8 @@ osd_keyboard (void)
 						else
 							gen_vol = 0;
 
-						osd_snd_set_volume (gen_vol);
-						sprintf(tmp_buf, "Volume--, at %d", gen_vol);
-						osd_gfx_set_message(tmp_buf);
+						osd_snd_set_volume(gen_vol);
+						drawVolume("Effect Vol. ", gen_vol);
 						message_delay = 60;
 
 						break;
@@ -816,9 +815,8 @@ osd_keyboard (void)
 						else
 							gen_vol = 255;
 
-						osd_snd_set_volume (gen_vol);
-						sprintf(tmp_buf, "Volume++, at %d", gen_vol);
-						osd_gfx_set_message(tmp_buf);
+						osd_snd_set_volume(gen_vol);
+						drawVolume("Effect Vol. ", gen_vol);
 						message_delay = 60;
 						break;
 					}

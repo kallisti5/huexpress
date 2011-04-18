@@ -12,8 +12,7 @@ extern UChar *OSD_MESSAGE_SPR;
 extern int blit_x,blit_y;// where must we blit the screen buffer on screen
 extern int screen_blit_x, screen_blit_y;// where on the screen we must blit XBuf
 
-TTF_Font *osd_font;
-
 int ToggleFullScreen(void);
+void drawVolume(char* name, int volume);
 
 #endif
