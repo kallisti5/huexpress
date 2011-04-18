@@ -650,9 +650,8 @@ read_sector_dummy (unsigned char *p, UInt32 sector)
 void
 pce_cd_read_sector(void)
 {
-	/* Avoid sound jiggling when accessing some sectors */
-	if (sound_driver == 1)
-		osd_snd_set_volume (0);
+	// Reduce volume to avoid sound stutter during CD access
+	osd_snd_set_volume(0);
 
 #if ENABLE_TRACING_CD
 	TRACE("CDRom2: %s reading sector %d (via CDEmulation mode %d)\n",
@@ -717,10 +716,10 @@ pce_cd_read_sector(void)
 	pce_cd_read_datacnt = 2048;
 	cd_read_buffer = cd_sector_buffer;
 
-	/* restore sound volume */
-	if (sound_driver == 1)
-		osd_snd_set_volume (0);
+	// raise volume back to original value
+	osd_snd_set_volume(gen_vol);
 }
+
 
 void
 issue_ADPCM_dma (void)

@@ -6,20 +6,23 @@
 
 #if !defined(SDL_mixer)
   extern void sdl_fill_audio(void *data, Uint8 *stream, int len);
-#else //SDL_mixer
+#else // SDL_mixer
   #include "osd_linux_sdl_music.h"
 #endif
 
 void osd_snd_set_volume(UChar v)
 {
+	#if ENABLE_TRACING_SND
+	TRACE("Sound: Set Volume %c\n", vol);
+	#endif
+
 #if !defined (SDL_mixer)
-	//#warning implement set volume for sdl
+	// TODO : implement set volume for sdl
 
 #else //SDL_mixer
 	Uint8 vol;
 	vol=v/2+((v==0)?0:1);// v=0 <=> vol=0; v=255 <=> vol=128
 	Mix_Volume(-1,vol);
-	Log("set volume %c\n",vol);
 #endif
 }
 
