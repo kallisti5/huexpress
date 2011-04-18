@@ -54,7 +54,7 @@ void osd_cd_read(UChar *p, UInt32 sector)
 	int retries = 0;
 	char buf[128];
 
-	TRACE("CDRom2: %s\n", __func__);
+	TRACE("CDRom2: %s : %d\n", __func__, sector);
 
 	while ((lseek(cd_drive_handle, 2048 * sector, SEEK_SET) < 0)
 		&& (retries < 3)) {
@@ -141,11 +141,12 @@ void osd_cd_track_info(UChar track, int *min, int *sec, int *fra, int *control)
 	int32 tracktime = (desc[track].min * 60) + desc[track].sec;
 	tracktime -= (desc[track - 1].min * 60) + desc[track - 1].sec;
 
+	*min = (tracktime / 60);
+	*sec = (tracktime % 60);
+
 	int32 trackframes = desc[track].frame;
 	trackframes -= desc[track - 1].frame;
 
-	*min = tracktime / 60;
-	*sec = tracktime % 60;
 	*fra = trackframes;
 	*control = desc[track].adr_control & 0xFF;
 }

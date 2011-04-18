@@ -559,23 +559,24 @@ read_sector_CD(unsigned char *p, UInt32 sector)
 	TRACE("CDRom2: Reading sector %d\n", sector);
 	#endif
 
-	if (cd_buf != NULL)
+	if (cd_buf != NULL) {
 		if ((sector >= first_sector)
 			&& (sector <= first_sector + CD_BUF_LENGTH - 1)) {
 				memcpy (p, cd_buf + 2048 * (sector - first_sector), 2048);
 				return;
 		} else {
 				for (i = 0; i < CD_BUF_LENGTH; i++)
-					osd_cd_read (cd_buf + 2048 * i, sector + i);
+					osd_cd_read(cd_buf + 2048 * i, sector + i);
 				first_sector = sector;
-				memcpy (p, cd_buf, 2048);
-		} else {
-			cd_buf = (UChar *) malloc (CD_BUF_LENGTH * 2048);
-			for (i = 0; i < CD_BUF_LENGTH; i++)
-				osd_cd_read (cd_buf + 2048 * i, sector + i);
-			first_sector = sector;
-			memcpy (p, cd_buf, 2048);
+				memcpy(p, cd_buf, 2048);
 		}
+	} else {
+		cd_buf = (UChar *) malloc (CD_BUF_LENGTH * 2048);
+		for (i = 0; i < CD_BUF_LENGTH; i++)
+			osd_cd_read (cd_buf + 2048 * i, sector + i);
+		first_sector = sector;
+		memcpy (p, cd_buf, 2048);
+	}
 
 }
 

@@ -697,9 +697,9 @@ void
 bank_set (UChar P, UChar V)
 {
 
-#if ENABLE_TRACING_CD
+#if ENABLE_TRACING
   if (V >= 0x40 && V <= 0x43)
-		printf("AC pseudo bank switching !!! (mmr[%d] = %d)\n", P, V);
+		TRACE("AC pseudo bank switching !!! (mmr[%d] = %d)\n", P, V);
 #endif
 
 #if defined(TEST_ROM_RELOCATED)

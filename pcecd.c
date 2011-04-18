@@ -88,7 +88,7 @@ pce_cd_handle_command(void)
 				}
 
 				pce_cd_set_sector_address ();
-				pce_cd_read_sector ();
+				pce_cd_read_sector();
 
 
 				/* TEST */
@@ -261,13 +261,15 @@ pce_cd_handle_command(void)
 								pce_cd_dirinfo[2] = binbcd[Fra];
 								pce_cd_dirinfo[3] = Ctrl;
 
-								//#if ENABLE_TRACING_CD
+								#if ENABLE_TRACING_CD
 								TRACE("CDRom2: Track #%d length - Min: %d,"
 									" Sec: %d, Frames: %d, Control: 0x%X\n",
 									bcdbin[pce_cd_temp_dirinfo[0]],
-									pce_cd_dirinfo[0], pce_cd_dirinfo[1],
-									pce_cd_dirinfo[2], pce_cd_dirinfo[3]);
-								//#endif
+									bcdbin[pce_cd_dirinfo[0]],
+									bcdbin[pce_cd_dirinfo[1]],
+									bcdbin[pce_cd_dirinfo[2]],
+									pce_cd_dirinfo[3]);
+								#endif
 								break;
 
 								} // case CD emulation = 1
@@ -453,10 +455,10 @@ pce_cd_handle_read_1800(UInt16 A) {
 					} else {
 						#if ENABLE_TRACING_CD
 						// not really needed unless troubleshooting sector reading
-						// TRACE("CDRom2: Sector data left count: %d\n",
-						// 	cd_sectorcnt);
+						TRACE("CDRom2: Sector data left count: %d\n",
+							cd_sectorcnt);
 						#endif
-						pce_cd_read_sector ();
+						pce_cd_read_sector();
 					}
 				}
 				return retval;
@@ -486,49 +488,50 @@ void pce_cd_handle_write_1800(UInt16 A, UChar V)
 			if (!pce_cd_cmdcnt)
 				switch (V) {
 					case 0:
-						#if ENABLE_TRACING_CD
+						#if ENABLE_TRACING_CD_2
 						TRACE("CDRom2: RESET? command at 1801\n");
 						#endif
+						io.cd_port_1800 = 0x40;
 						return;
 					case 3:
-						#if ENABLE_TRACING_CD
+						#if ENABLE_TRACING_CD_2
 						TRACE("CDRom2: GET SYSTEM STATUS? command at 1801\n");
 						#endif
 						return;
 					case 8:
-						#if ENABLE_TRACING_CD
+						#if ENABLE_TRACING_CD_2
 						TRACE("CDRom2: READ SECTOR command at 1801\n");
 						#endif
 						return;
 					case 0x81:
-						#if ENABLE_TRACING_CD
+						#if ENABLE_TRACING_CD_2
 						TRACE("CDRom2: ANOTHER RESET? command at 1801\n");
 						#endif
 						io.cd_port_1800 = 0x40;
 						return;
 					case 0xD8:
 					case 0xD9:
-						#if ENABLE_TRACING_CD
+						#if ENABLE_TRACING_CD_2
 						TRACE("CDRom2: PLAY AUDIO? command at 1801\n");
 						#endif
 						return;
 					case 0xDA:
-						#if ENABLE_TRACING_CD
+						#if ENABLE_TRACING_CD_2
 						TRACE("CDRom2: PAUSE AUDIO PLAYING? command at 1801\n");
 						#endif
 						return;
 					case 0xDD:
-						#if ENABLE_TRACING_CD
+						#if ENABLE_TRACING_CD_2
 						TRACE("CDRom2: READ Q CHANNEL? command at 1801\n");
 						#endif
 						return;
 					case 0xDE:
-						#if ENABLE_TRACING_CD
+						#if ENABLE_TRACING_CD_2
 						TRACE("CDRom2: GET DIRECTORY INFO? command at 1801\n");
 						#endif
 						return;
 					default:
-						#if ENABLE_TRACING_CD
+						#if ENABLE_TRACING_CD_2
 						TRACE("CDRom2: ERROR, unknown command %x at 1801\n", V);
 						#endif
 						return;
