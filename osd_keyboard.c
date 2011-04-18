@@ -17,8 +17,8 @@ input_config config[16] = {
 	{  // Config 0
 		{
 			{ 0, 0, 0, 0, 0, 0, { SDLK_UP, SDLK_DOWN, SDLK_LEFT, SDLK_RIGHT,
-  				SDLK_SPACE, SDLK_LALT, SDLK_TAB, SDLK_RETURN, SDLK_c, SDLK_x,
-  				-1, -1, -1, -1, -1, -1, -1, -1 } },
+				SDLK_SPACE, SDLK_LALT, SDLK_TAB, SDLK_RETURN, SDLK_c, SDLK_x,
+				-1, -1, -1, -1, -1, -1, -1, -1 } },
 			{ 0, 0, 0, 0, 0, 0, { 0 } },
 			{ 0, 0, 0, 0, 0, 0, { 0 } },
 			{ 0, 0, 0, 0, 0, 0, { 0 } },
@@ -78,6 +78,7 @@ extern int UPeriod;
 
 /* For joypad */
 SDL_Joystick *joypad[5];
+
 
 /* for keyboard */
 UInt16
@@ -206,7 +207,7 @@ read_input (UInt16 port)
 
 
 void
-sdl_config_joypad_axis (short which, joymap axis, UInt16 * bad_axes,
+sdl_config_joypad_axis(short which, joymap axis, UInt16 * bad_axes,
 	UInt16 num_axes) {
 
 	unsigned char t;
@@ -272,75 +273,66 @@ void
 sdl_config_joypad_button (short which, joymap button, UInt16 * bad_buttons,
 	UInt16 num_buttons)
 {
-  unsigned char t;
-  boolean done = FALSE;
+	unsigned char t;
+	boolean done = FALSE;
 
-  while (1)
-    {
-      if (read (fileno (stdin), &t, 1) == -1)
-	break;
-    }
-
-  while (!done)
-    {
-      time_t stime, ntime;
-      int buttons;
-
-      if (read (fileno (stdin), &t, 1) == -1)
-	{
-	  if (errno != EAGAIN)
-	    break;
+	while (1) {
+		if (read (fileno (stdin), &t, 1) == -1)
+			break;
 	}
-      else
-	break;
 
-      SDL_JoystickUpdate ();
+	while (!done) {
+		time_t stime, ntime;
+		int buttons;
 
-      for (buttons = num_buttons - 1; buttons >= 0; buttons--)
-	{
-	  if (bad_buttons[buttons])
-	    continue;
+		if (read (fileno (stdin), &t, 1) == -1) {
+			if (errno != EAGAIN)
+			break;
+		} else
+			break;
 
-	  if (SDL_JoystickGetButton (joypad[which], buttons))
-	    {
-	      printf
-		("    -- Button %d is pressed;  Please release button . . .\n",
-		 buttons);
+		SDL_JoystickUpdate ();
 
-	      config[current_config].individual_config[which].joy_mapping[button] = buttons;
+		for (buttons = num_buttons - 1; buttons >= 0; buttons--) {
+			if (bad_buttons[buttons])
+				continue;
 
-	      done = TRUE;
+			if (SDL_JoystickGetButton (joypad[which], buttons)) {
+				printf
+				("    -- Button %d is pressed;  Please release button . . .\n",
+					buttons);
 
-	      stime = time (NULL);
+				config[current_config].individual_config[which]
+					.joy_mapping[button] = buttons;
 
-	      while (SDL_JoystickGetButton (joypad[which], buttons))
-		{
-		  SDL_JoystickUpdate ();
-		  SDL_Delay (50);
-		  ntime = time (NULL);
+				done = TRUE;
 
-		  if ((ntime - stime) > 3)
-		    {
-		      bad_buttons[buttons] = 1;
-		      done = FALSE;
+				stime = time (NULL);
 
-		      printf
-			("    ** Button %d still claiming to be pressed after 3 seconds, marked as invalid\n\n"
-			 "    Please try another button now . . .\n",
-			 buttons);
-		      break;
-		    }
+				while (SDL_JoystickGetButton (joypad[which], buttons)) {
+					SDL_JoystickUpdate ();
+					SDL_Delay (50);
+					ntime = time (NULL);
+
+					if ((ntime - stime) > 3) {
+						bad_buttons[buttons] = 1;
+						done = FALSE;
+
+						printf
+						("    ** Button %d still claiming to be pressed after 3 seconds, marked as invalid\n\n"
+							"    Please try another button now . . .\n",
+							buttons);
+						break;
+					}
+				}
+			}
 		}
-	      printf ("\n");
-	    }
 	}
-    }
 
-  while (1)
-    {
-      if (read (fileno (stdin), &t, 1) == -1)
-	break;
-    }
+	while (1) {
+		if (read (fileno (stdin), &t, 1) == -1)
+			break;
+	}
 }
 
 
@@ -422,35 +414,34 @@ sdl_config_joypad (short which)
 void
 sdl_init_joypads (void)
 {
-  int n;
-  int joypad_number = SDL_NumJoysticks();
+	int n;
+	int joypad_number = SDL_NumJoysticks();
 
-	printf(" * Found %d joypad%s\n", joypad_number, joypad_number > 1 ? "s" : "");
+	MESSAGE_INFO("Found %d joypad%s\n",
+		joypad_number, joypad_number > 1 ? "s" : "");
 
-  for (n = 0; n < joypad_number; n++)
-    {
+	for (n = 0; n < joypad_number; n++) {
 //      if (config[current_config].individual_config[n].joydev == 0)
 //	{
 //	  joypad[n] = NULL;
 //	  continue;
 //	}
 
-      if ((joypad[n] = SDL_JoystickOpen(n)) == NULL)
-	{
-	  printf ("SDL could not open system joystick device %d (%s)\n", n, SDL_GetError ());
-	  continue;
+		if ((joypad[n] = SDL_JoystickOpen(n)) == NULL) {
+			MESSAGE_ERROR("SDL could not open system joystick device %d (%s)\n",
+				n, SDL_GetError ());
+			continue;
+		}
+
+		//      printf("joypad[%d] = %p\n", n, joypad[n]);
+
+		MESSAGE_INFO("PCE joypad %d: %s, %d axes, %d buttons\n",
+			n + 1, SDL_JoystickName (n), SDL_JoystickNumAxes (joypad[n]),
+			SDL_JoystickNumButtons (joypad[n]));
+
+	//      if (option.configure_joypads)
+	//	sdl_config_joypad (n);
 	}
-
-      //      printf("joypad[%d] = %p\n", n, joypad[n]);
-
-      printf (" * PCE joypad %d: %s, %d axes, %d buttons\n", n + 1,
-	      SDL_JoystickName (n),
-	      SDL_JoystickNumAxes (joypad[n]),
-	      SDL_JoystickNumButtons (joypad[n]));
-
-//      if (option.configure_joypads)
-//	sdl_config_joypad (n);
-    }
 }
 
 
@@ -459,13 +450,13 @@ osd_keyboard (void)
 {
 // char tmp_joy;
 
-  SDL_Event event;
+	SDL_Event event;
 
 #warning "need for pause support"
-  /* 
-   * while (key[KEY_PAUSE])
-   * pause ();
-   */
+/*
+* while (key[KEY_PAUSE])
+* pause ();
+*/
 
 	while (SDL_PollEvent (&event)) {
 		switch (event.type) {
@@ -479,6 +470,54 @@ osd_keyboard (void)
 						osd_snd_set_volume (gen_vol);
 						timer_60 = sav_timer;
 						key_delay = 10;
+						break;
+					}
+
+					case SDLK_F1:
+					{
+						if (key[SDLK_LSHIFT]) {
+							io.psg_channel_disabled[0]
+								= !io.psg_channel_disabled[0];
+						} else {
+							UInt32 sav_timer = timer_60;
+							osd_snd_set_volume (0);
+							searchbyte ();
+							osd_snd_set_volume (gen_vol);
+							timer_60 = sav_timer;
+							return 0;
+						}
+						break;
+					}
+
+					case SDLK_F2:
+					{
+						if (key[SDLK_LSHIFT]) {
+							io.psg_channel_disabled[1]
+								= !io.psg_channel_disabled[1];
+						} else {
+							UInt32 sav_timer = timer_60;
+							osd_snd_set_volume (0);
+							pokebyte ();
+							osd_snd_set_volume (gen_vol);
+							timer_60 = sav_timer;
+							return 0;
+						}
+						break;
+					}
+
+					case SDLK_F3:
+					{
+						if (key[SDLK_LSHIFT]) {
+							io.psg_channel_disabled[2]
+								= !io.psg_channel_disabled[2];
+						} else {
+							UInt32 sav_timer = timer_60;
+							osd_snd_set_volume (0);
+							freeze_value ();
+							osd_snd_set_volume (gen_vol);
+							timer_60 = sav_timer;
+							return 0;
+						}
 						break;
 					}
 
@@ -593,7 +632,8 @@ osd_keyboard (void)
 							unsigned short tmp = 0;
 							strcpy (tmp_buf, "snd0000.wav");
 							while ((tmp < 0xFFFF)
-								&& ((out_snd = fopen (tmp_buf, "rb")) != NULL)) {
+								&& ((out_snd = fopen (tmp_buf, "rb"))
+								!= NULL)) {
 								sprintf (tmp_buf, "snd%04x.wav", ++tmp);
 								fclose(out_snd);
 							}
@@ -682,184 +722,120 @@ osd_keyboard (void)
 						break;
 					}
 
-	    case SDLK_F1:
-	      {
-		if (key[SDLK_LSHIFT])
-		  {
-		    io.psg_channel_disabled[0] = !io.psg_channel_disabled[0];
-		  }
-		else
-		  {
-		    UInt32 sav_timer = timer_60;
-		    if (sound_driver == 1)
-		      osd_snd_set_volume (0);
-		    searchbyte ();
-		    if (sound_driver == 1)
-		      osd_snd_set_volume (gen_vol);
-		    timer_60 = sav_timer;
-		    return 0;
-		  }
-		break;
-	      }
+					case SDLK_F7:
+					{
+						UInt32 sav_timer = timer_60;
+						if (!loadgame ()) {
+							osd_gfx_set_message("Load game state\n");
+							message_delay = 180;
+						}
+						timer_60 = sav_timer;
+						break;
+					}
 
-	    case SDLK_F2:
-	      {
-		if (key[SDLK_LSHIFT])
-		  {
-		    io.psg_channel_disabled[1] = !io.psg_channel_disabled[1];
-		  }
-		else
-		  {
-		    UInt32 sav_timer = timer_60;
-		    if (sound_driver == 1)
-		      osd_snd_set_volume (0);
-		    pokebyte ();
-		    if (sound_driver == 1)
-		      osd_snd_set_volume (gen_vol);
-		    timer_60 = sav_timer;
-		    return 0;
-		  }
-		break;
-	      }
+					case SDLK_BACKQUOTE:	/* TILDE */
+					{
+						char *tmp = (char *) alloca (100);
+						sprintf (tmp, "FRAME DELTA = %d",
+							frame - HCD_frame_at_beginning_of_track);
+						osd_gfx_set_message (tmp);
+						message_delay = 240;
+						break;
+					}
 
-	    case SDLK_F7:
-	      {
-		UInt32 sav_timer = timer_60;
-		if (!loadgame ())
+					case SDLK_3:
+						if (key[SDLK_LSHIFT]) {
+							io.psg_channel_disabled[2]
+								= !io.psg_channel_disabled[2];
+						} else {
+							// cd_port_1800 = 0xD0;
+							io.cd_port_1800 &= ~0x40;
+						}
+						break;
 
-		  {
-		    osd_gfx_set_message (MESSAGE[language][game_load]);
-		    message_delay = 180;
-		  }
-		timer_60 = sav_timer;
-		break;
-	      }
+					case SDLK_4:
+						if (key[SDLK_LSHIFT]) {
+							io.psg_channel_disabled[3]
+								= !io.psg_channel_disabled[3];
+						}
+						/*
+						else
+						{
+							Wr6502 (0x2066, Rd6502 (0x2066) | 32);
+						}
+						*/
+						break;
 
-	    case SDLK_F3:
-	      {
-		if (key[SDLK_LSHIFT])
-		  {
-		    io.psg_channel_disabled[2] = !io.psg_channel_disabled[2];
-		  }
-		else
-		  {
-		    UInt32 sav_timer = timer_60;
-		    if (sound_driver == 1)
-		      osd_snd_set_volume (0);
-		    freeze_value ();
-		    if (sound_driver == 1)
-		      osd_snd_set_volume (gen_vol);
-		    timer_60 = sav_timer;
-		    return 0;
-		  }
-		break;
-	      }
+					case SDLK_5:
+						if (key[SDLK_LSHIFT]) {
+							io.psg_channel_disabled[4]
+								= !io.psg_channel_disabled[4];
+						} else {
+							io.cd_port_1800 = 0xD8;
+						}
+						break;
 
-	    case SDLK_BACKQUOTE:	/* TILDE */
-	      {
-		char *tmp = (char *) alloca (100);
-		sprintf (tmp, "FRAME DELTA = %d",
-			 frame - HCD_frame_at_beginning_of_track);
-		osd_gfx_set_message (tmp);
-		message_delay = 240;
-		break;
-	      }
+					case SDLK_6:
+						if (key[SDLK_LSHIFT]) {
+							io.psg_channel_disabled[5]
+								= !io.psg_channel_disabled[5];
+						}
+						/*
+						else
+						{
+							Wr6502 (0x22D6, 1);
+						}
+						*/
+						break;
 
-	    case SDLK_3:
-	      if (key[SDLK_LSHIFT])
-		{
-		  io.psg_channel_disabled[2] = !io.psg_channel_disabled[2];
+						/*
+						case SDLK_8:
+							Wr6502 (0x20D8, 128);
+							break;
+						*/
+
+					case SDLK_MINUS:
+					{
+						if (gen_vol > 0)
+							gen_vol -= 25;
+						else
+							gen_vol = 0;
+
+						osd_snd_set_volume (gen_vol);
+						sprintf(tmp_buf, "Volume--, at %d", gen_vol);
+						osd_gfx_set_message(tmp_buf);
+						message_delay = 60;
+
+						break;
+					}
+
+					case SDLK_EQUALS:
+					{
+						if (gen_vol < 255)
+							gen_vol += 25;
+						else
+							gen_vol = 255;
+
+						osd_snd_set_volume (gen_vol);
+						sprintf(tmp_buf, "Volume++, at %d", gen_vol);
+						osd_gfx_set_message (tmp_buf);
+						message_delay = 60;
+						break;
+					}
+
+					default:
+						/* ignore key */
+						break;
+				}
+				break;
+
+			case SDL_QUIT:
+				return 1;
 		}
-	      else
-		{
-		  //cd_port_1800 = 0xD0;
-		  io.cd_port_1800 &= ~0x40;
-		}
-	      break;
-
-	    case SDLK_4:
-	      if (key[SDLK_LSHIFT])
-		{
-		  io.psg_channel_disabled[3] = !io.psg_channel_disabled[3];
-		}
-	      /*
-	         else
-	         {
-	         Wr6502 (0x2066, Rd6502 (0x2066) | 32);
-	         }
-	       */
-	      break;
-	    case SDLK_5:
-	      if (key[SDLK_LSHIFT])
-		{
-		  io.psg_channel_disabled[4] = !io.psg_channel_disabled[4];
-		}
-	      else
-		{
-		  io.cd_port_1800 = 0xD8;
-		}
-	      break;
-	    case SDLK_6:
-	      if (key[SDLK_LSHIFT])
-		{
-		  io.psg_channel_disabled[5] = !io.psg_channel_disabled[5];
-		}
-	      /*
-	         else
-	         {
-	         Wr6502 (0x22D6, 1);
-	         }
-	       */
-	      break;
-
-	      /*
-	         case SDLK_8:
-	         Wr6502 (0x20D8, 128);
-	         break;
-	       */
-
-		case SDLK_MINUS:
-		{
-			if (gen_vol > 0)
-				gen_vol -= 25;
-			else
-				gen_vol = 0;
-
-			osd_snd_set_volume (gen_vol);
-			sprintf(tmp_buf, "Volume--, at %d", gen_vol);
-			osd_gfx_set_message(tmp_buf);
-			message_delay = 60;
-
-			break;
-		}
-
-		case SDLK_EQUALS:
-		{
-			if (gen_vol < 255)
-				gen_vol += 25;
-			else
-				gen_vol = 255;
-
-			osd_snd_set_volume (gen_vol);
-			sprintf(tmp_buf, "Volume++, at %d", gen_vol);
-			osd_gfx_set_message (tmp_buf);
-			message_delay = 60;
-			break;
-		}
-
-		default:
-			/* ignore key */
-			break;
-		}
-		break;
-
-	case SDL_QUIT:
-	  return 1;
 	}
-    }
 
 	//! Read events from joypad
-	SDL_PumpEvents ();  
+	SDL_PumpEvents ();
 
 #if defined(ENABLE_NETPLAY)
 
