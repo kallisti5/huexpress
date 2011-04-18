@@ -10,6 +10,10 @@ SDL_Color olay_cmap[256];
 //! Host machine rendered screen
 SDL_Surface *physical_screen = NULL;
 
+SDL_Surface *osd_text = NULL;
+SDL_Color osd_color = {0, 255, 0, 0}; // Green
+SDL_Rect osd_rect = {10, 5, 0, 0};
+
 SDL_Rect physical_screen_rect;
 
 int blit_x,blit_y;
@@ -40,6 +44,7 @@ osd_gfx_driver osd_gfx_driver_list[3] =
 	{ osd_gfx_init, osd_gfx_init_normal_mode,
 		osd_gfx_put_image_normal, osd_gfx_shut_normal_mode }
 };
+
 
 void osd_gfx_dummy_func(void)
 {
@@ -90,6 +95,7 @@ void DrawPixel(SDL_Surface *screen, int x, int y, Uint8 R, Uint8 G, Uint8 B)
 			}
 			break;
 	}
+
 }
 
 
@@ -111,6 +117,17 @@ void Sulock(SDL_Surface *screen)
 	{
 		SDL_UnlockSurface(screen);
 	}
+}
+
+
+TTF_Font* loadfont(char* file, int ptsize)
+{
+	TTF_Font* tmpfont;
+	tmpfont = TTF_OpenFont(file, ptsize);
+	if (tmpfont == NULL) {
+		MESSAGE_ERROR("Unable to load font: %s %s \n", file, TTF_GetError());
+	}
+	return tmpfont;
 }
 
 
@@ -136,6 +153,7 @@ void osd_gfx_put_image_normal(void)
 		for (y = 0; y < io.screen_h; y++)
 		memmove(screen->pixels + y * io.screen_w,
 			osd_gfx_buffer + y * XBUF_WIDTH, io.screen_w);
+
 		Sulock(screen);
 
 		if (physical_screen->flags & SDL_FULLSCREEN)
@@ -148,7 +166,13 @@ void osd_gfx_put_image_normal(void)
 			memmove(physical_screen->pixels, screen->pixels,
 				io.screen_w * io.screen_h);
 
+		if (message_delay && osd_text) {
+			SDL_BlitSurface(osd_text, NULL, physical_screen, &osd_rect);
+			message_delay--;
+		}
+
 		SDL_Flip(physical_screen);
+
 	} else {
 		UInt16 x;
 		UChar *p, *op;
@@ -187,7 +211,6 @@ void osd_gfx_put_image_normal(void)
 			}
 		}
 		SDL_UnlockYUVOverlay(olay);
-
 		SDL_DisplayYUVOverlay(olay, &physical_screen_rect);
 	}
 }
@@ -205,18 +228,23 @@ void osd_gfx_put_image_normal(void)
 *****************************************************************************/
 void osd_gfx_set_message(char* mess)
 {
-/*
- if (OSD_MESSAGE_SPR)
-	 destroy_bitmap(OSD_MESSAGE_SPR);
+	if (!host.video.hardware_scaling) {
 
- OSD_MESSAGE_SPR=create_bitmap(text_length(font,mess)+1,text_height(font)+1);
- clear(OSD_MESSAGE_SPR);
- textout(OSD_MESSAGE_SPR,font,mess,1,1,3);
- textout(OSD_MESSAGE_SPR,font,mess,0,0,255);
-*/
+		if (osd_text != NULL) {
+			SDL_FreeSurface(osd_text);
+		}
 
-#warning implement set_message
-	printf("%s\n",mess);
+		osd_text = TTF_RenderText_Blended(osd_font, mess, osd_color);
+
+		if (osd_text == NULL) {
+			MESSAGE_ERROR("SDL: Couldn't render OSD text - %s\n",
+				SDL_GetError());
+			// report error
+		}
+	} else {
+		// TODO : osd_gfx_set_message for SDL overlay
+		printf("%s\n",mess);
+	}
 }
 
 
@@ -312,6 +340,14 @@ int osd_gfx_init(void)
 		physical_screen_rect.h = rect.end_y;
 
 		SetPalette();
+
+		if (TTF_Init() < 0) {
+			MESSAGE_ERROR("SDL_ttf: Unable to initialize - %s\n",
+				TTF_GetError());
+			return 0;
+		}
+
+		osd_font = loadfont("font.otf", 24);
 
 		if (!host.video.hardware_scaling) {
 			if ((screen = SDL_CreateRGBSurface(SDL_SWSURFACE, fake_io_screen_w,
@@ -409,20 +445,23 @@ int osd_gfx_init_normal_mode()
 //! Delete the window
 void osd_gfx_shut_normal_mode(void)
 {
+	if (osd_text != NULL)
+		SDL_FreeSurface(osd_text);
+
 	if (!host.video.hardware_scaling)
 	{
 		SDL_FreeSurface(screen);
 		screen = NULL;
-	}
-	else
-	{
+	} else {
 		SDL_FreeYUVOverlay(olay);
 		olay = NULL;
 	}
 
+	TTF_CloseFont(osd_font);
+
 	/* SDL will free physical_screen internally */
 	SDL_QuitSubSystem(SDL_INIT_VIDEO);
-	
+
 	physical_screen = NULL;
 }
  
@@ -511,9 +550,9 @@ SInt32 osd_gfx_set_hugo_mode(SInt32 mode,SInt32 width,SInt32 height)
 
 *****************************************************************************/
 void osd_gfx_set_color(UChar index,
-											 UChar r,
-											 UChar g,
-											 UChar b)
+	UChar r,
+	UChar g,
+	UChar b)
 {
 	SDL_Color R;
 
@@ -523,14 +562,12 @@ void osd_gfx_set_color(UChar index,
 
 	if (!host.video.hardware_scaling)
 	{
-		R.r = r; 
-		R.g = g; 
+		R.r = r;
+		R.g = g;
 		R.b = b;
 
 		SDL_SetColors(physical_screen, &R, index, 1);
-	}
-	else
-	{
+	} else {
 		olay_cmap[index].r = (0.299 * r) + (0.587 * g) + (0.114 * b);
 		olay_cmap[index].g = (b - olay_cmap[index].r) * 0.565 + 128;
 		olay_cmap[index].b = (r - olay_cmap[index].r) * 0.713 + 128;
@@ -577,4 +614,11 @@ int ToggleFullScreen(void)
 	SDL_PauseAudio(SDL_DISABLE);
 
 	return (physical_screen->flags & SDL_FULLSCREEN) ? 0 : 1;
+}
+
+
+char
+drawVolume(int volume)
+{
+
 }

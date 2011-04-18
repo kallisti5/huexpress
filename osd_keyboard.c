@@ -797,7 +797,7 @@ osd_keyboard (void)
 					case SDLK_MINUS:
 					{
 						if (gen_vol > 0)
-							gen_vol -= 25;
+							gen_vol -= 17;
 						else
 							gen_vol = 0;
 
@@ -812,13 +812,13 @@ osd_keyboard (void)
 					case SDLK_EQUALS:
 					{
 						if (gen_vol < 255)
-							gen_vol += 25;
+							gen_vol += 17;
 						else
 							gen_vol = 255;
 
 						osd_snd_set_volume (gen_vol);
 						sprintf(tmp_buf, "Volume++, at %d", gen_vol);
-						osd_gfx_set_message (tmp_buf);
+						osd_gfx_set_message(tmp_buf);
 						message_delay = 60;
 						break;
 					}
