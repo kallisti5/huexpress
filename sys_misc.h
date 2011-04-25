@@ -63,7 +63,7 @@
 	 *	- tmp_basepath
 	 *  - video_path
 	 */
-	void osd_init_paths();
+	void osd_init_paths(int argc, char* argv[]);
 	
 	/*
 	 * gamepad_driver
