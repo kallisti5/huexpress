@@ -13,8 +13,11 @@ resource app_version {
 	long_info = "HuKU, the PCEngine emulator for Haiku"
 };
 
+resource app_flags B_SINGLE_LAUNCH;
+
+
 resource file_types message {
-	"types" = "application/octet-stream"
+	"types" = "application"
 	};
 
 resource vector_icon {
