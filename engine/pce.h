@@ -390,8 +390,6 @@ extern UChar can_write_debug;
 
 #include "list_rom.h" // List of known rom
 
-#include "gui.h"
-
 #include "config.h"
 
 #include "sprite.h"
