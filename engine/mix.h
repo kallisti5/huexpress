@@ -5,7 +5,7 @@
 #include "sound.h"
 #include "debug.h"
 
-void (*update_sound[4])();
+extern void (*update_sound[4])();
 
 UInt32 WriteBufferAdpcm8(UChar *buf,
 	UInt32 begin,

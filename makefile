@@ -100,7 +100,7 @@ RSRCS=
 #		naming scheme you need to specify the path to the library
 #		and it's name
 #		library: my_lib.a entry: my_lib.a or path/my_lib.a
-LIBS=
+LIBS=stdc++ be device tracker SDL SDL_mixer SDL_ttf vorbisfile z
 
 #	specify additional paths to directories following the standard
 #	libXXX.so or libXXX.a naming scheme.  You can specify full paths
@@ -159,7 +159,7 @@ DEBUGGER =
 COMPILER_FLAGS =-I/boot/common/include/SDL -D_GNU_SOURCE=1
 
 #	specify additional linker flags
-LINKER_FLAGS =-L/boot/common/lib -lbe -ldevice -lSDL -lSDL_mixer -lSDL_ttf -lvorbisfile -lz
+LINKER_FLAGS =-L/boot/common/lib
 
 #	specify the version of this particular item
 #	(for example, -app 3 4 0 d 0 -short 340 -long "340 "`echo -n -e '\302\251'`"1999 GNU GPL") 
