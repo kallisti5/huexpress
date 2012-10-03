@@ -1,4 +1,5 @@
-env = Environment()
+import os
+env = Environment(ENV = os.environ)
 
 def CheckPKGConfig(context, version):
 	context.Message( 'Checking for pkg-config... ' )
@@ -24,7 +25,7 @@ if not conf.CheckPKG('sdl'):
 env = conf.Finish()
 
 env.Append(CPPPATH = ['#src/includes/', '#src/engine/'])
-env.Append(LIBS = ['-lSDL_ttf'])
+env.Append(LIBS = ['-lSDL_ttf', '-lz', '-lvorbisfile'])
 
 Export("env")
 SConscript('src/SConscript')
