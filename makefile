@@ -34,44 +34,44 @@ APP_MIME_SIG=
 #	if two source files with the same name (source.c or source.cpp)
 #	are included from different directories.  Also note that spaces
 #	in folder names do not work well with this makefile.
-SRCS=	huku.c \
-		iniconfig.c \
-		lang.c \
-		miniunz.c \
-		osd_haiku_cd.c \
-		osd_haiku_snd.c \
-		osd_linux_sdl_music.c \
-		osd_haiku_sdl_machine.c \
-		osd_keyboard.c \
-		osd_sdl_gfx.c \
-		unzip.c \
-		utils.c \
-		view_inf.c \
-		view_zp.c \
-		engine/bios.c \
-		engine/bp.c	\
-		engine/cd.c \
-		engine/cheat.c \
-		engine/debug.c \
-		engine/dis.c \
-		engine/edit_ram.c \
-		engine/followop.c \
-		engine/format.c \
-		engine/gfx.c \
-		engine/h6280.c \
-		engine/hard_pce.c \
-		engine/hcd.c \
-		engine/list_rom.c \
-		engine/lsmp3.c \
-		engine/mix.c \
-		engine/ogglength.c \
-		engine/optable.c \
-		engine/pce.c \
-		engine/pcecd.c \
-		engine/sound.c \
-		engine/sprite.c \
-		engine/subs_eagle.c \
-		engine/trans_fx.c
+SRCS=	src/huku.c \
+		src/iniconfig.c \
+		src/lang.c \
+		src/miniunz.c \
+		src/osd_haiku_cd.c \
+		src/osd_haiku_snd.c \
+		src/osd_linux_sdl_music.c \
+		src/osd_haiku_sdl_machine.c \
+		src/osd_keyboard.c \
+		src/osd_sdl_gfx.c \
+		src/unzip.c \
+		src/utils.c \
+		src/view_inf.c \
+		src/view_zp.c \
+		src/engine/bios.c \
+		src/engine/bp.c	\
+		src/engine/cd.c \
+		src/engine/cheat.c \
+		src/engine/debug.c \
+		src/engine/dis.c \
+		src/engine/edit_ram.c \
+		src/engine/followop.c \
+		src/engine/format.c \
+		src/engine/gfx.c \
+		src/engine/h6280.c \
+		src/engine/hard_pce.c \
+		src/engine/hcd.c \
+		src/engine/list_rom.c \
+		src/engine/lsmp3.c \
+		src/engine/mix.c \
+		src/engine/ogglength.c \
+		src/engine/optable.c \
+		src/engine/pce.c \
+		src/engine/pcecd.c \
+		src/engine/sound.c \
+		src/engine/sprite.c \
+		src/engine/subs_eagle.c \
+		src/engine/trans_fx.c
 
 #	specify the resource definition files to use
 #	full path or a relative path to the resource file can be used.
@@ -156,7 +156,7 @@ SYMBOLS =
 DEBUGGER = 
 
 #	specify additional compiler flags for all files
-COMPILER_FLAGS =-I/boot/common/include/SDL -D_GNU_SOURCE=1
+COMPILER_FLAGS =-Isrc/includes -I/boot/common/include/SDL -D_GNU_SOURCE=1
 
 #	specify additional linker flags
 LINKER_FLAGS =-L/boot/common/lib
