@@ -12,12 +12,24 @@
  *	You should have received a copy of the GNU General Public License
  *	along with this program; if not, write to the Free Software
  *	Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *
+ *	Authors:
+ *		Zeograd (original author)
+ *		Alexander von Gluck IV, kallisti5@unixzen.com
  */
 
 
 #include "sprite.h"
 
 #include "utils.h"
+
+
+#undef TRACE
+#ifdef ENABLE_TRACING_GFX
+ 	#define TRACE(x...) printf("TraceSprite: " x)
+#else
+ 	#define TRACE(x...)
+#endif
 
 
 UChar BGONSwitch = 1;
@@ -87,34 +99,24 @@ plane2pixel (int no)
 	UInt32 L;
 	UChar *C2 = VRAM2 + no * 8 * 4;
 	int j;
-#if ENABLE_TRACING_GFX
 	TRACE("Planing tile %d\n", no);
-#endif
 	for (j = 0; j < 8; j++, C += 2, C2 += 4) {
 		M = C[0];
-#if ENABLE_TRACING_GFX
 		TRACE("C[0]=%02X\n", M);
-#endif
 		L = ((M & 0x88) >> 3)
 			| ((M & 0x44) << 6) | ((M & 0x22) << 15)
 			| ((M & 0x11) << 24);
 		M = C[1];
-#if ENABLE_TRACING_GFX
 		TRACE("C[1]=%02X\n", M);
-#endif
 		L |= ((M & 0x88) >> 2)
 			| ((M & 0x44) << 7) | ((M & 0x22) << 16)
 			| ((M & 0x11) << 25);
-			M = C[16];
-#if ENABLE_TRACING_GFX
+		M = C[16];
 		TRACE("C[16]=%02X\n", M);
-#endif
 		L |= ((M & 0x88) >> 1)
 			| ((M & 0x44) << 8) | ((M & 0x22) << 17) | ((M & 0x11) << 26);
 		M = C[17];
-#if ENABLE_TRACING_GFX
 		TRACE("C[17]=%02X\n", M);
-#endif
 		L |= ((M & 0x88))
 			| ((M & 0x44) << 9) | ((M & 0x22) << 18) | ((M & 0x11) << 27);
 		/* C2[0] = L;						 //37261504 */
@@ -122,10 +124,8 @@ plane2pixel (int no)
 		C2[1] = (L >> 8) & 0xff;
 		C2[2] = (L >> 16) & 0xff;
 		C2[3] = (L >> 24) & 0xff;
-#if ENABLE_TRACING_GFX
 		TRACE("L=%04X\n", L);
-#endif
-		}
+	}
 }
 
 
@@ -926,13 +926,13 @@ RefreshSpriteExact (int Y1, int Y2, UChar bg)
 			} else if (usespbg) {
 				if (atr & H_FLIP) {
 					for (j = 0; j <= cgx; j++) {
-						PutSpriteHflipM (osd_gfx_buffer + pos + (cgx - j) * 16,
+						PutSpriteHflipM(osd_gfx_buffer + pos + (cgx - j) * 16,
 							C + j * 128, C2 + j * 32 * 4, R, h, inc,
 							SPM + pos + (cgx - j) * 16, n);
 					}
 				} else {
 					for (j = 0; j <= cgx; j++) {
-						PutSpriteM (osd_gfx_buffer + pos + (j) * 16, C + j * 128,
+						PutSpriteM(osd_gfx_buffer + pos + (j) * 16, C + j * 128,
 							C2 + j * 32 * 4, R, h, inc,
 							SPM + pos + j * 16, n);
 					}
@@ -945,7 +945,7 @@ RefreshSpriteExact (int Y1, int Y2, UChar bg)
 					}
 				} else {
 					for (j = 0; j <= cgx; j++) {
-						PutSprite (osd_gfx_buffer + pos + (j) * 16, C + j * 128,
+						PutSprite(osd_gfx_buffer + pos + (j) * 16, C + j * 128,
 							C2 + j * 32 * 4, R, h, inc);
 					}
 				}
@@ -1014,14 +1014,14 @@ RefreshScreen (void)
 #if ENABLE_TRACING_GFX
 	/*
 	Log("VRAM: %02x%02x%02x%02x %02x%02x%02x%02x\n",
-	VRAM[0],
-	VRAM[1],
-	VRAM[2],
-	VRAM[3],
-	VRAM[4],
-	VRAM[5],
-	VRAM[6],
-	VRAM[7]);
+		VRAM[0],
+		VRAM[1],
+		VRAM[2],
+		VRAM[3],
+		VRAM[4],
+		VRAM[5],
+		VRAM[6],
+		VRAM[7]);
 	*/
 	{
 		int index;
