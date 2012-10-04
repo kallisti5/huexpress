@@ -5,7 +5,7 @@ import platform
 Import("env")
 
 main_sources = [
-	'huku.c',
+	'huexpress.c',
 	'iniconfig.c',
 	'lang.c',
 	'miniunz.c',
@@ -66,7 +66,7 @@ program_sources = [
 	engine_sources
 ]
 
-huku = env.Clone()
-huku.ParseConfig('pkg-config --cflags --libs sdl')
-huku.ParseConfig('pkg-config --cflags --libs SDL_mixer')
-huku.Program(target = 'huku', source = program_sources)
+huexpress = env.Clone()
+huexpress.ParseConfig('pkg-config --cflags --libs sdl')
+huexpress.ParseConfig('pkg-config --cflags --libs SDL_mixer')
+huexpress.Program(target = 'huexpress', source = program_sources)

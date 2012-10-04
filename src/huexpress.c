@@ -33,7 +33,7 @@ init_host(int argc, char *argv[])
 	option.local_input_mapping[2] = -1;
 	option.local_input_mapping[3] = -1;
 	option.local_input_mapping[4] = -1;
-	strcpy(option.server_hostname,"localhost");
+	strcpy(option.server_hostname, "localhost");
 #endif
 
 	/*
@@ -59,7 +59,7 @@ init_host(int argc, char *argv[])
 	if (parse_commandline(argc, argv))
 		return -1;
 
-	MESSAGE_INFO("Hu-KU!, the PCEngine emulator for Haiku\n");
+	MESSAGE_INFO("HuExpress, the multi-platform PCEngine emulator\n");
 
 	// Initialise the host machine
 	if (!osd_init_machine ())

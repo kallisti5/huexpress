@@ -1,7 +1,9 @@
-                    _______               __  __ _______ __ 
-                   |   |   |.--.--.______|  |/  |   |   |  |
-                   |       ||  |  |______|     <|   |   |__|
-                   |___|___||_____|      |__|\__|_______|__|
+
+         _______         _______
+        |   |   |.--.--.|    ___|.--.--.-----.----.-----.-----.-----.
+        |       ||  |  ||    ___||_   _|  _  |   _|  -__|__ --|__ --|
+        |___|___||_____||_______||__.__|   __|__| |_____|_____|_____|
+                                       |__|
 
                 Core-GraphX / PC Engine / Turbo GraphX Emulator
                                Version 2.15
@@ -22,7 +24,7 @@
 
 --[ FORK ]-------------------------------------------------------------------
 
-    Hu-KU! is a fork of the great Hu-Go! machine emulator by zerograd which
+    HuExpress! is a fork of the great Hu-Go! machine emulator by zerograd which
     is based on a PC Engine emulator produced by "Bero"
     (http://www.geocities.co.jp/Playtown/2004/)
  
@@ -41,7 +43,7 @@
 --[ HOW TO USE IT ? ]--------------------------------------------------------
 
     You can use hugo by just typing
-	hugo [ROM] [BACKUPMEM] [OPTION]
+	huexpress [ROM] [BACKUPMEM] [OPTION]
     
     where ROM is the name of the ROM, ISO, ISQ, or HCD.
 
@@ -56,7 +58,7 @@
     These two last are optionals. The order shouldn't import but the ROM name
     must be before the name of backup RAM.
 
---[ HOW TO CONFIGURE HU-GO! FOR PLAYING CDS ? ]------------------------------
+--[ HOW TO CONFIGURE HuExpress! FOR PLAYING CDS ? ]------------------------------
 
 	Under linux, you first have to configure the cd path (ie /dev/cdrom or such)
 	either on the command line (-i <cd path>), the .ini file (variable cd_path),
@@ -272,7 +274,7 @@
 --[ HCD ]--------------------------------------------------------------------
 
    Then what is this new format.
-   HCD means : Hu-KU! Cd Definition. Such a file allow you to use multi-code
+   HCD means : Hu-go!! Cd Definition. Such a file allow you to use multi-code
    CDs and emulate audio tracks with MP3
    It's only a beginning and there are still troubles with ISQ to emulate
    Code tracks but it should work fine later.
@@ -394,9 +396,7 @@
 
 --[ CHEATING ]---------------------------------------------------------------
 
-    I've pondered at length as to whether to include such an option. If I'm
-    not mistaken, Hu-KU! is the first emulator to propose this type of
-    option. Cheating is very primitive and there is no visual help so you
+    Cheating is very primitive and there is no visual help so you
     can't see what you type...
 
     BUT...
@@ -483,7 +483,7 @@
 --[ THANKS ]-----------------------------------------------------------------
 
    Special thanks :
-    -- Zerograd, for making Hu-GO! http://zerograd.com
+    -- Zerograd, for making Hu-Go! http://zerograd.com
  *> -- Bacon boy 99 (Ex-Planet Rom webmaster, the former logo,    <*
        having sent me some Cds and in fact, lots of things)
 	-- Ixion for the lots of bugs/improvements he worked on recently
