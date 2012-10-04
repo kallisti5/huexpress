@@ -20,7 +20,9 @@
 #include <errno.h>
 #include <fcntl.h>
 
-# include <limits.h>
+#if defined(__linux__)
+#include <limits.h>
+#endif
 
 #include "utils.h"
 #include "unzip.h"

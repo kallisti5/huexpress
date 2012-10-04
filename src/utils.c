@@ -19,7 +19,7 @@
 #include <stdarg.h>
 #include <ctype.h>
 
-#if defined(HAVE_LIMITS_H)
+#if defined(__linux__)
 #include <limits.h>
 #else
 #define PATH_MAX 255

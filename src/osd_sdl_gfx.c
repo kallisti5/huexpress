@@ -388,17 +388,14 @@ int osd_gfx_init_normal_mode()
 {
 	struct generic_rect rect;
 
-	if (!host.video.hardware_scaling)
-		{
-			if ((screen->w == io.screen_w) && (screen->h == io.screen_h))
-				return;
-		}
-	else
-		{
-			if ((olay->w == io.screen_w) && (olay->h == io.screen_h))
-				return;
-		}
-	
+	if (!host.video.hardware_scaling) {
+		if ((screen->w == io.screen_w) && (screen->h == io.screen_h))
+			return 1;
+	} else {
+		if ((olay->w == io.screen_w) && (olay->h == io.screen_h))
+			return 1;
+	}
+
 	if (!host.video.hardware_scaling)
 		SDL_FreeSurface(screen);
 	else

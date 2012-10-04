@@ -1,12 +1,12 @@
 #include "list_rom.h"
 #include "utils.h"
 
-#if defined(LINUX)
-  #include "linux/limits.h"
+#if defined(__linux__)
+#include <limits.h>
 #endif
 
 #if defined(WIN32)
-  #include "windef.h"
+#include "windef.h"
 #endif
 
 struct pce_rom_info *pce_romlist = NULL;

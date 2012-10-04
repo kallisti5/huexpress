@@ -40,7 +40,9 @@
 #include <stdarg.h>
 #include <string.h>
 #include <ctype.h>
+#if defined(__linux__)
 #include <limits.h>
+#endif
 #include <assert.h>
 
 #define PROGRAM_NAME "lsmp3"

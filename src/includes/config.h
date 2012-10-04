@@ -27,9 +27,6 @@
 /* defined if user have GTK2 installed */
 /* #undef GTK */
 
-/* Define to 1 if you have the <limits.h> header file. */
-#undef HAVE_LIMITS_H
-
 /* defined if inlined accessors should be used */
 #undef INLINED_ACCESSORS
 
