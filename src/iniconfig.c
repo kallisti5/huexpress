@@ -1,20 +1,23 @@
 /*
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ *	This program is free software; you can redistribute it and/or modify
+ *	it under the terms of the GNU General Public License as published by
+ *	the Free Software Foundation; either version 2 of the License, or
+ *	(at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Library General Public License for more details.
+ *	This program is distributed in the hope that it will be useful,
+ *	but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+ *	GNU Library General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *	You should have received a copy of the GNU General Public License
+ *	along with this program; if not, write to the Free Software
+ *	Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
+
+
 #include "iniconfig.h"
 #include "utils.h"
+
 
 static int default_joy_mapping[J_MAX] = {0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1, -1, -1};
@@ -85,70 +88,70 @@ init_config(void)
 
 	config_ar_index = 0;
 	if ((config_ar
-		= (config_var *) malloc (sizeof (config_var) * config_ar_size_max))
-			== NULL)
-		return 0;
+	= (config_var *) malloc (sizeof (config_var) * config_ar_size_max))
+		== NULL)
+	return 0;
 
 	/* open config file for reading */
 	if ((FCfgFile = fopen (config_file, "r")) != NULL) {
-		do {
-			memset (sCfgFileLine, '\0', BUFSIZ);
-			/* note.. line must NOT be a comment */
-			pRet = fgets (sCfgFileLine, BUFSIZ, FCfgFile);
+	do {
+		memset (sCfgFileLine, '\0', BUFSIZ);
+		/* note.. line must NOT be a comment */
+		pRet = fgets (sCfgFileLine, BUFSIZ, FCfgFile);
 
-			if (sCfgFileLine[0] == '#')
-				continue;
+		if (sCfgFileLine[0] == '#')
+		continue;
 
-			if (sCfgFileLine[0] == '[') {
-				int section_size;
-				pWrd = strrchr (sCfgFileLine, ']');
-				if (pWrd == NULL)	/* Badly formed section line */
-					continue;
+		if (sCfgFileLine[0] == '[') {
+		int section_size;
+		pWrd = strrchr (sCfgFileLine, ']');
+		if (pWrd == NULL)	/* Badly formed section line */
+			continue;
 
-				if (section != NULL)
-					free (section);
+		if (section != NULL)
+			free (section);
 
-				section_size = pWrd - sCfgFileLine;
-				section = (char *) malloc (section_size);
-				strncpy (section, sCfgFileLine + 1, section_size - 1);
-				section[section_size - 1] = '\0';
-				continue;
-			}
+		section_size = pWrd - sCfgFileLine;
+		section = (char *) malloc (section_size);
+		strncpy (section, sCfgFileLine + 1, section_size - 1);
+		section[section_size - 1] = '\0';
+		continue;
+		}
 
-			pWrd = strchr (sCfgFileLine, '=');
-			if (pWrd == NULL)
-				continue;
+		pWrd = strchr (sCfgFileLine, '=');
+		if (pWrd == NULL)
+		continue;
 
-			pTmp = strchr (pWrd, '\n');
-			if (pTmp != NULL)
-				*pTmp = '\0';
+		pTmp = strchr (pWrd, '\n');
+		if (pTmp != NULL)
+		*pTmp = '\0';
 
-			if (config_ar_index < config_ar_size_max) {
-				config_ar[config_ar_index].section = (char *) strdup (section);
+		if (config_ar_index < config_ar_size_max) {
+		config_ar[config_ar_index].section = (char *) strdup (section);
 
-				*pWrd = '\0';
-				pTmp = pWrd - 1;
-				while (*pTmp == '\t' || *pTmp == ' ')
-					*(pTmp--) = '\0';
+		*pWrd = '\0';
+		pTmp = pWrd - 1;
+		while (*pTmp == '\t' || *pTmp == ' ')
+			*(pTmp--) = '\0';
 
-				config_ar[config_ar_index].variable
-					= (char *) strdup (sCfgFileLine);
+		config_ar[config_ar_index].variable
+			= (char *) strdup (sCfgFileLine);
 
-				while (*pWrd == '\t' || *pWrd == ' ')
-					pWrd++;
+		while (*pWrd == '\t' || *pWrd == ' ')
+			pWrd++;
 
-				config_ar[config_ar_index].value = (char *) strdup (pWrd + 1);
+		config_ar[config_ar_index].value = (char *) strdup (pWrd + 1);
 
-				config_ar_index++;
-			}
+		config_ar_index++;
+		}
 
-		} while (pRet != NULL);
+	} while (pRet != NULL);
 
 	fclose (FCfgFile);
 	}
 
 	if (section != NULL)
-		free (section);
+	free (section);
 
 	qsort(config_ar, config_ar_index, sizeof (config_var), config_var_cmp);
 
@@ -162,34 +165,32 @@ dispose_config(void)
 	int index;
 
 	for (index = 0; index < config_ar_index; index++) {
-		free (config_ar[index].section);
-		free (config_ar[index].variable);
-		free (config_ar[index].value);
+	free (config_ar[index].section);
+	free (config_ar[index].variable);
+	free (config_ar[index].value);
 	}
 
 	free (config_ar);
 }
 
 
-char *
-get_config_var(char *section, char *variable)
+int
+get_config_var(char* section, char* variable, char* result)
 {
-	config_var key, *result;
-	char temp_result[BUFSIZ];
+	config_var key, *keyResult;
 
 	key.section = section;
 	key.variable = variable;
 
-	result
-		= bsearch(&key, config_ar, config_ar_index, sizeof (config_var),
-			config_var_cmp);
+	keyResult = bsearch(&key, config_ar, config_ar_index,
+		sizeof (config_var), config_var_cmp);
 
-	if (result != NULL) {
-		strcpy(temp_result, result->value);
-		return temp_result;
+	if (keyResult != NULL) {
+		strcpy(result, keyResult->value);
+		return 1;
 	}
 
-	return NULL;
+	return 0;
 }
 
 
@@ -198,24 +199,26 @@ get_config_var(char *section, char *variable)
 int
 get_config_int(char *section, char *keyword, int default_value)
 {
-	char *p = get_config_var(section, keyword);
-	if (p == NULL)
+	char buffer[BUFSIZ];
+
+	if (!get_config_var(section, keyword, buffer))
 		return default_value;
 
-	return atoi (p);
-}
-
-
-char*
-get_config_string(char *section, char *keyword, char *default_value)
-{
-	char *p = get_config_var(section, keyword);
-	return (p == NULL ? default_value : p);
+	return atoi(buffer);
 }
 
 
 void
-read_joy_mapping (void)
+get_config_string(char *section, char *keyword, char *default_value,
+	char* result)
+{
+	if (!get_config_var(section, keyword, result))
+		strcpy(result, default_value);
+}
+
+
+void
+read_joy_mapping(void)
 {
 	char tmp_str[10], tmp_str2[10], section_name[10];
 	unsigned char x, y, z;
@@ -228,37 +231,39 @@ read_joy_mapping (void)
 
 	strcpy (section_name, "CONFIG1");
 	for (z = 0; z < 16; z++) {
-		if (z < 10)
-			section_name[6] = '0' + z;
-		else
-			section_name[6] = (z - 10) + 'a';
+	if (z < 10)
+		section_name[6] = '0' + z;
+	else
+		section_name[6] = (z - 10) + 'a';
 
-		Log (" * Looking for section %s\n", section_name);
+	Log (" * Looking for section %s\n", section_name);
 
-		for (x = 0; x < 5; x++) {
-			// for each player
+	for (x = 0; x < 5; x++) {
+		// for each player
 
-			config[z].individual_config[x].joydev = 0;
-			strcpy (tmp_str2, "joydev1");
-			tmp_str2[6] = '0' + x;
+		config[z].individual_config[x].joydev = 0;
+		strcpy (tmp_str2, "joydev1");
+		tmp_str2[6] = '0' + x;
 
-			strncpy (tmp_str, get_config_string (section_name, tmp_str2, "0"),
-				10);
-			config[z].individual_config[x].joydev = atoi (tmp_str);
+		char buffer[BUFSIZ];
+		get_config_string(section_name, tmp_str2, "0", buffer);
+		strncpy(tmp_str, buffer, 10);
 
-			for (y = 0; y < J_MAX; y++) {
-				strncpy (tmp_str, joymap_reverse[y], 10);
-				tmp_str[strlen (tmp_str) + 1] = 0;
-				tmp_str[strlen (tmp_str)] = '0' + x;
-				temp_val = get_config_int (section_name, tmp_str, 0xffff);
+		config[z].individual_config[x].joydev = atoi (tmp_str);
 
-				if (0xffff != temp_val) {
-					config[z].individual_config[x].joy_mapping[y] = temp_val;
-					Log ("    %s set to %d\n", joymap_reverse[y], temp_val);
-				}
-			}
+		for (y = 0; y < J_MAX; y++) {
+		strncpy (tmp_str, joymap_reverse[y], 10);
+		tmp_str[strlen (tmp_str) + 1] = 0;
+		tmp_str[strlen (tmp_str)] = '0' + x;
+		temp_val = get_config_int (section_name, tmp_str, 0xffff);
 
+		if (0xffff != temp_val) {
+			config[z].individual_config[x].joy_mapping[y] = temp_val;
+			Log ("		%s set to %d\n", joymap_reverse[y], temp_val);
 		}
+		}
+
+	}
 	}
 
 	Log ("End of joypad mapping\n\n");
@@ -269,102 +274,102 @@ char
 set_arg(char nb_arg, const char *val) {
 
 	if (!val
-		&& (nb_arg == 'i' || nb_arg == 't' || nb_arg == 'w' || nb_arg == 'c')) {
-		MESSAGE_ERROR("No value provided for %c arg\n", nb_arg);
-		return 1;
+	&& (nb_arg == 'i' || nb_arg == 't' || nb_arg == 'w' || nb_arg == 'c')) {
+	MESSAGE_ERROR("No value provided for %c arg\n", nb_arg);
+	return 1;
 	}
 
 	switch (nb_arg)
 	{
-		case 'a':
-			option.want_fullscreen_aspect = 1;
-			MESSAGE_INFO("Option: Fullscreen aspect ratio enabled\n");
-			return 0;
+	case 'a':
+		option.want_fullscreen_aspect = 1;
+		MESSAGE_INFO("Option: Fullscreen aspect ratio enabled\n");
+		return 0;
 
-		case 'c':
-			CD_emulation = atoi(val);
-			MESSAGE_INFO("Option: Forcing CD emulation to mode %d\n", atoi(val));
-			return 0;
+	case 'c':
+		CD_emulation = atoi(val);
+		MESSAGE_INFO("Option: Forcing CD emulation to mode %d\n", atoi(val));
+		return 0;
 
-		case 'd':
-			debug_on_beginning = atoi(val);
-			Log ("Option: Debug on beginning set to %d\n", debug_on_beginning);
-			return 0;
+	case 'd':
+		debug_on_beginning = atoi(val);
+		Log ("Option: Debug on beginning set to %d\n", debug_on_beginning);
+		return 0;
 
-		case 'e':
-			use_eagle = atoi(val);
-			Log ("Eagle mode set to %d\n", use_eagle);
-			return 0;
+	case 'e':
+		use_eagle = atoi(val);
+		Log ("Eagle mode set to %d\n", use_eagle);
+		return 0;
 
-		case 'f':
-			option.want_fullscreen = 1;
-			MESSAGE_INFO("Option: Fullscreen mode enabled\n");
-			return 0;
+	case 'f':
+		option.want_fullscreen = 1;
+		MESSAGE_INFO("Option: Fullscreen mode enabled\n");
+		return 0;
 
-		case 'i':
-			strcpy (ISO_filename, val);
-			Log ("ISO filename is %s\n", ISO_filename);
-			return 0;
+	case 'i':
+		strcpy (ISO_filename, val);
+		Log ("ISO filename is %s\n", ISO_filename);
+		return 0;
 
-		case 'm':
-			minimum_bios_hooking = atoi (val);
-			Log ("Minimum Bios hooking set to %d\n", minimum_bios_hooking);
-			return 0;
+	case 'm':
+		minimum_bios_hooking = atoi (val);
+		Log ("Minimum Bios hooking set to %d\n", minimum_bios_hooking);
+		return 0;
 
-		case 'o':
-			option.want_hardware_scaling = 1;
-			MESSAGE_INFO("Option: Hardware overlay requested\n");
-			return 0;
+	case 'o':
+		option.want_hardware_scaling = 1;
+		MESSAGE_INFO("Option: Hardware overlay requested\n");
+		return 0;
 
 #if defined(ENABLE_NETPLAY)
-		case 'n':
+	case 'n':
 #warning hardcoding of netplay protocol
-/*       option.want_netplay = LAN_PROTOCOL; */
-			option.want_netplay = INTERNET_PROTOCOL;
-			strncpy(option.server_hostname, val, sizeof(option.server_hostname));
-			Log ("Netplay mode enabled\nServer hostname set to %s\n",
-				option.server_hostname);
-			return 0;
+/*			 option.want_netplay = LAN_PROTOCOL; */
+		option.want_netplay = INTERNET_PROTOCOL;
+		strncpy(option.server_hostname, val, sizeof(option.server_hostname));
+		Log ("Netplay mode enabled\nServer hostname set to %s\n",
+		option.server_hostname);
+		return 0;
 #endif // NETPLAY
 
-		case 's':
-			option.want_stereo = 1;
-			MESSAGE_INFO("Option: Stereo sound enabled\n");
-			return 0;
-		case 'S':
-			use_scanline = MIN(1, MAX(0, atoi (val)));
-			Log ("Scanline mode set to %d\n", use_scanline);
-			return 0;
-		case 'u':
-			US_encoded_card = atoi (val);
-			Log ("US Card encoding set to %d\n", US_encoded_card);
-			return 0;
-		case 't':
-			nb_max_track = atoi (val);
-			Log ("Number of tracks set to %d\n", nb_max_track);
-			return 0;
-		case 'z':
-			option.window_size = MIN(1, MAX(4, atoi (val)));
-			return 0;
-		case 'h':
-			printf(
-				"\nHuKU, the PCEngine emulator for Haiku\n"
-				"2011 Alexander von Gluck IV\n"
-				"Based on HuGO! by Zerograd and others\n\n"
-				" Usage: HuKU <GAME> [arguments]\n\n"
-				" Where <GAME> is an pce|iso|zip\n"
-				" Where [arguments] are:\n"
-				"	-cX	Force CD Emulation mode X\n"
-				"	-f	Fullscreen mode\n"
-				"	-o	Enable overlay mode\n"
-				"	-s	Enable Stereo sound\n"
-				"	-zX	Zoom level X (1-4)\n"
-				"\n");
-			return 1;
+	case 's':
+		option.want_stereo = 1;
+		MESSAGE_INFO("Option: Stereo sound enabled\n");
+		return 0;
+	case 'S':
+		use_scanline = MIN(1, MAX(0, atoi (val)));
+		Log ("Scanline mode set to %d\n", use_scanline);
+		return 0;
+	case 'u':
+		US_encoded_card = atoi (val);
+		Log ("US Card encoding set to %d\n", US_encoded_card);
+		return 0;
+	case 't':
+		nb_max_track = atoi (val);
+		Log ("Number of tracks set to %d\n", nb_max_track);
+		return 0;
+	case 'z':
+		option.window_size = MIN(1, MAX(4, atoi (val)));
+		return 0;
+	case 'h':
+		printf(
+		"\nHuKU, the PCEngine emulator for Haiku\n"
+		"2011 Alexander von Gluck IV\n"
+		"Based on HuGO! by Zerograd and others\n\n"
+		" Usage: HuKU <GAME> [arguments]\n\n"
+		" Where <GAME> is an pce|iso|zip\n"
+		" Where [arguments] are:\n"
+		"	-cX	Force CD Emulation mode X\n"
+		"	-f	Fullscreen mode\n"
+		"	-o	Enable overlay mode\n"
+		"	-s	Enable Stereo sound\n"
+		"	-zX	Zoom level X (1-4)\n"
+		"\n");
+		return 1;
 
-		default:
-			MESSAGE_ERROR("Unrecognized option : %c\n", nb_arg);
-			return 1;
+	default:
+		MESSAGE_ERROR("Unrecognized option : %c\n", nb_arg);
+		return 1;
 	}
 }
 
@@ -375,37 +380,37 @@ parse_commandline(int argc, char **argv)
 	char arg_value, i, arg_error = 0;
 
 	for (i = 1; i < argc; i++) {
-		// first option should always be our game
-		if (i == 1 && argv[i][0] != '-') {
-			strcpy (cart_name, argv[i]);
-			int x;
-			for (x = 0; x < strlen (cart_name); x++)
-				if (cart_name[x] == '\\')
-					cart_name[x] = '/';
+	// first option should always be our game
+	if (i == 1 && argv[i][0] != '-') {
+		strcpy (cart_name, argv[i]);
+		int x;
+		for (x = 0; x < strlen (cart_name); x++)
+		if (cart_name[x] == '\\')
+			cart_name[x] = '/';
+	} else {
+		if (argv[i][0] == '-') {
+		// if argument
+		if (strlen(argv[i]) > 2) {
+			arg_error |= set_arg(argv[i][1], (char *) &argv[i][2]);
 		} else {
-			if (argv[i][0] == '-') {
-				// if argument
-				if (strlen(argv[i]) > 2) {
-					arg_error |= set_arg(argv[i][1], (char *) &argv[i][2]);
-				} else {
-					arg_error |= set_arg(argv[i][1], NULL);
-				}
-			} else {
-				MESSAGE_ERROR("Unknown option: %s\n", argv[i]);
-				arg_error = 1;
-			}
+			arg_error |= set_arg(argv[i][1], NULL);
 		}
+		} else {
+		MESSAGE_ERROR("Unknown option: %s\n", argv[i]);
+		arg_error = 1;
+		}
+	}
 	}
 
 	if (arg_error)
-		return 1;
+	return 1;
 
 	video_driver = 0;
 
 	if (use_eagle)
-		video_driver = 1;
+	video_driver = 1;
 	else if (use_scanline)
-		video_driver = 2;
+	video_driver = 2;
 
 	return 0;
 }
@@ -415,378 +420,371 @@ void
 parse_INIfile_raw ()
 {
 #ifdef MSDOS
-  char x;
+	char x;
 #endif
+	Log ("Looking in %s\n", config_file);
 
-  Log ("Looking in %s\n", config_file);
+	read_joy_mapping ();
 
-  read_joy_mapping ();
+	char buffer[BUFSIZ];
+	get_config_string ("main", "rom_dir", ".", buffer);
+	strcpy(initial_path, buffer);
 
-  strcpy (initial_path, get_config_string ("main", "rom_dir", "."));
-  if ((initial_path[0]) && (initial_path[strlen (initial_path) - 1] != '/')
-      && (initial_path[strlen (initial_path) - 1] != '\\'))
-    strcat (initial_path, "/");
-  // rom_dir setting
+	if ((initial_path[0]) && (initial_path[strlen (initial_path) - 1] != '/')
+		&& (initial_path[strlen (initial_path) - 1] != '\\')) {
+		strcat (initial_path, "/");
+	}
 
-  Log ("Setting initial path to %s\n", initial_path);
+	// rom_dir setting
 
-  current_config = get_config_int ("main", "config", 0);
-  // choose input config
+	Log ("Setting initial path to %s\n", initial_path);
 
-  Log ("Setting joypad config number to %d\n", current_config);
+	current_config = get_config_int ("main", "config", 0);
+	// choose input config
 
-  language = MIN(get_config_int ("main", "language", 0), NB_LANG - 1);
-  // language setting
+	Log ("Setting joypad config number to %d\n", current_config);
 
-  Log ("Setting language to %d\n", language);
+	language = MIN(get_config_int ("main", "language", 0), NB_LANG - 1);
+	// language setting
 
-  smode = get_config_int ("main", "smode", -1);
-  // sound mode setting
+	Log ("Setting language to %d\n", language);
 
-  Log ("Setting sound mode to %d\n", smode);
+	smode = get_config_int ("main", "smode", -1);
+	// sound mode setting
 
-  use_eagle = get_config_int ("main", "eagle", 0);
-  // do we use EAGLE ?
+	Log ("Setting sound mode to %d\n", smode);
 
-  Log ("Setting eagle mode to %d\n", use_eagle);
+	use_eagle = get_config_int ("main", "eagle", 0);
+	// do we use EAGLE ?
 
-  use_scanline = get_config_int ("main", "scanline", 0);
-  // do we use EAGLE ?
+	Log ("Setting eagle mode to %d\n", use_eagle);
 
-  Log ("Setting scanline mode to %d\n", use_scanline);
+	use_scanline = get_config_int ("main", "scanline", 0);
+	// do we use EAGLE ?
 
-  option.want_snd_freq = get_config_int ("main", "snd_freq", 22050);
-  // frequency of the sound generator
+	Log ("Setting scanline mode to %d\n", use_scanline);
 
-  Log ("Setting default frequency to %d\n", option.want_snd_freq);
+	option.want_snd_freq = get_config_int ("main", "snd_freq", 22050);
+	// frequency of the sound generator
 
-  sbuf_size = get_config_int ("main", "buffer_size", 512);
-  // size of the sound buffer
+	Log ("Setting default frequency to %d\n", option.want_snd_freq);
 
-  Log ("Setting sound buffer size to %d bytes\n", sbuf_size);
+	sbuf_size = get_config_int ("main", "buffer_size", 512);
+	// size of the sound buffer
 
-  gamepad_driver = get_config_int ("main", "joy_type", -1);
+	Log ("Setting sound buffer size to %d bytes\n", sbuf_size);
 
-  Log ("Setting joy type to %d\n", gamepad_driver);
+	gamepad_driver = get_config_int ("main", "joy_type", -1);
 
-  sound_driver = get_config_int ("main", "sound_driver", 1);
+	Log ("Setting joy type to %d\n", gamepad_driver);
 
-  Log ("Setting sound driver to %d\n", sound_driver);
+	sound_driver = get_config_int ("main", "sound_driver", 1);
 
-  synchro = get_config_int ("main", "limit_fps", 0);
+	Log ("Setting sound driver to %d\n", sound_driver);
 
-  Log ("Setting fps limitation to %d\n", synchro);
+	synchro = get_config_int ("main", "limit_fps", 0);
 
-  option.want_fullscreen = get_config_int ("main", "start_fullscreen", 0);
+	Log ("Setting fps limitation to %d\n", synchro);
 
-  Log ("Setting start in fullscreen mode to %d\n", option.want_fullscreen);
+	option.want_fullscreen = get_config_int ("main", "start_fullscreen", 0);
 
-  option.want_fullscreen_aspect =
-    get_config_int ("main", "use_fullscreen_aspect", 0);
+	Log ("Setting start in fullscreen mode to %d\n", option.want_fullscreen);
 
-  Log ("Setting fullscreen aspect to %d\n", option.want_fullscreen_aspect);
+	option.want_fullscreen_aspect
+		= get_config_int ("main", "use_fullscreen_aspect", 0);
 
-  option.want_hardware_scaling = get_config_int ("main", "use_overlay", 0);
-  Log ("Setting hardware scaling to %d\n", option.want_hardware_scaling);
+	Log ("Setting fullscreen aspect to %d\n", option.want_fullscreen_aspect);
 
-  option.want_stereo = get_config_int ("main", "stereo_sound", 0);
+	option.want_hardware_scaling = get_config_int ("main", "use_overlay", 0);
+	Log ("Setting hardware scaling to %d\n", option.want_hardware_scaling);
 
-  Log ("Setting stereo sound to %d\n", option.want_stereo);
+	option.want_stereo = get_config_int ("main", "stereo_sound", 0);
 
-  option.window_size = get_config_int ("main", "window_size", 2);
+	Log ("Setting stereo sound to %d\n", option.want_stereo);
 
-  Log ("Setting window size to %d\n", option.window_size);
+	option.window_size = get_config_int ("main", "window_size", 2);
 
-  option.fullscreen_width = get_config_int ("main", "fullscreen_width", 640);
+	Log ("Setting window size to %d\n", option.window_size);
 
-  Log ("Setting preferred fullscreen width to %d\n", option.fullscreen_width);
+	option.fullscreen_width = get_config_int ("main", "fullscreen_width", 640);
 
-  option.fullscreen_height =
-    get_config_int ("main", "fullscreen_height", 480);
+	Log ("Setting preferred fullscreen width to %d\n", option.fullscreen_width);
 
-  Log ("Setting preferred fullscreen height to %d\n",
-       option.fullscreen_height);
+	option.fullscreen_height
+		= get_config_int ("main", "fullscreen_height", 480);
 
-  option.wanted_hardware_format =
-    get_config_int ("main", "hardware_format", 0);
+	Log ("Setting preferred fullscreen height to %d\n",
+		option.fullscreen_height);
 
-  Log ("Setting wanted hardware format to %x\n",
-       option.wanted_hardware_format);
+	option.wanted_hardware_format
+		= get_config_int ("main", "hardware_format", 0);
+
+	Log ("Setting wanted hardware format to %x\n",
+		option.wanted_hardware_format);
 
 #ifdef MSDOS
 
-  x = get_config_int ("main", "cd_driver", 0);
+	x = get_config_int ("main", "cd_driver", 0);
 
-  if (x)
-    {
-      osd_cd_driver = aspi_driver;
-      Log ("Setting cd driver to ASPI\n");
-    }
-  else
-    {
-      osd_cd_driver = mscdex_driver;
-      Log ("Setting cd driver to MSCDEX\n");
-    }
+	if (x) {
+		osd_cd_driver = aspi_driver;
+		Log ("Setting cd driver to ASPI\n");
+	} else {
+		osd_cd_driver = mscdex_driver;
+		Log ("Setting cd driver to MSCDEX\n");
+	}
 
 #endif
 
-  minimum_bios_hooking = get_config_int ("main", "minimum_bios_hooking", 0);
+	minimum_bios_hooking = get_config_int ("main", "minimum_bios_hooking", 0);
 
-  Log ("Minimum Bios hooking set to %d\n", minimum_bios_hooking);
+	Log ("Minimum Bios hooking set to %d\n", minimum_bios_hooking);
 
-  strcpy (cdsystem_path, get_config_string ("main", "cdsystem_path", ""));
+	memset(buffer, 0, BUFSIZ * sizeof(char));
+	get_config_string("main", "cdsystem_path", "", buffer);
+	strcpy (cdsystem_path, buffer);
 
-  Log ("CD system path set to %d\n", cdsystem_path);
+	Log ("CD system path set to %d\n", cdsystem_path);
 
-  strcpy (ISO_filename, get_config_string ("main", "cd_path", ""));
+	memset(buffer, 0, BUFSIZ * sizeof(char));
+	get_config_string("main", "cd_path", "", buffer);
+	strcpy(ISO_filename, buffer);
 
-  Log ("CD path set to %s\n", ISO_filename);
+	Log ("CD path set to %s\n", ISO_filename);
 
-  option.want_arcade_card_emulation =
-    get_config_int ("main", "arcade_card", 1);
+	option.want_arcade_card_emulation
+		= get_config_int("main", "arcade_card", 1);
 
-  Log ("Arcade card emulation set to %d\n",
-       option.want_arcade_card_emulation);
+	Log ("Arcade card emulation set to %d\n",
+		option.want_arcade_card_emulation);
 
-  option.want_supergraphx_emulation =
-    get_config_int ("main", "supergraphx", 1);
+	option.want_supergraphx_emulation
+		= get_config_int("main", "supergraphx", 1);
 
-  Log ("SuperGraphX emulation set to %d\n",
-       option.want_supergraphx_emulation);
+	Log ("SuperGraphX emulation set to %d\n",
+		option.want_supergraphx_emulation);
 
-  option.want_television_size_emulation =
-    get_config_int ("main", "tv_size", 0);
+	option.want_television_size_emulation
+		= get_config_int("main", "tv_size", 0);
 
-  Log ("Limiting graphics size to emulate tv output set to %d\n",
-       option.want_television_size_emulation);
+	Log ("Limiting graphics size to emulate tv output set to %d\n",
+		option.want_television_size_emulation);
 
-  Log ("End of parsing INI file\n\n");
+	Log ("End of parsing INI file\n\n");
 }
+
 
 void
 parse_INIfile ()
 {
-  Log ("--[ PARSING INI FILE ]------------------------------\n");
+	Log ("--[ PARSING INI FILE ]------------------------------\n");
 
 #ifndef LINUX
-  sprintf (config_file, "%s/huku.ini", short_exe_name);
+	sprintf (config_file, "%s/huku.ini", short_exe_name);
 #else
-  {
+	{
 
-    char tmp_home[256];
-    FILE *f;
+		char tmp_home[256];
+		FILE *f;
 
-    sprintf (tmp_home, "%s/huku.ini", short_exe_name);
+		sprintf (tmp_home, "%s/huku.ini", short_exe_name);
 
-    f = fopen (tmp_home, "rb");
+		f = fopen (tmp_home, "rb");
 
-    if (f != NULL)
-      {
+		if (f != NULL) {
 	strcpy (config_file, tmp_home);
 	fclose (f);
-      }
-    else
-      strcpy (config_file, "/etc/huku.ini");
-  }
+		} else
+			strcpy (config_file, "/etc/huku.ini");
+	}
 #endif
 
+	init_config ();
 
-  init_config ();
+	parse_INIfile_raw ();
 
-  parse_INIfile_raw ();
-
-  dispose_config ();
+	dispose_config ();
 
 }
 
+
 void
-set_config_var_str (char *section, char *name, char *value)
+set_config_var_str(char *section, char *name, char *value)
 {
-  config_var key, *result;
+	config_var key, *result;
 
 #if !defined(FINAL_RELEASE)
-  printf ("Setting [%s] %s to %s\n", section, name, value);
+	printf ("Setting [%s] %s to %s\n", section, name, value);
 #endif
 
-  key.section = section;
-  key.variable = name;
+	key.section = section;
+	key.variable = name;
 
-  result =
-    bsearch (&key, config_ar, config_ar_index, sizeof (config_var),
-	     config_var_cmp);
+	result = bsearch(&key, config_ar, config_ar_index,
+		sizeof (config_var), config_var_cmp);
 
-  if (result != NULL)
-    {
-      free (result->value);
-      result->value = strdup (value);
-      return;
-    }
-
-  if (config_ar_index < config_ar_size_max)
-    {
-
-      config_ar[config_ar_index].section = strdup (section);
-      config_ar[config_ar_index].variable = strdup (name);
-      config_ar[config_ar_index].value = strdup (value);
-
-      config_ar_index++;
-
-    }
-  else
-    {
-
-      Log ("Couldn't set [%s]%s to %sn bit enough internal space\n", section,
-	   name, value);
-
-    }
-}
-
-void
-set_config_var_int (char *section, char *name, int value)
-{
-  char temp_string[10];
-
-  snprintf (temp_string, 10, "%d", value);
-
-  set_config_var_str (section, name, temp_string);
-}
-
-void
-dump_config (char *filename)
-{
-  FILE *output_file;
-  int local_index;
-  char *last_section_name;
-
-  last_section_name = "";
-
-  output_file = fopen (filename, "wt");
-  if (output_file == NULL)
-    {
-      Log ("Couldn't save configuration to %s\n", filename);
-      return;
-    }
-
-  Log ("Saving %d entries in the configuration file\n", config_ar_index);
-
-  for (local_index = 0; local_index < config_ar_index; local_index++)
-    {
-      if (strcmp (last_section_name, config_ar[local_index].section))
-	{
-	  last_section_name = config_ar[local_index].section;
-	  fprintf (output_file, "[%s]\n", last_section_name);
+	if (result != NULL) {
+		free (result->value);
+		result->value = strdup (value);
+		return;
 	}
-      fprintf (output_file, "%s=%s\n", config_ar[local_index].variable,
-	       config_ar[local_index].value);
-    }
 
-  fclose (output_file);
+	if (config_ar_index < config_ar_size_max) {
+			config_ar[config_ar_index].section = strdup (section);
+			config_ar[config_ar_index].variable = strdup (name);
+			config_ar[config_ar_index].value = strdup (value);
+
+			config_ar_index++;
+
+	} else {
+		Log ("Couldn't set [%s]%s to %sn bit enough internal space\n", section,
+			name, value);
+	}
+}
+
+
+void
+set_config_var_int(char *section, char *name, int value)
+{
+	char temp_string[10];
+
+	snprintf (temp_string, 10, "%d", value);
+
+	set_config_var_str (section, name, temp_string);
+}
+
+
+void
+dump_config(char *filename)
+{
+	FILE *output_file;
+	int local_index;
+	char *last_section_name;
+
+	last_section_name = "";
+
+	output_file = fopen (filename, "wt");
+	if (output_file == NULL)
+		{
+			Log ("Couldn't save configuration to %s\n", filename);
+			return;
+		}
+
+	Log ("Saving %d entries in the configuration file\n", config_ar_index);
+
+	for (local_index = 0; local_index < config_ar_index; local_index++) {
+		if (strcmp (last_section_name, config_ar[local_index].section)) {
+			last_section_name = config_ar[local_index].section;
+			fprintf (output_file, "[%s]\n", last_section_name);
+		}
+		fprintf (output_file, "%s=%s\n", config_ar[local_index].variable,
+			config_ar[local_index].value);
+	}
+	fclose (output_file);
 
 }
+
 
 //! makes the configuration changes permanent
 void
 save_config (void)
 {
 
-  char config_name[PATH_MAX];
-  unsigned char input_config_number, input_config_button, input_config_player;
+	char config_name[PATH_MAX];
+	unsigned char input_config_number, input_config_button, input_config_player;
 
-  // Reads all variables in the ini file
-  init_config ();
+	// Reads all variables in the ini file
+	init_config ();
 
-  set_config_var_str ("main", "rom_dir", initial_path);
-  set_config_var_int ("main", "config", current_config);
-  set_config_var_int ("main", "language", language);
-  set_config_var_int ("main", "smode", smode);
-  set_config_var_int ("main", "eagle", use_eagle);
-  set_config_var_int ("main", "scanline", use_scanline);
-  set_config_var_int ("main", "snd_freq", option.want_snd_freq);
-  set_config_var_int ("main", "buffer_size", sbuf_size);
-  set_config_var_int ("main", "joy_type", gamepad_driver);
-  set_config_var_int ("main", "sound_driver", sound_driver);
-  set_config_var_int ("main", "start_fullscreen", option.want_fullscreen);
-  set_config_var_int ("main", "use_fullscreen_aspect",
-		      option.want_fullscreen_aspect);
-  set_config_var_int ("main", "use_overlay", option.want_hardware_scaling);
-  set_config_var_int ("main", "minimum_bios_hooking", minimum_bios_hooking);
-  set_config_var_str ("main", "cdsystem_path", cdsystem_path);
-  set_config_var_str ("main", "cd_path", ISO_filename);
-  set_config_var_int ("main", "stereo_sound", option.want_stereo);
-  set_config_var_int ("main", "fullscreen_width", option.fullscreen_width);
-  set_config_var_int ("main", "fullscreen_height", option.fullscreen_height);
-  set_config_var_int ("main", "window_size", option.window_size);
-  set_config_var_int ("main", "arcade_card",
-		      option.want_arcade_card_emulation);
-  set_config_var_int ("main", "supergraphx",
-		      option.want_supergraphx_emulation);
-  set_config_var_int ("main", "tv_size",
-		      option.want_television_size_emulation);
-  set_config_var_int ("main", "hardware_format",
-		      option.wanted_hardware_format);
+	set_config_var_str("main", "rom_dir", initial_path);
+	set_config_var_int("main", "config", current_config);
+	set_config_var_int("main", "language", language);
+	set_config_var_int("main", "smode", smode);
+	set_config_var_int("main", "eagle", use_eagle);
+	set_config_var_int("main", "scanline", use_scanline);
+	set_config_var_int("main", "snd_freq", option.want_snd_freq);
+	set_config_var_int("main", "buffer_size", sbuf_size);
+	set_config_var_int("main", "joy_type", gamepad_driver);
+	set_config_var_int("main", "sound_driver", sound_driver);
+	set_config_var_int("main", "start_fullscreen", option.want_fullscreen);
+	set_config_var_int("main", "use_fullscreen_aspect",
+				option.want_fullscreen_aspect);
+	set_config_var_int("main", "use_overlay", option.want_hardware_scaling);
+	set_config_var_int("main", "minimum_bios_hooking", minimum_bios_hooking);
+	set_config_var_str("main", "cdsystem_path", cdsystem_path);
+	set_config_var_str("main", "cd_path", ISO_filename);
+	set_config_var_int("main", "stereo_sound", option.want_stereo);
+	set_config_var_int("main", "fullscreen_width", option.fullscreen_width);
+	set_config_var_int("main", "fullscreen_height", option.fullscreen_height);
+	set_config_var_int("main", "window_size", option.window_size);
+	set_config_var_int("main", "arcade_card",
+				option.want_arcade_card_emulation);
+	set_config_var_int("main", "supergraphx",
+				option.want_supergraphx_emulation);
+	set_config_var_int("main", "tv_size",
+				option.want_television_size_emulation);
+	set_config_var_int("main", "hardware_format",
+				option.wanted_hardware_format);
 
 	// For each input configuration ...
-  for (input_config_number = 0; input_config_number < 16;
-       input_config_number++)
-    {
-      char section_name[] = "CONFIG0";
+	for (input_config_number = 0; input_config_number < 16;
+		input_config_number++) {
+		char section_name[] = "CONFIG0";
 
-      if (input_config_number < 10)
-	section_name[6] = '0' + input_config_number;
-      else
-	section_name[6] = 'a' + input_config_number - 10;
+		if (input_config_number < 10)
+			section_name[6] = '0' + input_config_number;
+		else
+			section_name[6] = 'a' + input_config_number - 10;
 
-			// For each player configuration ...
-      for (input_config_player = 0; input_config_player < 5;
-	   input_config_player++)
-	{
-	  char input_name[8];
-	  char input_type_name[10];
+		// For each player configuration ...
+		for (input_config_player = 0; input_config_player < 5;
+			input_config_player++) {
+			char input_name[8];
+			char input_type_name[10];
 
-		// If there's a joypad, dump it
-		if (config[input_config_number].individual_config[input_config_player].joydev)
-		{
-		  snprintf (input_name, 8, "joydev%1d", input_config_player);
-		  snprintf (input_type_name, 10, "%d",
-			    config[input_config_number].individual_config[input_config_player].joydev);
-		  set_config_var_str (section_name, input_name, input_type_name);
-		}
-		
-		// For each button configuration ...
-	  for (input_config_button = 0; input_config_button < J_MAX;
-	       input_config_button++)
-	    {
-	      char temp_joy_str[15];
-
-	      // Skip empty entries in joypad mapping
-	      if (config[input_config_number].individual_config[input_config_player].
-		  joy_mapping[input_config_button] == default_joy_mapping[input_config_button])
-			continue;
-			
-			if ((0 == config[input_config_number].individual_config[input_config_player].joydev)
-				&& (input_config_button >= J_PAD_START))
-			{
-				// If it is a joystick button/axis and it is disabled, we skip it
-				continue;
+			// If there's a joypad, dump it
+			if (config[input_config_number]
+				.individual_config[input_config_player].joydev) {
+				snprintf (input_name, 8, "joydev%1d", input_config_player);
+				snprintf (input_type_name, 10, "%d",
+					config[input_config_number]
+						.individual_config[input_config_player].joydev);
+				set_config_var_str (section_name, input_name, input_type_name);
 			}
+		// For each button configuration ...
+			for (input_config_button = 0; input_config_button < J_MAX;
+				input_config_button++) {
+				char temp_joy_str[15];
 
-	      snprintf (temp_joy_str, 15, "%s%1d",
-			joymap_reverse[input_config_button], input_config_player);
-			
-	      set_config_var_int (section_name, temp_joy_str,
-				  config[input_config_number].individual_config[input_config_player].
-				  joy_mapping[input_config_button]);
-	    }
+				// Skip empty entries in joypad mapping
+				if (config[input_config_number].individual_config[input_config_player]
+					.joy_mapping[input_config_button]
+					== default_joy_mapping[input_config_button]) {
+					continue;
+				}
+
+				if ((0 == config[input_config_number].individual_config[input_config_player].joydev)
+					&& (input_config_button >= J_PAD_START)) {
+					// If it is a joystick button/axis and disabled, we skip it
+					continue;
+				}
+
+				snprintf (temp_joy_str, 15, "%s%1d",
+				joymap_reverse[input_config_button], input_config_player);
+
+				set_config_var_int(section_name, temp_joy_str,
+					config[input_config_number].individual_config[input_config_player].
+					joy_mapping[input_config_button]);
+			}
+		}
 	}
-    }
 
-  // Sorts the configuration array
-  qsort (config_ar, config_ar_index, sizeof (config_var), config_var_cmp);
+	// Sorts the configuration array
+	qsort (config_ar, config_ar_index, sizeof (config_var), config_var_cmp);
 
-  // Dump the configuration into a file
-  sprintf (config_name, "%s/huku.ini", short_exe_name);
-  dump_config (config_name);
+	// Dump the configuration into a file
+	sprintf (config_name, "%s/huku.ini", short_exe_name);
+	dump_config (config_name);
 
-  dispose_config ();
-
+	dispose_config ();
 }

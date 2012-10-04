@@ -28,41 +28,41 @@ UChar HCD_current_played_track = 0;
 char*
 get_HCD_path(char *name, char *var) {
 
-	char *path;
-	char path_tmp[256];
-	char cw_dir[256];
+	char path[PATH_MAX];
+	char path_tmp[PATH_MAX];
+	char cw_dir[PATH_MAX];
 
-	path = get_config_string ("main", var, "");
+	get_config_string("main", var, "", path);
 
-		memset(path_tmp,0,256);
-		memset(cw_dir,0,256);
-		strcpy(path_tmp, name);
-		//Log("path_tmp:%s#\n",MP3_path_tmp);
-		//if filepath to .hcd is relative...?
-		// getcwd +name = gives the full path the hcd
-		//1. path_tmp==name          => current dir + path_tmp=.
-		//2. path begins with '.'    =>
-		// dirname is GNU C only
-		int i;
+	memset(path_tmp, 0, sizeof(char) * PATH_MAX);
+	memset(cw_dir, 0, sizeof(char) * PATH_MAX);
+	strcpy(path_tmp, name);
+	//Log("path_tmp:%s#\n",MP3_path_tmp);
+	//if filepath to .hcd is relative...?
+	// getcwd +name = gives the full path the hcd
+	//1. path_tmp==name          => current dir + path_tmp=.
+	//2. path begins with '.'    =>
+	// dirname is GNU C only
+	int i;
 
-		for (i = 0; path_tmp[i]; i++) {
-			if (path_tmp[i] == '\\') {
-				path_tmp[i] = '/';
-			}
+	for (i = 0; path_tmp[i]; i++) {
+		if (path_tmp[i] == '\\') {
+			path_tmp[i] = '/';
 		}
+	}
 
-		if (strrchr (path_tmp, '/'))
-			*(strrchr (path_tmp, '/') + 1) = 0;
+	if (strrchr (path_tmp, '/'))
+		*(strrchr (path_tmp, '/') + 1) = 0;
 
 		// path_tmp is now the root of the hcd dir
 
 	if (strcmp(path, "")) {
 		// We found an override within the HCD
 		// Override paths are relative to the HCD directory
-		strncat(path_tmp, path, 256);
+		strncat(path_tmp, path, PATH_MAX);
 	}
 
-	path = path_tmp;
+	strcpy(path, path_tmp);
 
 	/*
 	if (!strcmp(path, "")) {
@@ -118,8 +118,7 @@ fill_HCD_info(char *name) {
 
 // ----- find beginning ---------
 
-		strcpy(tmp_buf,
-			strupr(get_config_string(section_name, "begin", "")));
+		get_config_string(section_name, "begin", "", tmp_buf);
 
 		if (strcasestr (tmp_buf, "MSF")) {
 			int min = (tmp_buf[4] - '0') * 10 + (tmp_buf[5] - '0');
@@ -136,8 +135,7 @@ fill_HCD_info(char *name) {
 			CD_track[current_track].beg_lsn = 0;
 		}
 
-		strcpy(tmp_buf,
-			strupr(get_config_string(section_name, "type", "AUDIO")));
+		get_config_string(section_name, "type", "AUDIO", tmp_buf);
 
 		if (strcmp(tmp_buf, "CODE") == 0) {
 			// FOUND: CODE TRACK
@@ -153,7 +151,9 @@ fill_HCD_info(char *name) {
 			strcpy(tmp_buf, ISO_path);
 				// search filename of ISO
 
-			strcat(tmp_buf, get_config_string(section_name, "filename", ""));
+			char buffer[BUFSIZ];
+			get_config_string(section_name, "filename", "", buffer);
+			strcat(tmp_buf, buffer);
 			strcpy(CD_track[current_track].filename, tmp_buf);
 
 			struct stat rom_file_buf;
@@ -180,8 +180,8 @@ fill_HCD_info(char *name) {
 
 				for (i = 0; i < CD_track[current_track].patch_number; i++) {
 					sprintf(tmp_str, "patch%d", i);
-					strcpy(tmp_str, get_config_string (section_name, tmp_str,
-						"0XFFFFFFFF, 0XFF"));
+					get_config_string (section_name, tmp_str,
+						"0XFFFFFFFF, 0XFF", tmp_str);
 					sscanf(tmp_str, "%X,%X",
 						&CD_track[current_track].patch[i].offset,
 						&CD_track[current_track].patch[i].new_val);
@@ -202,7 +202,7 @@ fill_HCD_info(char *name) {
 
 			CD_track[current_track].source_type = HCD_SOURCE_CD_TRACK;
 
-			strcpy (tmp_buf, get_config_string(section_name, "drive", "0"));
+			get_config_string(section_name, "drive", "0", tmp_buf);
 			osd_cd_init(tmp_buf);
 
 	//------- looking for the index of the track to use for emulation ----
@@ -236,7 +236,9 @@ fill_HCD_info(char *name) {
 			CD_track[current_track].source_type = HCD_SOURCE_REGULAR_FILE;
 
 			strcpy (tmp_buf, MP3_path);
-			strcat (tmp_buf, get_config_string (section_name, "filename", ""));
+			char fileNameBuffer[PATH_MAX];
+			get_config_string (section_name, "filename", "", fileNameBuffer);
+			strcat (tmp_buf, fileNameBuffer);
 			strcpy (CD_track[current_track].filename, tmp_buf);
 
 			// START Search for subtitles
@@ -256,8 +258,7 @@ fill_HCD_info(char *name) {
 
 				for (i = 0; i < CD_track[current_track].subtitle_number; i++) {
 					sprintf(tmp_str, "subtitle%d", i);
-					strcpy(tmp_str, get_config_string (section_name,
-						tmp_str, "0,0,"));
+					get_config_string (section_name, tmp_str, "0,0,", tmp_str);
 
 					sscanf(tmp_str, "%d,%d",
 						&CD_track[current_track].subtitle[i].StartTime,

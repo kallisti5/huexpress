@@ -21,8 +21,9 @@
 void set_config_file (const char *filename);
 void set_config_file_back (void);
 
-char*
-get_config_string(char *section, char *keyword, char *default_value);
+void get_config_string(char *section, char *keyword, char *default_value,
+	char* result);
+int get_config_int(char *section, char *keyword, int default_value);
 
 void parse_INIfile();
 /* check the configuration file for options
