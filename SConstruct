@@ -26,6 +26,8 @@ env = conf.Finish()
 
 env.Append(CPPPATH = ['#src/includes/', '#src/engine/'])
 env.Append(LIBS = ['-lSDL_ttf', '-lz', '-lvorbisfile'])
+env.Append(CFLAGS = ['-g'])
+env.Append(LINKFLAGS = ['-g'])
 
 Export("env")
 SConscript('src/SConscript')
