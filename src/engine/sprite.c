@@ -25,7 +25,7 @@
 
 
 #undef TRACE
-#ifdef ENABLE_TRACING_GFX
+#if ENABLE_TRACING_GFX
  	#define TRACE(x...) printf("TraceSprite: " x)
 #else
  	#define TRACE(x...)
