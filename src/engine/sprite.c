@@ -94,7 +94,7 @@ CheckSprites (void)
 static void
 plane2pixel (int no)
 {
-	unsigned long M;
+	unsigned int M;
 	UChar *C = VRAM + no * 32;
 	UInt32 L;
 	UChar *C2 = VRAM2 + no * 8 * 4;
@@ -149,7 +149,7 @@ sp2pixel (int no)
 	C2 = &VRAMS[no * 32 * 4];
 	// 2 longs -> 16 nibbles => 32 loops for a 16*16 spr
 	for (i = 0; i < 32; i++, C++, C2 += 4) {
-		long L;
+		int L;
 		M = C[0];
 		L = ((M & 0x88) >> 3)
 			| ((M & 0x44) << 6) | ((M & 0x22) << 15) | ((M & 0x11) << 24);
@@ -249,11 +249,12 @@ RefreshLine (int Y1, int Y2)
 				C = VRAM + (no * 32 + offset * 2);
 				P = PP;
 				for (i = 0; i < h; i++, P += XBUF_WIDTH, C2 += 4, C += 2) {
-					unsigned long L;
+					unsigned int L;
 					UChar J;
 					J = (C[0] | C[1] | C[16] | C[17]);
 					if (!J)
 						continue;
+
 					L = C2[0] + (C2[1] << 8) + (C2[2] << 16) + (C2[3] << 24);
 					if (J & 0x80)
 						P[0] = PAL((L >> 4) & 15);
@@ -297,7 +298,7 @@ RefreshLine (int Y1, int Y2)
 		Description: convert a sprite from VRAM to normal format
 		Parameters: UChar *P (the place where to draw i.e. XBuf[...])
 								UChar *C (the buffer toward the sprite to draw)
-								unsigned long *C2 (the buffer of precalculated sprite)
+								UChar *C2 (the buffer of precalculated sprite)
 								UChar *R (address of the palette of this sprite [in PAL] )
 								int h (the number of line to draw)
 								int inc (the value to increment the sprite buffer)
@@ -360,11 +361,11 @@ PutSprite (UChar * P, UChar * C, UChar * C2, UChar * R, int h, int inc)
 
 
 void
-PutSpriteHandleFull (UChar * P, UChar * C, unsigned long *C2, UChar * R,
+PutSpriteHandleFull (UChar * P, UChar * C, UChar *C2, UChar * R,
 	int h, int inc)
 {
 	int i, J;
-	unsigned long L;
+	unsigned int L;
 	for (i = 0; i < h; i++, C += inc, C2 += inc, P += XBUF_WIDTH) {
 		J = (C[0] + (C[1] << 8)) | (C[32] + (C[33] << 8)) | (C[64]
 			+ (C[65] << 8)) | (C[96] + (C[97] << 8));
@@ -437,11 +438,11 @@ PutSpriteHandleFull (UChar * P, UChar * C, unsigned long *C2, UChar * R,
 
 
 static void
-PutSpriteHflip (UChar * P, UChar * C, unsigned long *C2, UChar * R, int h,
+PutSpriteHflip (UChar * P, UChar * C, UChar *C2, UChar * R, int h,
 	int inc)
 {
 	int i, J;
-	unsigned long L;
+	unsigned int L;
 	for (i = 0; i < h; i++, C += inc, C2 += inc, P += XBUF_WIDTH) {
 		J = (C[0] + (C[1] << 8)) | (C[32] + (C[33] << 8))
 			| (C[64] + (C[65] << 8)) | (C[96] + (C[97] << 8));
@@ -497,7 +498,7 @@ PutSpriteHflip (UChar * P, UChar * C, unsigned long *C2, UChar * R, int h,
 		Parameters:
 			UChar *P : A Pointer in the buffer where we got to draw the sprite
 			UChar *C : A pointer in the video mem where data are available
-			unsigned long *C2 : A pointer in the VRAMS mem
+			UChar *C2 : A pointer in the VRAMS mem
 			UChar *R	: A pointer to the current palette
 			int h : height of the sprite
 			int inc : value of the incrementation for the data
@@ -510,7 +511,7 @@ PutSpriteM (UChar * P, UChar * C, UChar * C2, UChar * R, int h, int inc,
 	UChar * M, UChar pr)
 {
 	int i, J;
-	unsigned long L;
+	unsigned int L;
 	for (i = 0; i < h; i++, C += inc, C2 += inc * 4,
 		P += XBUF_WIDTH, M += XBUF_WIDTH) {
 		J = (C[0] + (C[1] << 8)) | (C[32] + (C[33] << 8))
@@ -570,7 +571,7 @@ PutSpriteHflipM (UChar * P, UChar * C, UChar * C2, UChar * R, int h,
 	int inc, UChar * M, UChar pr)
 {
 	int i, J;
-	unsigned long L;
+	unsigned int L;
 	for (i = 0; i < h; i++, C += inc, C2 += inc * 4,
 		P += XBUF_WIDTH, M += XBUF_WIDTH) {
 		J = (C[0] + (C[1] << 8)) | (C[32] + (C[33] << 8)) | (C[64]
@@ -628,7 +629,7 @@ PutSpriteMakeMask (UChar * P, UChar * C, UChar * C2, UChar * R, int h,
 {
 	int i;
 	UInt16 J;
-	unsigned long L;
+	unsigned int L;
 	for (i = 0; i < h; i++, C += inc, C2 += inc * 4,
 		P += XBUF_WIDTH, M += XBUF_WIDTH) {
 
@@ -731,7 +732,7 @@ PutSpriteHflipMakeMask (UChar * P, UChar * C, UChar * C2, UChar * R,
 	int h, int inc, UChar * M, UChar pr)
 {
 	int i, J;
-	unsigned long L;
+	unsigned int L;
 	for (i = 0; i < h; i++, C += inc, C2 += inc * 4,
 		P += XBUF_WIDTH, M += XBUF_WIDTH) {
 		J = (C[0] + (C[1] << 8)) | (C[32] + (C[33] << 8))
