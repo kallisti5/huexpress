@@ -32,16 +32,16 @@
 #endif
 
 
-UChar BGONSwitch = 1;
+uchar BGONSwitch = 1;
 // do we have to draw background ?
 
-UChar SPONSwitch = 1;
+uchar SPONSwitch = 1;
 // Do we have to draw sprites ?
 
-UInt32 spr_init_pos[1024];
+uint32 spr_init_pos[1024];
 // cooked initial position of sprite
 
-void (*RefreshSprite) (int Y1, int Y2, UChar bg);
+void (*RefreshSprite) (int Y1, int Y2, uchar bg);
 
 int ScrollYDiff;
 int oldScrollX;
@@ -49,8 +49,8 @@ int oldScrollY;
 int oldScrollYDiff;
 
 // Actual memory area where the gfx functions are drawing sprites and tiles
-UChar SPM_raw[XBUF_WIDTH * XBUF_HEIGHT];
-static UChar *SPM = SPM_raw + XBUF_WIDTH * 64 + 32;
+uchar SPM_raw[XBUF_WIDTH * XBUF_HEIGHT];
+static uchar *SPM = SPM_raw + XBUF_WIDTH * 64 + 32;
 
 int frame = 0;
 // number of frame displayed
@@ -58,7 +58,7 @@ int frame = 0;
 /*
 	Hit Chesk Sprite#0 and others
 */
-SInt32
+int32
 CheckSprites (void)
 {
 	int i, x0, y0, w0, h0, x, y, w, h;
@@ -95,9 +95,9 @@ static void
 plane2pixel (int no)
 {
 	unsigned int M;
-	UChar *C = VRAM + no * 32;
-	UInt32 L;
-	UChar *C2 = VRAM2 + no * 8 * 4;
+	uchar *C = VRAM + no * 32;
+	uint32 L;
+	uchar *C2 = VRAM2 + no * 8 * 4;
 	int j;
 	TRACE("Planing tile %d\n", no);
 	for (j = 0; j < 8; j++, C += 2, C2 += 4) {
@@ -141,9 +141,9 @@ plane2pixel (int no)
 static void
 sp2pixel (int no)
 {
-	UChar M;
-	UChar *C;
-	UChar *C2;
+	uchar M;
+	uchar *C;
+	uchar *C2;
 	int i;
 	C = &VRAM[no * 128];
 	C2 = &VRAMS[no * 32 * 4];
@@ -189,7 +189,7 @@ RefreshLine (int Y1, int Y2)
 	int X1, XW, Line;
 	int x, y, h, offset, Shift;
 
-	UChar *PP;
+	uchar *PP;
 	Y2++;
 
 #if ENABLE_TRACING_GFX
@@ -218,8 +218,8 @@ RefreshLine (int Y1, int Y2)
 			x = ScrollX / 8;
 			y &= io.bg_h - 1;
 			for (X1 = 0; X1 < XW; X1++, x++, PP += 8) {
-				UChar *R, *P, *C;
-				UChar *C2;
+				uchar *R, *P, *C;
+				uchar *C2;
 				int no, i;
 				x &= io.bg_w - 1;
 
@@ -227,7 +227,7 @@ RefreshLine (int Y1, int Y2)
 				no = VRAM[(x + y * io.bg_w) << 1]
 					+ (VRAM[((x + y * io.bg_w) << 1) + 1] << 8);
 				#else
-				no = ((UInt16 *) VRAM)[x + y * io.bg_w];
+				no = ((uint16 *) VRAM)[x + y * io.bg_w];
 				#endif
 
 				R = &Pal[(no >> 12) * 16];
@@ -250,7 +250,7 @@ RefreshLine (int Y1, int Y2)
 				P = PP;
 				for (i = 0; i < h; i++, P += XBUF_WIDTH, C2 += 4, C += 2) {
 					unsigned int L;
-					UChar J;
+					uchar J;
 					J = (C[0] | C[1] | C[16] | C[17]);
 					if (!J)
 						continue;
@@ -296,27 +296,27 @@ RefreshLine (int Y1, int Y2)
 		Function: PutSprite
 
 		Description: convert a sprite from VRAM to normal format
-		Parameters: UChar *P (the place where to draw i.e. XBuf[...])
-								UChar *C (the buffer toward the sprite to draw)
-								UChar *C2 (the buffer of precalculated sprite)
-								UChar *R (address of the palette of this sprite [in PAL] )
+		Parameters: uchar *P (the place where to draw i.e. XBuf[...])
+								uchar *C (the buffer toward the sprite to draw)
+								uchar *C2 (the buffer of precalculated sprite)
+								uchar *R (address of the palette of this sprite [in PAL] )
 								int h (the number of line to draw)
 								int inc (the value to increment the sprite buffer)
 		Return: nothing
 
 *****************************************************************************/
 void
-PutSprite (UChar * P, UChar * C, UChar * C2, UChar * R, int h, int inc)
+PutSprite (uchar * P, uchar * C, uchar * C2, uchar * R, int h, int inc)
 {
 	int i, J;
-	UInt32 L;
+	uint32 L;
 	for (i = 0; i < h; i++, C += inc, C2 += inc * 4, P += XBUF_WIDTH) {
 		#if defined(WORDS_BIGENDIAN)
 		J = (C[0] + (C[1] << 8)) | (C[32] + (C[33] << 8))
 			| (C[64] + (C[65] << 8)) | (C[96] + (C[97] << 8));
 		#else
-		J = ((UInt16 *) C)[0] | ((UInt16 *) C)[16]
-			| ((UInt16 *) C)[32] | ((UInt16 *)C)[48];
+		J = ((uint16 *) C)[0] | ((uint16 *) C)[16]
+			| ((uint16 *) C)[32] | ((uint16 *)C)[48];
 		#endif
 
 		if (!J)
@@ -361,7 +361,7 @@ PutSprite (UChar * P, UChar * C, UChar * C2, UChar * R, int h, int inc)
 
 
 void
-PutSpriteHandleFull (UChar * P, UChar * C, UChar *C2, UChar * R,
+PutSpriteHandleFull (uchar * P, uchar * C, uchar *C2, uchar * R,
 	int h, int inc)
 {
 	int i, J;
@@ -370,8 +370,8 @@ PutSpriteHandleFull (UChar * P, UChar * C, UChar *C2, UChar * R,
 		J = (C[0] + (C[1] << 8)) | (C[32] + (C[33] << 8)) | (C[64]
 			+ (C[65] << 8)) | (C[96] + (C[97] << 8));
 		#if 0
-		J = ((UInt16 *) C)[0] | ((UInt16 *) C)[16] | ((UInt16 *) C)[32]
-			| ((UInt16 *)C)[48];
+		J = ((uint16 *) C)[0] | ((uint16 *) C)[16] | ((uint16 *) C)[32]
+			| ((uint16 *)C)[48];
 		#endif
 		if (!J)
 			continue;
@@ -438,7 +438,7 @@ PutSpriteHandleFull (UChar * P, UChar * C, UChar *C2, UChar * R,
 
 
 static void
-PutSpriteHflip (UChar * P, UChar * C, UChar *C2, UChar * R, int h,
+PutSpriteHflip (uchar * P, uchar * C, uchar *C2, uchar * R, int h,
 	int inc)
 {
 	int i, J;
@@ -447,8 +447,8 @@ PutSpriteHflip (UChar * P, UChar * C, UChar *C2, UChar * R, int h,
 		J = (C[0] + (C[1] << 8)) | (C[32] + (C[33] << 8))
 			| (C[64] + (C[65] << 8)) | (C[96] + (C[97] << 8));
 		#if 0
-		J = ((UInt16 *) C)[0] | ((UInt16 *) C)[16] | ((UInt16 *) C)[32]
-			| ((UInt16 *)C)[48];
+		J = ((uint16 *) C)[0] | ((uint16 *) C)[16] | ((uint16 *) C)[32]
+			| ((uint16 *)C)[48];
 		#endif
 		if (!J)
 			continue;
@@ -496,19 +496,19 @@ PutSpriteHflip (UChar * P, UChar * C, UChar *C2, UChar * R, int h,
 
 		Description: Display a sprite considering priority
 		Parameters:
-			UChar *P : A Pointer in the buffer where we got to draw the sprite
-			UChar *C : A pointer in the video mem where data are available
-			UChar *C2 : A pointer in the VRAMS mem
-			UChar *R	: A pointer to the current palette
+			uchar *P : A Pointer in the buffer where we got to draw the sprite
+			uchar *C : A pointer in the video mem where data are available
+			uchar *C2 : A pointer in the VRAMS mem
+			uchar *R	: A pointer to the current palette
 			int h : height of the sprite
 			int inc : value of the incrementation for the data
-			UChar* M :
+			uchar* M :
 			Return:
 
 *****************************************************************************/
 void
-PutSpriteM (UChar * P, UChar * C, UChar * C2, UChar * R, int h, int inc,
-	UChar * M, UChar pr)
+PutSpriteM (uchar * P, uchar * C, uchar * C2, uchar * R, int h, int inc,
+	uchar * M, uchar pr)
 {
 	int i, J;
 	unsigned int L;
@@ -518,8 +518,8 @@ PutSpriteM (UChar * P, UChar * C, UChar * C2, UChar * R, int h, int inc,
 			| (C[64] + (C[65] << 8)) | (C[96] + (C[97] << 8));
 
 		#if 0
-		J = ((UInt16 *) C)[0] | ((UInt16 *) C)[16] | ((UInt16 *) C)[32]
-			| ((UInt16 *)C)[48];
+		J = ((uint16 *) C)[0] | ((uint16 *) C)[16] | ((uint16 *) C)[32]
+			| ((uint16 *)C)[48];
 		#endif
 		// fprintf(stderr, "Masked : %lX\n", J);
 		if (!J)
@@ -567,8 +567,8 @@ PutSpriteM (UChar * P, UChar * C, UChar * C2, UChar * R, int h, int inc,
 
 
 static void
-PutSpriteHflipM (UChar * P, UChar * C, UChar * C2, UChar * R, int h,
-	int inc, UChar * M, UChar pr)
+PutSpriteHflipM (uchar * P, uchar * C, uchar * C2, uchar * R, int h,
+	int inc, uchar * M, uchar pr)
 {
 	int i, J;
 	unsigned int L;
@@ -577,8 +577,8 @@ PutSpriteHflipM (UChar * P, UChar * C, UChar * C2, UChar * R, int h,
 		J = (C[0] + (C[1] << 8)) | (C[32] + (C[33] << 8)) | (C[64]
 			+ (C[65] << 8)) | (C[96] + (C[97] << 8));
 		#if 0
-		J = ((UInt16 *) C)[0] | ((UInt16 *) C)[16] | ((UInt16 *) C)[32]
-			| ((UInt16*)C)[48];
+		J = ((uint16 *) C)[0] | ((uint16 *) C)[16] | ((uint16 *) C)[32]
+			| ((uint16*)C)[48];
 		#endif
 		if (!J)
 			continue;
@@ -624,32 +624,32 @@ PutSpriteHflipM (UChar * P, UChar * C, UChar * C2, UChar * R, int h,
 
 
 void
-PutSpriteMakeMask (UChar * P, UChar * C, UChar * C2, UChar * R, int h,
-	int inc, UChar * M, UChar pr)
+PutSpriteMakeMask (uchar * P, uchar * C, uchar * C2, uchar * R, int h,
+	int inc, uchar * M, uchar pr)
 {
 	int i;
-	UInt16 J;
+	uint16 J;
 	unsigned int L;
 	for (i = 0; i < h; i++, C += inc, C2 += inc * 4,
 		P += XBUF_WIDTH, M += XBUF_WIDTH) {
 
 		#if 0
-		J = ((UInt16 *) C)[0] | ((UInt16 *) C)[16] | ((UInt16 *) C)[32]
-			| ((UInt16 *)C)[48];
+		J = ((uint16 *) C)[0] | ((uint16 *) C)[16] | ((uint16 *) C)[32]
+			| ((uint16 *)C)[48];
 		#endif
 
 		J =	(C[0] + (C[1] << 8)) | (C[32] + (C[33] << 8)) | (C[64] +
 			+ (C[65] << 8)) | (C[96] + (C[97] << 8));
 
 		#if 0
-		if ((UInt16)J != (UInt16)((C[0] + (C[1] << 8)) | (C[32] + (C[33] << 8))
+		if ((uint16)J != (uint16)((C[0] + (C[1] << 8)) | (C[32] + (C[33] << 8))
 			| (C[64] + (C[65] << 8)) | (C[92] + (C[93] << 8)))) {
 			Log("J != ... ( 0x%x != 0x%x )\n", J, (C[0] + (C[1] << 8)) | (C[32] + (C[33] << 8)) | (C[64] + (C[65] << 8)) | (C[92] + (C[93] << 8)));
-			Log("((UInt16 *) C)[0] = %x\t(C[0] + (C[1] << 8)) = %x\n", ((UInt16 *) C)[0], (C[0] + (C[1] << 8)));
-			Log("((UInt16 *) C)[16] = %x\t(C[32] + (C[33] << 8)) = %x\n", ((UInt16 *) C)[16], (C[32] + (C[33] << 8)));
-			Log("((UInt16 *) C)[32] = %x\t(C[64] + (C[65] << 8)) = %x\n", ((UInt16 *) C)[32], (C[64] + (C[65] << 8)));
-			Log("((UInt16 *) C)[48] = %x\t(C[92] + (C[93] << 8)) = %x\n", ((UInt16 *) C)[48], (C[92] + (C[93] << 8)));
-			Log("& ((UInt16 *) C)[48] = %p\t&C[92] = %p\n", & ((UInt16 *) C)[48], & C[92] );
+			Log("((uint16 *) C)[0] = %x\t(C[0] + (C[1] << 8)) = %x\n", ((uint16 *) C)[0], (C[0] + (C[1] << 8)));
+			Log("((uint16 *) C)[16] = %x\t(C[32] + (C[33] << 8)) = %x\n", ((uint16 *) C)[16], (C[32] + (C[33] << 8)));
+			Log("((uint16 *) C)[32] = %x\t(C[64] + (C[65] << 8)) = %x\n", ((uint16 *) C)[32], (C[64] + (C[65] << 8)));
+			Log("((uint16 *) C)[48] = %x\t(C[92] + (C[93] << 8)) = %x\n", ((uint16 *) C)[48], (C[92] + (C[93] << 8)));
+			Log("& ((uint16 *) C)[48] = %p\t&C[92] = %p\n", & ((uint16 *) C)[48], & C[92] );
 		}
 		#endif
 
@@ -728,8 +728,8 @@ PutSpriteMakeMask (UChar * P, UChar * C, UChar * C2, UChar * R, int h,
 
 
 static void
-PutSpriteHflipMakeMask (UChar * P, UChar * C, UChar * C2, UChar * R,
-	int h, int inc, UChar * M, UChar pr)
+PutSpriteHflipMakeMask (uchar * P, uchar * C, uchar * C2, uchar * R,
+	int h, int inc, uchar * M, uchar pr)
 {
 	int i, J;
 	unsigned int L;
@@ -738,8 +738,8 @@ PutSpriteHflipMakeMask (UChar * P, UChar * C, UChar * C2, UChar * R,
 		J = (C[0] + (C[1] << 8)) | (C[32] + (C[33] << 8))
 			| (C[64] + (C[65] << 8)) | (C[96] + (C[97] << 8));
 		#if 0
-		J = ((UInt16 *) C)[0] | ((UInt16 *) C)[16] | ((UInt16 *) C)[32]
-			| ((UInt16 *)C)[48];
+		J = ((uint16 *) C)[0] | ((uint16 *) C)[16] | ((uint16 *) C)[32]
+			| ((uint16 *)C)[48];
 		#endif
 		if (!J)
 			continue;
@@ -819,12 +819,12 @@ PutSpriteHflipMakeMask (UChar * P, UChar * C, UChar * C2, UChar * R,
 		Function: RefreshSpriteExact
 
 		Description: draw all sprites between two lines, with the normal method
-		Parameters: int Y1, int Y2 (the 'ordonee' to draw between), UChar bg (do we draw fg or bg sprites)
+		Parameters: int Y1, int Y2 (the 'ordonee' to draw between), uchar bg (do we draw fg or bg sprites)
 		Return: absolutly nothing
 
 *****************************************************************************/
 void
-RefreshSpriteExact (int Y1, int Y2, UChar bg)
+RefreshSpriteExact (int Y1, int Y2, uchar bg)
 {
 	int n;
 	SPR *spr;
@@ -840,8 +840,8 @@ RefreshSpriteExact (int Y1, int Y2, UChar bg)
 
 	for (n = 0; n < 64; n++, spr--) {
 		int x, y, no, atr, inc, cgx, cgy;
-		UChar *R, *C;
-		UChar *C2;
+		uchar *R, *C;
+		uchar *C2;
 		int pos;
 		int h, t, i, j;
 		int y_sum;
@@ -984,7 +984,7 @@ RefreshScreen (void)
 	/*
 	{
 	char* spr = SPRAM;
-	UInt32 CRC = -1;
+	uint32 CRC = -1;
 	int index;
 	for (index = 0; index < 64 * sizeof(SPR); index++) {
 		spr[index] ^= CRC;
@@ -994,8 +994,8 @@ RefreshScreen (void)
 	Log("frame %d : CRC = %X\n", frame, CRC);
 
 	{
-		char* spr = ((UInt16*)VRAM) + 2048;
-		UInt32 CRC = -1;
+		char* spr = ((uint16*)VRAM) + 2048;
+		uint32 CRC = -1;
 		int index;
 		for (index = 0; index < 64 * sizeof(SPR); index++) {
 			char tmp = spr[index];
@@ -1026,7 +1026,7 @@ RefreshScreen (void)
 	*/
 	{
 		int index;
-		unsigned char tmp_data;
+		uchar tmp_data;
 		unsigned int CRC = 0xFFFFFFFF;
 
 		for (index = 0; index < 0x10000; index++) {
@@ -1046,7 +1046,7 @@ RefreshScreen (void)
 	/*
 	{
 		int index;
-		unsigned char tmp_data;
+		uchar tmp_data;
 		unsigned int CRC = 0xFFFFFFFF;
 
 		for (index = 0; index < 256; index++) {

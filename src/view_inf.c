@@ -16,9 +16,9 @@
 
 #if defined(ALLEGRO)
 
-static UChar page = 0;
+static uchar page = 0;
 
-static UChar out = 0;
+static uchar out = 0;
 
 void (*info_display[MAX_PAGES]) () =
 {
@@ -37,7 +37,7 @@ void (*info_display[MAX_PAGES])();
 	
 #endif
 	
-UChar nb_choices[MAX_PAGES] = { 11,
+uchar nb_choices[MAX_PAGES] = { 11,
   12
 };
 
@@ -123,9 +123,9 @@ void
 display_reg ()
 {
   char *tmp_buf = (char *) alloca (100);
-  UInt32 i, j;
-  UChar page1, page2;
-  UInt16 stack = Rd6502 (0x2000) + 256 * Rd6502 (0x2001);
+  uint32 i, j;
+  uchar page1, page2;
+  uint16 stack = Rd6502 (0x2000) + 256 * Rd6502 (0x2001);
   // __stack is now at 0x2000 but it's not absolutely compulsory
 
   clear (screen);
@@ -138,8 +138,8 @@ display_reg ()
   textoutshadow (screen, font, tmp_buf, blit_x, blit_y + 10, 3, 2, 1, 1);
 
   sprintf (tmp_buf, " A:X = %04X   [__stack] = %04X",
-	   (UInt16) (M.A * 256 + M.X),
-	   (UInt16) (Rd6502 (stack) + Rd6502 (stack + 1) * 256));
+	   (uint16) (M.A * 256 + M.X),
+	   (uint16) (Rd6502 (stack) + Rd6502 (stack + 1) * 256));
   textoutshadow (screen, font, tmp_buf, blit_x, blit_y + 20, 3, 2, 1, 1);
 
   for (i = 0; i < 8; i += 2)
@@ -230,9 +230,9 @@ void
 display_reg ()
 {
   char *tmp_buf = (char *) alloca (100);
-  UInt32 i, j;
-  UChar page1, page2;
-  UInt16 stack = Rd6502 (0x2000) + 256 * Rd6502 (0x2001);
+  uint32 i, j;
+  uchar page1, page2;
+  uint16 stack = Rd6502 (0x2000) + 256 * Rd6502 (0x2001);
   // __stack is now at 0x2000 but it's not absolutely compulsory
 
   clear (screen);
@@ -245,8 +245,8 @@ display_reg ()
   textoutshadow (screen, font, tmp_buf, blit_x, blit_y + 10, 3, 2, 1, 1);
 
   sprintf (tmp_buf, " A:X = %04X   [__stack] = %04X",
-           (UInt16) (reg_a * 256 + reg_x),
-	   (UInt16) (Rd6502 (stack) + Rd6502 (stack + 1) * 256));
+           (uint16) (reg_a * 256 + reg_x),
+	   (uint16) (Rd6502 (stack) + Rd6502 (stack + 1) * 256));
   textoutshadow (screen, font, tmp_buf, blit_x, blit_y + 20, 3, 2, 1, 1);
 
   for (i = 0; i < 8; i += 2)
@@ -332,7 +332,7 @@ display_reg ()
 #endif
 
 void 
-display_satb(UChar number_page, UChar index_low, UChar index_mid, UChar index_hi)
+display_satb(uchar number_page, uchar index_low, uchar index_mid, uchar index_hi)
 {
  int i;
  char* tmp_buf=(char*)alloca(100);
@@ -441,10 +441,10 @@ display_satb8()
 void
 display_pattern ()
 {
-  unsigned char no = 0;
-  unsigned char inc = 2, h = 16, j = 0;
-  unsigned char *R = &SPal[(((SPR *) SPRAM)[0].atr & 15) * 16];
-  unsigned char *C;
+  uchar no = 0;
+  uchar inc = 2, h = 16, j = 0;
+  uchar *R = &SPal[(((SPR *) SPRAM)[0].atr & 15) * 16];
+  uchar *C;
   char *tmp_buf = (char *) alloca (100);
   unsigned long *C2;
 /*

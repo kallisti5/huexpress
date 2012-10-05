@@ -1,7 +1,7 @@
 #ifndef _INCLUDE_OSD_SND_H
 #define _INCLUDE_OSD_SND_H
 
-#include "cleantyp.h"
+#include "cleantypes.h"
 #include "sys_snd.h"
 #include "sound.h"
 

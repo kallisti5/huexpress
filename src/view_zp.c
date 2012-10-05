@@ -124,7 +124,7 @@ view_zp ()
 
 #ifdef ALLEGRO
   BITMAP *bg;
-  unsigned char line, col;
+  uchar line, col;
   char *tmp_buf = (char *) alloca (100);
   unsigned short dum;
 

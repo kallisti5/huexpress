@@ -5,7 +5,7 @@
  * to make a port of Hu-Go! on various platforms
  */
 
-#include "cleantyp.h"
+#include "cleantypes.h"
 #include "sys_cd.h"
 #include "sys_inp.h"
 #include "sys_gfx.h"

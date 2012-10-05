@@ -45,7 +45,7 @@
 #define STEPPING  1
 #define TRACING   2
 
-extern UChar running_mode;
+extern uchar running_mode;
 
 int disassemble();
 

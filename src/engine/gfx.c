@@ -26,14 +26,14 @@
 #include "config.h"
 
 typedef struct {
-  UChar r,g,b;
+  uchar r,g,b;
 } rgb_map_struct;
 
 rgb_map_struct rgb_map[256];
 
 void SetPalette(void)
 {
-  UChar i;
+  uchar i;
 
   osd_gfx_set_color(255, 0x3f, 0x3f, 0x3f);
   rgb_map[255].r = 255;
@@ -194,8 +194,8 @@ TRACE("GFX: Adding vdw to the height of graphics, cur_display = %d\n", cur_displ
     }
   */
 
-  io.vdc_min_display = (UInt16)min_display;
-  io.vdc_max_display = (UInt16)max_display;
+  io.vdc_min_display = (uint16)min_display;
+  io.vdc_max_display = (uint16)max_display;
 
   //! Number of lines to render
   io.screen_h = max_display - min_display + 1;
@@ -357,14 +357,14 @@ render_lines(int min_line, int max_line)
    - sprite #0 collision checking (occur as soon as the sprite #0 is shown and overlap another sprite
    - frame skipping to test
 */
-UChar
+uchar
 Loop6502()
 {
   static int video_dump_countdown = 0;
   static int display_counter = 0;
   static int last_display_counter = 0;
   static int satb_dma_counter = 0;
-  UChar return_value = INT_NONE;
+  uchar return_value = INT_NONE;
 
   io.vdc_status &= ~(VDC_RasHit | VDC_SATBfinish);
 
@@ -391,7 +391,7 @@ Loop6502()
     {
       if (((io.VDC[RCR].W & 0x3FF) >= 0x40) && ((io.VDC[RCR].W & 0x3FF) <= 0x146))
         {
-          UInt16 temp_rcr = (UInt16)((io.VDC[RCR].W & 0x3FF) - 0x40);
+          uint16 temp_rcr = (uint16)((io.VDC[RCR].W & 0x3FF) - 0x40);
 
           if (scanline == (temp_rcr + io.VDC[VPR].B.l + io.VDC[VPR].B.h) % 263)
             {
@@ -591,7 +591,7 @@ int video_dump_flag = 0;
 void dump_uyvy_frame(char* output_buffer)
 {
   int x,y;
-  UChar* xbuf_pointer;
+  uchar* xbuf_pointer;
 
   xbuf_pointer = osd_gfx_buffer;
 
@@ -610,7 +610,7 @@ void dump_uyvy_frame(char* output_buffer)
 void dump_yyuv_frame(char* output_buffer)
 {
   int x,y;
-  UChar* xbuf_pointer;
+  uchar* xbuf_pointer;
 
   xbuf_pointer = osd_gfx_buffer;
 
@@ -628,7 +628,7 @@ void dump_yyuv_frame(char* output_buffer)
 void dump_rgb_frame(char* output_buffer)
 {
   int x,y;
-  UChar* xbuf_pointer;
+  uchar* xbuf_pointer;
 
   xbuf_pointer = osd_gfx_buffer;
 
@@ -645,7 +645,7 @@ void dump_rgb_frame(char* output_buffer)
 void dump_raw_frame(char* output_buffer)
 {
   int y;
-  UChar* xbuf_pointer;
+  uchar* xbuf_pointer;
 
   xbuf_pointer = osd_gfx_buffer;
 
@@ -658,7 +658,7 @@ void dump_raw_frame(char* output_buffer)
 void dump_uyv_frame_separated(char* output_buffer_u, char* output_buffer_y, char* output_buffer_v)
 {
   int x,y;
-  UChar* xbuf_pointer;
+  uchar* xbuf_pointer;
 
   xbuf_pointer = osd_gfx_buffer;
 
@@ -974,7 +974,7 @@ void stop_dump_video()
 
 static FILE* video_output_file = NULL;
 static unsigned int old_dump_crc = (unsigned)-1;
-static UInt16 old_screen_w, old_screen_h;
+static uint16 old_screen_w, old_screen_h;
 
 static int video_frame_total, video_frame_skipped;
 
@@ -1018,7 +1018,7 @@ void dump_video_frame()
 {
   char* frame_buffer;
   int index;
-  unsigned char tmp_data;
+  uchar tmp_data;
   unsigned int CRC = (unsigned)0xFFFFFFFF;
 
   if (video_output_file == NULL)
@@ -1034,15 +1034,15 @@ void dump_video_frame()
   // Compute the rendered buffer CRC
   for (index = 0; index < ((io.screen_w & ~1) * (io.screen_h & ~1)); index++)
     {
-      tmp_data = (unsigned char)frame_buffer[index];
+      tmp_data = (uchar)frame_buffer[index];
       tmp_data ^= CRC;
       CRC >>= 8;
       CRC ^= TAB_CONST[tmp_data];
     }
 
-  if ((old_screen_w != (UInt16)(io.screen_w & ~1)) || (old_screen_h != (UInt16)(io.screen_h & ~1)) || (CRC != old_dump_crc))
+  if ((old_screen_w != (uint16)(io.screen_w & ~1)) || (old_screen_h != (uint16)(io.screen_h & ~1)) || (CRC != old_dump_crc))
     {
-      UInt16 dum;
+      uint16 dum;
 
       dum = htons(io.screen_w & ~1);
       (void)fwrite(&dum, 2, 1, video_output_file);
@@ -1055,7 +1055,7 @@ void dump_video_frame()
     }
   else
     {
-      UInt32 dum;
+      uint32 dum;
 
       dum = 0;
 
@@ -1065,8 +1065,8 @@ void dump_video_frame()
     }
 
   free(frame_buffer);
-  old_screen_h = (UInt16)(io.screen_h & ~1);
-  old_screen_w = (UInt16)(io.screen_w & ~1);
+  old_screen_h = (uint16)(io.screen_h & ~1);
+  old_screen_w = (uint16)(io.screen_w & ~1);
   old_dump_crc = CRC;
   video_frame_total ++;
 }

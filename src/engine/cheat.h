@@ -21,13 +21,13 @@ int savegame();
 
 typedef struct {
        unsigned short position;
-		 unsigned char value;
+		 uchar value;
 		 } freezed_value;
 
 extern freezed_value list_to_freeze[MAX_FREEZED_VALUE];
 /* List of all the value to freeze */
 
-extern unsigned char current_freezed_values;
+extern uchar current_freezed_values;
 /* Current number of values to freeze */
 
 int freeze_value (void);

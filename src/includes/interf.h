@@ -7,7 +7,7 @@
 #include "pce.h"
 #include <math.h>
 
-UChar gui();
+uchar gui();
 // This function calls a true GUI allowing to change options, etc...
 
 extern char skin_filename[256];

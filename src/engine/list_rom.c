@@ -9705,11 +9705,11 @@ unsigned long pack_filesize(PACKFILE *F)
    }
 */
 
-UInt32 CRC_file (char *name)
+uint32 CRC_file (char *name)
 {
   FILE *F = fopen (name, "rb");
-  UChar *tmp_data;
-  UInt32 taille, index, CRC = -1, true_size;
+  uchar *tmp_data;
+  uint32 taille, index, CRC = -1, true_size;
 
   if (!F)
     return -1;
@@ -9721,7 +9721,7 @@ UInt32 CRC_file (char *name)
       //fprintf(stderr,"HEADER OF 0X%X BYTES\n",taille & 0x0FFF);
       fseek (F, taille & 0x0FFF, SEEK_SET);
     }
-  if (!(tmp_data = (unsigned char *) (malloc (true_size))))
+  if (!(tmp_data = (uchar *) (malloc (true_size))))
     exit (-1);
   fread (tmp_data, true_size, 1, F);
   for (index = 0; index < true_size; index++)

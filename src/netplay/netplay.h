@@ -80,7 +80,7 @@ extern "C"
   void shutdown_network ();
 
   //! Compute the checksum for an array of byte
-  unsigned char compute_checksum (unsigned char *data, int index_min,
+  uchar compute_checksum (uchar *data, int index_min,
 				  int index_max);
 
   //! Return the number of available slots

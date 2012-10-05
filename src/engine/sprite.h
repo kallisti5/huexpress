@@ -2,7 +2,7 @@
 #define _SPRITE_H_
 
 #include "pce.h"
-#include "cleantyp.h"
+#include "cleantypes.h"
 #include "mix.h"
 
 typedef	struct {
@@ -32,10 +32,10 @@ typedef	struct {
  *          1 -> must be drawn verticaly flipped
  */
 
-extern UChar BGONSwitch;
+extern uchar BGONSwitch;
 /* do we have to draw background ? */
 
-extern UChar SPONSwitch;
+extern uchar SPONSwitch;
 /* Do we have to draw sprites ? */
 
 #define	PAL(c)	R[c]
@@ -54,7 +54,7 @@ extern int	oldScrollX;
 extern int	oldScrollY;
 extern int	oldScrollYDiff;
 
-extern UInt32 spr_init_pos[1024];
+extern uint32 spr_init_pos[1024];
 // cooked initial position of sprite
 
 /*
@@ -107,10 +107,10 @@ extern int frame;
 //extern void PutSprite(byte *P,byte *C,unsigned	long *C2,byte *R,int h,int inc);
 // the simplified function
 
-extern void RefreshSpriteExact(int,int,unsigned char);
+extern void RefreshSpriteExact(int,int,uchar);
 // The true refreshing function
 
-extern void (*RefreshSprite)(int Y1,int Y2,unsigned char bg);
+extern void (*RefreshSprite)(int Y1,int Y2,uchar bg);
 // The pointer toward the used function
 
 #endif

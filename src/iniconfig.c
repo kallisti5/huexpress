@@ -221,7 +221,7 @@ void
 read_joy_mapping(void)
 {
 	char tmp_str[10], tmp_str2[10], section_name[10];
-	unsigned char x, y, z;
+	uchar x, y, z;
 	unsigned short temp_val;
 
 	Log ("--[ JOYPAD MAPPING ]-------------------------------\n");
@@ -359,12 +359,12 @@ set_arg(char nb_arg, const char *val) {
 		" Where <GAME> is an pce|iso|zip\n"
 		" Where [arguments] are:\n"
 		"	-cX	Force CD Emulation mode X\n"
-		"   -dX Debug (0-1)\n"
-		"   -eX Eagle mode (0-1)\n"
+		"	-dX Debug (0-1)\n"
+		"	-eX Eagle mode (0-1)\n"
 		"	-f	Fullscreen mode\n"
 		"	-o	Enable overlay mode\n"
 		"	-s	Enable Stereo sound\n"
-		"   -SX Scanline mode (0-1)\n"
+		"	-SX Scanline mode (0-1)\n"
 		"	-zX	Zoom level X (1-4)\n"
 		"\n");
 		return 1;
@@ -694,7 +694,7 @@ save_config (void)
 {
 
 	char config_name[PATH_MAX];
-	unsigned char input_config_number, input_config_button, input_config_player;
+	uchar input_config_number, input_config_button, input_config_player;
 
 	// Reads all variables in the ini file
 	init_config ();

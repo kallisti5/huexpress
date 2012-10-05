@@ -136,7 +136,7 @@ ram_key ()
       break;
     case KEY_SPACE:
       {
-	UInt32 dummy = RAM[selected_byte];
+	uint32 dummy = RAM[selected_byte];
 
 	change_value (
 		      (((selected_byte & 0x04) / 4) * 2 + 6 +
@@ -144,7 +144,7 @@ ram_key ()
 		      (selected_byte - frame_up) / NB_BYTE_LINE * 10 +
 		      blit_y - 1, 2, &dummy);
 
-	RAM[selected_byte] = (UChar) dummy;
+	RAM[selected_byte] = (uchar) dummy;
 
       }
       break;
@@ -193,7 +193,7 @@ edit_ram ()
 #ifdef ALLEGRO
 
   BITMAP *bg;
-  unsigned char line, col;
+  uchar line, col;
   char *tmp_buf = (char *) alloca (100);
   unsigned short dum;
 

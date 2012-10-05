@@ -24,7 +24,7 @@
 #endif
 
 #include <string.h>
-#include "cleantyp.h"
+#include "cleantypes.h"
 #include "pce.h"
 
 extern const char nb_fadein;
@@ -38,7 +38,7 @@ extern void (*fade_in_proc[5])(BITMAP*,unsigned,unsigned,unsigned,unsigned);
 
 #else
 
-extern void (*fade_in_proc[5])(UChar*,unsigned,unsigned,unsigned,unsigned);
+extern void (*fade_in_proc[5])(uchar*,unsigned,unsigned,unsigned,unsigned);
 
 #endif
 

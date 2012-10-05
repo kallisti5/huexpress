@@ -6,7 +6,7 @@
 #ifndef H6280_H_
 #define H6280_H_
 
-#include "cleantyp.h"
+#include "cleantypes.h"
 
 /********************************************/
 /* function parameters:                     */
@@ -266,12 +266,12 @@ extern int tya(void);
 #define	VEC_IRQ2	0xFFF6
 #define	VEC_BRK		0xFFF6
 
-extern UChar flnz_list[256];
+extern uchar flnz_list[256];
 
-inline UChar imm_operand(UInt16 addr);
-inline UChar get_8bit_zp(UChar zp_addr);
-inline UInt16 get_16bit_zp(UChar zp_addr);
-inline void put_8bit_zp(UChar zp_addr, UChar byte);
+inline uchar imm_operand(uint16 addr);
+inline uchar get_8bit_zp(uchar zp_addr);
+inline uint16 get_16bit_zp(uchar zp_addr);
+inline void put_8bit_zp(uchar zp_addr, uchar byte);
 
 
 #if !defined(INLINED_ACCESSORS)
@@ -279,9 +279,9 @@ inline void put_8bit_zp(UChar zp_addr, UChar byte);
 #define put_8bit_addr(addr,byte) Wr6502((addr),(byte))
 #define get_16bit_addr(addr) (Rd6502(addr) + (Rd6502(addr + 1) << 8))
 #else
-inline UChar get_8bit_addr(UInt16 addr);
-inline void put_8bit_addr(UInt16 addr, UChar byte);
-inline UInt16 get_16bit_addr(UInt16 addr);
+inline uchar get_8bit_addr(uint16 addr);
+inline void put_8bit_addr(uint16 addr, uchar byte);
+inline uint16 get_16bit_addr(uint16 addr);
 #endif
 
 #endif

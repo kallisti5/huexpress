@@ -11,7 +11,7 @@ Uint16 read_input (Uint16 port);
 // info about the input config 
 
 Uint8 *key;
-Int16 joy[J_MAX];
+int16 joy[J_MAX];
 
 input_config config[16] = {
 	{  // Config 0
@@ -45,21 +45,21 @@ static UDPpacket *outgoing_packet;
 static IPaddress server_address;
 
 //! Send identification packet(s) until we're sure the server is aware of our needs
-static void send_identification (UChar *);
+static void send_identification (uchar *);
 
 //! Send packet for telling the server what is the status of the current input reading
-static void send_local_status (UChar *);
+static void send_local_status (uchar *);
 
 //! Wait for digest information from server using the lan protocol
-static void wait_lan_digest_status (UChar *);
+static void wait_lan_digest_status (uchar *);
 
 //! Wait for digest information from server using the internet protocol
-static void wait_internet_digest_status (UChar *);
+static void wait_internet_digest_status (uchar *);
 
 
 #endif // ENABLE_NETPLAY
 
-UChar current_config;
+uchar current_config;
 
 // the number of the current config
 char tmp_buf[100];
@@ -81,11 +81,11 @@ SDL_Joystick *joypad[5];
 
 
 /* for keyboard */
-UInt16
-read_input (UInt16 port)
+uint16
+read_input (uint16 port)
 {
 	static char autoI_delay = 0, autoII_delay = 0;
-	UInt16 tmp;
+	uint16 tmp;
 
 	key = SDL_GetKeyState (NULL);
 
@@ -207,10 +207,10 @@ read_input (UInt16 port)
 
 
 void
-sdl_config_joypad_axis(short which, joymap axis, UInt16 * bad_axes,
-	UInt16 num_axes) {
+sdl_config_joypad_axis(short which, joymap axis, uint16 * bad_axes,
+	uint16 num_axes) {
 
-	unsigned char t;
+	uchar t;
 	boolean done = FALSE;
 
 	while (1) {
@@ -270,10 +270,10 @@ sdl_config_joypad_axis(short which, joymap axis, UInt16 * bad_axes,
 
 
 void
-sdl_config_joypad_button (short which, joymap button, UInt16 * bad_buttons,
-	UInt16 num_buttons)
+sdl_config_joypad_button (short which, joymap button, uint16 * bad_buttons,
+	uint16 num_buttons)
 {
-	unsigned char t;
+	uchar t;
 	boolean done = FALSE;
 
 	while (1) {
@@ -340,7 +340,7 @@ void
 sdl_config_joypad (short which)
 {
   int sa;
-  UInt16 *bad_vals, n;
+  uint16 *bad_vals, n;
 
   printf ("    ^ We need to configure this joypad ^\n"
 	  "    Press [ENTER] when ready to begin, [ENTER] can also be used to skip configuration steps.\n");
@@ -352,7 +352,7 @@ sdl_config_joypad (short which)
 #endif
 
   n = SDL_JoystickNumAxes (joypad[which]);
-  bad_vals = (UInt16 *) calloc (sizeof (UInt16), n);
+  bad_vals = (uint16 *) calloc (sizeof (uint16), n);
 
   printf ("    - Press axis to use as x-plane (left/right)\n");
   sdl_config_joypad_axis (which, J_PXAXIS, bad_vals, n);
@@ -363,7 +363,7 @@ sdl_config_joypad (short which)
   free (bad_vals);
 
   n = SDL_JoystickNumButtons (joypad[which]);
-  bad_vals = (UInt16 *) calloc (sizeof (UInt16), n);
+  bad_vals = (uint16 *) calloc (sizeof (uint16), n);
 
   printf ("    - Press button to use for 'RUN'\n");
   sdl_config_joypad_button (which, J_PRUN, bad_vals, n);
@@ -465,7 +465,7 @@ osd_keyboard (void)
 					case SDLK_F12:
 					case SDLK_ASTERISK:
 					{
-						UInt32 sav_timer = timer_60;
+						uint32 sav_timer = timer_60;
 						osd_snd_set_volume(0);
 						disass_menu();
 						osd_snd_set_volume(gen_vol);
@@ -480,7 +480,7 @@ osd_keyboard (void)
 							io.psg_channel_disabled[0]
 								= !io.psg_channel_disabled[0];
 						} else {
-							UInt32 sav_timer = timer_60;
+							uint32 sav_timer = timer_60;
 							osd_snd_set_volume (0);
 							searchbyte ();
 							osd_snd_set_volume(gen_vol);
@@ -496,7 +496,7 @@ osd_keyboard (void)
 							io.psg_channel_disabled[1]
 								= !io.psg_channel_disabled[1];
 						} else {
-							UInt32 sav_timer = timer_60;
+							uint32 sav_timer = timer_60;
 							osd_snd_set_volume (0);
 							pokebyte ();
 							osd_snd_set_volume (gen_vol);
@@ -512,7 +512,7 @@ osd_keyboard (void)
 							io.psg_channel_disabled[2]
 								= !io.psg_channel_disabled[2];
 						} else {
-							UInt32 sav_timer = timer_60;
+							uint32 sav_timer = timer_60;
 							osd_snd_set_volume (0);
 							freeze_value ();
 							osd_snd_set_volume (gen_vol);
@@ -565,7 +565,7 @@ osd_keyboard (void)
 							io.psg_channel_disabled[5]
 								= !io.psg_channel_disabled[5];
 						} else {
-							UInt32 sav_timer = timer_60;
+							uint32 sav_timer = timer_60;
 							{
 								// AGetVoiceVolume(hVoice, &vol);
 								// ASetVoiceVolume(hVoice, 0);
@@ -597,7 +597,7 @@ osd_keyboard (void)
 							io.psg_channel_disabled[4]
 								= !io.psg_channel_disabled[4];
 						} else {
-							UInt32 sav_timer = timer_60;
+							uint32 sav_timer = timer_60;
 							osd_gfx_savepict();
 							osd_gfx_set_message("Screenshot saved");
 							message_delay = 180;
@@ -619,7 +619,7 @@ osd_keyboard (void)
 					case SDLK_NUMLOCK:
 					{
 						if (dump_snd) {
-							UInt32 dummy;
+							uint32 dummy;
 							dummy = filesize (out_snd);
 							fseek (out_snd, 4, SEEK_SET);
 							fwrite (&dummy, 1, 4, out_snd);
@@ -724,7 +724,7 @@ osd_keyboard (void)
 
 					case SDLK_F7:
 					{
-						UInt32 sav_timer = timer_60;
+						uint32 sav_timer = timer_60;
 						if (!loadgame ()) {
 							osd_gfx_set_message("Load game state\n");
 							message_delay = 180;
@@ -840,7 +840,7 @@ osd_keyboard (void)
   if (option.want_netplay)
     {
 
-      UChar local_input[5];
+      uchar local_input[5];
       int input_index;
 
       for (input_index = 0; input_index < 5; input_index++)
@@ -1176,9 +1176,9 @@ wait_identification_acknowledge_packet ()
  * Send a single packet to warn the server of our need in terms of slots
  */
 void
-send_identification_packet (UChar * local_input_mapping)
+send_identification_packet (uchar * local_input_mapping)
 {
-  UChar number_requested_slots;
+  uchar number_requested_slots;
   int input_index;
   int number_destination;
 
@@ -1235,7 +1235,7 @@ send_identification_packet (UChar * local_input_mapping)
  * \param local_input_mapping mapping between the remote (global) and local input
  */
 void
-send_identification (UChar * local_input_mapping)
+send_identification (uchar * local_input_mapping)
 {
   /* TODO : add checking for number of acknowledged slots against requested one */
   do
@@ -1249,7 +1249,7 @@ send_identification (UChar * local_input_mapping)
  * Send a packet for explaining what is the current local status
  */
 void
-send_local_status (UChar * local_input)
+send_local_status (uchar * local_input)
 {
   int input_index;
   int number_destination;
@@ -1438,7 +1438,7 @@ wait_digest_packet ()
  * Updates io.JOY
  */
 void
-wait_lan_digest_status (UChar * local_input)
+wait_lan_digest_status (uchar * local_input)
 {
 
 #if defined(NETPLAY_DEBUG)
@@ -1467,7 +1467,7 @@ wait_lan_digest_status (UChar * local_input)
  * \param frame_number the frame number value in the packet
  */
 void
-send_internet_local_status (UChar * local_input, UInt32 frame_number)
+send_internet_local_status (uchar * local_input, uint32 frame_number)
 {
   int input_index;
   int number_destination;
@@ -1519,7 +1519,7 @@ int
 search_digest_packet ()
 {
   int number_digest;
-  UInt32 start_frame_number;
+  uint32 start_frame_number;
 
   /* Look up the number of digest available in the incoming packet */
   number_digest = incoming_packet->data[PACKET_INTERNET_DIGEST_NUMBER_DIGEST];
@@ -1752,7 +1752,7 @@ wait_internet_digest_packet ()
  * Updates io.JOY
  */
 void
-wait_internet_digest_status (UChar * local_input)
+wait_internet_digest_status (uchar * local_input)
 {
 
 #if defined(NETPLAY_DEBUG)

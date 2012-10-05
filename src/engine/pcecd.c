@@ -25,25 +25,25 @@
 #include "pce.h"
 #include "utils.h"
 
-UChar pce_cd_cmdcnt;
+uchar pce_cd_cmdcnt;
 
-UInt32 pce_cd_sectoraddy;
+uint32 pce_cd_sectoraddy;
 
-UChar pce_cd_sectoraddress[3];
+uchar pce_cd_sectoraddress[3];
 
-UChar pce_cd_temp_dirinfo[4];
+uchar pce_cd_temp_dirinfo[4];
 
-UChar pce_cd_temp_play[4];
+uchar pce_cd_temp_play[4];
 
-UChar pce_cd_temp_stop[4];
+uchar pce_cd_temp_stop[4];
 
-UChar pce_cd_dirinfo[4];
+uchar pce_cd_dirinfo[4];
 
-extern UChar pce_cd_adpcm_trans_done;
+extern uchar pce_cd_adpcm_trans_done;
 
-UChar cd_port_180b = 0;
+uchar cd_port_180b = 0;
 
-UChar cd_fade;
+uchar cd_fade;
 // the byte set by the fade function
 
 static void
@@ -362,15 +362,15 @@ pce_cd_handle_command(void)
 }
 
 
-UChar
-pce_cd_handle_read_1800(UInt16 A) {
+uchar
+pce_cd_handle_read_1800(uint16 A) {
 
 	switch (A & 15) {
 		case 0:
 			return io.cd_port_1800;
 		case 1:
 		{
-			UChar retval;
+			uchar retval;
 
 			if (cd_read_buffer) {
 				retval = *cd_read_buffer++;
@@ -393,7 +393,7 @@ pce_cd_handle_read_1800(UInt16 A) {
 
 		case 3:
 		{
-			static UChar tmp_res = 0x02;
+			static uchar tmp_res = 0x02;
 
 			tmp_res = 0x02 - tmp_res;
 
@@ -437,7 +437,7 @@ pce_cd_handle_read_1800(UInt16 A) {
 
 		case 8:
 			if (pce_cd_read_datacnt) {
-				UChar retval;
+				uchar retval;
 
 				if (cd_read_buffer)
 					retval = *cd_read_buffer++;
@@ -474,7 +474,7 @@ pce_cd_handle_read_1800(UInt16 A) {
 }
 
 
-void pce_cd_handle_write_1800(UInt16 A, UChar V)
+void pce_cd_handle_write_1800(uint16 A, uchar V)
 {
 	switch (A & 15) {
 		case 0:

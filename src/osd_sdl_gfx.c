@@ -33,10 +33,10 @@ int blit_x,blit_y;
 int screen_blit_x, screen_blit_y;
 // where on the screen we must blit XBuf
 
-UChar* XBuf;
+uchar* XBuf;
 // buffer for video flipping
 
-UChar index_to_RGB[256];
+uchar index_to_RGB[256];
 // convertion array from bero's reduced pce palette to x11 palette
 
 int osd_gfx_init();
@@ -155,7 +155,7 @@ TTF_Font* loadfont(char* file, int ptsize)
 *****************************************************************************/
 void osd_gfx_put_image_normal(void)
 {
-	UInt16 y;
+	uint16 y;
 
 	if (!host.video.hardware_scaling)
 	{
@@ -186,8 +186,8 @@ void osd_gfx_put_image_normal(void)
 		SDL_Flip(physical_screen);
 
 	} else {
-		UInt16 x;
-		UChar *p, *op;
+		uint16 x;
+		uchar *p, *op;
 
 		SDL_LockYUVOverlay(olay);
 
@@ -484,7 +484,7 @@ void osd_gfx_shut_normal_mode(void)
 			names were available
 
 *****************************************************************************/
-UInt16 osd_gfx_savepict()
+uint16 osd_gfx_savepict()
 	{
 		short unsigned tmp=0;
 		char filename[PATH_MAX];
@@ -537,7 +537,7 @@ UInt16 osd_gfx_savepict()
 								 1 on error
 
 *****************************************************************************/
-SInt32 osd_gfx_set_hugo_mode(SInt32 mode,SInt32 width,SInt32 height)
+int32 osd_gfx_set_hugo_mode(int32 mode,int32 width,int32 height)
 {
 
 	screen = SDL_SetVideoMode(320,200, 8, SDL_SWSURFACE);
@@ -551,17 +551,17 @@ SInt32 osd_gfx_set_hugo_mode(SInt32 mode,SInt32 width,SInt32 height)
 		Function: osd_gfx_set_color
 
 		Description: Change the component of the choosen color
-		Parameters: UChar index : index of the color to change
-					UChar r	: new red component of the color
-								UChar g : new green component of the color
-								UChar b : new blue component of the color
+		Parameters: uchar index : index of the color to change
+					uchar r	: new red component of the color
+								uchar g : new green component of the color
+								uchar b : new blue component of the color
 		Return:
 
 *****************************************************************************/
-void osd_gfx_set_color(UChar index,
-	UChar r,
-	UChar g,
-	UChar b)
+void osd_gfx_set_color(uchar index,
+	uchar r,
+	uchar g,
+	uchar b)
 {
 	SDL_Color R;
 

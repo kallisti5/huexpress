@@ -17,7 +17,7 @@
 
 #ifdef INLINED_ACCESSORS
 #undef INLINED_ACCESSORS
-#define get_8bit_addr(addr) Rd6502((UInt16)(addr))
+#define get_8bit_addr(addr) Rd6502((uint16)(addr))
 #define put_8bit_addr(addr,byte) Wr6502((addr),(byte))
 #endif
 
@@ -317,7 +317,7 @@ const char *cdbios_functions(int index)
 #endif
 
 
-int handle_bios(void)
+int handle_bios()
 {
 #if ENABLE_TRACING_BIOS
 	static int last_op = -1, last_ax = -1, last_bx = -1, last_cx = -1, last_dx = -1;
@@ -348,7 +348,7 @@ int handle_bios(void)
 	}
 #endif
 
-	switch(imm_operand((UInt16)(reg_pc + 1))) {
+	switch(imm_operand((uint16)(reg_pc + 1))) {
 		case CD_RESET:
 			switch(CD_emulation) {
 				case 1: /* true CD */
@@ -373,9 +373,9 @@ int handle_bios(void)
 
 		case CD_READ:
 		{
-			UChar mode = get_8bit_zp(_dh);
-			UInt32 nb_to_read = get_8bit_zp(_al);
-			UInt16 offset = get_16bit_zp(_bx);
+			uchar mode = get_8bit_zp(_dh);
+			uint32 nb_to_read = get_8bit_zp(_al);
+			uint16 offset = get_16bit_zp(_bx);
 
 			pce_cd_sectoraddy = (get_8bit_zp(_cl) << 16)
 				+ (get_8bit_zp(_ch) << 8)
@@ -399,7 +399,7 @@ int handle_bios(void)
 					}
 
 					if (nb_to_read) {
-						UInt32 index;
+						uint32 index;
 
 						pce_cd_read_sector();
 						for (index = 0; index < nb_to_read; index++)
@@ -446,10 +446,10 @@ int handle_bios(void)
 				case 5:
 				case 6:
 				{
-					UChar nb_bank_to_fill_completely = nb_to_read >> 2;
-					UChar remaining_block_to_write = nb_to_read & 3;
-					UChar bank_where_to_write = get_8bit_zp(_bl);
-					UInt16 offset_in_bank = 0;
+					uchar nb_bank_to_fill_completely = nb_to_read >> 2;
+					uchar remaining_block_to_write = nb_to_read & 3;
+					uchar bank_where_to_write = get_8bit_zp(_bl);
+					uint16 offset_in_bank = 0;
 
 					while (nb_bank_to_fill_completely--) {
 						pce_cd_read_sector();
@@ -495,11 +495,11 @@ int handle_bios(void)
 
 				case 0xFE:
 					IO_write(0, 0);
-					IO_write(2, (UChar)(offset & 0xFF));
-					IO_write(3, (UChar)(offset >> 8));
+					IO_write(2, (uchar)(offset & 0xFF));
+					IO_write(3, (uchar)(offset >> 8));
 					IO_write(0, 2);
 				{
-					UInt32 nb_sector;
+					uint32 nb_sector;
 					nb_to_read = get_16bit_zp(_ax);
 					nb_sector = (nb_to_read >> 11)
 						+ ((nb_to_read & 2047) ? 1 : 0);
@@ -535,8 +535,8 @@ int handle_bios(void)
 							| flnz_list[reg_a = 0x22]);
 					else {
 						IO_write(0, 0);
-						IO_write(2, (UChar)(offset & 0xFF));
-						IO_write(3, (UChar)(offset >> 8));
+						IO_write(2, (uchar)(offset & 0xFF));
+						IO_write(3, (uchar)(offset >> 8));
 						IO_write(0, 2);
 
 						while (nb_to_read) {
@@ -615,8 +615,8 @@ int handle_bios(void)
 			/* seems to fill a whole buffer of 10 bytes but */
 			/* meaning of this array is mostly unknown */
 		{
-			UInt16 offset = get_16bit_zp(_bx);
-			// static UChar result = 3;
+			uint16 offset = get_16bit_zp(_bx);
+			// static uchar result = 3;
 
 			// result = 3 - result;
 
@@ -650,7 +650,7 @@ int handle_bios(void)
 			//	if (get_8bit_zp(_bh) & 0x02) {
 			//		osd_cd_play_audio_track(bcdbin[get_8bit_zp(_al)]);
 			//	} else
-				/* UInt16 bufaddr = get_16bit_zp(_bx); */
+				/* uint16 bufaddr = get_16bit_zp(_bx); */
 				int min, sec, fra, con;
 
 				osd_cd_stop_audio();
@@ -684,8 +684,8 @@ int handle_bios(void)
 
 		case AD_TRANS:
 		{
-			UInt32 nb_to_read = get_8bit_zp(_al);
-			UInt16 ADPCM_offset = get_16bit_zp(_bx);
+			uint32 nb_to_read = get_8bit_zp(_al);
+			uint16 ADPCM_offset = get_16bit_zp(_bx);
 
 			pce_cd_sectoraddy = (get_8bit_zp(_cl) << 16)
 				+ (get_8bit_zp(_ch) << 8)
@@ -717,10 +717,10 @@ int handle_bios(void)
 
 		case AD_READ:
 		{
-			UInt16 ADPCM_buffer = get_16bit_zp(_cx);
-			UChar type = get_8bit_zp(_dh);
-			UInt16 address = get_16bit_zp(_bx);
-			UInt16 size = get_16bit_zp(_ax);
+			uint16 ADPCM_buffer = get_16bit_zp(_cx);
+			uchar type = get_8bit_zp(_dh);
+			uint16 address = get_16bit_zp(_bx);
+			uint16 size = get_16bit_zp(_ax);
 
 			switch(type) {
 				case 0: // memory write
@@ -734,8 +734,8 @@ int handle_bios(void)
 					io.adpcm_rptr = ADPCM_buffer;
 
 					IO_write(0, 0);
-					IO_write(2, (UChar)(address & 0xFF));
-					IO_write(3, (UChar)(address >> 8));
+					IO_write(2, (uchar)(address & 0xFF));
+					IO_write(3, (uchar)(address >> 8));
 
 					IO_write(0, 2);
 
@@ -755,8 +755,8 @@ int handle_bios(void)
 				case 5:
 				case 6:
 				{
-					UChar bank_to_fill = get_8bit_zp(_bl);
-					UInt32 i;
+					uchar bank_to_fill = get_8bit_zp(_bl);
+					uint32 i;
 
 					while (size >= 2048) {
 						for (i = 0; i < 2048; i++)
@@ -787,7 +787,7 @@ int handle_bios(void)
 
 			io.adpcm_psize = get_16bit_zp(_ax) << 1;
 
-			io.adpcm_rate = (UChar)(32 / (16 - (get_8bit_zp(_dh) & 15)));
+			io.adpcm_rate = (uchar)(32 / (16 - (get_8bit_zp(_dh) & 15)));
 
 			new_adpcm_play = 1;
 
@@ -810,7 +810,7 @@ int handle_bios(void)
 			else
 				reg_x = 0;
 
-			reg_p = ((reg_p & (~(FL_N|FL_T|FL_Z))) | flnz_list[reg_a = (UChar)(reg_x == 1 ? 0 : 1)]);
+			reg_p = ((reg_p & (~(FL_N|FL_T|FL_Z))) | flnz_list[reg_a = (uchar)(reg_x == 1 ? 0 : 1)]);
 		}
 		rts();
 		break;
@@ -819,7 +819,7 @@ int handle_bios(void)
 			switch(get_8bit_zp(_al)) {
 				case CD_DINFO_TRACK:
 				{
-					UInt16 buf_offset = get_16bit_zp(_bx);
+					uint16 buf_offset = get_16bit_zp(_bx);
 					// usually 0x2256 in system 3.0
 					// _ah contain the number of the track
 
@@ -828,13 +828,13 @@ int handle_bios(void)
 						case 3:
 						case 4:
 						case 5:
-							put_8bit_addr( (UInt16)buf_offset,
+							put_8bit_addr( (uint16)buf_offset,
 								CD_track[bcdbin[get_8bit_zp(_ah)]].beg_min);
-							put_8bit_addr( (UInt16)(buf_offset + 1),
+							put_8bit_addr( (uint16)(buf_offset + 1),
 								CD_track[bcdbin[get_8bit_zp(_ah)]].beg_sec);
-							put_8bit_addr( (UInt16)(buf_offset + 2),
+							put_8bit_addr( (uint16)(buf_offset + 2),
 								CD_track[bcdbin[get_8bit_zp(_ah)]].beg_fra);
-							put_8bit_addr( (UInt16)(buf_offset + 3),
+							put_8bit_addr( (uint16)(buf_offset + 3),
 								CD_track[bcdbin[get_8bit_zp(_ah)]].type);
 							break;
 						case 1:
@@ -844,10 +844,10 @@ int handle_bios(void)
 							osd_cd_track_info(bcdbin[get_8bit_zp(_ah)],
 								&Min, &Sec, &Fra, &Ctrl);
 
-							put_8bit_addr((UInt16)(buf_offset), binbcd[Min]);
-							put_8bit_addr((UInt16)(buf_offset + 1), binbcd[Sec]);
-							put_8bit_addr((UInt16)(buf_offset + 2), binbcd[Fra]);
-							put_8bit_addr((UInt16)(buf_offset + 3), (UChar)Ctrl);
+							put_8bit_addr((uint16)(buf_offset), binbcd[Min]);
+							put_8bit_addr((uint16)(buf_offset + 1), binbcd[Sec]);
+							put_8bit_addr((uint16)(buf_offset + 2), binbcd[Fra]);
+							put_8bit_addr((uint16)(buf_offset + 3), (uchar)Ctrl);
 						}
 							break;
 					}
@@ -861,15 +861,15 @@ int handle_bios(void)
 					#if ENABLE_TRACING_BIOS
 					TRACE("BIOS: Request for number of CDRom2 tracks\n");
 					#endif
-					UInt16 buf_offset = get_16bit_zp(_bx);
+					uint16 buf_offset = get_16bit_zp(_bx);
 
 					switch(CD_emulation) {
 						case 2:
 						case 3:
 						case 4:
-							put_8bit_addr((UInt16)(buf_offset), binbcd[01]);
+							put_8bit_addr((uint16)(buf_offset), binbcd[01]);
 								// Number of first track	(BCD)
-							put_8bit_addr((UInt16)(buf_offset + 1),
+							put_8bit_addr((uint16)(buf_offset + 1),
 								binbcd[nb_max_track]);
 								// Number of last track (BCD)
 							break;
@@ -879,15 +879,15 @@ int handle_bios(void)
 
 							osd_cd_nb_tracks(&first_track, &last_track);
 
-							put_8bit_addr((UInt16)(buf_offset),
+							put_8bit_addr((uint16)(buf_offset),
 								binbcd[first_track]);
-							put_8bit_addr((UInt16)(buf_offset + 1),
+							put_8bit_addr((uint16)(buf_offset + 1),
 								binbcd[last_track]);
 							}
 							break;
 						case 5:
-							put_8bit_addr( (UInt16)(buf_offset), binbcd[HCD_first_track]);
-							put_8bit_addr( (UInt16)(buf_offset + 1), binbcd[HCD_last_track]);
+							put_8bit_addr( (uint16)(buf_offset), binbcd[HCD_first_track]);
+							put_8bit_addr( (uint16)(buf_offset + 1), binbcd[HCD_last_track]);
 							break;
 					}
 				}
@@ -897,7 +897,7 @@ int handle_bios(void)
 
 			case CD_DINFO_LENGTH:
 				{
-					UInt16 buf_offset = get_16bit_zp(_bx);
+					uint16 buf_offset = get_16bit_zp(_bx);
 					int min, sec, frame;
 
 					osd_cd_length(&min, &sec, &frame);
@@ -906,9 +906,9 @@ int handle_bios(void)
 						min, sec, frame);
 					#endif
 
-					put_8bit_addr( (UInt16)(buf_offset), binbcd[min]);
-					put_8bit_addr( (UInt16)(buf_offset + 1), binbcd[sec]);
-					put_8bit_addr( (UInt16)(buf_offset + 2), binbcd[frame]);
+					put_8bit_addr( (uint16)(buf_offset), binbcd[min]);
+					put_8bit_addr( (uint16)(buf_offset + 1), binbcd[sec]);
+					put_8bit_addr( (uint16)(buf_offset + 2), binbcd[frame]);
 
 					reg_p = ((reg_p & (~(FL_N|FL_T|FL_Z)))
 						| flnz_list[reg_a = 0]);
@@ -979,8 +979,8 @@ int handle_bios(void)
 						if ((status == CDROM_AUDIO_PLAY)
 							|| (status == CDROM_AUDIO_PAUSED))
 							osd_cd_stop_audio();
-						osd_cd_play_audio_range((UChar)min1, (UChar)sec1,
-							(UChar)fra1, (UChar)min2, (UChar)sec2, (UChar)fra2);
+						osd_cd_play_audio_range((uchar)min1, (uchar)sec1,
+							(uchar)fra1, (uchar)min2, (uchar)sec2, (uchar)fra2);
 						break;
 					case 2:
 					case 3:
@@ -998,13 +998,13 @@ int handle_bios(void)
 
 		case EX_JOYSNS:
 		{
-			UChar dummy[5], index;
+			uchar dummy[5], index;
 
 			for (index = 0; index < 5; index++) {
 				dummy[index] = get_8bit_addr(0x2228 + index);
-				put_8bit_addr( (UInt16)(0x2232 + index), dummy[index]);
-				put_8bit_addr( (UInt16)(0x2228 + index), io.JOY[index]);
-				put_8bit_addr( (UInt16)(0x222D + index), (io.JOY[index] ^ dummy[index]) & io.JOY[index]);
+				put_8bit_addr( (uint16)(0x2232 + index), dummy[index]);
+				put_8bit_addr( (uint16)(0x2228 + index), io.JOY[index]);
+				put_8bit_addr( (uint16)(0x222D + index), (io.JOY[index] ^ dummy[index]) & io.JOY[index]);
 			}
 		}
 			/* TODO : check if A <- 0 is needed here */
@@ -1013,17 +1013,17 @@ int handle_bios(void)
 
 		case BM_FREE:
 		{
-			SInt16 free_mem;
+			Sint16 free_mem;
 
-			free_mem = (SInt16)(WRAM[4] + (WRAM[5] << 8));
+			free_mem = (Sint16)(WRAM[4] + (WRAM[5] << 8));
 			free_mem -= WRAM[6] + (WRAM[7] << 8);
 			free_mem -= 0x12; /* maybe the header */
 
 			if (free_mem < 0)
 				free_mem = 0;
 
-			put_8bit_zp(_cl, (UChar)(free_mem & 0xFF));
-			put_8bit_zp(_ch, (UChar)(free_mem >> 8));
+			put_8bit_zp(_cl, (uchar)(free_mem & 0xFF));
+			put_8bit_zp(_ch, (uchar)(free_mem >> 8));
 
 			reg_p = ((reg_p & (~(FL_N|FL_T|FL_Z))) | flnz_list[reg_a = 0]);
 			rts();
@@ -1033,7 +1033,7 @@ int handle_bios(void)
 #if ENABLE_TRACING_BIOS
 		case MA_MUL8U:
 		{
-			UInt16 res;
+			uint16 res;
 
 			res = get_8bit_zp(_ax) * get_8bit_zp(_bx);
 
@@ -1046,7 +1046,7 @@ int handle_bios(void)
 
 		case MA_MUL8S:
 		{
-			SInt16 res;
+			Sint16 res;
 
 			res = get_8bit_zp(_ax) * get_8bit_zp(_bx);
 
@@ -1059,7 +1059,7 @@ int handle_bios(void)
 
 		case MA_MUL16U:
 		{
-			UInt32 res;
+			uint32 res;
 
 			res = get_16bit_zp(_ax) * get_16bit_zp(_bx);
 
@@ -1074,7 +1074,7 @@ int handle_bios(void)
 
 		case MA_DIV16U:
 		{
-			UInt16 res, rem;
+			uint16 res, rem;
 
 			res = get_16bit_zp(_ax) / get_16bit_zp(_bx);
 			rem = get_16bit_zp(_ax) % get_16bit_zp(_bx);
@@ -1090,7 +1090,7 @@ int handle_bios(void)
 
 		case MA_DIV16S:
 		{
-			SInt16 res, rem;
+			Sint16 res, rem;
 
 			res = get_16bit_zp(_ax) / get_16bit_zp(_bx);
 			rem = get_16bit_zp(_ax) % get_16bit_zp(_bx);
@@ -1106,7 +1106,7 @@ int handle_bios(void)
 
 		case MA_MUL16S:
 		{
-			SInt32 res;
+			int32 res;
 
 			res = get_16bit_zp(_ax) * get_16bit_zp(_bx);
 
@@ -1122,10 +1122,10 @@ int handle_bios(void)
 
 		default:
 			/* unhandled function, restoring initial behaviour */
-			put_8bit_addr( (UInt16)(reg_pc),
-				CDBIOS_replace[imm_operand((UInt16)(reg_pc + 1))][0]);
-			put_8bit_addr( (UInt16)(reg_pc + 1),
-				CDBIOS_replace[imm_operand( (UInt16)(reg_pc + 1))][1]);
+			put_8bit_addr( (uint16)(reg_pc),
+				CDBIOS_replace[imm_operand((uint16)(reg_pc + 1))][0]);
+			put_8bit_addr( (uint16)(reg_pc + 1),
+				CDBIOS_replace[imm_operand( (uint16)(reg_pc + 1))][1]);
 	}
 	return 0;
 }

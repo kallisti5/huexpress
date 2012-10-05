@@ -39,47 +39,47 @@
 
 struct_hard_pce *hard_pce;
 
-UChar *RAM;
+uchar *RAM;
 
 // Video
-UInt16 *SPRAM;
-UChar *VRAM2;
-UChar *VRAMS;
-UChar  *Pal;
-UChar  *vchange;
-UChar  *vchanges;
-UChar  *WRAM;
-UChar  *VRAM;
-UInt32 *p_scanline;
+uint16 *SPRAM;
+uchar *VRAM2;
+uchar *VRAMS;
+uchar  *Pal;
+uchar  *vchange;
+uchar  *vchanges;
+uchar  *WRAM;
+uchar  *VRAM;
+uint32 *p_scanline;
 
 // Audio
-UChar *PCM;
+uchar *PCM;
 
 // I/O
 IO *p_io;
 
 // CD
-/**/ UChar * cd_read_buffer;
-UChar *cd_sector_buffer;
-UChar *cd_extra_mem;
-UChar *cd_extra_super_mem;
-UChar *ac_extra_mem;
+/**/ uchar * cd_read_buffer;
+uchar *cd_sector_buffer;
+uchar *cd_extra_mem;
+uchar *cd_extra_super_mem;
+uchar *ac_extra_mem;
 
-UInt32 pce_cd_read_datacnt;
-/**/ UChar cd_sectorcnt;
-UChar pce_cd_curcmd;
+uint32 pce_cd_read_datacnt;
+/**/ uchar cd_sectorcnt;
+uchar pce_cd_curcmd;
 /**/
 // Memory
-UChar *zp_base;
-UChar *sp_base;
-UChar *mmr;
-UChar *IOAREA;
+uchar *zp_base;
+uchar *sp_base;
+uchar *mmr;
+uchar *IOAREA;
 
 // Interruption
-UInt32 *p_cyclecount;
-UInt32 *p_cyclecountold;
+uint32 *p_cyclecount;
+uint32 *p_cyclecountold;
 
-const UInt32 TimerPeriod = 1097;
+const uint32 TimerPeriod = 1097;
 
 // registers
 
@@ -88,37 +88,37 @@ const UInt32 TimerPeriod = 1097;
 //! Shared memory handle
 static int shm_handle;
 
-UInt16 *p_reg_pc;
-UChar *p_reg_a;
-UChar *p_reg_x;
-UChar *p_reg_y;
-UChar *p_reg_p;
-UChar *p_reg_s;
+uint16 *p_reg_pc;
+uchar *p_reg_a;
+uchar *p_reg_x;
+uchar *p_reg_y;
+uchar *p_reg_p;
+uchar *p_reg_s;
 
 #else
 
-UInt16 reg_pc;
-UChar reg_a;
-UChar reg_x;
-UChar reg_y;
-UChar reg_p;
-UChar reg_s;
+uint16 reg_pc;
+uchar reg_a;
+uchar reg_x;
+uchar reg_y;
+uchar reg_p;
+uchar reg_s;
 
 #endif
 
 // Mapping
-UChar *PageR[8];
-UChar *ROMMapR[256];
+uchar *PageR[8];
+uchar *ROMMapR[256];
 
-UChar *PageW[8];
-UChar *ROMMapW[256];
+uchar *PageW[8];
+uchar *ROMMapW[256];
 
-UChar* trap_ram_read;
-UChar* trap_ram_write;
+uchar* trap_ram_read;
+uchar* trap_ram_write;
 
 // Miscellaneous
-UInt32 *p_cycles;
-SInt32 *p_external_control_cpu;
+uint32 *p_cycles;
+int32 *p_external_control_cpu;
 
 //! External rom size hack for shared memory indication
 extern int ROM_size;
@@ -126,20 +126,20 @@ extern int ROM_size;
 /**
   * Predeclaration of access functions
 	**/
-UChar read_memory_simple(UInt16);
-UChar read_memory_sf2(UInt16);
-UChar read_memory_arcade_card(UInt16);
+uchar read_memory_simple(uint16);
+uchar read_memory_sf2(uint16);
+uchar read_memory_arcade_card(uint16);
 
-void write_memory_simple(UInt16,UChar);
-void write_memory_arcade_card(UInt16,UChar);
+void write_memory_simple(uint16,uchar);
+void write_memory_arcade_card(uint16,uchar);
 
 
 
 //! Function to write into memory. Defaulted to the basic one
-void (*write_memory_function)(UInt16,UChar) = write_memory_simple;
+void (*write_memory_function)(uint16,uchar) = write_memory_simple;
 
 //! Function to read from memory. Defaulted to the basic one
-UChar (*read_memory_function)(UInt16) = read_memory_simple;
+uchar (*read_memory_function)(uint16) = read_memory_simple;
 
 /**
   * Initialize the hardware
@@ -186,7 +186,7 @@ hard_init (void)
 	WRAM = hard_pce->WRAM;
 	VRAM = hard_pce->VRAM;
 	VRAM2 = hard_pce->VRAM2;
-	VRAMS = (UChar*)hard_pce->VRAMS;
+	VRAMS = (uchar*)hard_pce->VRAMS;
 	vchange = hard_pce->vchange;
 	vchanges = hard_pce->vchanges;
 
@@ -374,7 +374,7 @@ int return_value_mask_tab_1400[4] =
 
 //! Returns the useful value mask depending on port value
 static int
-return_value_mask(UInt16 A)
+return_value_mask(uint16 A)
 {
   if (A < 0x400) // VDC
     {
@@ -411,10 +411,10 @@ return_value_mask(UInt16 A)
 }
 
 /* read */
-UChar
-IO_read_raw (UInt16 A)
+uchar
+IO_read_raw (uint16 A)
 {
-	UChar ret;
+	uchar ret;
 
 #ifndef FINAL_RELEASE
 	if ((A & 0x1F00) == 0x1A00)
@@ -482,7 +482,7 @@ IO_read_raw (UInt16 A)
 		case 6:
 		{
 			int ofs = io.PSG[io.psg_ch][PSG_DATA_INDEX_REG];
-			io.PSG[io.psg_ch][PSG_DATA_INDEX_REG] = (UChar)((io.PSG[io.psg_ch][PSG_DATA_INDEX_REG] + 1) & 31);
+			io.PSG[io.psg_ch][PSG_DATA_INDEX_REG] = (uchar)((io.PSG[io.psg_ch][PSG_DATA_INDEX_REG] + 1) & 31);
 			return io.wave[io.psg_ch][ofs];
 		}
 		case 7:
@@ -506,7 +506,7 @@ IO_read_raw (UInt16 A)
 		else
 		{
 			ret &= 15;
-			io.joy_counter = (UChar)((io.joy_counter + 1) % 5);
+			io.joy_counter = (uchar)((io.joy_counter + 1) % 5);
 		}
 
 /* return ret | Country; *//* country 0:JPN 1<<6=US */
@@ -544,21 +544,21 @@ IO_read_raw (UInt16 A)
 		switch (A & 15)
 		{
 		case 0:
-			return (UChar) (io.ac_shift);
+			return (uchar) (io.ac_shift);
 		case 1:
-			return (UChar) (io.ac_shift >> 8);
+			return (uchar) (io.ac_shift >> 8);
 		case 2:
-			return (UChar) (io.ac_shift >> 16);
+			return (uchar) (io.ac_shift >> 16);
 		case 3:
-			return (UChar) (io.ac_shift >> 24);
+			return (uchar) (io.ac_shift >> 24);
 		case 4:
 			return io.ac_shiftbits;
 		case 5:
 			return io.ac_unknown4;
 		case 14:
-			return (UChar)(option.want_arcade_card_emulation ? 0x10 : NODATA);
+			return (uchar)(option.want_arcade_card_emulation ? 0x10 : NODATA);
 		case 15:
-			return (UChar)(option.want_arcade_card_emulation ? 0x51 : NODATA);
+			return (uchar)(option.want_arcade_card_emulation ? 0x51 : NODATA);
 		default:
 			Log ("Unknown Arcade card port access : 0x%04X\n", A);
 		}
@@ -566,7 +566,7 @@ IO_read_raw (UInt16 A)
 
 	case 0x1A00:
 	{
-		UChar ac_port = (UChar)((A >> 4) & 3);
+		uchar ac_port = (uchar)((A >> 4) & 3);
 		switch (A & 15)
 		{
 		case 0:
@@ -624,7 +624,7 @@ IO_read_raw (UInt16 A)
 						 io.
 						 ac_incr[ac_port]) & 0xffffff;
 				else
-					io.ac_offset[ac_port] = (UInt16)
+					io.ac_offset[ac_port] = (uint16)
 						((io.ac_offset[ac_port] +
 						 io.
 						 ac_incr[ac_port]) & 0xffff);
@@ -637,19 +637,19 @@ IO_read_raw (UInt16 A)
 
 
 		case 2:
-			return (UChar) (io.ac_base[ac_port]);
+			return (uchar) (io.ac_base[ac_port]);
 		case 3:
-			return (UChar) (io.ac_base[ac_port] >> 8);
+			return (uchar) (io.ac_base[ac_port] >> 8);
 		case 4:
-			return (UChar) (io.ac_base[ac_port] >> 16);
+			return (uchar) (io.ac_base[ac_port] >> 16);
 		case 5:
-			return (UChar) (io.ac_offset[ac_port]);
+			return (uchar) (io.ac_offset[ac_port]);
 		case 6:
-			return (UChar) (io.ac_offset[ac_port] >> 8);
+			return (uchar) (io.ac_offset[ac_port] >> 8);
 		case 7:
-			return (UChar) (io.ac_incr[ac_port]);
+			return (uchar) (io.ac_incr[ac_port]);
 		case 8:
-			return (UChar) (io.ac_incr[ac_port] >> 8);
+			return (uchar) (io.ac_incr[ac_port] >> 8);
 		case 9:
 			return io.ac_control[ac_port];
 		default:
@@ -669,10 +669,10 @@ IO_read_raw (UInt16 A)
 }
 
 //! Adds the io_buffer feature
-UChar IO_read (UInt16 A)
+uchar IO_read (uint16 A)
 {
   int mask;
-  UChar temporary_return_value;
+  uchar temporary_return_value;
 
   if ((A < 0x800) || (A >= 0x1800)) // latch isn't affected out of the 0x800 - 0x1800 range
     return IO_read_raw(A);
@@ -687,14 +687,14 @@ UChar IO_read (UInt16 A)
 }
 
 #if defined(TEST_ROM_RELOCATED)
-extern UChar* ROM;
+extern uchar* ROM;
 #endif
 
 /**
   * Change bank setting
   **/
 void
-bank_set (UChar P, UChar V)
+bank_set (uchar P, uchar V)
 {
 
 #if ENABLE_TRACING
@@ -743,7 +743,7 @@ fprintf(stderr, "Bank set MMR[%d]=%02x at %04x\n", P, V, reg_pc);
 		}
 }
 
-void write_memory_simple(UInt16 A, UChar V)
+void write_memory_simple(uint16 A, uchar V)
 	{
 		if (PageW[A >> 13] == IOAREA)
     	IO_write (A, V);
@@ -751,7 +751,7 @@ void write_memory_simple(UInt16 A, UChar V)
 	    PageW[A >> 13][A] = V;
 	}
 
-void write_memory_sf2(UInt16 A, UChar V)
+void write_memory_sf2(uint16 A, uchar V)
 	{
 		if (PageW[A >> 13] == IOAREA)
 			IO_write (A, V);
@@ -775,7 +775,7 @@ void write_memory_sf2(UInt16 A, UChar V)
 				PageW[A >> 13][A] = V;
 	}
 
-void write_memory_arcade_card(UInt16 A, UChar V)
+void write_memory_arcade_card(uint16 A, uchar V)
 	{
 	  if ((mmr[A >> 13] >= 0x40)  && (mmr[A >> 13] <= 0x43))
 			{
@@ -784,7 +784,7 @@ void write_memory_arcade_card(UInt16 A, UChar V)
 				fprintf(stderr, "writing 0x%02x to AC pseudo bank (%d)\n", V, mmr[A >> 13] - 0x40);
 				#endif
 				*/
-				IO_write((UInt16)(0x1A00 + ((mmr[A >> 13] - 0x40) << 4)), V);
+				IO_write((uint16)(0x1A00 + ((mmr[A >> 13] - 0x40) << 4)), V);
 			}
 		else
 			if (PageW[A >> 13] == IOAREA)
@@ -793,7 +793,7 @@ void write_memory_arcade_card(UInt16 A, UChar V)
 				PageW[A >> 13][A] = V;
 	}
 
-UChar read_memory_simple(UInt16 A)
+uchar read_memory_simple(uint16 A)
 	{
 	  if (PageR[A >> 13] != IOAREA)
 	    return PageR[A >> 13][A];
@@ -801,7 +801,7 @@ UChar read_memory_simple(UInt16 A)
     	return IO_read (A);
 	}
 
-UChar read_memory_arcade_card(UInt16 A)
+uchar read_memory_arcade_card(uint16 A)
 	{
 		if ((mmr[A >> 13] >= 0x40)  && (mmr[A >> 13] <= 0x43))
 			{
@@ -810,7 +810,7 @@ UChar read_memory_arcade_card(UInt16 A)
 				fprintf(stderr, "reading AC pseudo bank (%d)\n", mmr[A >> 13] - 0x40);
 				#endif
 				*/
-				return IO_read((UInt16)(0x1A00 + ((mmr[A >> 13] - 0x40) << 4)));
+				return IO_read((uint16)(0x1A00 + ((mmr[A >> 13] - 0x40) << 4)));
 			}
 		else
 			if (PageR[A >> 13] != IOAREA)
@@ -820,17 +820,17 @@ UChar read_memory_arcade_card(UInt16 A)
 	}
 
 static char opcode_long_buffer[256];
-static UInt16 opcode_long_position;
+static uint16 opcode_long_position;
 
 char * get_opcode_long()
 	{
 		//! size of data used by the current opcode
     int size;
 
-		unsigned char opcode;
+		uchar opcode;
 
 		//! Buffer of opcode data, maximum is 7 (for xfer opcodes)
-		unsigned char opbuf[7];
+		uchar opbuf[7];
 
 		int i;
 

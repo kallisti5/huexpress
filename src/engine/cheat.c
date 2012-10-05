@@ -31,25 +31,25 @@ long file_size (char* file_name)
 }
 #endif
 
-inline void fputw (UInt16 value, FILE* F)
+inline void fputw (uint16 value, FILE* F)
 {
  fputc((int)(value & 0xFF), F);
  fputc((int)(value >> 8), F);
  }
 
-inline UInt16 fgetw (FILE* F)
+inline uint16 fgetw (FILE* F)
 {
- return (UInt16)(fgetc(F) + (fgetc(F) << 8));
+ return (uint16)(fgetc(F) + (fgetc(F) << 8));
  }
 
 freezed_value list_to_freeze[MAX_FREEZED_VALUE];
 // List of all the value to freeze
 
-unsigned char current_freezed_values;
+uchar current_freezed_values;
 // Current number of values to freeze
 
-static UChar
-bigindextobank (UInt32 index)
+static uchar
+bigindextobank (uint32 index)
 {
   if (index<0x8000)
     return 0;
@@ -60,16 +60,16 @@ bigindextobank (UInt32 index)
   // FIXME:  what to return here?
 }
 
-UInt16
-bigtosmallindex(UInt32 index)
+uint16
+bigtosmallindex(uint32 index)
 {
   if (index<0x8000)
-    return (UInt16)index;
-  return (UInt16)(index & 0x1FFF);
+    return (uint16)index;
+  return (uint16)(index & 0x1FFF);
 }
 
-UChar
-readindexedram (UInt32 index)
+uchar
+readindexedram (uint32 index)
 {
  if (index<0x8000)
    return RAM[index];
@@ -83,7 +83,7 @@ readindexedram (UInt32 index)
  }
 
 void
-writeindexedram (UInt32 index, UChar value)
+writeindexedram (uint32 index, uchar value)
 {
  if (index<0x8000)
    RAM[index] = value;
@@ -111,7 +111,7 @@ char
 pokebyte ()
 {
   char tmp_str[10], new_val;
-  unsigned char index = 0;
+  uchar index = 0;
   unsigned addr;
 
   while (osd_keypressed())
@@ -131,7 +131,7 @@ pokebyte ()
   tmp_str[index - 1] = 0;
   new_val = atoi (tmp_str);
 
-  writeindexedram(addr, (UChar)new_val);
+  writeindexedram(addr, (uchar)new_val);
 
   {
     char *tmp_buf = (char *) malloc (100);
@@ -157,16 +157,16 @@ pokebyte ()
 char
 searchbyte ()
 {
-  UInt32 MAX_INDEX;
+  uint32 MAX_INDEX;
   char tmp_str[10];
-  UInt32 index = 0, tmp_word, last_index;
-  UChar bank;
+  uint32 index = 0, tmp_word, last_index;
+  uchar bank;
   char data_filename[80], old_filename[80];
   char first_research = 1;
   FILE *D, *O;
-  SInt16 to_search;
+  Sint16 to_search;
 
-  MAX_INDEX = (UInt16)( CD_emulation ? 0x48000 : 0x8000);
+  MAX_INDEX = (uint16)( CD_emulation ? 0x48000 : 0x8000);
 
   while (osd_keypressed ())
 		/*@-retvalother*/
@@ -204,7 +204,7 @@ searchbyte ()
 
   for (index = 0; index < MAX_INDEX; index++)
     {
-      if (readindexedram(index) == (UChar)to_search)
+      if (readindexedram(index) == (uchar)to_search)
 	{
 
 	  if (first_research)
@@ -218,7 +218,7 @@ searchbyte ()
 	      while (!(feof (O)))
 		{
                   fgetc (O);
-                  bank = (UChar)fgetc(O);
+                  bank = (uchar)fgetc(O);
 		  tmp_word = fgetw(O);
 
 		  if ((bank > bigindextobank(index))
@@ -230,7 +230,7 @@ searchbyte ()
 		    }
 		}
 
-	      if ((bigtosmallindex(index) == (UInt16)tmp_word) &&
+	      if ((bigtosmallindex(index) == (uint16)tmp_word) &&
                   (bigindextobank(index) == bank))
 		{
                   fputc (to_search, D);
@@ -255,13 +255,13 @@ searchbyte ()
             }
 	  else
 	{
-          UChar old_value;
+          uchar old_value;
 
 	    {
 	      while (!(feof (O)))
 		{
                   fgetc (O);
-                  bank = (UChar)fgetc(O);
+                  bank = (uchar)fgetc(O);
 		  tmp_word = fgetw(O);
 
 		  if ((bank > bigindextobank(index))
@@ -274,7 +274,7 @@ searchbyte ()
 		}
 
 	      if ((bigindextobank(index) == bank) &&
-                  (bigtosmallindex(index) == (UInt16)tmp_word) &&
+                  (bigtosmallindex(index) == (uint16)tmp_word) &&
                   (readindexedram(index) == old_value + to_search))
 		{
                   fputc (readindexedram(index), D);
@@ -342,9 +342,9 @@ loadgame ()
 
 #ifdef ALLEGRO
   PACKFILE *fp;
-  UInt32 tmp = 0;
+  uint32 tmp = 0;
   char *tmp_buf = (char *) alloca (100);
-  UChar version = 0;
+  uchar version = 0;
 
   if (!exists (sav_path))
     return 1;
@@ -399,7 +399,7 @@ loadgame ()
   memset (vchange, 1, VRAMSIZE / 32);
   memset (vchanges, 1, VRAMSIZE / 128);
 
-  CycleOld = (UInt32) M.User;
+  CycleOld = (uint32) M.User;
 
   pack_fclose (fp);
 
@@ -409,9 +409,9 @@ loadgame ()
 
 #ifdef ALLEGRO
   PACKFILE *fp;
-  UInt32 tmp = 0;
+  uint32 tmp = 0;
   char *tmp_buf = (char *) alloca (100);
-  UChar version = 0;
+  uchar version = 0;
 
   if (!exists (sav_path))
     return 1;
@@ -491,7 +491,7 @@ loadgame ()
   memset (vchange, 1, VRAMSIZE / 32);
   memset (vchanges, 1, VRAMSIZE / 128);
 
-  // CycleOld = (UInt32) M.User;
+  // CycleOld = (uint32) M.User;
 
   zp_base = RAM;
   sp_base = RAM + 0x100;
@@ -518,7 +518,7 @@ loadgame ()
 	  
     for (mmr_index = 0; mmr_index < 8; mmr_index++)
       {
-				bank_set((UChar)mmr_index, mmr[mmr_index]);
+				bank_set((uchar)mmr_index, mmr[mmr_index]);
 				printf("Setting bank %d to 0x%02x\n", mmr_index, mmr[mmr_index]);
       }
   }
@@ -554,7 +554,7 @@ savegame ()
 #ifdef ALLEGRO
 
   PACKFILE *fp;
-  UInt32 tmp;
+  uint32 tmp;
 
   if (!(fp = pack_fopen (sav_path, F_WRITE_PACKED)))
     return 1;
@@ -599,7 +599,7 @@ savegame ()
 #ifdef ALLEGRO
 
   PACKFILE *fp;
-  UInt32 tmp;
+  uint32 tmp;
 
   if (!(fp = pack_fopen (sav_path, F_WRITE_PACKED)))
     return 1;
@@ -699,7 +699,7 @@ int
 freeze_value (void)
 {
   char tmp_str[10];
-  unsigned char index = 0;
+  uchar index = 0;
   unsigned where;
 
   while (osd_keypressed ())

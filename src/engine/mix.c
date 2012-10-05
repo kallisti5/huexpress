@@ -64,7 +64,7 @@ void update_sound_allegro(void)
   {
 
     int size;
-    unsigned char *p;
+    uchar *p;
 
 #if defined(LINUX) || defined(MSDOS)
     if (MP3_playing)
@@ -111,17 +111,17 @@ void (*update_sound[4])() =
 
 /* SDL Audio Stuff */
 
-unsigned char old;
+uchar old;
 Uint32 audio_len=0;
 
 /* Callback for SDL Audio */
 void sdl_fill_audio(void *data, Uint8 *stream, int len)
 {
-  UChar lvol, rvol;
+  uchar lvol, rvol;
   int i;
-  UChar center;
+  uchar center;
 #if ENABLE_TRACING_AUDIO
-  UChar first_chan;
+  uchar first_chan;
 
 //IXION
   if ((first_chan = ((io.psg_lfo_ctrl & 3) == 0) ? 0 : 2) == 2)
@@ -163,7 +163,7 @@ void sdl_fill_audio(void *data, Uint8 *stream, int len)
    * Mix streams and apply master volume.
    */
   for (i = 0; i < len ; i++)
-    stream[i] = center + ((UInt32) ((sbuf[0][i] + sbuf[1][i] + sbuf[2][i] + sbuf[3][i] + sbuf[4][i] + sbuf[5][i] +
+    stream[i] = center + ((uint32) ((sbuf[0][i] + sbuf[1][i] + sbuf[2][i] + sbuf[3][i] + sbuf[4][i] + sbuf[5][i] +
                 adpcmbuf[i]) * (!(i % 2) ? lvol : rvol)) >> 7);
 
   SDL_UnlockAudio();
@@ -329,7 +329,7 @@ void (*update_sound[4])() =
 #endif
 
 
-int mseq(UInt32 *rand_val)
+int mseq(uint32 *rand_val)
 {
   if (*rand_val & 0x00080000)
   {
@@ -372,15 +372,15 @@ int AdpcmStepSizeTable[ADPCM_MAX_INDEX + 1] =
 };
 
 /* TODO : improve pointer in adpcm buffer maybe using fixed type */
-UInt32 WriteBufferAdpcm8 (UChar *buf, UInt32 begin, UInt32 size, SChar *Index, SInt32 *PreviousValue)
+uint32 WriteBufferAdpcm8 (uchar *buf, uint32 begin, uint32 size, char *Index, int32 *PreviousValue)
 {
-  UInt32 ret_val = 0;
+  uint32 ret_val = 0;
 
   /* TODO: use something else than ALLEGRO's fixed to make this portable */
 #ifdef ALLEGRO
-  SInt32 step, difference, deltaCode;
-  SChar index = *Index;
-  SInt32 previousValue = *PreviousValue;
+  int32 step, difference, deltaCode;
+  char index = *Index;
+  int32 previousValue = *PreviousValue;
   fixed FixedIndex = 0, FixedInc;
 
 
@@ -463,15 +463,15 @@ UInt32 WriteBufferAdpcm8 (UChar *buf, UInt32 begin, UInt32 size, SChar *Index, S
 
 void WriteBuffer(char *buf, int ch, unsigned dwSize)
 {
-  static UInt32 fixed_n[6] = { 0, 0, 0, 0, 0, 0 };
-  UInt32 fixed_inc;
-  static UInt32 k[6] = { 0, 0, 0, 0, 0, 0 };
-  static UInt32 t; // used to know how much we got to advance in the ring buffer
-  static UInt32 r[6];
-  static UInt32 rand_val[6] = { 0, 0, 0, 0, 0x51F631E4, 0x51F631E4 }; // random seed for 'noise' generation
-  UInt16 dwPos = 0;
-  SInt32 vol;
-  UInt32 Tp;
+  static uint32 fixed_n[6] = { 0, 0, 0, 0, 0, 0 };
+  uint32 fixed_inc;
+  static uint32 k[6] = { 0, 0, 0, 0, 0, 0 };
+  static uint32 t; // used to know how much we got to advance in the ring buffer
+  static uint32 r[6];
+  static uint32 rand_val[6] = { 0, 0, 0, 0, 0x51F631E4, 0x51F631E4 }; // random seed for 'noise' generation
+  uint16 dwPos = 0;
+  int32 vol;
+  uint32 Tp;
   static char vol_tbl[32] =
   {
     /*
@@ -490,8 +490,8 @@ void WriteBuffer(char *buf, int ch, unsigned dwSize)
      */
     0, 1, 1, 2, 2, 2, 3, 3, 4, 4, 5, 5, 6, 7, 8, 9, 10, 11, 13, 15, 17, 19, 21, 24, 27, 31, 35, 39, 44, 50, 56, 64
   };
-  UInt16 lbal, rbal;
-  SChar sample;
+  uint16 lbal, rbal;
+  char sample;
 
   if (!(io.PSG[ch][PSG_DDA_REG] & PSG_DDA_ENABLE) || io.psg_channel_disabled[ch])
   {
@@ -508,8 +508,8 @@ void WriteBuffer(char *buf, int ch, unsigned dwSize)
     /*
      * There is 'direct access' audio to be played.
      */
-    static UInt32 da_index[6] = { 0, 0, 0, 0, 0, 0 };
-    UInt16 index = da_index[ch] >> 16;
+    static uint32 da_index[6] = { 0, 0, 0, 0, 0, 0 };
+    uint16 index = da_index[ch] >> 16;
 
     /*
      * For this direct audio stuff there is no frequency provided via PSG registers 3
@@ -523,7 +523,7 @@ void WriteBuffer(char *buf, int ch, unsigned dwSize)
      * See the big comment in the final else clause for an explanation of this value
      * to the best of my knowledge.
      */
-    fixed_inc = ((UInt32) (3580000 / host.sound.freq) << 16) / 0x1FF;
+    fixed_inc = ((uint32) (3580000 / host.sound.freq) << 16) / 0x1FF;
 
     /*
      * Volume handling changed 2-24-03.
@@ -567,14 +567,14 @@ void WriteBuffer(char *buf, int ch, unsigned dwSize)
        * (-16..16) by our balance (0..511) and then divide by 64 to get a final
        * 8-bit output sample of (-127..127)
        */
-      *buf++ = (char) ((SInt32) (sample * lbal) >> 6);
+      *buf++ = (char) ((int32) (sample * lbal) >> 6);
 
       if (host.sound.stereo)
       {
         /*
          * Same as above but for right channel.
          */
-        *buf++ = (char) ((SInt32) (sample * rbal) >> 6);
+        *buf++ = (char) ((int32) (sample * rbal) >> 6);
         dwPos += 2;
       }
       else
@@ -600,7 +600,7 @@ void WriteBuffer(char *buf, int ch, unsigned dwSize)
 
   if ((ch > 3) && (io.PSG[ch][7] & 0x80))
   {
-    UInt32 Np = (io.PSG[ch][7] & 0x1F);
+    uint32 Np = (io.PSG[ch][7] & 0x1F);
 
     /*
      * PSG Noise generation, for nifty little effects like space ships taking off or blowing up.
@@ -646,7 +646,7 @@ void WriteBuffer(char *buf, int ch, unsigned dwSize)
     {
       k[ch] += 3000 + Np * 512;
 
-      if ((t = (k[ch] / (UInt32) host.sound.freq)) >= 1)
+      if ((t = (k[ch] / (uint32) host.sound.freq)) >= 1)
       {
         r[ch] = mseq(&rand_val[ch]);
         k[ch] -= host.sound.freq * t;
@@ -675,7 +675,7 @@ void WriteBuffer(char *buf, int ch, unsigned dwSize)
   {
     /*
      * Thank god for well commented code!  The original line of code read:
-     * fixed_inc = ((UInt32) (3.2 * 1118608 / host.sound.freq) << 16) / Tp;
+     * fixed_inc = ((uint32) (3.2 * 1118608 / host.sound.freq) << 16) / Tp;
      * and had nary a comment to be found.  It took a little head scratching to get
      * it figured out.  The 3.2 * 1118608 comes out to 3574595.6 which is obviously
      * meant to represent the 3.58mhz cpu clock speed used in the pc engine to
@@ -696,7 +696,7 @@ void WriteBuffer(char *buf, int ch, unsigned dwSize)
      * sampling rate into consideration with regard to the 3580000 effective pc engine
      * samplerate.  We use 16.16 fixed arithmetic for speed.
      */       
-    fixed_inc = ((UInt32) (3580000 / host.sound.freq) << 16) / Tp;
+    fixed_inc = ((uint32) (3580000 / host.sound.freq) << 16) / Tp;
 
     if (host.sound.stereo)
     {
@@ -721,11 +721,11 @@ void WriteBuffer(char *buf, int ch, unsigned dwSize)
       if ((sample = (io.wave[ch][io.PSG[ch][PSG_DATA_INDEX_REG]] - 16)) >= 0)
         sample++;
 
-      *buf++ = (char) ((SInt16) (sample * lbal) >> 6);
+      *buf++ = (char) ((Sint16) (sample * lbal) >> 6);
 
       if (host.sound.stereo)
       {
-        *buf++ = (char) ((SInt32) (sample * rbal) >> 6);
+        *buf++ = (char) ((int32) (sample * rbal) >> 6);
         dwPos += 2;
       }
       else

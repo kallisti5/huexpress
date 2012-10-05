@@ -16,13 +16,13 @@
 #define FL_TIQ     0x04
 
 
-extern UChar irq_mask;
-extern UChar irq_register;
+extern uchar irq_mask;
+extern uchar irq_register;
 
-extern void  hw_put_1402(UChar);
-extern void  hw_put_1403(UChar);
+extern void  hw_put_1402(uchar);
+extern void  hw_put_1403(uchar);
 
-extern UChar hw_get_1402(void);
-extern UChar hw_get_1403(void);
+extern uchar hw_get_1402(void);
+extern uchar hw_get_1403(void);
 
 #endif

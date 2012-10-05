@@ -12,7 +12,7 @@
 #ifndef _INCLUDE_HAIKU_OSD_INIT_MACHINE
 #define _INCLUDE_HAIKU_OSD_INIT_MACHINE
 
-extern UChar gamepad;
+extern uchar gamepad;
 // gamepad detected ?
 
 extern char dump_snd;

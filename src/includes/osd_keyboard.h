@@ -9,8 +9,8 @@
 
 typedef struct
 {
-	SInt16 axis[4];
-	SInt16 button[16];
+	Sint16 axis[4];
+	Sint16 button[16];
 } js_status;
 
 extern char auto_fire_A[5];

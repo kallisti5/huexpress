@@ -13,7 +13,7 @@ void sdlmixer_fill_audio(int channel)
 		return;
 	}
 
-  UChar lvol, rvol;
+  uchar lvol, rvol;
   int i;
     
 	if (!(cvt.len))
@@ -61,14 +61,14 @@ for (i = 0; i < 6; i++)
 
 	if ( USE_S16 == TRUE ) {
     	for (i = 0; i < cvt.len ; i++)
-      	cvt.buf[i] = 128 + ((UInt32) ((sbuf[0][i] + sbuf[1][i] + sbuf[2][i] + sbuf[3][i] + sbuf[4][i] + sbuf[5][i] +
+      	cvt.buf[i] = 128 + ((uint32) ((sbuf[0][i] + sbuf[1][i] + sbuf[2][i] + sbuf[3][i] + sbuf[4][i] + sbuf[5][i] +
                 adpcmbuf[i]) * (!(i % 2) ? lvol : rvol)) >> 7);
     	// convert audio data
     	SDL_ConvertAudio(&cvt);
     	chunk = Mix_QuickLoad_RAW(cvt.buf, cvt.len_cvt);
 	}else{
     	for (i = 0; i < cvt.len ; i++)
-      	stream[i] = 128 + ((UInt32) ((sbuf[0][i] + sbuf[1][i] + sbuf[2][i] + sbuf[3][i] + sbuf[4][i] + sbuf[5][i] +
+      	stream[i] = 128 + ((uint32) ((sbuf[0][i] + sbuf[1][i] + sbuf[2][i] + sbuf[3][i] + sbuf[4][i] + sbuf[5][i] +
                 adpcmbuf[i]) * (!(i % 2) ? lvol : rvol)) >> 7);
     	chunk = Mix_QuickLoad_RAW(stream, cvt.len);
 	}

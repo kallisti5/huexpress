@@ -45,6 +45,9 @@
 #endif
 #include <assert.h>
 
+#include "cleantypes.h"
+
+
 #define PROGRAM_NAME "lsmp3"
 #define PROGRAM_VER  "1.17"
 
@@ -120,9 +123,9 @@ MP3_length (char *argv)
   char AlbumStr[ALBUM_LEN + 1];
   char YearStr[YEAR_LEN + 1];
   char CommentStr[COMMENT_LEN + 1];
-  unsigned char *pBuf;
-  unsigned char *pBufTrav;
-  unsigned char *pBufEnd;
+  uchar *pBuf;
+  uchar *pBufTrav;
+  uchar *pBufEnd;
   int Layer;
   int BitRateIdx;
   int Frq;
@@ -145,7 +148,7 @@ MP3_length (char *argv)
   int i;
 
   /* Add a few extra bytes so we may overstep our buffer */
-  if ((pBuf = (unsigned char *) malloc (FRAME_SIZ + 8)) == NULL)
+  if ((pBuf = (uchar *) malloc (FRAME_SIZ + 8)) == NULL)
     return 0;
 
   {

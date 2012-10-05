@@ -14,7 +14,7 @@
    *
    * Changes the current global volume
    */
-   void osd_snd_set_volume(UChar);
+   void osd_snd_set_volume(uchar);
 
 	/*
 	* osd_snd_init_sound

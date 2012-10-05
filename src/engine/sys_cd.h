@@ -36,11 +36,11 @@
    * osd_cd_read
    * 
    * Read a 2048 cooked sector from the cd
-   * Returns the read data in the UChar* variable
-   * Data are located at sector in the UInt32 variable
+   * Returns the read data in the uchar* variable
+   * Data are located at sector in the uint32 variable
    * return 0 on success else non zero value on error
    */
-  void osd_cd_read(UChar*, UInt32);
+  void osd_cd_read(uchar*, uint32);
 
   /*
    * osd_cd_stop_audio
@@ -55,7 +55,7 @@
    * Return the msf location of the beginning of the given track
    * plus the control byte of it
    */
-  void osd_cd_track_info(UChar track,
+  void osd_cd_track_info(uchar track,
                          int* min,
                          int* sec,
                          int* fra,
@@ -84,19 +84,19 @@
    * 
    * Plays the selected audio track
    */
-  void osd_cd_play_audio_track(UChar track);
+  void osd_cd_play_audio_track(uchar track);
 
   /*
    * osd_cd_play_audio_range
    * 
    * Plays audio range specified in msf mode
    */
-  void osd_cd_play_audio_range(UChar min_from,
-                               UChar sec_from,
-                               UChar fra_from,
-                               UChar min_to,
-                               UChar sec_to,
-                               UChar fra_to);
+  void osd_cd_play_audio_range(uchar min_from,
+                               uchar sec_from,
+                               uchar fra_from,
+                               uchar min_to,
+                               uchar sec_to,
+                               uchar fra_to);
 	/*
 	 * osd_cd_pause
 	 *
@@ -116,7 +116,7 @@
 	 *
 	 * Fills the pce buffer given as param with info about the subchannel
 	 */
-	void osd_cd_subchannel_info(UInt16 offset);
+	void osd_cd_subchannel_info(uint16 offset);
 	
 	/*
 	 * osd_cd_resume

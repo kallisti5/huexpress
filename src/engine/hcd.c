@@ -14,16 +14,16 @@
 #include "utils.h"
 #include "hcd.h"
 
-UInt32 HCD_first_track;
-UInt32 HCD_last_track;
+uint32 HCD_first_track;
+uint32 HCD_last_track;
 
 char HCD_cover_filename[256] = "";
 
 FILE *HCD_iso_FILE = 0;
 
-UInt32 HCD_current_subtitle = 0;
-UInt32 HCD_frame_at_beginning_of_track = 0;
-UChar HCD_current_played_track = 0;
+uint32 HCD_current_subtitle = 0;
+uint32 HCD_frame_at_beginning_of_track = 0;
+uchar HCD_current_played_track = 0;
 
 char*
 get_HCD_path(char *name, char *var) {
@@ -171,7 +171,7 @@ fill_HCD_info(char *name) {
 				// Search for patch
 
 			if (CD_track[current_track].patch_number) {
-				UInt32 i;
+				uint32 i;
 				char tmp_str[256];
 
 				CD_track[current_track].patch
@@ -249,7 +249,7 @@ fill_HCD_info(char *name) {
 				= get_config_int (section_name, "subtitle_number", 0);
 
 			if (CD_track[current_track].subtitle_number) {
-				UInt32 i;
+				uint32 i;
 				char tmp_str[256];
 
 				CD_track[current_track].subtitle
@@ -356,25 +356,25 @@ HCD_pause_playing ()
 };
 
 void
-HCD_play_track (UChar track, char repeat)
+HCD_play_track (uchar track, char repeat)
 {
 
   switch (CD_track[track].subtitle_synchro_type)
     {
     case 0:			// frame synchronisation
-      HCD_frame_at_beginning_of_track = (UInt32)frame;
+      HCD_frame_at_beginning_of_track = (uint32)frame;
       break;
     case 1:			// timer synchronisation
       HCD_frame_at_beginning_of_track = timer_60;
       break;
     }
 
-  HCD_current_played_track = (UChar)track;
+  HCD_current_played_track = (uchar)track;
   HCD_current_subtitle = 0;
 
   if (CD_track[track].source_type == HCD_SOURCE_CD_TRACK)
     {
-     osd_cd_play_audio_track((UChar)(CD_track[track].filename[0]));
+     osd_cd_play_audio_track((uchar)(CD_track[track].filename[0]));
      }
 
 #warning "reenable mp3 with sdl"
@@ -416,16 +416,16 @@ HCD_play_sectors (int begin_sect, int sect_len, char repeat)
 
   for (result = nb_max_track; result; result--)
     {
-      if (((UInt32)begin_sect >= CD_track[result].beg_lsn) &&
+      if (((uint32)begin_sect >= CD_track[result].beg_lsn) &&
 	  		((unsigned)begin_sect <= CD_track[result].beg_lsn + CD_track[result].length))
 			break;
     }
 
   if (CD_track[result].source_type == HCD_SOURCE_CD_TRACK)
     {
-     UInt32 min_from, sec_from, fra_from;
-     UInt32 min_to, sec_to, fra_to;
-     UInt32 min_real, sec_real, fra_real, dummy;
+     uint32 min_from, sec_from, fra_from;
+     uint32 min_to, sec_to, fra_to;
+     uint32 min_real, sec_real, fra_real, dummy;
      begin_sect -= CD_track[result].beg_lsn;
 
      /* begin_sect is now relative to the begin of the track to play */
@@ -442,7 +442,7 @@ HCD_play_sectors (int begin_sect, int sect_len, char repeat)
                 (int*)&sec_to,
                 (int*)&fra_to);
 
-     osd_cd_track_info((UChar)(CD_track[result].filename[0]),
+     osd_cd_track_info((uchar)(CD_track[result].filename[0]),
                        (int*)&min_real,
                        (int*)&sec_real,
                        (int*)&fra_real,
@@ -701,7 +701,7 @@ HCD_handle_subtitle ()
 }
 
 void
-read_sector_HCD (unsigned char *p, UInt32 dum)
+read_sector_HCD (uchar *p, uint32 dum)
 {
   int result;
 
@@ -714,15 +714,15 @@ read_sector_HCD (unsigned char *p, UInt32 dum)
     }
 
   if (CD_track[result].source_type == HCD_SOURCE_REGULAR_FILE)
-    HCD_iso_read_sector(p, dum, (UInt32)result);
+    HCD_iso_read_sector(p, dum, (uint32)result);
   else
     if (CD_track[result].source_type == HCD_SOURCE_CD_TRACK)
-      HCD_cd_read_sector(p, dum, (UInt32)result);
+      HCD_cd_read_sector(p, dum, (uint32)result);
 
 }
 
 void
-HCD_iso_read_sector(unsigned char *p, UInt32 dum, UInt32 result)
+HCD_iso_read_sector(uchar *p, uint32 dum, uint32 result)
 {
 
   static int current_position = 0;
@@ -933,11 +933,11 @@ label_are_bad:
  }
 
 void
-HCD_cd_read_sector(unsigned char *p, UInt32 dum, UInt32 result)
+HCD_cd_read_sector(uchar *p, uint32 dum, uint32 result)
 {
- UInt32 min, sec, fra, control;
+ uint32 min, sec, fra, control;
 
- osd_cd_track_info((UChar)CD_track[result].filename[0],
+ osd_cd_track_info((uchar)CD_track[result].filename[0],
                    (int*)&min,
                    (int*)&sec,
                    (int*)&fra,

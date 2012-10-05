@@ -13,7 +13,7 @@
 #include <stdio.h>
 
 #include "config.h"
-#include "cleantyp.h"
+#include "cleantypes.h"
 
 #if defined(SHARED_MEMORY)
 
@@ -60,12 +60,12 @@
 void hard_init (void);
 void hard_term (void);
 
-void	IO_write (UInt16 A,UChar V);
-UChar	IO_read  (UInt16 A);
-void	bank_set (UChar P, UChar V);
+void	IO_write (uint16 A,uchar V);
+uchar	IO_read  (uint16 A);
+void	bank_set (uchar P, uchar V);
 
-extern void	(*write_memory_function)(UInt16,UChar);
-extern UChar	(*read_memory_function)(UInt16);
+extern void	(*write_memory_function)(uint16,uchar);
+extern uchar	(*read_memory_function)(uint16);
 
 #define Wr6502(A,V) ((*write_memory_function)((A),(V)))
 
@@ -91,114 +91,114 @@ extern struct_hard_pce* hard_pce;
 extern IO *p_io;
 // the global I/O status
 
-extern UChar *RAM;
+extern uchar *RAM;
 // mem where variables are stocked (well, RAM... )
 // in reality, only 0x2000 bytes are used in a coregraphx and 0x8000 only
 // in a supergraphx
 
-extern UChar *WRAM;
+extern uchar *WRAM;
 // extra backup memory
 // This memory lies in Interface Unit or eventually in RGB adaptator
 
-extern UChar *VRAM;
+extern uchar *VRAM;
 // Video mem
 // 0x10000 bytes on coregraphx, the double on supergraphx I think
 // contain information about the sprites position/status, information
 // about the pattern and palette to use for each tile, and patterns
 // for use in sprite/tile rendering
 
-extern UInt16 *SPRAM;
+extern uint16 *SPRAM;
 // SPRAM = sprite RAM
 // The pc engine got a function to transfert a piece VRAM toward the inner
 // gfx cpu sprite memory from where data will be grabbed to render sprites
 
-extern UChar *Pal;
+extern uchar *Pal;
 // PCE->PC Palette convetion array
 // Each of the 512 available PCE colors (333 RGB -> 512 colors)
 // got a correspondancy in the 256 fixed colors palette
 
-extern UChar *VRAM2,*VRAMS;
+extern uchar *VRAM2,*VRAMS;
 // These are array to keep in memory the result of the linearisation of
 // PCE sprites and tiles
 
-extern UChar *vchange,*vchanges;
+extern uchar *vchange,*vchanges;
 // These array are boolean array to know if we must update the
 // corresponding linear sprite representation in VRAM2 and VRAMS or not
 // if (vchanges[5] != 0) 6th pattern in VRAM2 must be updated
 
 #define scanline (*p_scanline)
 
-extern UInt32 *p_scanline;
+extern uint32 *p_scanline;
 // The current rendered line on screen
 
-extern UChar *PCM;
+extern uchar *PCM;
 // The ADPCM array (0x10000 bytes)
 
 //! A pointer to know where we're currently reading data in the cd buffer
-extern UChar *cd_sector_buffer;
+extern uchar *cd_sector_buffer;
 
 //! The real buffer into which data are written from the cd and in which we
 //! takes data to gives it back throught the cd ports
-extern UChar *cd_read_buffer;
+extern uchar *cd_read_buffer;
 
 //! extra ram provided by the system CD card
-extern UChar *cd_extra_mem;
+extern uchar *cd_extra_mem;
 
 //! extra ram provided by the super system CD card
-extern UChar *cd_extra_super_mem;
+extern uchar *cd_extra_super_mem;
 
 //! extra ram provided by the Arcade card
-extern UChar *ac_extra_mem;
+extern uchar *ac_extra_mem;
 
 //! remaining useful data in cd_read_buffer
-extern UInt32 pce_cd_read_datacnt;
+extern uint32 pce_cd_read_datacnt;
 
 //! number of sectors we must still read on cd
-extern UChar cd_sectorcnt;
+extern uchar cd_sectorcnt;
 
 //! number of the current command of the cd interface
-extern UChar pce_cd_curcmd;
+extern uchar pce_cd_curcmd;
 
-extern UChar* zp_base;
+extern uchar* zp_base;
 // pointer to the beginning of the Zero Page area
 
-extern UChar* sp_base;
+extern uchar* sp_base;
 // pointer to the beginning of the Stack Area
 
-extern UChar* mmr;
+extern uchar* mmr;
 // Value of each of the MMR registers
 
-extern UChar *IOAREA;
+extern uchar *IOAREA;
 // physical address on emulator machine of the IO area (fake address as it has to be handled specially)
 
 //! 
-extern UChar *PageR[8];
-extern UChar *ROMMapR[256];
+extern uchar *PageR[8];
+extern uchar *ROMMapR[256];
 
-extern UChar *PageW[8];
-extern UChar *ROMMapW[256];
+extern uchar *PageW[8];
+extern uchar *ROMMapW[256];
 
 //! False "ram"s in which you can read/write (to homogeneize writes into RAM, BRAM, ... as well as in rom) but the result isn't coherent
-extern UChar* trap_ram_read;
-extern UChar* trap_ram_write;
+extern uchar* trap_ram_read;
+extern uchar* trap_ram_write;
 
 // physical address on emulator machine of each of the 256 banks
 
 #define cyclecount (*p_cyclecount)
 
-extern UInt32 *p_cyclecount;
+extern uint32 *p_cyclecount;
 // Number of elapsed cycles
 
 #define cyclecountold (*p_cyclecountold)
 
-extern UInt32 *p_cyclecountold;
+extern uint32 *p_cyclecountold;
 // Previous number of elapsed cycles
 
 #define external_control_cpu (*p_external_control_cpu)
 
-extern SInt32 *p_external_control_cpu;
+extern int32 *p_external_control_cpu;
 
-extern const UInt32 TimerPeriod;
+extern const uint32 TimerPeriod;
 // Base period for the timer
 
 // registers:
@@ -212,27 +212,27 @@ extern const UInt32 TimerPeriod;
 #define reg_p   (*p_reg_p)
 #define reg_s   (*p_reg_s)
 
-extern UInt16 *p_reg_pc;
-extern UChar  *p_reg_a;
-extern UChar  *p_reg_x;
-extern UChar  *p_reg_y;
-extern UChar  *p_reg_p;
-extern UChar  *p_reg_s;
+extern uint16 *p_reg_pc;
+extern uchar  *p_reg_a;
+extern uchar  *p_reg_x;
+extern uchar  *p_reg_y;
+extern uchar  *p_reg_p;
+extern uchar  *p_reg_s;
 
 #else
-extern UInt16 reg_pc;
-extern UChar  reg_a;
-extern UChar  reg_x;
-extern UChar  reg_y;
-extern UChar  reg_p;
-extern UChar  reg_s;
+extern uint16 reg_pc;
+extern uchar  reg_a;
+extern uchar  reg_x;
+extern uchar  reg_y;
+extern uchar  reg_p;
+extern uchar  reg_s;
 #endif
 
 // These are the main h6280 register, reg_p is the flag register
 
 #define cycles (*p_cycles)
 
-extern UInt32 *p_cycles;
+extern uint32 *p_cycles;
 // Number of pc engine cycles elapsed since the resetting of the emulated console
 
 /**

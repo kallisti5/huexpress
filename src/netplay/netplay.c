@@ -76,11 +76,11 @@ const int SDL_TICKS_PER_SECOND = 1000;
 /*!
  * In the lan protocol implementation, this array holds the input for the previous frame
  */
-static UChar previous_input_value[5];
+static uchar previous_input_value[5];
 
 /*!
  * In the internet protocol implementation, this pointer holds the history */
-static UChar *history_digest = NULL;
+static uchar *history_digest = NULL;
 
 //! Send packet for the previous frame
 void send_previous_digest_packet (global_status_type * global_status,
@@ -117,10 +117,10 @@ shutdown_network ()
  * \param value the value to rotate
  * \return the rotated value
  */
-UChar
-rotate_left (UChar value)
+uchar
+rotate_left (uchar value)
 {
-  return (UChar) ((value << 1) + ((value & 0x80) ? 1 : 0));
+  return (uchar) ((value << 1) + ((value & 0x80) ? 1 : 0));
 }
 
 /*!
@@ -129,10 +129,10 @@ rotate_left (UChar value)
  * \param index_min first index in the array to take into account
  * \param index_max last index (EXCLUSIVE) in the array to take into account
  */
-unsigned char
-compute_checksum (unsigned char *data, int index_min, int index_max)
+uchar
+compute_checksum (uchar *data, int index_min, int index_max)
 {
-  UChar checksum;
+  uchar checksum;
   int index;
 
   checksum = 0;
@@ -758,7 +758,7 @@ int
 get_remaining_time (global_status_type * global_status)
 {
   double next_time;
-  UInt32 current_time;
+  uint32 current_time;
 
   current_time = SDL_GetTicks ();
 
@@ -772,18 +772,18 @@ get_remaining_time (global_status_type * global_status)
 	   current_time,
 	   (double) current_time / (double) SDL_TICKS_PER_SECOND,
 	   global_status->frame_number,
-	   (UInt32) (next_time * 1000.0) - current_time,
+	   (uint32) (next_time * 1000.0) - current_time,
 	   next_time - current_time / (double) SDL_TICKS_PER_SECOND);
 
 #endif
 
-  if ((UInt32) (next_time * 1000.0) < current_time)
+  if ((uint32) (next_time * 1000.0) < current_time)
     {
       fprintf (stderr, "The server is too slow, we're late for frame %u\n",
 	       global_status->frame_number);
       return 0;
     }
-  return (UInt32) (next_time * 1000.0) - current_time;
+  return (uint32) (next_time * 1000.0) - current_time;
 }
 
 /*!
@@ -791,7 +791,7 @@ get_remaining_time (global_status_type * global_status)
  */
 void
 store_individual_status (global_status_type * global_status,
-			 int input_index, UChar input_value)
+			 int input_index, uchar input_value)
 {
   global_status->input_value[input_index] = input_value;
 }
@@ -933,7 +933,7 @@ init_internet_history ()
       return;
     }
 
-  history_digest = (UChar *) malloc ((size_t) BUFFER_SIZE_BYTES);
+  history_digest = (uchar *) malloc ((size_t) BUFFER_SIZE_BYTES);
 
   if (history_digest == NULL)
     {

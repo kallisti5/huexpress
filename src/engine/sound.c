@@ -23,7 +23,7 @@ extern void sdl_fill_audio(void *data, Uint8 *stream, int len);
 
 /* Variables definition */
 
-UChar sound_driver = 3;
+uchar sound_driver = 3;
 // 0 =-¯ No sound driver
 // 1 =-¯ Allegro sound driver
 // 2 =-¯ Seal sound driver
@@ -39,14 +39,14 @@ char *sbuf[6];
 char *adpcmbuf;
 // the buffer filled with adpcm data
 
-UChar new_adpcm_play = 0;
+uchar new_adpcm_play = 0;
 // Have we begun a new adpcm sample (i.e. must be reset adpcm index/prev value)
 
-unsigned char main_buf[SBUF_SIZE_BYTE];
+uchar main_buf[SBUF_SIZE_BYTE];
 // the mixed buffer, may be removed later for hard mixing...
 
-UInt32 CycleOld;
-UInt32 CycleNew;
+uint32 CycleOld;
+uint32 CycleNew;
 // indicates the last time music has been "released"
 
 /* TODO */
@@ -56,19 +56,19 @@ int BaseClock=7170000;
 // the sound use a kind of "relative" frequency
 // I think there's a pb with this value that cause troubles with some cd sync
 
-UInt32 ds_nChannels = 1;
+uint32 ds_nChannels = 1;
 // mono or stereo, to remove later
 
-UInt32 dwNewPos;
+uint32 dwNewPos;
 
-UInt32 AdpcmFilledBuf = 0;
+uint32 AdpcmFilledBuf = 0;
 // Size (in nibbles) of adpcm buf that has been filled with new data
 
-UChar *big_buf;
+uchar *big_buf;
 
-UChar gen_vol = 255;
+uchar gen_vol = 255;
 
-UInt32 sbuf_size = 10 * 1024;
+uint32 sbuf_size = 10 * 1024;
 
 
 /* Functions definition */
@@ -128,7 +128,7 @@ int InitSound(void)
 void
 TrashSound (void)		/* Shut down sound  */
 {
-	UChar dum;
+	uchar dum;
 
 	if (!silent) {
 		for (dum = 0; dum < 6; dum++)
@@ -144,7 +144,7 @@ TrashSound (void)		/* Shut down sound  */
 void
 write_psg (int ch)
 {
-	UInt32 Cycle;
+	uint32 Cycle;
 
 	if (CycleNew != CycleOld) {
 		Cycle = CycleNew - CycleOld;
@@ -171,7 +171,7 @@ write_psg (int ch)
 */
 	if (sound_driver == 2) // || sound_driver == 3) /* Added 3 (SDL) */
 	{
-		if (dwNewPos > (UInt32) host.sound.freq * SOUND_BUF_MS / 1000) {
+		if (dwNewPos > (uint32) host.sound.freq * SOUND_BUF_MS / 1000) {
 			#if ENABLE_TRACING_AUDIO
 			TRACE("AUDIO: Sound buffer overrun\n");
 			#endif
@@ -209,11 +209,11 @@ write_psg (int ch)
 /* TODO : doesn't support repeat mode for now */
 void write_adpcm(void)
 {
-	UInt32 Cycle;
-	UInt32 AdpcmUsedNibbles;
+	uint32 Cycle;
+	uint32 AdpcmUsedNibbles;
 
-	static SChar index;
-	static SInt32 previousValue;
+	static char index;
+	static int32 previousValue;
 
 	if (CycleNew != CycleOld) {
 		Cycle = CycleNew - CycleOld;
@@ -263,7 +263,7 @@ static FILE* audio_output_file = NULL;
 static int sound_dump_length;
 
 //! Cycle of the last sound output
-static UInt32 sound_dump_last_cycle;
+static uint32 sound_dump_last_cycle;
 
 //! Start the audio dump process
 //! return 1 if audio dumping began, else 0
@@ -345,7 +345,7 @@ start_dump_audio(void) {
 
 void
 stop_dump_audio(void) {
-	UInt32 dum;
+	uint32 dum;
 
 	if (audio_output_file == NULL)
 		return;
@@ -372,7 +372,7 @@ stop_dump_audio(void) {
 
 
 void
-dump_audio_chunck(UChar* content, int length) {
+dump_audio_chunck(uchar* content, int length) {
 	int cycle;
 	int real_length;
 

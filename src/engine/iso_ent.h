@@ -1,4 +1,4 @@
-UChar ISO_header[0x800]=
+uchar ISO_header[0x800]=
 {
 
 

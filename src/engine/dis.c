@@ -19,7 +19,7 @@
 
 /* Way to accedate to the PC Engine memory
 
-unsigned char Op6502(register unsigned A) { register char __AUX;
+uchar Op6502(register unsigned A) { register char __AUX;
                __asm__ __volatile__ ("
 	movl _Page(,%%eax,4),%%ecx
 	movb (%%edx,%%ecx),%%al"
@@ -34,15 +34,15 @@ unsigned char Op6502(register unsigned A) { register char __AUX;
 
 /* GLOBALS */
 
-UChar opbuf[OPBUF_SIZE];
+uchar opbuf[OPBUF_SIZE];
 
-UInt16 init_pos;
+uint16 init_pos;
 // Initial adress to disassemble
 
-UInt16 selected_position;
+uint16 selected_position;
 // Adress user points to
 
-UChar running_mode;
+uchar running_mode;
 // the state we are running the cpu:
 // 0 -> plain running
 // 1 -> stepping, going over subroutines
@@ -60,7 +60,7 @@ UChar running_mode;
 void
 forward_one_line ()
 {
-  unsigned char op;
+  uchar op;
 
 	op = get_8bit_addr(init_pos);
   if ((op & 0xF) == 0xB)
@@ -89,11 +89,11 @@ void
 backward_one_line ()
 {
   char line;
-  unsigned char Try;
-  UInt16 try_pos[MAX_TRY] = { 1, 2, 3, 4, 7 };
+  uchar Try;
+  uint16 try_pos[MAX_TRY] = { 1, 2, 3, 4, 7 };
   unsigned short temp_pos;
   char possible;
-  unsigned char op, size, i;
+  uchar op, size, i;
 
   for (Try = 0; Try < MAX_TRY; Try++)
     {
@@ -200,7 +200,7 @@ dis_key ()
     case KEY_F3:		/* F3 */
       {
 	char *tmp_buf = (char *) alloca (20);
-	UChar index = 0;
+	uchar index = 0;
 
 	while (osd_keypressed ())
 	  osd_readkey ();
@@ -261,7 +261,7 @@ dis_key ()
     case KEY_F6:		/* F6 */
       {
 	char dum;
-	unsigned char op = Op6502 (selected_position);
+	uchar op = Op6502 (selected_position);
 
 	if ((op & 0xF) == 0xB)
 	  op = Bp_list[op >> 4].original_op;
@@ -329,7 +329,7 @@ dis_key ()
 
       {
 	char *tmp_buf = (char *) alloca (20);
-	UChar index = 0;
+	uchar index = 0;
 
 	while (osd_keypressed ())
 	  osd_readkey ();
@@ -375,10 +375,10 @@ disassemble ()
 #ifdef ALLEGRO
 
   char linebuf[256];
-  UChar op;
+  uchar op;
   int i, size;
   char line;
-  UInt16 position;
+  uint16 position;
   char bp_actived, bp_disabled;
   char *tmp_buf = (char *) alloca (100);
 

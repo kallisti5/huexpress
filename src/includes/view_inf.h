@@ -6,7 +6,7 @@
 #define MAX_PAGES 10
 
 #include "pce.h"
-#include "cleantyp.h"
+#include "cleantypes.h"
 
 void view_info();
 // Display pages of infos on hardware

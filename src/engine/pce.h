@@ -17,7 +17,7 @@
 #define WIDTH   (360+64)
 #define HEIGHT  256
 
-#include "cleantyp.h"
+#include "cleantypes.h"
 
 #ifdef MSDOS
 
@@ -85,24 +85,24 @@ extern DATAFILE *datafile;
 #define SERVER_HOSTNAME_MAX_SIZE 256
 
 
-SInt32 CheckSprites (void);
+int32 CheckSprites (void);
 void RefreshLine (int Y1, int Y2);
 void RefreshScreen (void);
-UInt32 CRC_file (char *);
+uint32 CRC_file (char *);
 int CartLoad (char *name);
 #ifndef KERNEL_DS
 int ResetPCE (M6502 * M);
 #else
 int ResetPCE ();
 #endif
-SInt32 InitMachine (void);
+int32 InitMachine (void);
 void TrashMachine (void);
-SInt32 Joysticks (void);
-UInt32 msf2nb_sect (UChar min, UChar sec, UChar fra);
+int32 Joysticks (void);
+uint32 msf2nb_sect (uchar min, uchar sec, uchar fra);
 void fill_cd_info ();
-void nb_sect2msf (UInt32 lsn, UChar * min, UChar * sec, UChar * frm);
+void nb_sect2msf (uint32 lsn, uchar * min, uchar * sec, uchar * frm);
 void delete_file_tmp (char *name, int dummy, int dummy2);
-UChar TimerInt ();
+uchar TimerInt ();
 
 void init_log_file ();
 int InitPCE (char *name, char *backmemname);
@@ -117,10 +117,10 @@ search_possible_syscard();
 extern FILE *out_snd;
 // The file used to put sound into
 
-extern SChar volatile key_delay;
+extern char volatile key_delay;
 // are we allowed to press another 'COMMAND' key ?
 
-extern volatile UInt32 message_delay;
+extern volatile uint32 message_delay;
 // if different of zero, we must display the message pointed by pmessage
 
 extern char short_cart_name[PATH_MAX];
@@ -167,15 +167,15 @@ extern M6502 M;
 
 #endif
 
-extern UChar populus;
+extern uchar populus;
 
-extern UChar *PopRAM;
+extern uchar *PopRAM;
 // Now dynamicaly allocated
 // ( size of popRAMsize bytes )
 // If someone could explain me why we need it
 // the version I have works well without this trick
 
-extern const UInt32 PopRAMsize;
+extern const uint32 PopRAMsize;
 // I don't really know if it must be 0x8000 or 0x10000
 
 #ifdef ALLEGRO
@@ -185,42 +185,42 @@ extern BITMAP *XBuf;
 extern char *server_hostname;
 // Name of the server to connect to
 
-extern SInt32 smode;
+extern int32 smode;
 // what sound card type should we use? (0 means the silent one,
 // my favorite : the fastest!!! ; and -1 means AUTODETECT;
 // later will avoid autodetection if wanted)
 
-extern SChar silent;
+extern char silent;
 // use sound?
 
-extern UChar language;
+extern uchar language;
 // the current language
 
 extern int BaseClock, UPeriod;
 
-extern UChar US_encoded_card;
+extern uchar US_encoded_card;
 // Do we have to swap even and odd bytes in the rom
 
-extern UChar debug_on_beginning;
+extern uchar debug_on_beginning;
 // Do we have to set a bp on the reset IP
 
-extern UChar CD_emulation;
+extern uchar CD_emulation;
 // Do we handle CDs
 
-extern UChar CDBIOS_replace[0x4d][2];
+extern uchar CDBIOS_replace[0x4d][2];
 // Used to know what byte do we have replaced
 
-extern UChar use_eagle;
+extern uchar use_eagle;
 // Do we use eagle ?
 
-extern UInt32 timer_60;
+extern uint32 timer_60;
 // how many times do the interrupt have been called
 
-extern UChar bcdbin[0x100];
+extern uchar bcdbin[0x100];
 
-extern UChar binbcd[0x100];
+extern uchar binbcd[0x100];
 
-extern UInt32 pce_cd_sectoraddy;
+extern uint32 pce_cd_sectoraddy;
 
 struct host_video
 {
@@ -230,8 +230,8 @@ struct host_video
 struct host_sound
 {
   boolean stereo;
-  UInt32 freq;
-  UInt16 sample_size;
+  uint32 freq;
+  uint16 sample_size;
   boolean signed_sound;
 };
 
@@ -253,15 +253,15 @@ struct hugo_options
   boolean want_arcade_card_emulation;
   boolean want_supergraphx_emulation;
   boolean want_television_size_emulation;
-  UChar window_size;
-  UInt16 fullscreen_width;
-  UInt16 fullscreen_height;
-  UInt32 want_snd_freq;
-  UInt32 wanted_hardware_format;
+  uchar window_size;
+  uint16 fullscreen_width;
+  uint16 fullscreen_height;
+  uint32 want_snd_freq;
+  uint32 wanted_hardware_format;
 #if defined(ENABLE_NETPLAY)
   netplay_type want_netplay;
   char server_hostname[SERVER_HOSTNAME_MAX_SIZE];
-  UChar local_input_mapping[5];
+  uchar local_input_mapping[5];
 #endif
 };
 
@@ -270,17 +270,17 @@ extern struct hugo_options option;
 typedef struct
 {
 
-  UInt32 offset;
+  uint32 offset;
 
-  UChar new_val;
+  uchar new_val;
 
 } PatchEntry;
 
 typedef struct
 {
 
-  UInt32 StartTime;
-  UInt32 Duration;
+  uint32 StartTime;
+  uint32 Duration;
   char data[32];
 
 } SubtitleEntry;
@@ -294,22 +294,22 @@ typedef enum
 
 typedef struct
 {
-  UChar beg_min;
-  UChar beg_sec;
-  UChar beg_fra;
+  uchar beg_min;
+  uchar beg_sec;
+  uchar beg_fra;
 
-  UChar type;
+  uchar type;
 
-  UInt32 beg_lsn;
-  UInt32 length;
+  uint32 beg_lsn;
+  uint32 length;
 
   hcd_source_type source_type;
   char filename[256];
 
-  UInt32 patch_number;
-  UInt32 subtitle_number;
+  uint32 patch_number;
+  uint32 subtitle_number;
 
-  UChar subtitle_synchro_type;
+  uchar subtitle_synchro_type;
 
   PatchEntry *patch;
   SubtitleEntry *subtitle;
@@ -318,15 +318,15 @@ typedef struct
 
 extern Track CD_track[0x100];
 
-extern UChar nb_max_track;
+extern uchar nb_max_track;
 
-extern UChar video_driver;
+extern uchar video_driver;
 
-extern UChar use_scanline;
+extern uchar use_scanline;
 
-extern UChar minimum_bios_hooking;
+extern uchar minimum_bios_hooking;
 
-extern UChar cart_reload;
+extern uchar cart_reload;
 
 #if !defined(MIN)
 #define MIN(a,b) ({__typeof__(a) _a = (a); __typeof__(b) _b = (b);_a < _b ? _a : _b; })
@@ -335,7 +335,7 @@ extern UChar cart_reload;
 
 // Video related defines
 
-extern UChar can_write_debug;
+extern uchar can_write_debug;
 
 #define SpHitON    (io.VDC[CR].W&0x01)
 #define OverON     (io.VDC[CR].W&0x02)

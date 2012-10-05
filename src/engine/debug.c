@@ -12,7 +12,7 @@
 /***************************************************************************/
 #include "debug.h"
 
-UInt16 Bp_pos_to_restore;
+uint16 Bp_pos_to_restore;
 
 // Used in RESTORE_BP to know where we must restore a BP
 
@@ -20,7 +20,7 @@ Breakpoint Bp_list[MAX_BP];
 
 // Set of breakpoints
 
-UChar save_background = 1;
+uchar save_background = 1;
 
 
 #ifdef ALLEGRO
@@ -43,7 +43,7 @@ BITMAP *save_bg;
 /*
 #if defined(MSDOS) || defined(WIN32)
 
-unsigned char
+uchar
 Op6502 (register unsigned A)
 {
   register char __AUX;
@@ -60,7 +60,7 @@ Op6502 (register unsigned A)
 #else 
        */
 
-unsigned char
+uchar
 Op6502 (unsigned int A)
 {
   return (PageR[A >> 13][A]);
@@ -126,10 +126,10 @@ disass_menu ()
 *****************************************************************************/
 
 int
-toggle_user_breakpoint (UInt16 where)
+toggle_user_breakpoint (uint16 where)
 {
 
-  UChar dum;
+  uchar dum;
 
   for (dum = 0; dum < MAX_USER_BP; dum++)
 
@@ -168,7 +168,7 @@ toggle_user_breakpoint (UInt16 where)
   Bp_list[dum].original_op = Op6502 (where);
 
 
-  Wr6502 (where, (UChar)(0xB + 0x10 * dum));
+  Wr6502 (where, (uchar)(0xB + 0x10 * dum));
 
   // Put an invalid opcode
 
@@ -191,7 +191,7 @@ void
 display_debug_help ()
 {
 #ifdef ALLEGRO
-  UInt32 x;
+  uint32 x;
 
   BITMAP *bg;
 
@@ -235,10 +235,10 @@ display_debug_help ()
 	 directly taken from Dave Shadoff emulator TGSIM*
 
 *****************************************************************************/
-UInt32 cvtnum (char *string)
+uint32 cvtnum (char *string)
 {
 
-  UInt32 value = 0;
+  uint32 value = 0;
 
   char *c = string;
 
@@ -298,18 +298,18 @@ UInt32 cvtnum (char *string)
        correctly jump, ret,...
                  Well, the trick isn't in a 10 line function ;)
                  but in the optable.following_IP funcs
-    Parameters: UInt16 where, the current address
-                UChar nb, the nb of the breakpoint to set
+    Parameters: uint16 where, the current address
+                uchar nb, the nb of the breakpoint to set
     Return: nothing
 
 *****************************************************************************/
 void
-set_bp_following (UInt16 where, UChar nb)
+set_bp_following (uint16 where, uchar nb)
 {
 
-  UInt16 next_pos;
+  uint16 next_pos;
 
-  UChar op = Op6502 (where);
+  uchar op = Op6502 (where);
 
 
   next_pos = (*optable_debug[op].following_IP) (where);
@@ -324,7 +324,7 @@ set_bp_following (UInt16 where, UChar nb)
   Bp_list[nb].original_op = Op6502 (next_pos);
 
 
-  Wr6502 (next_pos, (UChar)(0xB + 0x10 * nb));
+  Wr6502 (next_pos, (uchar)(0xB + 0x10 * nb));
 
 
   return;
@@ -338,11 +338,11 @@ set_bp_following (UInt16 where, UChar nb)
 
     Description: change the value
     Parameters: int X, int Y : position on screen
-                UChar lenght : # of characters allowed
+                uchar lenght : # of characters allowed
     Return: the new value in int pointed by result
 
 *****************************************************************************/
-UChar change_value (int X, int Y, UChar length, UInt32 * result)
+uchar change_value (int X, int Y, uchar length, uint32 * result)
 {
 #ifdef ALLEGRO
   char index = 0;

@@ -32,7 +32,7 @@ void (*fade_in_proc[5]) (BITMAP *, unsigned, unsigned, unsigned, unsigned) =
 
 #else
 
-void (*fade_in_proc[5]) (UChar *, unsigned, unsigned, unsigned, unsigned) =
+void (*fade_in_proc[5]) (uchar *, unsigned, unsigned, unsigned, unsigned) =
 {};
 
 #endif
@@ -90,8 +90,8 @@ special_fadein1 (BITMAP * to, unsigned xto, unsigned yto, unsigned xmax,
   static char xinit[] = { 0, 1, 2, 3, 3, 3, 3, 2, 1, 0, 0, 0, 1, 2, 2, 1 };
   static char yinit[] = { 0, 0, 0, 0, 1, 2, 3, 3, 3, 3, 2, 1, 1, 1, 2, 2 };
   unsigned x = 0, y = 0;
-  unsigned char index;
-  UChar tmp_sync = 0;
+  uchar index;
+  uchar tmp_sync = 0;
   for (index = 0; index < 16; index++)
     {
       for (y = yinit[index]; y < ymax; y += 4)
@@ -126,8 +126,8 @@ special_fadeout1 (unsigned xto, unsigned yto, unsigned xmax, unsigned ymax)
   static char xinit[] = { 0, 1, 2, 3, 3, 3, 3, 2, 1, 0, 0, 0, 1, 2, 2, 1 };
   static char yinit[] = { 0, 0, 0, 0, 1, 2, 3, 3, 3, 3, 2, 1, 1, 1, 2, 2 };
   unsigned x = 0, y = 0;
-  unsigned char index;
-  UChar tmp_sync = 0;
+  uchar index;
+  uchar tmp_sync = 0;
   for (index = 0; index < 16; index++)
     {
       for (y = yto + yinit[index]; y < yto + ymax; y += 4)
@@ -163,7 +163,7 @@ special_fadeout2 (unsigned xto, unsigned yto, unsigned xmax, unsigned ymax)
   int y = 0;
   int *diff, *act;
   int index, max_iter = (xmax - xto) / 8, iter = 0;
-  UChar tmp_sync = 0;
+  uchar tmp_sync = 0;
 
   diff = (int *) alloca (sizeof (int) * ymax);
   act = (int *) alloca (sizeof (int) * ymax);
@@ -212,7 +212,7 @@ special_fadein2 (BITMAP * to, unsigned xto, unsigned yto, unsigned xmax,
   int y = 0;
   int *diff, *act;
   int index, max_iter = (xmax - xto) / 8, iter = 0;
-  UChar tmp_sync = 0;
+  uchar tmp_sync = 0;
 
   diff = (int *) alloca (sizeof (int) * ymax);
   act = (int *) alloca (sizeof (int) * ymax);
@@ -264,7 +264,7 @@ special_fadein3 (BITMAP * to, unsigned xto, unsigned yto, unsigned xmax,
   int y = 0;
   int *diff, *act;
   int index, max_iter = (xmax - xto) / 10, iter = 0;
-  UChar tmp_sync = 0;
+  uchar tmp_sync = 0;
 
   diff = (int *) alloca (sizeof (int) * ymax);
   act = (int *) alloca (sizeof (int) * ymax);
@@ -313,7 +313,7 @@ special_fadeout3 (unsigned xto, unsigned yto, unsigned xmax, unsigned ymax)
   int y = 0;
   int *diff, *act;
   int index, max_iter = (xmax - xto) / 10, iter = 0;
-  UChar tmp_sync = 0;
+  uchar tmp_sync = 0;
 
   diff = (int *) alloca (sizeof (int) * ymax);
   act = (int *) alloca (sizeof (int) * ymax);
@@ -363,8 +363,8 @@ special_fadein4 (BITMAP * to, unsigned xto, unsigned yto, unsigned xmax,
   static char xinit[] = { 0, 2, 0, 2, 1, 3, 1, 3, 1, 3, 1, 3, 2, 0, 2, 0 };
   static char yinit[] = { 0, 0, 1, 1, 2, 2, 3, 3, 0, 0, 1, 1, 2, 2, 3, 3 };
   unsigned x = 0, y = 0;
-  unsigned char index;
-  UChar tmp_sync = 0;
+  uchar index;
+  uchar tmp_sync = 0;
   for (index = 0; index < 16; index++)
     {
       for (y = yinit[index]; y < ymax; y += 4)
@@ -399,8 +399,8 @@ special_fadeout4 (unsigned xto, unsigned yto, unsigned xmax, unsigned ymax)
   static char xinit[] = { 0, 2, 0, 2, 1, 3, 1, 3, 1, 3, 1, 3, 2, 0, 2, 0 };
   static char yinit[] = { 0, 0, 1, 1, 2, 2, 3, 3, 0, 0, 1, 1, 2, 2, 3, 3 };
   unsigned x = 0, y = 0;
-  unsigned char index;
-  UChar tmp_sync = 0;
+  uchar index;
+  uchar tmp_sync = 0;
   for (index = 0; index < 16; index++)
     {
       for (y = yto + yinit[index]; y < yto + ymax; y += 4)
@@ -436,8 +436,8 @@ special_fadein5 (BITMAP * to, unsigned xto, unsigned yto, unsigned xmax,
   static char xinit[] = { 3, 2, 2, 1, 1, 0, 0, 0, 1, 0, 1, 2, 2, 3, 3, 3 };
   static char yinit[] = { 0, 1, 0, 0, 1, 0, 1, 2, 2, 3, 3, 3, 2, 3, 2, 1 };
   unsigned x = 0, y = 0;
-  unsigned char index;
-  UChar tmp_sync = 0;
+  uchar index;
+  uchar tmp_sync = 0;
   for (index = 0; index < 16; index++)
     {
       for (y = yinit[index]; y < ymax; y += 4)
@@ -473,8 +473,8 @@ special_fadeout5 (unsigned xto, unsigned yto, unsigned xmax, unsigned ymax)
   static char xinit[] = { 3, 2, 2, 1, 1, 0, 0, 0, 1, 0, 1, 2, 2, 3, 3, 3 };
   static char yinit[] = { 0, 1, 0, 0, 1, 0, 1, 2, 2, 3, 3, 3, 2, 3, 2, 1 };
   unsigned x = 0, y = 0;
-  unsigned char index;
-  UChar tmp_sync = 0;
+  uchar index;
+  uchar tmp_sync = 0;
   for (index = 0; index < 16; index++)
     {
       for (y = yto + yinit[index]; y < yto + ymax; y += 4)

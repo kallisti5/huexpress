@@ -25,9 +25,9 @@
 #ifndef _INCLUDE_PCECD_H
 #define _INCLUDE_PCECD_H
 
-#include "cleantyp.h"
+#include "cleantypes.h"
 
-UChar pce_cd_handle_read_1800(UInt16 A);
-void pce_cd_handle_write_1800(UInt16 A, UChar V);
+uchar pce_cd_handle_read_1800(uint16 A);
+void pce_cd_handle_write_1800(uint16 A, uchar V);
 
 #endif

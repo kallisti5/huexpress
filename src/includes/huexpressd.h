@@ -56,7 +56,7 @@
 
 #include <SDL_net.h>
 #include "config.h"
-#include "cleantyp.h"
+#include "cleantypes.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -93,10 +93,10 @@ extern "C"
 
   typedef struct
   {
-    UInt32 frame_number;
+    uint32 frame_number;
     int number_identified_players;
     input_mapping_type input_mapping[5];	//!< 5 stands for MAX_NUMBER_PLAYER
-    UChar input_value[5];                       //!< 5 stands for MAX_NUMBER_PLAYER
+    uchar input_value[5];                       //!< 5 stands for MAX_NUMBER_PLAYER
     client_status_type player_status[5];	//!< 5 stands for MAX_NUMBER_PLAYER
     UDPsocket server_socket;
     UDPpacket *current_packet;	//!< current packet computed from client
@@ -105,8 +105,8 @@ extern "C"
     int number_allocation_request;
     allocation_request_type allocation_request[5];  //!< 5 stands for MAX_NUMBER_PLAYER
     double start_time; //!< In seconds
-    UInt32 next_frame_to_send[5];  //!< 5 stands for MAX_NUMBER_PLAYER
-    UInt32 next_frame_asked[5];   //!< 5 stands for MAX_NUMBER_PLAYER
+    uint32 next_frame_to_send[5];  //!< 5 stands for MAX_NUMBER_PLAYER
+    uint32 next_frame_asked[5];   //!< 5 stands for MAX_NUMBER_PLAYER
   } global_status_type;
 
 #ifdef __cplusplus

@@ -34,9 +34,9 @@ void parse_INIfile();
 int parse_commandline(int argc, char** argv);
 /* check the command line for options */
 
-extern unsigned char joy_mapping[5][16];
+extern uchar joy_mapping[5][16];
 
-extern SInt32 smode,vmode;
+extern int32 smode,vmode;
 
 extern char* bmdefault;
 

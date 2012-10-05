@@ -1,7 +1,7 @@
 #ifndef _INCLUDE_SYS_INP_H
 #define _INCLUDE_SYS_INP_H
 
-#include "cleantyp.h"
+#include "cleantypes.h"
 #if defined(ENABLE_NETPLAY)
 #include "SDL_net.h"
 #endif
@@ -50,7 +50,7 @@ void osd_shutdown_netplay(void);
 /*!
  * Number of the input configuration
  */
-extern UChar current_config;
+extern uchar current_config;
 
 /*
  * joymap
@@ -101,23 +101,23 @@ typedef struct
 {
 	
 	//! Mouse device, 0 for none
-	UChar mousedev;
+	uchar mousedev;
 	
 	//! Joypad device, 0 for none
-	UChar joydev;
+	uchar joydev;
 	
 	//! whether autofire is set
-	UChar autoI;
-	UChar autoII;
+	uchar autoI;
+	uchar autoII;
 	
 	//! whether autofire triggered event
-	UChar firedI;
-	UChar firedII;
+	uchar firedI;
+	uchar firedII;
 	
 	//! mapping for joypad and keyboard
 	//! J_UP to J_PAD_START (excluded) are for use with the keyboard, others are
 	//! for the joypad
-	UInt16 joy_mapping[J_MAX];
+	uint16 joy_mapping[J_MAX];
 	
 } individual_input_config;
 
@@ -158,26 +158,26 @@ extern input_config config[16];
 	 */
 
 /* for nothing */
-UInt16 noinput();
+uint16 noinput();
 
 /* for keyboard/gamepad input */
-UInt16 input1();
-UInt16 input2();
-UInt16 input3();
-UInt16 input4();
-UInt16 input5();
+uint16 input1();
+uint16 input2();
+uint16 input3();
+uint16 input4();
+uint16 input5();
 
 /* for joypad */
-UInt16 joypad1();
-UInt16 joypad2();
-UInt16 joypad3();
-UInt16 joypad4();
+uint16 joypad1();
+uint16 joypad2();
+uint16 joypad3();
+uint16 joypad4();
 
 /* for mouse */
-UInt16 mouse1();
-UInt16 mouse2();
+uint16 mouse1();
+uint16 mouse2();
 
 /* for synaptic link */
-UInt16 synaplink();
+uint16 synaplink();
 
 #endif

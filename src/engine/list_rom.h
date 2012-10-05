@@ -44,12 +44,12 @@ struct pce_rom_info
 extern struct pce_rom_info *pce_romlist;
 extern int pce_romlist_size;
 
-#include "cleantyp.h"
+#include "cleantypes.h"
 
 // extern ROM_TYPE ROM_LIST[NB_ROM];
 
 unsigned long filesize(FILE *F);
-UInt32 CRC_file(char *name);
+uint32 CRC_file(char *name);
 void pce_build_romlist(void);
 
 #endif

@@ -10,7 +10,7 @@
   #include "osd_linux_sdl_music.h"
 #endif
 
-void osd_snd_set_volume(UChar v)
+void osd_snd_set_volume(uchar v)
 {
 	#if ENABLE_TRACING_SND
 	TRACE("Sound: Set Volume %c\n", vol);
@@ -151,7 +151,7 @@ numopened=Mix_QuerySpec(&frequency,&format,&channels);
 
 void osd_snd_trash_sound(void)
 {
-  UChar chan;
+  uchar chan;
 #if !defined(SDL_mixer)
 	SDL_CloseAudio();
 	

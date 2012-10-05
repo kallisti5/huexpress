@@ -49,7 +49,7 @@ void osd_cd_close()
 }
 
 
-void osd_cd_read(UChar *p, UInt32 sector)
+void osd_cd_read(uchar *p, uint32 sector)
 {
 	int retries = 0;
 	char buf[128];
@@ -115,7 +115,7 @@ void osd_cd_status(int *status)
 }
 
 
-void osd_cd_track_info(UChar track, int *min, int *sec, int *fra, int *control)
+void osd_cd_track_info(uchar track, int *min, int *sec, int *fra, int *control)
 {
 	*min = 0; *sec = 0; *fra = 0; *control = 0;
 
@@ -203,7 +203,7 @@ void osd_cd_resume(void)
 }
 
 
-void osd_cd_play_audio_track(UChar track)
+void osd_cd_play_audio_track(uchar track)
 {
 	TRACE("CDRom2: %s\n", __func__);
 	scsi_play_track playtrack;
@@ -222,8 +222,8 @@ void osd_cd_play_audio_track(UChar track)
 }
 
 
-void osd_cd_play_audio_range(UChar min_from, UChar sec_from, UChar fra_from,
-	UChar min_to, UChar sec_to, UChar fra_to)
+void osd_cd_play_audio_range(uchar min_from, uchar sec_from, uchar fra_from,
+	uchar min_to, uchar sec_to, uchar fra_to)
 {
 	TRACE("CDRom2: %s\n", __func__);
 }

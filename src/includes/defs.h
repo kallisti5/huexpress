@@ -5,7 +5,7 @@
 #ifndef DEFS_H_
 #define DEFS_H_
 
-#include "cleantyp.h"
+#include "cleantypes.h"
 
 //
 // misc typedefs:
@@ -16,16 +16,16 @@
 //
 typedef struct {
 #ifdef BYTEORD_LSBFIRST
-  UChar bl;
-  UChar bh;
+  uchar bl;
+  uchar bh;
 #else
-  UChar bh;
-  UChar bl;
+  uchar bh;
+  uchar bl;
 #endif
 } BytesOfWord;
 
 typedef union {
-  UInt16       w;
+  uint16       w;
   BytesOfWord  b;
 } Word;
 
@@ -40,7 +40,7 @@ typedef struct {
 } WordsOfLong;
 
 typedef union {
-  UInt32       i;
+  uint32       i;
   WordsOfLong  w;
 } LongWord;
 
@@ -50,15 +50,15 @@ typedef union {
 //
 
 typedef struct mode {
-  Int16 size;
-  void (*func_format)(Char *, long, UChar *, Char *);
+  int16 size;
+  void (*func_format)(char *, long, uchar *, char *);
 } mode_struct;
 
 
 typedef struct op {
    int (*func_exe)(void);
-   Int16  addr_mode;
-   Char * opname;
+   int16  addr_mode;
+   char * opname;
 //   short int filler[3];   // force align to power-of-2 (?)
 } operation;
 

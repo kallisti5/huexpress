@@ -16,7 +16,7 @@
 #ifndef _UTILS_C
 #define _UTILS_C
 
-#include "cleantyp.h"
+#include "cleantypes.h"
 
 void Log (char *, ...);
 
@@ -47,7 +47,7 @@ int shmctl(int, int, int);
 
 #endif
 
-void patch_rom(char* filename, int offset, UChar value);
+void patch_rom(char* filename, int offset, uchar value);
 
 char *strupr(char *s);
 #if !defined(FREEBSD)

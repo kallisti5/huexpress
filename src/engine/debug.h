@@ -37,38 +37,38 @@
 
 typedef struct
 {
-	UInt16 position;
-	UChar flag;
-	UChar original_op;
+	uint16 position;
+	uchar flag;
+	uchar original_op;
 } Breakpoint;
 
-extern UInt16 Bp_pos_to_restore;
+extern uint16 Bp_pos_to_restore;
 // Used in RESTORE_BP to know where we must restore a BP
 
 extern Breakpoint Bp_list[MAX_BP];
 // The list of all breakpoints
 
-extern UChar save_background;
+extern uchar save_background;
 // Do we have to preserve the background
 
-unsigned char Op6502 (unsigned int A);
+uchar Op6502 (unsigned int A);
 
 void disass_menu ();
 // Kind of front end for the true disassemble function
 
-int toggle_user_breakpoint (UInt16);
+int toggle_user_breakpoint (uint16);
 // Toggle the breakpoint at the specified address
 
 void display_debug_help ();
 // Display a help screen
 
-UInt32 cvtnum (char *string);
+uint32 cvtnum (char *string);
 // Convert a hexa string into a number
 
-void set_bp_following (UInt16 where, UChar nb);
+void set_bp_following (uint16 where, uchar nb);
 // Set a bp at the location that follows a given address
 
-UChar change_value (int X, int Y, UChar length, UInt32 * result);
+uchar change_value (int X, int Y, uchar length, uint32 * result);
 // Wait for user to enter a value and display in on screen
 
 #endif

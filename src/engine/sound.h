@@ -4,7 +4,7 @@
 #include "pce.h"
 #include "debug.h"
 
-extern UChar sound_driver;
+extern uchar sound_driver;
 
 #ifdef DJGPP
 
@@ -30,7 +30,7 @@ extern LPAUDIOWAVE lpWave;
 
 #endif
 
-#include "cleantyp.h"
+#include "cleantypes.h"
 
 #define SOUND_BUF_MS	200
 // I think it's too long but for a beginning it'll be enough
@@ -48,11 +48,11 @@ extern SAMPLE *CD_sample;
 
 #endif
 
-extern unsigned char * big_buf;
+extern uchar * big_buf;
 
-extern UChar gen_vol;
+extern uchar gen_vol;
 
-extern UInt32 sbuf_size;
+extern uint32 sbuf_size;
 
 extern char* sbuf[6];//[SBUF_SIZE_BYTE];
 // the buffer where the "DATA-TO-SEND-TO-THE-SOUND-CARD" go
@@ -60,7 +60,7 @@ extern char* sbuf[6];//[SBUF_SIZE_BYTE];
 
 extern char* adpcmbuf;
 
-extern UChar new_adpcm_play;
+extern uchar new_adpcm_play;
 // Have we begun a new adpcm sample (i.e. must be reset adpcm index/prev value)
 
 #ifndef SDL
@@ -70,18 +70,18 @@ extern char main_buf[SBUF_SIZE_BYTE];
 
 #else
 
-extern UChar main_buf[SBUF_SIZE_BYTE];
+extern uchar main_buf[SBUF_SIZE_BYTE];
 // the mixed buffer, may be removed later for hard mixing...
 
 #endif
 
-extern UInt32	CycleOld;
-extern UInt32   CycleNew;
+extern uint32	CycleOld;
+extern uint32   CycleNew;
 // indicates the last time music has been "released"
 
-extern UInt32	dwNewPos;
+extern uint32	dwNewPos;
 
-extern UInt32 AdpcmFilledBuf;
+extern uint32 AdpcmFilledBuf;
 
 extern char MP3_playing;
 // is MP3 playing ?
@@ -92,7 +92,7 @@ void write_psg(int ch);
 void WriteBuffer(char *, int, unsigned);
 
 void write_adpcm(void);
-void dump_audio_chunck(UChar* content, int length);
+void dump_audio_chunck(uchar* content, int length);
 
 int start_dump_audio(void);
 void stop_dump_audio(void);

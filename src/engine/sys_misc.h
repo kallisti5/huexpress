@@ -34,7 +34,7 @@
    * Behaves like kbhit, returning 0 is case no key have been pressed and a
    * non zero value if there's any key that can be read from osd_readkey
    */
-   SChar osd_keypressed(void);
+   char osd_keypressed(void);
 
   /*
    * osd_readkey
@@ -43,7 +43,7 @@
    * while the higher byte contains the scancode of the key.
    * Once called, discard the value in the keystroke buffer
    */
-   UInt16 osd_readkey(void);
+   uint16 osd_readkey(void);
 
   /*
    * osd_fix_filename_slashes

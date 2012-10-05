@@ -41,26 +41,26 @@
 
 /* Variable section */
 
-UChar minimum_bios_hooking = 0;
+uchar minimum_bios_hooking = 0;
 
-UChar can_write_debug = 0;
+uchar can_write_debug = 0;
 
-UChar *cd_buf = NULL;
+uchar *cd_buf = NULL;
 
-UChar *PopRAM;
+uchar *PopRAM;
 // Now dynamicaly allocated
 // ( size of popRAMsize bytes )
 // If someone could explain me why we need it
 // the version I have works well without this trick
 
-const UInt32 PopRAMsize = 0x8000;
+const uint32 PopRAMsize = 0x8000;
 // I don't really know if it must be 0x8000 or 0x10000
 
 #define ZW			64
 //byte ZBuf[ZW*256];
 //BOOL IsROM[8];
 
-UChar *ROM;
+uchar *ROM;
 // IOAREA = a pointer to the emulated IO zone
 // vchange = array of boolean to know whether bg tiles have changed (i.e.
 //		vchanges[5]==1 means the 6th tile have changed and VRAM2 should be updated)
@@ -68,7 +68,7 @@ UChar *ROM;
 // vchanges IDEM for sprites
 // ROM = the same thing as the ROM file (w/o header)
 
-UChar CDBIOS_replace[0x4d][2];
+uchar CDBIOS_replace[0x4d][2];
 // Used to know what byte do we have replaced to hook bios functions so that
 // we can restore them if needed
 
@@ -76,21 +76,21 @@ int ROM_size;
 // obvious, no ?
 // actually, the number of block of 0x2000 bytes in the rom
 
-extern SInt32 vmode;
+extern int32 vmode;
 // What is the favorite video mode to use
 
-SInt32 smode;
+int32 smode;
 // what sound card type should we use? (0 means the silent one,
 // my favorite : the fastest!!! ; and -1 means AUTODETECT;
 // later will avoid autodetection if wanted)
 
-SChar silent = 1;
+char silent = 1;
 // a bit different from the previous one, even if asked to
 // use a card, we could not be able to make sound...
 
 /*
  * nb_joy no more used
- * unsigned char nb_joy = 1;
+ * uchar nb_joy = 1;
  * number of input to poll
  */
 
@@ -103,7 +103,7 @@ int Country;
 int IPeriod;
 // Number of cycle between two interruption calls
 
-UInt32 TimerCount;
+uint32 TimerCount;
 // int CycleOld;
 // int TimerPeriod;
 int scanlines_per_frame = 263;
@@ -122,13 +122,13 @@ char short_iso_name[PATH_MAX];
 // Just the ISO filename without the extension (with a dot)
 // you just have to add your own extension...
 
-UChar hook_start_cd_system = 0;
+uchar hook_start_cd_system = 0;
 // Do we hook CD system to avoid pressing start on main screen
 
-UChar use_eagle = 0;
+uchar use_eagle = 0;
 // eagle use ?
 
-UChar use_scanline = 0;
+uchar use_scanline = 0;
 // use scanline mode ?
 
 char true_file_name[PATH_MAX];
@@ -155,7 +155,7 @@ char video_path[PATH_MAX];
 char ISO_filename[PATH_MAX] = "";
 // The name of the ISO file
 
-UChar force_header = 1;
+uchar force_header = 1;
 // Force the first sector of the code track to be the correct header
 
 char* server_hostname = NULL;
@@ -163,36 +163,36 @@ char* server_hostname = NULL;
 char *bmdefault = NULL;
 // Name of the backup memory
 
-UChar cart_reload = 0;
+uchar cart_reload = 0;
 // Once the game ended, do we need to load another rom
 // i.e. do we escape game by pressing F12 or do we called the file selector
 
 char effectively_played = 0;
 // Well, the name is enough I think...
 
-UChar populus = 0;
+uchar populus = 0;
 // no more hasardous detection
 // thanks to the CRC detection
 // now, used to know whether the save file
 // must contain extra info
 
-UChar US_encoded_card = 0;
+uchar US_encoded_card = 0;
 // Do we have to swap bit order in the rom
 
-UInt16 NO_ROM;
+uint16 NO_ROM;
 // Number of the ROM in the database or 0xFFFF if unknown
 
-UChar debug_on_beginning = 0;
+uchar debug_on_beginning = 0;
 // Do we have to set a bp on the reset IP
 
-UChar CD_emulation = 0;
+uchar CD_emulation = 0;
 // Do we emulate CD ( == 1)
 //						or	ISO file	 ( == 2)
 //						or	ISQ file	 ( == 3)
 //						or	plain BIN file ( == 4)
 //						or	HCD ( == 5)
 
-UChar builtin_system_used = 0;
+uchar builtin_system_used = 0;
 // Have we used the .dat included rom or no ?
 
 int scroll = 0;
@@ -209,19 +209,19 @@ Track CD_track[0x100];
 // beg_lsn -> beginning in number of sector (2048 bytes)
 // length -> number of sector
 
-volatile SChar key_delay = 0;
+volatile char key_delay = 0;
 // delay to avoid too many key strokes
 
-static volatile unsigned char can_blit = 1;
+static volatile uchar can_blit = 1;
 // used to sync screen to 60 image/sec.
 
-volatile UInt32 message_delay = 0;
+volatile uint32 message_delay = 0;
 // if different of zero, we must display the message pointed by pmessage
 
 char exit_message[256] = "";
 // What we must display at the end
 
-UChar language;
+uchar language;
 /* The language of the messages
  * 0 -> English
  * 1 -> French
@@ -234,7 +234,7 @@ UChar language;
  * 8 -> Italian
  */
 
-unsigned char binbcd[0x100] = {
+uchar binbcd[0x100] = {
 	0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09,
 	0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19,
 	0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29,
@@ -248,7 +248,7 @@ unsigned char binbcd[0x100] = {
 };
 
 
-unsigned char bcdbin[0x100] = {
+uchar bcdbin[0x100] = {
 	0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0, 0, 0, 0, 0, 0,
 	0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0, 0, 0, 0, 0, 0,
 	0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0, 0, 0, 0, 0, 0,
@@ -261,7 +261,7 @@ unsigned char bcdbin[0x100] = {
 	0x5a, 0x5b, 0x5c, 0x5d, 0x5e, 0x5f, 0x60, 0x61, 0x62, 0x63, 0, 0, 0, 0, 0, 0,
 };
 
-UChar pce_cd_adpcm_trans_done = 0;
+uchar pce_cd_adpcm_trans_done = 0;
 
 FILE *iso_FILE = NULL;
 
@@ -272,25 +272,25 @@ const char* joymap_reverse[J_MAX] = {
 	"PSELECT", "PRUN", "PAUTOI", "PAUTOII",
 	"PXAXIS", "PYAXIS"};
 
-UInt32 packed_iso_filesize = 0;
+uint32 packed_iso_filesize = 0;
 
-UInt32 ISQ_position = 0;
+uint32 ISQ_position = 0;
 
 // struct cdrom_tocentry pce_cd_tocentry;
 
-UChar nb_max_track = 24;	//(NO MORE BCD!!!!!)
+uchar nb_max_track = 24;	//(NO MORE BCD!!!!!)
 
 //extern char	 *pCartName;
 
 //extern char snd_bSound;
 
-UInt32 timer_60 = 0;
+uint32 timer_60 = 0;
 // how many times do the interrupt have been called
 
 int UPeriod = 0;
 // Number of frame to skip
 
-UChar video_driver = 0;
+uchar video_driver = 0;
 /* 0 => Normal driver, normal display
  * 1 => Eagle graphism
  * 2 => Scanline graphism
@@ -302,14 +302,14 @@ static int shm_rom_handle;
 #endif
 
 // Pre declaration of reading function routines
-void read_sector_dummy (unsigned char *, UInt32);
-void read_sector_CD (unsigned char *, UInt32);
-void read_sector_ISO (unsigned char *, UInt32);
-void read_sector_ISQ (unsigned char *, UInt32);
-void read_sector_BIN (unsigned char *, UInt32);
-void read_sector_HCD (unsigned char *, UInt32);
+void read_sector_dummy (uchar *, uint32);
+void read_sector_CD (uchar *, uint32);
+void read_sector_ISO (uchar *, uint32);
+void read_sector_ISQ (uchar *, uint32);
+void read_sector_BIN (uchar *, uint32);
+void read_sector_HCD (uchar *, uint32);
 
-void (*read_sector_method[6]) (unsigned char *, UInt32) =
+void (*read_sector_method[6]) (uchar *, uint32) =
 {
 read_sector_dummy,
 		read_sector_CD,
@@ -325,7 +325,7 @@ check_char (char *s, char c)
 }
 
 
-UInt32 interrupt_60hz (UInt32 interval, void *param)
+uint32 interrupt_60hz (uint32 interval, void *param)
 {
 	/* Refresh freezed values in RAM */
 	for (can_blit = 0; can_blit < current_freezed_values; can_blit++)
@@ -367,8 +367,8 @@ extern int op6502_nb;
 void
 fill_cd_info ()
 {
-	UChar Min, Sec, Fra;
-	UChar current_track;
+	uchar Min, Sec, Fra;
+	uchar current_track;
 
 	// Track 1 is almost always a audio avertising track
 	// 30 sec. seems usual
@@ -480,7 +480,7 @@ fill_cd_info ()
 
 
 void
-read_sector_BIN (unsigned char *p, UInt32 sector)
+read_sector_BIN (uchar *p, uint32 sector)
 {
 	static int first_read = 1;
 	static long second_track_sector = 0;
@@ -488,7 +488,7 @@ read_sector_BIN (unsigned char *p, UInt32 sector)
 
 
 	if (first_read) {
-		UChar found = 0, dummy;
+		uchar found = 0, dummy;
 		int index_in_header = 0;
 		unsigned long position;
 
@@ -541,18 +541,18 @@ read_sector_BIN (unsigned char *p, UInt32 sector)
 
 
 void
-read_sector_ISQ (unsigned char *p, UInt32 sector)
+read_sector_ISQ (uchar *p, uint32 sector)
 {
 	// Only for allegro?
 }
 
 
 #define CD_BUF_LENGTH 8
-UInt32 first_sector = 0;
+uint32 first_sector = 0;
 
 
 void
-read_sector_CD(unsigned char *p, UInt32 sector)
+read_sector_CD(uchar *p, uint32 sector)
 {
 	int i;
 	#if ENABLE_TRACING_CD
@@ -571,7 +571,7 @@ read_sector_CD(unsigned char *p, UInt32 sector)
 				memcpy(p, cd_buf, 2048);
 		}
 	} else {
-		cd_buf = (UChar *) malloc (CD_BUF_LENGTH * 2048);
+		cd_buf = (uchar *) malloc (CD_BUF_LENGTH * 2048);
 		for (i = 0; i < CD_BUF_LENGTH; i++)
 			osd_cd_read (cd_buf + 2048 * i, sector + i);
 		first_sector = sector;
@@ -582,7 +582,7 @@ read_sector_CD(unsigned char *p, UInt32 sector)
 
 
 void
-read_sector_ISO (unsigned char *p, UInt32 sector)
+read_sector_ISO (uchar *p, uint32 sector)
 {
 	int result;
 
@@ -622,7 +622,7 @@ read_sector_ISO (unsigned char *p, UInt32 sector)
 		*/
 
 		for (i = 0; i < 2048; i += 4)
-			*(UInt32 *) & p[i] = 0xDEADBEEF;
+			*(uint32 *) & p[i] = 0xDEADBEEF;
 			return;
 		}
 
@@ -641,7 +641,7 @@ read_sector_ISO (unsigned char *p, UInt32 sector)
 
 
 void
-read_sector_dummy (unsigned char *p, UInt32 sector)
+read_sector_dummy (uchar *p, uint32 sector)
 {
 	return;
 }
@@ -753,7 +753,7 @@ issue_ADPCM_dma (void)
 #endif
 
 void
-lba2msf (int lba, unsigned char *msf)
+lba2msf (int lba, uchar *msf)
 {
 	lba += CD_MSF_OFFSET;
 	msf[0] = binbcd[lba / (CD_SECS * CD_FRAMES)];
@@ -763,10 +763,10 @@ lba2msf (int lba, unsigned char *msf)
 }
 
 
-UInt32
-msf2nb_sect (UChar min, UChar sec, UChar frm)
+uint32
+msf2nb_sect (uchar min, uchar sec, uchar frm)
 {
-	UInt32 result = frm;
+	uint32 result = frm;
 	result += sec * CD_FRAMES;
 	result += min * CD_FRAMES * CD_SECS;
 	return result;
@@ -774,7 +774,7 @@ msf2nb_sect (UChar min, UChar sec, UChar frm)
 
 
 void
-nb_sect2msf (UInt32 lsn, UChar * min, UChar * sec, UChar * frm)
+nb_sect2msf (uint32 lsn, uchar * min, uchar * sec, uchar * frm)
 {
 
 	(*frm) = lsn % CD_FRAMES;
@@ -787,7 +787,7 @@ nb_sect2msf (UInt32 lsn, UChar * min, UChar * sec, UChar * frm)
 
 
 void
-IO_write (UInt16 A, UChar V)
+IO_write (uint16 A, uchar V)
 {
 	//printf("w%04x,%02x ",A&0x3FFF,V);
 
@@ -827,7 +827,7 @@ IO_write (UInt16 A, UChar V)
 					// (*init_normal_mode[video_driver]) ();
 					gfx_need_video_mode_change = 1;
 					{
-						UInt32 x, y = (WIDTH - io.screen_w) / 2 - 512 * WIDTH;
+						uint32 x, y = (WIDTH - io.screen_w) / 2 - 512 * WIDTH;
 						for (x = 0; x < 1024; x++) {
 							spr_init_pos[x] = y;
 							y += WIDTH;
@@ -838,7 +838,7 @@ IO_write (UInt16 A, UChar V)
 
 			case MWR:	/* size of the virtual background screen */
 				{
-					static UChar bgw[] = { 32, 64, 128, 128 };
+					static uchar bgw[] = { 32, 64, 128, 128 };
 					io.bg_h = (V & 0x40) ? 64 : 32;
 					io.bg_w = bgw[(V >> 4) & 3];
 				}
@@ -1008,7 +1008,7 @@ IO_write (UInt16 A, UChar V)
 
 			case CR:		/* Auto increment size */
 				{
-					static UChar incsize[] = { 1, 32, 64, 128 };
+					static uchar incsize[] = { 1, 32, 64, 128 };
 					/*
 						if (io.VDC[CR].B.h == V)
 						return;
@@ -1111,7 +1111,7 @@ IO_write (UInt16 A, UChar V)
 	case 4:
 		io.VCE[io.vce_reg.W].B.l = V;
 		{
-			UChar c;
+			uchar c;
 			int i, n;
 			n = io.vce_reg.W;
 			c = io.VCE[n].W >> 1;
@@ -1128,7 +1128,7 @@ IO_write (UInt16 A, UChar V)
 	case 5:
 		io.VCE[io.vce_reg.W].B.h = V;
 		{
-			UChar c;
+			uchar c;
 			int i, n;
 			n = io.vce_reg.W;
 			c = io.VCE[n].W >> 1;
@@ -1298,7 +1298,7 @@ IO_write (UInt16 A, UChar V)
 		}
 	else
 		{
-			UChar ac_port = (A >> 4) & 3;
+			uchar ac_port = (A >> 4) & 3;
 			switch (A & 15)
 				{
 				case 0:
@@ -1394,7 +1394,7 @@ IO_write (UInt16 A, UChar V)
 }
 
 
-UChar
+uchar
 TimerInt ()
 {
 	if (io.timer_start)
@@ -1490,7 +1490,7 @@ search_possible_syscard()
 						 set true_file_name
 
 *****************************************************************************/
-SInt32
+int32
 search_syscard()
 {
 	char* syscard_location;
@@ -1697,7 +1697,7 @@ CartLoad(char *name)
 	}
 
 #else
-	ROM = (UChar *) malloc(fsize);
+	ROM = (uchar *) malloc(fsize);
 #endif
 	ROM_size = fsize / 0x2000;
 	fread (ROM, 1, fsize, fp);
@@ -1744,7 +1744,7 @@ ResetPCE ()
 	io.screen_h = 224;
 
 	{
-		UInt32 x, y = (WIDTH - io.screen_w) / 2 - 512 * WIDTH;
+		uint32 x, y = (WIDTH - io.screen_w) / 2 - 512 * WIDTH;
 		for (x = 0; x < 1024; x++) {
 			spr_init_pos[x] = y;
 			y += WIDTH;
@@ -1842,7 +1842,7 @@ ResetPCE ()
 
 	if (CD_emulation) {
 		// We set illegal opcodes to handle CD Bios functions
-		UInt16 x;
+		uint16 x;
 
 		TRACE("Will hook CD functions\n");
 
@@ -1852,7 +1852,7 @@ ResetPCE ()
 			for (x = 0x01; x < 0x4D; x++)
 				if (x != 0x22) {
 					// the 0x22th jump is special, points to a one byte routine
-					UInt16 dest;
+					uint16 dest;
 					dest = Op6502 (0xE000 + x * 3 + 1);
 					dest += 256 * Op6502 (0xE000 + x * 3 + 2);
 
@@ -1997,7 +1997,7 @@ InitPCE (char *name, char *backmemname)
 
 	memset (VRAMS, 0, VRAMSIZE);
 
-	IOAREA = (UChar *) malloc (0x2000);
+	IOAREA = (uchar *) malloc (0x2000);
 	memset (IOAREA, 0xFF, 0x2000);
 
 	memset (vchange, 1, VRAMSIZE / 32);
@@ -2024,15 +2024,15 @@ InitPCE (char *name, char *backmemname)
 	}
 
 	if (local_us_encoded_card) {
-		UInt32 x;
-		UChar inverted_nibble[16] = { 0, 8, 4, 12,
+		uint32 x;
+		uchar inverted_nibble[16] = { 0, 8, 4, 12,
 			2, 10, 6, 14,
 			1, 9, 5, 13,
 			3, 11, 7, 15
 		};
 
 		for (x = 0; x < ROM_size * 0x2000; x++) {
-			UChar temp;
+			uchar temp;
 
 			temp = ROM[x] & 15;
 
@@ -2048,18 +2048,18 @@ InitPCE (char *name, char *backmemname)
 	if (CD_emulation)
 		{
 
-			cd_extra_mem = (UChar *) malloc (0x10000);
+			cd_extra_mem = (uchar *) malloc (0x10000);
 			memset (cd_extra_mem, 0, 0x10000);
 
-			cd_extra_super_mem = (UChar *) malloc (0x30000);
+			cd_extra_super_mem = (uchar *) malloc (0x30000);
 			memset (cd_extra_super_mem, 0, 0x30000);
 
-			ac_extra_mem = (UChar *) malloc (0x200000);
+			ac_extra_mem = (uchar *) malloc (0x200000);
 			memset (ac_extra_mem, 0, 0x200000);
 
-			cd_sector_buffer = (UChar *) malloc (0x2000);
+			cd_sector_buffer = (uchar *) malloc (0x2000);
 
-			// cd_read_buffer = (UChar *)malloc(0x2000);
+			// cd_read_buffer = (uchar *)malloc(0x2000);
 
 		}
 */
@@ -2156,7 +2156,7 @@ InitPCE (char *name, char *backmemname)
 			populus = TRUE;
 
 			MESSAGE_INFO("Special Rom: Populous detected!\n");
-			if (!(PopRAM = (UChar *) malloc (PopRAMsize)))
+			if (!(PopRAM = (uchar *) malloc (PopRAMsize)))
 				perror (MESSAGE[language][no_mem]);
 
 			ROMMapW[0x40] = PopRAM;
@@ -2243,8 +2243,8 @@ InitPCE (char *name, char *backmemname)
 	if ((NO_ROM != 0xFFFF) && (pce_romlist + NO_ROM)
 		&& (pce_romlist[NO_ROM].flags & CD_SYSTEM))
 		{
-			UInt16 offset;
-			UChar new_val;
+			uint16 offset;
+			uchar new_val;
 
 			offset = atoi (pce_romlist[NO_ROM].note);
 			new_val = atoi (&pce_romlist[NO_ROM].note[6]);

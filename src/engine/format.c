@@ -16,33 +16,33 @@
 /*@ -bufferoverflowhigh */
 
 void
-lineprint1 (char *outf, long ctr, unsigned char *op, char *outstring)
+lineprint1 (char *outf, long ctr, uchar *op, char *outstring)
 {
   sprintf (outf, "%02X          %s", *op, outstring);
 }
 
 void
-lineprint2 (char *outf, long ctr, unsigned char *op, char *outstring)
+lineprint2 (char *outf, long ctr, uchar *op, char *outstring)
 {
   sprintf (outf, "%02X %02X       %s", *op, *(op + 1), outstring);
 }
 
 void
-lineprint3 (char *outf, long ctr, unsigned char *op, char *outstring)
+lineprint3 (char *outf, long ctr, uchar *op, char *outstring)
 {
   sprintf (outf, "%02X %02X %02X    %s", *op, *(op + 1), *(op + 2),
 	   outstring);
 }
 
 void
-lineprint4 (char *outf, long ctr, unsigned char *op, char *outstring)
+lineprint4 (char *outf, long ctr, uchar *op, char *outstring)
 {
   sprintf (outf, "%02X %02X %02X %02X %s", *op, *(op + 1), *(op + 2),
 	   *(op + 3), outstring);
 }
 
 void
-lineprint7 (char *outf, long ctr, unsigned char *op, char *outstring)
+lineprint7 (char *outf, long ctr, uchar *op, char *outstring)
 {
   sprintf (outf, "%02X %02X %02X %02X %02X %02X %02X %s",
 	   *op, *(op + 1), *(op + 2), *(op + 3), *(op + 4),
@@ -54,7 +54,7 @@ lineprint7 (char *outf, long ctr, unsigned char *op, char *outstring)
 /* look/act as wrappers around lineprint functions */
 
 void
-implicit (char *outf, long ctr, unsigned char *op, char *str)
+implicit (char *outf, long ctr, uchar *op, char *str)
 {
   char buf[256];
   sprintf (buf, "%-4s", str);
@@ -62,7 +62,7 @@ implicit (char *outf, long ctr, unsigned char *op, char *str)
 }
 
 void
-immed (char *outf, long ctr, unsigned char *op, char *str)
+immed (char *outf, long ctr, uchar *op, char *str)
 {
   char buf[256];
   sprintf (buf, "%-4s #$%02X", str, *(op + 1));
@@ -70,7 +70,7 @@ immed (char *outf, long ctr, unsigned char *op, char *str)
 }
 
 void
-relative (char *outf, long ctr, unsigned char *op, char *str)
+relative (char *outf, long ctr, uchar *op, char *str)
 {
   char buf[256];
   long newadd;
@@ -87,7 +87,7 @@ relative (char *outf, long ctr, unsigned char *op, char *str)
 }
 
 void
-ind_zp (char *outf, long ctr, unsigned char *op, char *str)
+ind_zp (char *outf, long ctr, uchar *op, char *str)
 {
   char buf[256];
   sprintf (buf, "%-4s $%02X", str, *(op + 1));
@@ -95,7 +95,7 @@ ind_zp (char *outf, long ctr, unsigned char *op, char *str)
 }
 
 void
-ind_zpx (char *outf, long ctr, unsigned char *op, char *str)
+ind_zpx (char *outf, long ctr, uchar *op, char *str)
 {
   char buf[256];
   sprintf (buf, "%-4s $%02X,X", str, *(op + 1));
@@ -103,7 +103,7 @@ ind_zpx (char *outf, long ctr, unsigned char *op, char *str)
 }
 
 void
-ind_zpy (char *outf, long ctr, unsigned char *op, char *str)
+ind_zpy (char *outf, long ctr, uchar *op, char *str)
 {
   char buf[256];
   sprintf (buf, "%-4s $%02X,Y", str, *(op + 1));
@@ -111,7 +111,7 @@ ind_zpy (char *outf, long ctr, unsigned char *op, char *str)
 }
 
 void
-ind_zpind (char *outf, long ctr, unsigned char *op, char *str)
+ind_zpind (char *outf, long ctr, uchar *op, char *str)
 {
   char buf[256];
   sprintf (buf, "%-4s ($%02X)", str, *(op + 1));
@@ -119,7 +119,7 @@ ind_zpind (char *outf, long ctr, unsigned char *op, char *str)
 }
 
 void
-ind_zpix (char *outf, long ctr, unsigned char *op, char *str)
+ind_zpix (char *outf, long ctr, uchar *op, char *str)
 {
   char buf[256];
   sprintf (buf, "%-4s ($%02X,X)", str, *(op + 1));
@@ -127,7 +127,7 @@ ind_zpix (char *outf, long ctr, unsigned char *op, char *str)
 }
 
 void
-ind_zpiy (char *outf, long ctr, unsigned char *op, char *str)
+ind_zpiy (char *outf, long ctr, uchar *op, char *str)
 {
   char buf[256];
   sprintf (buf, "%-4s ($%02X),Y", str, *(op + 1));
@@ -135,7 +135,7 @@ ind_zpiy (char *outf, long ctr, unsigned char *op, char *str)
 }
 
 void
-absol (char *outf, long ctr, unsigned char *op, char *str)
+absol (char *outf, long ctr, uchar *op, char *str)
 {
   char buf[256];
   sprintf (buf, "%-4s $%02X%02X", str, *(op + 2), *(op + 1));
@@ -143,7 +143,7 @@ absol (char *outf, long ctr, unsigned char *op, char *str)
 }
 
 void
-absind (char *outf, long ctr, unsigned char *op, char *str)
+absind (char *outf, long ctr, uchar *op, char *str)
 {
   char buf[256];
   sprintf (buf, "%-4s ($%02X%02X)", str, *(op + 2), *(op + 1));
@@ -151,7 +151,7 @@ absind (char *outf, long ctr, unsigned char *op, char *str)
 }
 
 void
-absindx (char *outf, long ctr, unsigned char *op, char *str)
+absindx (char *outf, long ctr, uchar *op, char *str)
 {
   char buf[256];
   sprintf (buf, "%-4s ($%02X%02X,X)", str, *(op + 2), *(op + 1));
@@ -159,7 +159,7 @@ absindx (char *outf, long ctr, unsigned char *op, char *str)
 }
 
 void
-absx (char *outf, long ctr, unsigned char *op, char *str)
+absx (char *outf, long ctr, uchar *op, char *str)
 {
   char buf[256];
   sprintf (buf, "%-4s $%02X%02X,X", str, *(op + 2), *(op + 1));
@@ -167,7 +167,7 @@ absx (char *outf, long ctr, unsigned char *op, char *str)
 }
 
 void
-absy (char *outf, long ctr, unsigned char *op, char *str)
+absy (char *outf, long ctr, uchar *op, char *str)
 {
   char buf[256];
   sprintf (buf, "%-4s $%02X%02X,Y", str, *(op + 2), *(op + 1));
@@ -175,7 +175,7 @@ absy (char *outf, long ctr, unsigned char *op, char *str)
 }
 
 void
-pseudorel (char *outf, long ctr, unsigned char *op, char *str)
+pseudorel (char *outf, long ctr, uchar *op, char *str)
 {
   char buf[256];
   long newadd;
@@ -191,7 +191,7 @@ pseudorel (char *outf, long ctr, unsigned char *op, char *str)
 }
 
 void
-tst_zp (char *outf, long ctr, unsigned char *op, char *str)
+tst_zp (char *outf, long ctr, uchar *op, char *str)
 {
   char buf[256];
 
@@ -200,7 +200,7 @@ tst_zp (char *outf, long ctr, unsigned char *op, char *str)
 }
 
 void
-tst_abs (char *outf, long ctr, unsigned char *op, char *str)
+tst_abs (char *outf, long ctr, uchar *op, char *str)
 {
   char buf[256];
 
@@ -210,7 +210,7 @@ tst_abs (char *outf, long ctr, unsigned char *op, char *str)
 }
 
 void
-tst_zpx (char *outf, long ctr, unsigned char *op, char *str)
+tst_zpx (char *outf, long ctr, uchar *op, char *str)
 {
   char buf[256];
 
@@ -219,7 +219,7 @@ tst_zpx (char *outf, long ctr, unsigned char *op, char *str)
 }
 
 void
-tst_absx (char *outf, long ctr, unsigned char *op, char *str)
+tst_absx (char *outf, long ctr, uchar *op, char *str)
 {
   char buf[256];
 
@@ -229,7 +229,7 @@ tst_absx (char *outf, long ctr, unsigned char *op, char *str)
 }
 
 void
-xfer (char *outf, long ctr, unsigned char *op, char *str)
+xfer (char *outf, long ctr, uchar *op, char *str)
 {
   char buf[256];
 

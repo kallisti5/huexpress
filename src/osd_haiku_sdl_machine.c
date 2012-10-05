@@ -6,12 +6,12 @@ int netplay_mode;
 char initial_path[PATH_MAX] = "";
 // prefered path for for searching
 
-UChar* osd_gfx_buffer = NULL;
+uchar* osd_gfx_buffer = NULL;
 
-UChar gamepad = 0;
+uchar gamepad = 0;
 // gamepad detected ?
 
-UChar* XBuf;
+uchar* XBuf;
 // The screen buffer where we draw before blitting it on screen
 
 int gamepad_driver = 0;
@@ -34,7 +34,7 @@ int *fd[4];
 SDL_TimerID timerId;
 // handle for the timer callback
 
-UInt32 interrupt_60hz(UInt32, void*);
+uint32 interrupt_60hz(uint32, void*);
 // declaration of the actual callback to call 60 times a second
 
 int osd_init_machine(void)
@@ -48,7 +48,7 @@ int osd_init_machine(void)
 
 	atexit(SDL_Quit);
 
-	if (!(XBuf = (UChar*)malloc(XBUF_WIDTH * XBUF_HEIGHT)))
+	if (!(XBuf = (uchar*)malloc(XBUF_WIDTH * XBUF_HEIGHT)))
 	{
 		MESSAGE_ERROR("Initialization failed...\n");
 		TRACE("%s, couldn't malloc XBuf\n", __func__);
@@ -121,7 +121,7 @@ osd_shut_machine (void)
             else any non zero value
 
 *****************************************************************************/
-SChar osd_keypressed(void)
+char osd_keypressed(void)
 {
 
 #warning implement keypressed with sdl	
@@ -137,7 +137,7 @@ SChar osd_keypressed(void)
     Return: the key value (currently, lower byte is ascii and higher is scancode)
 
 *****************************************************************************/
-UInt16 osd_readkey(void)
+uint16 osd_readkey(void)
 {
 	SDL_Event event;
 	while ( SDL_PollEvent( &event ))

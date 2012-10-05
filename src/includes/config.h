@@ -75,18 +75,6 @@
 /* defined if user wants open memory openness */
 #undef SHARED_MEMORY
 
-/* The size of a `char', as computed by sizeof. */
-#define SIZEOF_CHAR 1
-
-/* The size of a `int', as computed by sizeof. */
-#define SIZEOF_INT 4
-
-/* The size of a `long int', as computed by sizeof. */
-#define SIZEOF_LONG_INT 4
-
-/* The size of a `short int', as computed by sizeof. */
-#define SIZEOF_SHORT_INT 2
-
 /* If using the C implementation of alloca, define if you know the
    direction of stack growth for your system; otherwise it will be
    automatically deduced at run-time.

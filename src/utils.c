@@ -448,7 +448,7 @@ unsigned long TAB_CONST[256] = {
    0X2D02EF8D
 };
 
-void patch_rom(char* filename, int offset, UChar value)
+void patch_rom(char* filename, int offset, uchar value)
 {
   FILE* f;
 

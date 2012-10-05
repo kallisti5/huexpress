@@ -1,7 +1,7 @@
 #ifndef _DJGPP_INCLUDE_DIS_CST_H
 #define _DJGPP_INCLUDE_DIS_CST_H
 
-#include "cleantyp.h"
+#include "cleantypes.h"
 #include "followop.h"
 
 /* addressing modes: */
@@ -32,8 +32,8 @@
 /* addressing mode information: */
 
 typedef struct mode_debug {
-  unsigned char size;
-  void (*func)(char *, long int, unsigned char *, char *);
+  uchar size;
+  void (*func)(char *, long int, uchar *, char *);
 } mode_struct_debug;
 
 /* now define table contents: */
@@ -41,7 +41,7 @@ typedef struct mode_debug {
 typedef struct op_debug {
    int addr_mode;
    char * opname;
-   UInt16 (*following_IP) (UInt16);
+   uint16 (*following_IP) (uint16);
 } operation_debug;
 
 extern operation_debug optable_debug[256];
