@@ -1,34 +1,13 @@
 #ifndef _SOUND_H_
 #define _SOUND_H_
 
+
 #include "pce.h"
 #include "debug.h"
 
+
 extern uchar sound_driver;
 
-#ifdef DJGPP
-
-#ifdef BYTE
-
-#undef BYTE
-#undef WORD
-#undef DWORD
-
-#endif
-
-#ifdef DJGPP
-
-#include <audio.h> //SEAL include
-
-extern HAC hVoice;
-
-extern LPAUDIOWAVE lpWave;
-
-#endif
-
-#include <libamp.h>
-
-#endif
 
 #include "cleantypes.h"
 
@@ -39,14 +18,6 @@ extern LPAUDIOWAVE lpWave;
 // Calculated for mono sound
 #define SBUF_SIZE_BYTE 1024*8
 
-
-#ifdef ALLEGRO
-
-extern AUDIOSTREAM* PCM_stream;
-
-extern SAMPLE *CD_sample;
-
-#endif
 
 extern uchar * big_buf;
 
@@ -96,5 +67,6 @@ void dump_audio_chunck(uchar* content, int length);
 
 int start_dump_audio(void);
 void stop_dump_audio(void);
+
 
 #endif // HDEF_SOUND_H
