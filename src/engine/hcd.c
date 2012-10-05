@@ -452,7 +452,8 @@ HCD_play_sectors (int begin_sect, int sect_len, char repeat)
 		if (strcasestr (CD_track[result].filename, ".mp3")
 			|| strcasestr (CD_track[result].filename, ".ogg")) {
 			#if defined(SDL_mixer)
-			if (-150 < begin_sect - CD_track[result].beg_lsn < 150)
+			if (-150 < begin_sect - CD_track[result].beg_lsn
+				&& begin_sect - CD_track[result].beg_lsn < 150)
 				Mix_PlayMusic(sdlmixmusic[result], repeat);
 			else  /* can't yet easily repeat "inside" a track */
 				Mix_PlayMusic(sdlmixmusic[result], FALSE);
