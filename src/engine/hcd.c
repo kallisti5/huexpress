@@ -347,294 +347,137 @@ fill_HCD_info(char *name) {
 void
 HCD_pause_playing ()
 {
-
-
-
-  if (MP3_playing)
-
-    MP3_playing = 0;
-
-
-
+	if (MP3_playing)
+		MP3_playing = 0;
 };
+
 
 void
 HCD_play_track (uchar track, char repeat)
 {
+	switch (CD_track[track].subtitle_synchro_type) {
+		case 0:			// frame synchronisation
+			HCD_frame_at_beginning_of_track = (uint32)frame;
+			break;
+		case 1:			// timer synchronisation
+			HCD_frame_at_beginning_of_track = timer_60;
+			break;
+	}
 
-  switch (CD_track[track].subtitle_synchro_type)
-    {
-    case 0:			// frame synchronisation
-      HCD_frame_at_beginning_of_track = (uint32)frame;
-      break;
-    case 1:			// timer synchronisation
-      HCD_frame_at_beginning_of_track = timer_60;
-      break;
-    }
+	HCD_current_played_track = (uchar)track;
+	HCD_current_subtitle = 0;
 
-  HCD_current_played_track = (uchar)track;
-  HCD_current_subtitle = 0;
-
-  if (CD_track[track].source_type == HCD_SOURCE_CD_TRACK)
-    {
-     osd_cd_play_audio_track((uchar)(CD_track[track].filename[0]));
-     }
-
-#warning "reenable mp3 with sdl"
-#if (defined(LINUX) || defined(MSDOS)) && defined(ALLEGRO)
-
-  else
-
-  if ((CD_track[track].source_type == HCD_SOURCE_REGULAR_FILE) &&
-
-     (strcasestr (CD_track[track].filename, ".MP3")))
-
-    {				// must play MP3
-
-      load_amp (CD_track[track].filename, repeat);
-
-      MP3_playing = 1;
-
-    }
-
-#elif defined (SDL_mixer)
-
-  else if ((CD_track[track].source_type == HCD_SOURCE_REGULAR_FILE)
-			&& ((strcasestr (CD_track[track].filename, ".mp3"))
-			||(strcasestr (CD_track[track].filename, ".ogg"))
-			||(strcasestr (CD_track[track].filename, ".wav"))))
-    {
-	  Mix_PlayMusic(sdlmixmusic[track],repeat);
-      MP3_playing = 1;
-    }
-
-#endif
-
+	switch (CD_track[track].source_type) {
+		case HCD_SOURCE_CD_TRACK:
+			osd_cd_play_audio_track((uchar)(CD_track[track].filename[0]));
+			break;
+		case HCD_SOURCE_REGULAR_FILE:
+			#if defined(SDL_mixer)
+			if ((strcasestr (CD_track[track].filename, ".mp3"))
+				|| (strcasestr (CD_track[track].filename, ".ogg"))
+				|| (strcasestr (CD_track[track].filename, ".wav"))) {
+				Mix_PlayMusic(sdlmixmusic[track],repeat);
+				MP3_playing = 1;	
+			}
+			#endif
+			break;
+	}
 };
+
 
 void
 HCD_play_sectors (int begin_sect, int sect_len, char repeat)
 {
-  int result;
-
-  for (result = nb_max_track; result; result--)
-    {
-      if (((uint32)begin_sect >= CD_track[result].beg_lsn) &&
-	  		((unsigned)begin_sect <= CD_track[result].beg_lsn + CD_track[result].length))
-			break;
-    }
-
-  if (CD_track[result].source_type == HCD_SOURCE_CD_TRACK)
-    {
-     uint32 min_from, sec_from, fra_from;
-     uint32 min_to, sec_to, fra_to;
-     uint32 min_real, sec_real, fra_real, dummy;
-     begin_sect -= CD_track[result].beg_lsn;
-
-     /* begin_sect is now relative to the begin of the track to play */
-     Frame2Time((unsigned)begin_sect,
-                (int*)&min_from,
-                (int*)&sec_from,
-                (int*)&fra_from);
-
-     sect_len += begin_sect;
-
-     /* sect_len is now also relative to the begin of the track to play */
-     Frame2Time((unsigned)sect_len,
-                (int*)&min_to,
-                (int*)&sec_to,
-                (int*)&fra_to);
-
-     osd_cd_track_info((uchar)(CD_track[result].filename[0]),
-                       (int*)&min_real,
-                       (int*)&sec_real,
-                       (int*)&fra_real,
-                       (int*)&dummy);
-
-     min_from += min_real;
-     sec_from += sec_real;
-     fra_from += fra_real;
-
-     min_to += min_real;
-     sec_to += sec_real;
-     fra_to += fra_real;
-
-
-
-     if (fra_to > 75)
-
-       {
-
-        fra_to -= 75;
-
-        sec_to ++;
-
-        }
-
-
-
-     if (fra_from > 75)
-
-       {
-
-        fra_from -= 75;
-
-        sec_from ++;
-
-        }
-
-
-
-     if (sec_to > 60)
-
-       {
-
-        sec_to -= 60;
-
-        min_to ++;
-
-        }
-
-
-
-     if (sec_from > 60)
-
-       {
-
-        sec_from -= 60;
-
-        min_from ++;
-
-        }
-
-
-
-      osd_cd_play_audio_range(min_from,
-
-                              sec_from,
-
-                              fra_from,
-
-                              min_to,
-
-                              sec_to,
-
-                              fra_to);
-
-
-
-     }
-
-#warning "reenable mp3 with sdl"
-#if (defined(LINUX) || defined(MSDOS)) && defined(ALLEGRO)
-
-  else
-
-  if ((CD_track[result].source_type == HCD_SOURCE_REGULAR_FILE) &&
-
-      (strcasestr (CD_track[result].filename, ".MP3")))
-
-    {				// must play MP3
-
-
-
-      if (-150 < begin_sect - CD_track[result].beg_lsn < 150)
-
-	load_amp (CD_track[result].filename, repeat);
-
-      else			/* can't yet easily repeat "inside" a track */
-
-	load_amp (CD_track[result].filename, FALSE);
-
-
-
-      if (amp_pollsize)
-
-	seek_amp_abs (amp_samprat / amp_pollsize *
-
-		      (begin_sect - CD_track[result].beg_lsn) / 75);
-
-
-
-      HCD_frame_at_beginning_of_track =
-
-	frame - (begin_sect - CD_track[result].beg_lsn) / 75.0 * 60.0;
-
-      /* try to estimate the number of cycle that should have elapsed since
-
-         the beginning of the track */
-
-
-
-      HCD_current_played_track = result;
-
-      HCD_current_subtitle = 0;
-
-
-
-      MP3_playing = 1;
-
-
-
-
-
-    }
-
-#elif SDL_mixer
-
-  else if ((CD_track[result].source_type == HCD_SOURCE_REGULAR_FILE)
-				&& (strcasestr (CD_track[result].filename, ".mp3")
-				||strcasestr (CD_track[result].filename, ".ogg"))) {
-
-      if (-150 < begin_sect - CD_track[result].beg_lsn < 150)
-		Mix_PlayMusic(sdlmixmusic[result], repeat);
-      else			/* can't yet easily repeat "inside" a track */
-		Mix_PlayMusic(sdlmixmusic[result], FALSE);
-
-	  Mix_RewindMusic();
-	  if (Mix_SetMusicPosition((begin_sect - CD_track[result].beg_lsn) / 75)==-1){
-	    printf("Mix_SetMusicPosition(): %s\n", Mix_GetError());
-	  }
-
-      HCD_frame_at_beginning_of_track = frame - (begin_sect - CD_track[result].beg_lsn) / 75.0 * 60.0;
-
-      /* try to estimate the number of cycle that should have elapsed since
-         the beginning of the track */
-      HCD_current_played_track = result;
-      HCD_current_subtitle = 0;
-      MP3_playing = 1;
-
-  }
-#endif
-  else if (strcasestr (CD_track[result].filename, ".WAV"))
-
-    {
-
-#ifdef MSDOS
-
-
-
-      static SAMPLE *wav_sample;
-
-
-
-      wav_sample = load_sample (CD_track[result].filename);
-
-
-
-      play_sample (wav_sample, 255, 128, 1000, FALSE);
-
-
-
-#endif
-
-
-
-    }
-
-
-
+	int result;
+
+	for (result = nb_max_track; result; result--) {
+	if (((uint32)begin_sect >= CD_track[result].beg_lsn)
+		&& ((unsigned)begin_sect <= CD_track[result].beg_lsn
+		+ CD_track[result].length))
+		break;
+	}
+
+	if (CD_track[result].source_type == HCD_SOURCE_CD_TRACK) {
+		uint32 min_from, sec_from, fra_from;
+		uint32 min_to, sec_to, fra_to;
+		uint32 min_real, sec_real, fra_real, dummy;
+		begin_sect -= CD_track[result].beg_lsn;
+
+		/* begin_sect is now relative to the begin of the track to play */
+		Frame2Time((unsigned)begin_sect, (int*)&min_from, (int*)&sec_from,
+			(int*)&fra_from);
+
+		sect_len += begin_sect;
+
+		/* sect_len is now also relative to the begin of the track to play */
+		Frame2Time((unsigned)sect_len, (int*)&min_to, (int*)&sec_to,
+			(int*)&fra_to);
+
+     	osd_cd_track_info((uchar)(CD_track[result].filename[0]),
+     		(int*)&min_real, (int*)&sec_real, (int*)&fra_real, (int*)&dummy);
+
+		min_from += min_real;
+		sec_from += sec_real;
+		fra_from += fra_real;
+
+		min_to += min_real;
+		sec_to += sec_real;
+		fra_to += fra_real;
+
+		if (fra_to > 75) {
+			fra_to -= 75;
+			sec_to++;
+		}
+
+		if (fra_from > 75) {
+			fra_from -= 75;
+			sec_from++;
+		}
+
+		if (sec_to > 60) {
+			sec_to -= 60;
+			min_to ++;
+		}
+
+		if (sec_from > 60) {
+			sec_from -= 60;
+			min_from++;
+		}
+
+		osd_cd_play_audio_range(min_from, sec_from, fra_from,
+			min_to, sec_to, fra_to);
+	}
+
+	if (CD_track[result].source_type == HCD_SOURCE_REGULAR_FILE) {
+		if (strcasestr (CD_track[result].filename, ".mp3")
+			|| strcasestr (CD_track[result].filename, ".ogg")) {
+			#if defined(SDL_mixer)
+			if (-150 < begin_sect - CD_track[result].beg_lsn < 150)
+				Mix_PlayMusic(sdlmixmusic[result], repeat);
+			else  /* can't yet easily repeat "inside" a track */
+				Mix_PlayMusic(sdlmixmusic[result], FALSE);
+
+			Mix_RewindMusic();
+			if (Mix_SetMusicPosition((begin_sect - CD_track[result].beg_lsn)
+				/ 75) == -1) {
+	    		printf("Mix_SetMusicPosition(): %s\n", Mix_GetError());
+	  		}
+
+			HCD_frame_at_beginning_of_track = frame
+				- (begin_sect - CD_track[result].beg_lsn) / 75.0 * 60.0;
+
+			/* estimate the number of cycle that should have elapsed since
+			the beginning of the track */
+			HCD_current_played_track = result;
+			HCD_current_subtitle = 0;
+			MP3_playing = 1;
+			#endif
+		} else if (strcasestr (CD_track[result].filename, ".WAV")) {
+			// TODO: There was only an MSDOS case here? :(
+		}
+	}
 };
+
 
 void
 HCD_shutdown ()
