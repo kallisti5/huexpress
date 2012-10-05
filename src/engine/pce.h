@@ -19,68 +19,34 @@
 
 #include "cleantypes.h"
 
-#ifdef MSDOS
 
-#include <crt0.h>
-#include <conio.h>
-#include <dir.h>
-#include <dos.h>
-
-#elif defined(LINUX)
-
+#if defined(LINUX)
 #include <sys/param.h>
 #include <sys/types.h>
 #include <sys/ioctl.h>
 #include <linux/cdrom.h>
-
 #elif defined(FREEBSD)
-
 #include <sys/param.h>
 #include <sys/types.h>
 #include <sys/ioctl.h>
-
 #elif defined(WIN32)
-
 #define MAX_INPUT 255
-
 #endif
 
-
-
 #ifdef KERNEL_DS
-
 #include "h6280.h"
 #include "globals.h"
 #include "interupt.h"
-
 #else
-
 #include "m6502.h"
-
 #endif
+
 
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "cd.h"
 
-#ifdef ALLEGRO
-
-#undef VGA
-// Avoid both VGA and ALLEGRO define
-
-#define alleg_mouse_unused
-#define alleg_flic_unused
-#define alleg_gui_unused
-
-#include "allegro.h"
-#include "info_dat.h"
-#include "data.h"
-// Include some informations to correctly use the datafile
-
-extern DATAFILE *datafile;
-
-#endif
 
 #define SERVER_HOSTNAME_MAX_SIZE 256
 
@@ -178,9 +144,6 @@ extern uchar *PopRAM;
 extern const uint32 PopRAMsize;
 // I don't really know if it must be 0x8000 or 0x10000
 
-#ifdef ALLEGRO
-extern BITMAP *XBuf;
-#endif
 
 extern char *server_hostname;
 // Name of the server to connect to
@@ -398,10 +361,9 @@ extern uchar can_write_debug;
 
 #include "hcd.h"
 
+
 #if defined(SEAL_SOUND)
-
 #include </djgpp/audio/include/audio.h> // SEAL include
-
 #endif /* SEAL sound */
 
 #include <time.h>
@@ -409,5 +371,6 @@ extern uchar can_write_debug;
 #ifdef SOUND
 #include "sound.h"
 #endif // SOUND
+
 
 #endif

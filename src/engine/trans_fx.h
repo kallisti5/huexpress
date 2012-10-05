@@ -19,9 +19,6 @@
 #ifndef _TRANS_FX_H_
 #define _TRANS_FX_H_
 
-#ifdef ALLEGRO
-  #include <allegro.h>
-#endif
 
 #include <string.h>
 #include "cleantypes.h"
@@ -31,17 +28,9 @@ extern const char nb_fadein;
 extern const char nb_fadeout;
 // used to know how many functions we have
 
-
-#ifdef ALLEGRO
-
-extern void (*fade_in_proc[5])(BITMAP*,unsigned,unsigned,unsigned,unsigned);
-
-#else
-
 extern void (*fade_in_proc[5])(uchar*,unsigned,unsigned,unsigned,unsigned);
 
-#endif
-
 extern void (*fade_out_proc[5])(unsigned,unsigned,unsigned,unsigned);
+
 
 #endif

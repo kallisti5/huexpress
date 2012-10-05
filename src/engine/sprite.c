@@ -1009,9 +1009,6 @@ RefreshScreen (void)
 
 	(*osd_gfx_driver_list[video_driver].draw) ();
 
-	if (!silent)
-		(*update_sound[sound_driver]) ();
-
 #if ENABLE_TRACING_GFX
 	/*
 	Log("VRAM: %02x%02x%02x%02x %02x%02x%02x%02x\n",

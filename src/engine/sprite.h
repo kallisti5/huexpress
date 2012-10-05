@@ -1,9 +1,11 @@
 #ifndef _SPRITE_H_
 #define _SPRITE_H_
 
+
 #include "pce.h"
 #include "cleantypes.h"
 #include "mix.h"
+
 
 typedef	struct {
 	short y,x,no,atr;
@@ -57,35 +59,6 @@ extern int	oldScrollYDiff;
 extern uint32 spr_init_pos[1024];
 // cooked initial position of sprite
 
-/*
-####################################
-####################################
-####################################
-####################################
-2KILL :: BEGIN
-####################################
-####################################
-####################################
-####################################
-*/
-#ifdef ALLEGRO
-
-extern BITMAP* dirty_spr[0x20000/32];
-// Used for precalculation of sprites, VRAMSIZE/32 is for # of sprite
-
-#endif
-/*
-####################################
-####################################
-####################################
-####################################
-2KILL :: END
-####################################
-####################################
-####################################
-####################################
-*/
-
 extern char exact_putspritem;
 // do we use a slow but precise function to draw certain sprites
 
@@ -112,5 +85,6 @@ extern void RefreshSpriteExact(int,int,uchar);
 
 extern void (*RefreshSprite)(int Y1,int Y2,uchar bg);
 // The pointer toward the used function
+
 
 #endif
