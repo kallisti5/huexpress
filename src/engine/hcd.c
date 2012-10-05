@@ -10,9 +10,11 @@
 /*		2011 - Alexander von Gluck, kallisti5@unixzen.com                 */
 /**************************************************************************/
 
+
 #include "iniconfig.h"
 #include "utils.h"
 #include "hcd.h"
+
 
 uint32 HCD_first_track;
 uint32 HCD_last_track;
@@ -24,6 +26,7 @@ FILE *HCD_iso_FILE = 0;
 uint32 HCD_current_subtitle = 0;
 uint32 HCD_frame_at_beginning_of_track = 0;
 uchar HCD_current_played_track = 0;
+
 
 char*
 get_HCD_path(char *name, char *var) {

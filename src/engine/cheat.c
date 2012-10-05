@@ -57,7 +57,7 @@ bigindextobank (uint32 index)
     return ((index-0x8000) >> 13) + 1;
   if (index<0x48000)
     return ((index-0x18000) >> 13) + 10;
-  // FIXME:  what to return here?
+  return 0;
 }
 
 uint16

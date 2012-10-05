@@ -2,7 +2,6 @@
 #include "osd_haiku_sdl_machine.h"
 
 int netplay_mode;
-
 char initial_path[PATH_MAX] = "";
 // prefered path for for searching
 
@@ -37,7 +36,8 @@ SDL_TimerID timerId;
 uint32 interrupt_60hz(uint32, void*);
 // declaration of the actual callback to call 60 times a second
 
-int osd_init_machine(void)
+int
+osd_init_machine(void)
 {
 	MESSAGE_INFO("Emulator initialization\n");
 
@@ -96,19 +96,18 @@ osd_shut_machine (void)
 	  SDL_RemoveTimer(timerId);
 
 #ifndef SDL  
-  /* closing joypad device */
-  close ((int)fd[0]);
+	/* closing joypad device */
+	close((int)fd[0]);
 #endif
 
 	if (dump_snd)
 		fclose(out_snd);
 
-  TrashSound();
+	TrashSound();
 
-  SDL_Quit();
+	SDL_Quit();
 
-  wipe_directory(tmp_basepath);
-
+	wipe_directory(tmp_basepath);
 }
 
 /*****************************************************************************
@@ -121,12 +120,12 @@ osd_shut_machine (void)
             else any non zero value
 
 *****************************************************************************/
-char osd_keypressed(void)
+char
+osd_keypressed(void)
 {
-
-#warning implement keypressed with sdl	
-	
- }
+	#warning TODO: implement keypressed with sdl
+	return 0;	
+}
 
 /*****************************************************************************
 
@@ -137,7 +136,8 @@ char osd_keypressed(void)
     Return: the key value (currently, lower byte is ascii and higher is scancode)
 
 *****************************************************************************/
-uint16 osd_readkey(void)
+uint16
+osd_readkey(void)
 {
 	SDL_Event event;
 	while ( SDL_PollEvent( &event ))
@@ -161,7 +161,8 @@ uint16 osd_readkey(void)
     Return: nothing but the char* is updated
 
 *****************************************************************************/
-void osd_fix_filename_slashes(char* s)
+void
+osd_fix_filename_slashes(char* s)
 {
 	while (*s)
 	{
@@ -201,7 +202,7 @@ osd_init_paths(int argc, char* argv[])
 			strcpy(short_exe_name,"./");
 		}
 	
-  sprintf(log_filename,"%s/%s",short_exe_name,"huexpress.log");	
+	sprintf(log_filename,"%s/%s",short_exe_name,"huexpress.log");	
 		
 	// Set a temporary path per user (should it be by process ?)
 	sprintf(tmp_basepath, "%s/tmp", short_exe_name);
@@ -212,7 +213,7 @@ osd_init_paths(int argc, char* argv[])
 	mkdir(sav_basepath, 0777);
 		
 	// Set the video output directory
-  sprintf (video_path, "%s/video/", short_exe_name);
+	sprintf (video_path, "%s/video/", short_exe_name);
 	mkdir(video_path, 0777);
 
 }
