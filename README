@@ -16,15 +16,15 @@
 
 --[ INTRODUCTION ]-----------------------------------------------------------
 
-    This is the first release of Hu-KU!, a PC Engine emulator for the
-    Haiku operating system.
+    This is the first release of HuExpress, a multi-platform PC Engine
+    emulator.
 
-    If you are looking for the original Hu-Go! PC Engine emulator, which runs
-    on Linux, Windows, etc... see http://zeograd.com
+    If you are looking for the original Hu-Go! PC Engine emulator
+    see zeograd.com
 
 --[ FORK ]-------------------------------------------------------------------
 
-    HuExpress! is a fork of the great Hu-Go! machine emulator by zerograd which
+    HuExpress is a fork of the great Hu-Go! machine emulator by zeograd which
     is based on a PC Engine emulator produced by "Bero"
     (http://www.geocities.co.jp/Playtown/2004/)
  
@@ -48,7 +48,7 @@
     where ROM is the name of the ROM, ISO, ISQ, or HCD.
 
     Check out the HCD section later for details.
-    If ROM has no extension, Hu-KU! will look for ROM.PCE then ROM.ZIP.
+    If ROM has no extension, HuExpress! will look for ROM.PCE then ROM.ZIP.
 
     ISO games must be specified with ISO extension to be recognized.
 
@@ -137,7 +137,7 @@
 
 --[ OPTIONS ]----------------------------------------------------------------
 
-    There are two kinds of options. Command line or Hu-KU!.INI options. The
+    There are two kinds of options. Command line or huexpress.cfg options. The
     emu first reads in the INI file then the command line, so you can
     over-ride general options.
 
@@ -169,7 +169,7 @@
     -- u : US encoded rom
         0 -> Normal rom (Default)
         1 -> US encoded rom, with invertion of bits
-       Hu-Go! should automaticaly recognize such rom but if not (i.e.
+        HuExpress should automaticaly recognize such rom but if not (i.e.
        it works only is -u1 is specified) tell me so that I can add it
        to the database.
 	
@@ -274,7 +274,7 @@
 --[ HCD ]--------------------------------------------------------------------
 
    Then what is this new format.
-   HCD means : Hu-go!! Cd Definition. Such a file allow you to use multi-code
+   HCD means : Hu-Go!! Cd Definition. Such a file allow you to use multi-code
    CDs and emulate audio tracks with MP3
    It's only a beginning and there are still troubles with ISQ to emulate
    Code tracks but it should work fine later.
@@ -467,8 +467,8 @@
 
 --[ DEVELOPERS CORNER ]------------------------------------------------------
 
-	Hu-KU! now exposes a large part of the current game internal variables via
-	shared memory (only linux/freebsd for now, soon windows too).
+	HuExpress exposes a large part of the current game internal variables
+	via shared memory (only linux/freebsd for now, soon windows too).
 	You can use the shared memory of identifier 25679. It contains a structure
 	of type struct_hard_pce as defined in shared_memory.h (you should grab the
 	source archive of course). You can then alter or read all the quite self
@@ -477,13 +477,11 @@
 	  -1 => Full speed
 	  0  => Emulation paused
 	 >0  => Number of opcodes to run before pausing
-	You have to recompile Hu-KU! using --enable-shared-memory to benefit this
-	feature.
 
 --[ THANKS ]-----------------------------------------------------------------
 
    Special thanks :
-    -- Zerograd, for making Hu-Go! http://zerograd.com
+    -- Zerograd, for making Hu-Go! http://zeograd.com
  *> -- Bacon boy 99 (Ex-Planet Rom webmaster, the former logo,    <*
        having sent me some Cds and in fact, lots of things)
 	-- Ixion for the lots of bugs/improvements he worked on recently
