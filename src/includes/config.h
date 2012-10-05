@@ -8,6 +8,7 @@
 #define ENABLE_TRACING_CD 0
 #define ENABLE_TRACING_CD_2 0
 #define ENABLE_TRACING_GFX 0
+#define ENABLE_TRACING_SPRITE 0
 #define ENABLE_TRACING_SND 0
 
 /* Define to one of `_getb67', `GETB67', `getb67' for Cray-2 and Cray-YMP

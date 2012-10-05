@@ -25,7 +25,7 @@
 
 
 #undef TRACE
-#if ENABLE_TRACING_GFX
+#if ENABLE_TRACING_SPRITE
  	#define TRACE(x...) printf("TraceSprite: " x)
 #else
  	#define TRACE(x...)
@@ -997,7 +997,7 @@ RefreshScreen(void)
 {
 	frame += UPeriod + 1;
 
-	HCD_handle_subtitle ();
+	HCD_handle_subtitle();
 	/*
 	{
 	char* spr = SPRAM;
