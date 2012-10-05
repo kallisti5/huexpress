@@ -9,8 +9,8 @@ resource app_version {
 	variety = B_APPV_DEVELOPMENT,
 	internal = 0,
 
-	short_info = "HuKU 0.2.15",
-	long_info = "HuKU, the PCEngine emulator for Haiku"
+	short_info = "HuExpress 0.2.15",
+	long_info = "HuExpress, the multi-platform PCEngine emulator"
 };
 
 resource app_flags B_SINGLE_LAUNCH;

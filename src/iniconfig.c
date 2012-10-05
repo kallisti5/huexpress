@@ -353,16 +353,18 @@ set_arg(char nb_arg, const char *val) {
 		return 0;
 	case 'h':
 		printf(
-		"\nHuKU, the PCEngine emulator for Haiku\n"
-		"2011 Alexander von Gluck IV\n"
+		"\nHuExpress, the multi-platform PCEngine emulator\n"
 		"Based on HuGO! by Zerograd and others\n\n"
-		" Usage: HuKU <GAME> [arguments]\n\n"
+		" Usage: huexpress <GAME> [arguments]\n\n"
 		" Where <GAME> is an pce|iso|zip\n"
 		" Where [arguments] are:\n"
 		"	-cX	Force CD Emulation mode X\n"
+		"   -dX Debug (0-1)\n"
+		"   -eX Eagle mode (0-1)\n"
 		"	-f	Fullscreen mode\n"
 		"	-o	Enable overlay mode\n"
 		"	-s	Enable Stereo sound\n"
+		"   -SX Scanline mode (0-1)\n"
 		"	-zX	Zoom level X (1-4)\n"
 		"\n");
 		return 1;
@@ -580,31 +582,32 @@ parse_INIfile ()
 	Log ("--[ PARSING INI FILE ]------------------------------\n");
 
 #ifndef LINUX
-	sprintf (config_file, "%s/huku.ini", short_exe_name);
+	sprintf(config_file, "%s/%s", short_exe_name, SETTINGS_FILENAME);
 #else
 	{
 
 		char tmp_home[256];
 		FILE *f;
 
-		sprintf (tmp_home, "%s/huku.ini", short_exe_name);
+		sprintf(tmp_home, "%s/%s", short_exe_name, SETTINGS_FILENAME);
 
-		f = fopen (tmp_home, "rb");
+		f = fopen(tmp_home, "rb");
 
 		if (f != NULL) {
-	strcpy (config_file, tmp_home);
-	fclose (f);
-		} else
-			strcpy (config_file, "/etc/huku.ini");
+			strcpy (config_file, tmp_home);
+			fclose (f);
+		} else {
+			sprintf(tmp_home, "/etc/%s", SETTINGS_FILENAME);
+			strcpy(config_file, tmp_home);
+		}
 	}
 #endif
 
-	init_config ();
+	init_config();
 
-	parse_INIfile_raw ();
+	parse_INIfile_raw();
 
-	dispose_config ();
-
+	dispose_config();
 }
 
 
@@ -783,7 +786,7 @@ save_config (void)
 	qsort (config_ar, config_ar_index, sizeof (config_var), config_var_cmp);
 
 	// Dump the configuration into a file
-	sprintf (config_name, "%s/huku.ini", short_exe_name);
+	sprintf (config_name, "%s/huexpress.ini", short_exe_name);
 	dump_config (config_name);
 
 	dispose_config ();

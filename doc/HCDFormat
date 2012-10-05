@@ -13,9 +13,9 @@
 The HCD format defines the track contents of PCEngine / Turbografx 
 CDRom² and SuperCDRom² disk images.
 
-The HCD format used by HuKU should be fully compatible with the version
-used by HuGO!, although some optional enhancements exist within the
-HuKU format.
+The HCD format used by HuExpress should be fully compatible with the
+version used by HuGO!, although some optional enhancements exist within the
+HuExpress format.
 
 CD File Layout
 ^^^^^^^^^^^^^^

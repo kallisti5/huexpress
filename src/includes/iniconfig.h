@@ -8,6 +8,8 @@
 #include "lang.h"
 
 
+#define SETTINGS_FILENAME "huexpress.cfg"
+
 #if defined(SDL)
 
 // #include "osd_machine_sdl.h"

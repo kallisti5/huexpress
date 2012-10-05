@@ -34,7 +34,7 @@
 #include "pcecd.h"
 #endif
 
-#define LOG_NAME "huku.log"
+#define LOG_NAME "huexpress.log"
 
 #define CD_FRAMES 75
 #define CD_SECS 60
@@ -1436,12 +1436,19 @@ search_possible_syscard()
 	MESSAGE_INFO("We need a syscard to load a CD, begining search...\n");
 	FILE* f;
 
-#define POSSIBLE_LOCATION_COUNT 4
+	#if defined(__haiku__)
+	#define POSSIBLE_LOCATION_COUNT 3
 	const char* POSSIBLE_LOCATION[POSSIBLE_LOCATION_COUNT] = {
-		"./","../","/usr/local/lib/huku/","/boot/common/data/huku/"
+		"./","../","/boot/common/data/huexpress/"
 	};
+	#else
+	#define POSSIBLE_LOCATION_COUNT 3
+	const char* POSSIBLE_LOCATION[POSSIBLE_LOCATION_COUNT] = {
+		"./","../","/usr/local/lib/huexpress/"
+	};
+	#endif
 
-#define POSSIBLE_FILENAME_COUNT	4
+	#define POSSIBLE_FILENAME_COUNT	4
 	const char* POSSIBLE_FILENAME[POSSIBLE_FILENAME_COUNT] = {
 		"syscard.pce","syscard3.pce","syscard30.pce","cd-rom~1.pce"
 	};
@@ -1921,11 +1928,12 @@ InitPCE (char *name, char *backmemname)
 
 	char home_directory[256];
 
-	strcpy (home_directory, getenv ("HOME"));
+	strcpy(home_directory, getenv ("HOME"));
 
 	switch (CD_emulation) {
 		case 0:
-			sprintf (sav_path, "%s/.huku/%ssav", home_directory, short_cart_name);
+			sprintf (sav_path, "%s/.huexpress/%ssav", home_directory,
+				short_cart_name);
 			break;
 		case 1:
 			sprintf (sav_path, "%s/cd_sav", short_exe_name);

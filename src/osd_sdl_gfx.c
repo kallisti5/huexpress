@@ -4,7 +4,7 @@
 /*                                       */
 /* Original Author:                      */
 /*		Zerograd? - Hu-GO!               */
-/* Reworked for HuKU by:                 */
+/* Reworked for HuExpress by:            */
 /*		Alexander von Gluck, kallisti5   */
 /*****************************************/
 
@@ -294,7 +294,7 @@ int osd_gfx_init(void)
 		return 0;
 	}
 
-	SDL_WM_SetCaption("HuKU!", NULL);
+	SDL_WM_SetCaption("HuExpress", NULL);
 
 	if (option.want_fullscreen)
 		SDL_ShowCursor(SDL_DISABLE);

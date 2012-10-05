@@ -191,7 +191,7 @@ osd_init_paths(int argc, char* argv[])
 	// path (when HOME environment variable is available)
 	if (home_path)
 		{			
-			sprintf(short_exe_name,"%s/.huku",home_path);
+			sprintf(short_exe_name,"%s/.huexpress",home_path);
 			
 			// Create directory if not existing
 			mkdir(short_exe_name,0777);			
@@ -201,7 +201,7 @@ osd_init_paths(int argc, char* argv[])
 			strcpy(short_exe_name,"./");
 		}
 	
-  sprintf(log_filename,"%s/%s",short_exe_name,"huku.log");	
+  sprintf(log_filename,"%s/%s",short_exe_name,"huexpress.log");	
 		
 	// Set a temporary path per user (should it be by process ?)
 	sprintf(tmp_basepath, "%s/tmp", short_exe_name);
