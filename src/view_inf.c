@@ -446,7 +446,7 @@ display_pattern ()
   uchar *R = &SPal[(((SPR *) SPRAM)[0].atr & 15) * 16];
   uchar *C;
   char *tmp_buf = (char *) alloca (100);
-  unsigned long *C2;
+  uchar* C2;
 /*
  clear(screen);
 
