@@ -16,9 +16,11 @@
 #ifndef _UTILS_C
 #define _UTILS_C
 
+
 #include "cleantypes.h"
 
-void Log (char *, ...);
+
+void Log(char *, ...);
 
 //! Wait for the current 60th of sec to be elapsed
 void wait_next_vsync();
@@ -27,7 +29,6 @@ void wait_next_vsync();
 extern unsigned long TAB_CONST[256];
 
 #if defined(WIN32)
-
 #include <stdio.h>
 #include <windows.h>
 
@@ -37,8 +38,8 @@ typedef int key_t;
 #define IPC_EXCL  0
 #define IPC_RMID  0
 
-int shmget (key_t, int, int);
-char* shmat (int, int, int);
+int shmget(key_t, int, int);
+char* shmat(int, int, int);
 int shmctl(int, int, int);
 
 #if !defined(unix)
@@ -59,9 +60,8 @@ int stricmp (char *s1, char *s2);
 #endif
 
 void get_directory_from_filename(char*);
-
 void wipe_directory(char*);
-
 int file_exists(char*);
+
 
 #endif
