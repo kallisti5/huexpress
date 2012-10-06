@@ -1,6 +1,11 @@
 import os
 env = Environment(ENV = os.environ)
 
+# enable choosing other compilers
+env["CC"] = os.getenv("CC") or env["CC"]
+env["CXX"] = os.getenv("CXX") or env["CXX"]
+env["ENV"].update(x for x in os.environ.items() if x[0].startswith("CCC_"))
+
 def CheckPKGConfig(context, version):
 	context.Message( 'Checking for pkg-config... ' )
 	ret = context.TryAction('pkg-config --atleast-pkgconfig-version=%s' % version)[0]
