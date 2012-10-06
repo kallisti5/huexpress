@@ -1,9 +1,13 @@
 #ifndef _INCLUDE_CHEAT_H
 #define _INCLUDE_CHEAT_H
 
+
 #include <stdio.h>
+#include <unistd.h>
+
 #include "pce.h"
 #include "lang.h"
+
 
 char pokebyte();
 /* Change the value of a byte in the memory */
@@ -20,9 +24,9 @@ int savegame();
 #define  MAX_FREEZED_VALUE   8
 
 typedef struct {
-       unsigned short position;
-		 uchar value;
-		 } freezed_value;
+	unsigned short position;
+	uchar value;
+} freezed_value;
 
 extern freezed_value list_to_freeze[MAX_FREEZED_VALUE];
 /* List of all the value to freeze */
