@@ -99,13 +99,13 @@ osd_snd_init_sound(void)
 		host.sound.sample_size = sbuf_size;
 		host.sound.freq = option.want_snd_freq;
 
-		if (Mix_OpenAudio((host.sound.freq), (USE_S16?AUDIO_S16:AUDIO_U8),
+		if (Mix_OpenAudio((host.sound.freq), (USE_S16 ? AUDIO_S16 : AUDIO_U8),
 			(USE_S16?2:host.sound.stereo), sbuf_size) < 0) {
 			Log("Couldn't open audio: %s\n", Mix_GetError());
 			return 0;
 		}
 
-		numopened = Mix_QuerySpec(&frequency, &format, &channels);
+		Mix_QuerySpec(&frequency, &format, &channels);
 
 		if (channels == 2) {
 			Log("Mixer obtained stereo.\n");
