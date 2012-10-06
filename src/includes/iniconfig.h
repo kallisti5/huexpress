@@ -20,6 +20,8 @@
 
 #endif
 
+int init_config();
+
 void set_config_file (const char *filename);
 void set_config_file_back (void);
 

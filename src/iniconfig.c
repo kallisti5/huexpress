@@ -77,7 +77,7 @@ set_config_file_back(void)
 }
 
 
-char
+int
 init_config(void)
 {
 	FILE *FCfgFile = NULL;
@@ -697,7 +697,7 @@ save_config (void)
 	uchar input_config_number, input_config_button, input_config_player;
 
 	// Reads all variables in the ini file
-	init_config ();
+	init_config();
 
 	set_config_var_str("main", "rom_dir", initial_path);
 	set_config_var_int("main", "config", current_config);
