@@ -124,8 +124,9 @@ char
 osd_keypressed(void)
 {
 	#warning TODO: implement keypressed with sdl
-	return 0;	
+	return 0;
 }
+
 
 /*****************************************************************************
 
@@ -140,19 +141,19 @@ uint16
 osd_readkey(void)
 {
 	SDL_Event event;
-	while ( SDL_PollEvent( &event ))
-	{
-		switch (event.type)
-		{
+	while (SDL_PollEvent(&event)) {
+		switch (event.type) {
 			case SDL_KEYDOWN:
 				return event.key.keysym.unicode;
 			case SDL_QUIT:
 				return 0;
 		}
 	}
- }
+	return 0;
+}
 
- /*****************************************************************************
+
+/*****************************************************************************
 
     Function: osd_fix_filename_slashes
 
@@ -171,6 +172,7 @@ osd_fix_filename_slashes(char* s)
 		s++;
 	}
 }
+
 
 /*****************************************************************************
 
