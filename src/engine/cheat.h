@@ -7,6 +7,7 @@
 
 #include "pce.h"
 #include "lang.h"
+#include "utils.h"
 
 
 char pokebyte();

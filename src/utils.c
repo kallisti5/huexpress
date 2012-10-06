@@ -572,3 +572,22 @@ file_exists(char* name_to_check)
 	struct stat stat_buffer;
 	return !stat(name_to_check, &stat_buffer);
 }
+
+
+/*!
+ * file_size : Open a file and determine it's size
+ * @param file_name Name of file to check size of
+ * @return 0 if file doesn't exist, else size
+ */
+long
+file_size(char* file_name)
+{
+	FILE* f = fopen(file_name, "rb");
+	long position;
+	if (f == NULL)
+		return 0;
+	fseek(f, 0, SEEK_END);
+	position = ftell(f);
+	fclose(f);
+	return position;
+}

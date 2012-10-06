@@ -1,4 +1,6 @@
 #include "osd_linux_sdl_music.h"
+#include "utils.h"
+
 
 #ifdef SDL_mixer
 /* Callback for SDL Mixer */

@@ -62,6 +62,7 @@ int stricmp (char *s1, char *s2);
 void get_directory_from_filename(char*);
 void wipe_directory(char*);
 int file_exists(char*);
+long file_size(char* file_name);
 
 
 #endif

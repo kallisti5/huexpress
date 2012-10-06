@@ -16,20 +16,6 @@
  
 #include "cheat.h"
 
-#if !defined(ALLEGRO)
-
-long file_size (char* file_name)
-{
-	FILE* f = fopen(file_name,"rb");
-	long position;
-	if (f == NULL)
-		return 0;
-	fseek(f,0,SEEK_END);
-	position = ftell(f);
-	fclose(f);
-	return position;
-}
-#endif
 
 inline void fputw (uint16 value, FILE* F)
 {
@@ -293,7 +279,7 @@ searchbyte ()
   fclose (D);
 
   rename (data_filename, old_filename);
-  if (!file_size (old_filename))
+  if (!file_size(old_filename))
     {
       osd_gfx_set_message (MESSAGE[language][search_failed]);
       message_delay = 180;
@@ -301,7 +287,7 @@ searchbyte ()
       return 1;
     }
 
-  if (file_size (old_filename) == 4)
+  if (file_size(old_filename) == 4)
     {
       char *tmp_buf = (char *) malloc (100);
       snprintf (tmp_buf, 100, MESSAGE[language][found_at], last_index);

@@ -10,10 +10,13 @@
 /*		2011 - Alexander von Gluck, kallisti5@unixzen.com                 */
 /**************************************************************************/
 
+#include "hcd.h"
+
+
+#include <sys/stat.h>
 
 #include "iniconfig.h"
 #include "utils.h"
-#include "hcd.h"
 
 
 uint32 HCD_first_track;
@@ -166,7 +169,7 @@ fill_HCD_info(char *name) {
 				return 0;
 			}
 
-			CD_track[current_track].length = file_size (tmp_buf) / 2048;
+			CD_track[current_track].length = file_size(tmp_buf) / 2048;
 				// Determine file length of track
 
 			CD_track[current_track].patch_number
