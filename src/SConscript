@@ -15,6 +15,12 @@ main_sources = [
 	'view_zp.c'
 ]
 
+sdl_sources = [
+	'osd_sdl_snd.c',
+	'osd_sdl_gfx.c'
+]
+
+
 engine_sources = [
 	'engine/bios.c',
 	'engine/bp.c',
@@ -47,22 +53,19 @@ if env['PLATFORM'] in ('posix', 'linux', 'freebsd', 'darwin'):
 		'osd_linux_cd.c',
 		'osd_linux_sdl_music.c',
 		'osd_haiku_sdl_machine.c',
-		'osd_haiku_snd.c',
 		'osd_keyboard.c',
-		'osd_sdl_gfx.c'
 	]
 elif env['PLATFORM'] in ('haiku'):
 	main_sources += [
 		'osd_haiku_cd.c',
-		'osd_haiku_snd.c',
 		'osd_linux_sdl_music.c',
 		'osd_haiku_sdl_machine.c',
 		'osd_keyboard.c',
-		'osd_sdl_gfx.c'
 	]
 
 program_sources = [
 	main_sources +
+	sdl_sources +
 	engine_sources
 ]
 
