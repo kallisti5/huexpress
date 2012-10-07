@@ -7,6 +7,7 @@ static char backup_mem[PATH_MAX];
 struct host_machine host;
 struct hugo_options option;
 
+
 //! Setup the host machine
 /*!
  * \param argc The number of argument on command line
@@ -16,7 +17,7 @@ struct hugo_options option;
 int
 init_host(int argc, char *argv[])
 {
-	memset (&option, 0, sizeof (option));
+	memset(&option, 0, sizeof(option));
 
 	option.want_stereo = FALSE;
 	option.want_fullscreen = FALSE;
@@ -50,7 +51,7 @@ init_host(int argc, char *argv[])
 	init_log_file();
 
 	// Init the random seed
-	srand((unsigned int) time (NULL));
+	srand((unsigned int) time(NULL));
 
 	// Read configuration in ini file
 	parse_INIfile();
@@ -62,23 +63,22 @@ init_host(int argc, char *argv[])
 	MESSAGE_INFO("HuExpress, the multi-platform PCEngine emulator\n");
 
 	// Initialise the host machine
-	if (!osd_init_machine ())
+	if (!osd_init_machine())
 		return -1;
 
 	// If backup memory name hasn't been overriden on command line, use the default
-	if ((bmdefault) && (strcmp (bmdefault, "")))
-		snprintf (backup_mem, sizeof (backup_mem), "%s/%s", short_exe_name,
+	if ((bmdefault) && (strcmp(bmdefault, "")))
+		snprintf(backup_mem, sizeof(backup_mem), "%s/%s", short_exe_name,
 			bmdefault);
 	else
-		snprintf (backup_mem, sizeof (backup_mem), "%s/backup.dat",
+		snprintf(backup_mem, sizeof(backup_mem), "%s/backup.dat",
 			short_exe_name);
 
 	// In case of crash, try to free audio related ressources if possible
 	//      atexit (TrashSound);
 
 	// Initialise the input devices
-	if (osd_init_input () != 0)
-	{
+	if (osd_init_input() != 0) {
 		MESSAGE_ERROR("Initialization of input system failed\n");
 		return (-2);
 	}
@@ -92,7 +92,7 @@ init_host(int argc, char *argv[])
  * Deallocate ressources reserved during the initialisation
  */
 void
-cleanup ()
+cleanup()
 {
 
 	osd_shutdown_input();
@@ -109,7 +109,7 @@ cleanup ()
 int
 game_asked()
 {
-	return ((CD_emulation == 1) || (strcmp (cart_name, "")));
+	return ((CD_emulation == 1) || (strcmp(cart_name, "")));
 }
 
 
@@ -125,15 +125,14 @@ play_game(void)
 	if (InitPCE(cart_name, backup_mem) != 0)
 		return 0;
 
-	if (!(*osd_gfx_driver_list[video_driver].init) ())
-	{
+	if (!(*osd_gfx_driver_list[video_driver].init) ()) {
 		MESSAGE_ERROR("Can't set graphic resolution\n");
 		return 0;
 	}
 
-	if (!osd_snd_init_sound())
-	{
-		MESSAGE_ERROR("Couldn't open any sound hardware on the host machine.\n");
+	if (!osd_snd_init_sound()) {
+		MESSAGE_ERROR
+			("Couldn't open any sound hardware on the host machine.\n");
 	} else
 		MESSAGE_INFO("Initilized audio, SDL compatible soundcard. %dHz\n",
 			host.sound.freq);
@@ -143,7 +142,7 @@ play_game(void)
 #endif
 
 	// Run the emulation
-	RunPCE ();
+	RunPCE();
 
 #if defined(ENABLE_NETPLAY)
 	osd_shutdown_netplay();
@@ -161,7 +160,7 @@ play_game(void)
 
 
 int
-main (int argc, char *argv[])
+main(int argc, char *argv[])
 {
 	// initialize host emulator
 	int error = init_host(argc, argv);
@@ -171,10 +170,10 @@ main (int argc, char *argv[])
 		if (game_asked()) {
 			while (play_game());
 		} else {
-			build_gtk_interface (argc, argv);
+			build_gtk_interface(argc, argv);
 		}
 	}
-#else // not defined(GTK)
+#else							// not defined(GTK)
 	if (!error) {
 		if (game_asked()) {
 			while (play_game());
