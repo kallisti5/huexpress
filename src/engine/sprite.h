@@ -7,8 +7,8 @@
 #include "mix.h"
 
 
-typedef	struct {
-	short y,x,no,atr;
+typedef struct {
+	short y, x, no, atr;
 } SPR;
 /* Sprite structure
  * y,x = pos
@@ -46,15 +46,15 @@ extern uchar SPONSwitch;
 #define	MinLine	io.minline
 #define	MaxLine	io.maxline
 
-//#define ScrollX	io.scroll_x
+//#define ScrollX   io.scroll_x
 //#define ScrollY io.scroll_y
 #define	ScrollX	io.VDC[BXR].W
 #define	ScrollY	io.VDC[BYR].W
-extern int	ScrollYDiff;
+extern int ScrollYDiff;
 
-extern int	oldScrollX;
-extern int	oldScrollY;
-extern int	oldScrollYDiff;
+extern int oldScrollX;
+extern int oldScrollY;
+extern int oldScrollYDiff;
 
 extern uint32 spr_init_pos[1024];
 // cooked initial position of sprite
@@ -65,25 +65,25 @@ extern char exact_putspritem;
 extern int frame;
 // number of frame displayed
 
-//extern void (*PutSpriteMaskedFunction)(byte *P,byte *C,unsigned	long *C2,byte *R,int h,int inc,byte *M,byte pr);
+//extern void (*PutSpriteMaskedFunction)(byte *P,byte *C,unsigned   long *C2,byte *R,int h,int inc,byte *M,byte pr);
 // the general function for *masked
 
-//extern void (*PutSpriteMakeMaskedFunction)(byte *P,byte *C,unsigned	long *C2,byte *R,int h,int inc,byte *M,byte pr);
+//extern void (*PutSpriteMakeMaskedFunction)(byte *P,byte *C,unsigned   long *C2,byte *R,int h,int inc,byte *M,byte pr);
 // the general function for *makemasked*
 
-//extern void PutSpriteM(byte *P,byte *C,unsigned	long *C2,byte *R,int h,int inc,byte *M,byte pr);
+//extern void PutSpriteM(byte *P,byte *C,unsigned   long *C2,byte *R,int h,int inc,byte *M,byte pr);
 // the exact function
 
-//extern void PutSpriteMakeMask(byte *P,byte *C,unsigned	long *C2,byte *R,int h,int inc,byte *M,byte pr);
+//extern void PutSpriteMakeMask(byte *P,byte *C,unsigned    long *C2,byte *R,int h,int inc,byte *M,byte pr);
 // the exact function
 
-//extern void PutSprite(byte *P,byte *C,unsigned	long *C2,byte *R,int h,int inc);
+//extern void PutSprite(byte *P,byte *C,unsigned    long *C2,byte *R,int h,int inc);
 // the simplified function
 
-extern void RefreshSpriteExact(int,int,uchar);
+extern void RefreshSpriteExact(int, int, uchar);
 // The true refreshing function
 
-extern void (*RefreshSprite)(int Y1,int Y2,uchar bg);
+extern void (*RefreshSprite) (int Y1, int Y2, uchar bg);
 // The pointer toward the used function
 
 

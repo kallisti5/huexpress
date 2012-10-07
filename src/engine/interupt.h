@@ -19,8 +19,8 @@
 extern uchar irq_mask;
 extern uchar irq_register;
 
-extern void  hw_put_1402(uchar);
-extern void  hw_put_1403(uchar);
+extern void hw_put_1402(uchar);
+extern void hw_put_1403(uchar);
 
 extern uchar hw_get_1402(void);
 extern uchar hw_get_1403(void);

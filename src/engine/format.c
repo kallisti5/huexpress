@@ -15,29 +15,34 @@
 /* lineprinters, to keep code clean. */
 /*@ -bufferoverflowhigh */
 
-void lineprint1(char *outf, long ctr, uchar * op, char *outstring)
+void
+lineprint1(char *outf, long ctr, uchar * op, char *outstring)
 {
 	sprintf(outf, "%02X          %s", *op, outstring);
 }
 
-void lineprint2(char *outf, long ctr, uchar * op, char *outstring)
+void
+lineprint2(char *outf, long ctr, uchar * op, char *outstring)
 {
 	sprintf(outf, "%02X %02X       %s", *op, *(op + 1), outstring);
 }
 
-void lineprint3(char *outf, long ctr, uchar * op, char *outstring)
+void
+lineprint3(char *outf, long ctr, uchar * op, char *outstring)
 {
 	sprintf(outf, "%02X %02X %02X    %s", *op, *(op + 1), *(op + 2),
 			outstring);
 }
 
-void lineprint4(char *outf, long ctr, uchar * op, char *outstring)
+void
+lineprint4(char *outf, long ctr, uchar * op, char *outstring)
 {
 	sprintf(outf, "%02X %02X %02X %02X %s", *op, *(op + 1), *(op + 2),
 			*(op + 3), outstring);
 }
 
-void lineprint7(char *outf, long ctr, uchar * op, char *outstring)
+void
+lineprint7(char *outf, long ctr, uchar * op, char *outstring)
 {
 	sprintf(outf, "%02X %02X %02X %02X %02X %02X %02X %s",
 			*op, *(op + 1), *(op + 2), *(op + 3), *(op + 4),
@@ -48,21 +53,24 @@ void lineprint7(char *outf, long ctr, uchar * op, char *outstring)
 /* common addressing-mode formatters */
 /* look/act as wrappers around lineprint functions */
 
-void implicit(char *outf, long ctr, uchar * op, char *str)
+void
+implicit(char *outf, long ctr, uchar * op, char *str)
 {
 	char buf[256];
 	sprintf(buf, "%-4s", str);
 	lineprint1(outf, ctr, op, buf);
 }
 
-void immed(char *outf, long ctr, uchar * op, char *str)
+void
+immed(char *outf, long ctr, uchar * op, char *str)
 {
 	char buf[256];
 	sprintf(buf, "%-4s #$%02X", str, *(op + 1));
 	lineprint2(outf, ctr, op, buf);
 }
 
-void relative(char *outf, long ctr, uchar * op, char *str)
+void
+relative(char *outf, long ctr, uchar * op, char *str)
 {
 	char buf[256];
 	long newadd;
@@ -78,84 +86,96 @@ void relative(char *outf, long ctr, uchar * op, char *str)
 	lineprint2(outf, ctr, op, buf);
 }
 
-void ind_zp(char *outf, long ctr, uchar * op, char *str)
+void
+ind_zp(char *outf, long ctr, uchar * op, char *str)
 {
 	char buf[256];
 	sprintf(buf, "%-4s $%02X", str, *(op + 1));
 	lineprint2(outf, ctr, op, buf);
 }
 
-void ind_zpx(char *outf, long ctr, uchar * op, char *str)
+void
+ind_zpx(char *outf, long ctr, uchar * op, char *str)
 {
 	char buf[256];
 	sprintf(buf, "%-4s $%02X,X", str, *(op + 1));
 	lineprint2(outf, ctr, op, buf);
 }
 
-void ind_zpy(char *outf, long ctr, uchar * op, char *str)
+void
+ind_zpy(char *outf, long ctr, uchar * op, char *str)
 {
 	char buf[256];
 	sprintf(buf, "%-4s $%02X,Y", str, *(op + 1));
 	lineprint2(outf, ctr, op, buf);
 }
 
-void ind_zpind(char *outf, long ctr, uchar * op, char *str)
+void
+ind_zpind(char *outf, long ctr, uchar * op, char *str)
 {
 	char buf[256];
 	sprintf(buf, "%-4s ($%02X)", str, *(op + 1));
 	lineprint2(outf, ctr, op, buf);
 }
 
-void ind_zpix(char *outf, long ctr, uchar * op, char *str)
+void
+ind_zpix(char *outf, long ctr, uchar * op, char *str)
 {
 	char buf[256];
 	sprintf(buf, "%-4s ($%02X,X)", str, *(op + 1));
 	lineprint2(outf, ctr, op, buf);
 }
 
-void ind_zpiy(char *outf, long ctr, uchar * op, char *str)
+void
+ind_zpiy(char *outf, long ctr, uchar * op, char *str)
 {
 	char buf[256];
 	sprintf(buf, "%-4s ($%02X),Y", str, *(op + 1));
 	lineprint2(outf, ctr, op, buf);
 }
 
-void absol(char *outf, long ctr, uchar * op, char *str)
+void
+absol(char *outf, long ctr, uchar * op, char *str)
 {
 	char buf[256];
 	sprintf(buf, "%-4s $%02X%02X", str, *(op + 2), *(op + 1));
 	lineprint3(outf, ctr, op, buf);
 }
 
-void absind(char *outf, long ctr, uchar * op, char *str)
+void
+absind(char *outf, long ctr, uchar * op, char *str)
 {
 	char buf[256];
 	sprintf(buf, "%-4s ($%02X%02X)", str, *(op + 2), *(op + 1));
 	lineprint3(outf, ctr, op, buf);
 }
 
-void absindx(char *outf, long ctr, uchar * op, char *str)
+void
+absindx(char *outf, long ctr, uchar * op, char *str)
 {
 	char buf[256];
 	sprintf(buf, "%-4s ($%02X%02X,X)", str, *(op + 2), *(op + 1));
 	lineprint3(outf, ctr, op, buf);
 }
 
-void absx(char *outf, long ctr, uchar * op, char *str)
+void
+absx(char *outf, long ctr, uchar * op, char *str)
 {
 	char buf[256];
 	sprintf(buf, "%-4s $%02X%02X,X", str, *(op + 2), *(op + 1));
 	lineprint3(outf, ctr, op, buf);
 }
 
-void absy(char *outf, long ctr, uchar * op, char *str)
+void
+absy(char *outf, long ctr, uchar * op, char *str)
 {
 	char buf[256];
 	sprintf(buf, "%-4s $%02X%02X,Y", str, *(op + 2), *(op + 1));
 	lineprint3(outf, ctr, op, buf);
 }
 
-void pseudorel(char *outf, long ctr, uchar * op, char *str)
+void
+pseudorel(char *outf, long ctr, uchar * op, char *str)
 {
 	char buf[256];
 	long newadd;
@@ -171,7 +191,8 @@ void pseudorel(char *outf, long ctr, uchar * op, char *str)
 	lineprint3(outf, ctr, op, buf);
 }
 
-void tst_zp(char *outf, long ctr, uchar * op, char *str)
+void
+tst_zp(char *outf, long ctr, uchar * op, char *str)
 {
 	char buf[256];
 
@@ -179,7 +200,8 @@ void tst_zp(char *outf, long ctr, uchar * op, char *str)
 	lineprint3(outf, ctr, op, buf);
 }
 
-void tst_abs(char *outf, long ctr, uchar * op, char *str)
+void
+tst_abs(char *outf, long ctr, uchar * op, char *str)
 {
 	char buf[256];
 
@@ -188,7 +210,8 @@ void tst_abs(char *outf, long ctr, uchar * op, char *str)
 	lineprint4(outf, ctr, op, buf);
 }
 
-void tst_zpx(char *outf, long ctr, uchar * op, char *str)
+void
+tst_zpx(char *outf, long ctr, uchar * op, char *str)
 {
 	char buf[256];
 
@@ -196,7 +219,8 @@ void tst_zpx(char *outf, long ctr, uchar * op, char *str)
 	lineprint3(outf, ctr, op, buf);
 }
 
-void tst_absx(char *outf, long ctr, uchar * op, char *str)
+void
+tst_absx(char *outf, long ctr, uchar * op, char *str)
 {
 	char buf[256];
 
@@ -205,7 +229,8 @@ void tst_absx(char *outf, long ctr, uchar * op, char *str)
 	lineprint4(outf, ctr, op, buf);
 }
 
-void xfer(char *outf, long ctr, uchar * op, char *str)
+void
+xfer(char *outf, long ctr, uchar * op, char *str)
 {
 	char buf[256];
 

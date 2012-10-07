@@ -13,12 +13,12 @@
 
 #if defined(SDL) && !defined(SDL_mixer)
 #include <SDL_audio.h>
-SDL_AudioSpec wanted; /* For SDL Audio */
-extern void sdl_fill_audio(void *data, Uint8 *stream, int len);
+SDL_AudioSpec wanted;			/* For SDL Audio */
+extern void sdl_fill_audio(void *data, Uint8 * stream, int len);
 #endif
 
 #ifdef SDL_mixer
-	#include "osd_linux_sdl_music.h"
+#include "osd_linux_sdl_music.h"
 #endif
 
 /* Variables definition */
@@ -50,7 +50,7 @@ uint32 CycleNew;
 // indicates the last time music has been "released"
 
 /* TODO */
-int BaseClock=7170000;
+int BaseClock = 7170000;
 // int BaseClock = 8992000;
 // the freq of the internal PC Engine CPU
 // the sound use a kind of "relative" frequency
@@ -73,7 +73,8 @@ uint32 sbuf_size = 10 * 1024;
 
 /* Functions definition */
 
-int InitSound(void)
+int
+InitSound(void)
 {
 	for (silent = 0; silent < 6; silent++)
 		sbuf[silent] = (char *) calloc(sizeof(char), SBUF_SIZE_BYTE);
@@ -82,7 +83,7 @@ int InitSound(void)
 
 	silent = 1;
 
-	if (smode == 0)		// No sound
+	if (smode == 0)				// No sound
 		return TRUE;
 
 /* SDL Audio / Mixer Begin */
@@ -126,15 +127,15 @@ int InitSound(void)
 
 
 void
-TrashSound (void)		/* Shut down sound  */
-{
+TrashSound(void)
+{								/* Shut down sound  */
 	uchar dum;
 
 	if (!silent) {
 		for (dum = 0; dum < 6; dum++)
-			free (sbuf[dum]);
+			free(sbuf[dum]);
 
-		free (adpcmbuf);
+		free(adpcmbuf);
 
 		silent = 1;
 	}
@@ -142,7 +143,7 @@ TrashSound (void)		/* Shut down sound  */
 
 
 void
-write_psg (int ch)
+write_psg(int ch)
 {
 	uint32 Cycle;
 
@@ -151,7 +152,7 @@ write_psg (int ch)
 		CycleOld = CycleNew;
 
 		dwNewPos = (unsigned) ((float) (host.sound.freq) * (float) Cycle
-			/ (float) BaseClock);
+							   / (float) BaseClock);
 		// in fact, size of the data to write
 
 	};
@@ -169,28 +170,28 @@ write_psg (int ch)
 	}
   }
 */
-	if (sound_driver == 2) // || sound_driver == 3) /* Added 3 (SDL) */
+	if (sound_driver == 2)		// || sound_driver == 3) /* Added 3 (SDL) */
 	{
 		if (dwNewPos > (uint32) host.sound.freq * SOUND_BUF_MS / 1000) {
-			#if ENABLE_TRACING_AUDIO
+#if ENABLE_TRACING_AUDIO
 			TRACE("AUDIO: Sound buffer overrun\n");
-			#endif
+#endif
 			dwNewPos = host.sound.freq * SOUND_BUF_MS / 1000;
-				// Ask it to fill the buffer
+			// Ask it to fill the buffer
 		} else if (sound_driver == 1) {
-			#if ENABLE_TRACING_AUDIO
+#if ENABLE_TRACING_AUDIO
 			TRACE("AUDIO: dwNewPos = %d / %d\n", dwNewPos, sbuf_size);
-			#endif
+#endif
 			if (dwNewPos > sbuf_size) {
-				#if ENABLE_TRACING_AUDIO
+#if ENABLE_TRACING_AUDIO
 				TRACE("AUDIO: Sound buffer overrun\n");
-				#endif
+#endif
 				dwNewPos = sbuf_size;
 				// Ask it to fill the buffer
 			}
-			#if ENABLE_TRACING_AUDIO
+#if ENABLE_TRACING_AUDIO
 			TRACE("AUDIO: After correction, dwNewPos = %d\n", dwNewPos);
-			#endif
+#endif
 		}
 	}
 
@@ -198,16 +199,17 @@ write_psg (int ch)
 	WriteBuffer(&sbuf[ch][0], ch, dwNewPos * ds_nChannels);
 	// write DATA 'til dwNewPos
 
-	#if ENABLE_TRACING_AUDIO
+#if ENABLE_TRACING_AUDIO
 	TRACE("AUDIO: Buffer %d has been filled\n", ch);
-	#endif
+#endif
 
 
 };
 
 
 /* TODO : doesn't support repeat mode for now */
-void write_adpcm(void)
+void
+write_adpcm(void)
 {
 	uint32 Cycle;
 	uint32 AdpcmUsedNibbles;
@@ -220,7 +222,7 @@ void write_adpcm(void)
 		CycleOld = CycleNew;
 
 		dwNewPos = (unsigned) ((float) (host.sound.freq) * (float) Cycle
-			/ (float) BaseClock);
+							   / (float) BaseClock);
 		// in fact, size of the data to write
 	};
 
@@ -235,8 +237,8 @@ void write_adpcm(void)
 		AdpcmFilledBuf = io.adpcm_psize;
 
 	AdpcmUsedNibbles
-		= WriteBufferAdpcm8 (adpcmbuf, io.adpcm_pptr, AdpcmFilledBuf,
-			&index, &previousValue);
+		= WriteBufferAdpcm8(adpcmbuf, io.adpcm_pptr, AdpcmFilledBuf,
+							&index, &previousValue);
 
 	io.adpcm_pptr += AdpcmUsedNibbles;
 	io.adpcm_pptr &= 0x1FFFF;
@@ -257,7 +259,7 @@ void write_adpcm(void)
 };
 
 //! file for dumping audio
-static FILE* audio_output_file = NULL;
+static FILE *audio_output_file = NULL;
 
 //! Size (in byte) of audio data dumped
 static int sound_dump_length;
@@ -268,9 +270,10 @@ static uint32 sound_dump_last_cycle;
 //! Start the audio dump process
 //! return 1 if audio dumping began, else 0
 int
-start_dump_audio(void) {
+start_dump_audio(void)
+{
 	char audio_output_filename[PATH_MAX];
-	struct tm * tm_current_time;
+	struct tm *tm_current_time;
 	time_t time_t_current_time;
 
 	if (audio_output_file != NULL)
@@ -279,100 +282,97 @@ start_dump_audio(void) {
 	time(&time_t_current_time);
 	tm_current_time = localtime(&time_t_current_time);
 
-	snprintf(audio_output_filename, PATH_MAX, "%saudio-%04d-%02d-%02d %02d-%02d-%02d.wav", 
-		video_path,
-		tm_current_time->tm_year + 1900,
-		tm_current_time->tm_mon + 1,
-		tm_current_time->tm_mday,
-		tm_current_time->tm_hour,
-		tm_current_time->tm_min,
-		tm_current_time->tm_sec);
+	snprintf(audio_output_filename, PATH_MAX,
+			 "%saudio-%04d-%02d-%02d %02d-%02d-%02d.wav", video_path,
+			 tm_current_time->tm_year + 1900, tm_current_time->tm_mon + 1,
+			 tm_current_time->tm_mday, tm_current_time->tm_hour,
+			 tm_current_time->tm_min, tm_current_time->tm_sec);
 
 	audio_output_file = fopen(audio_output_filename, "wb");
 
 	sound_dump_length = 0;
 
-	fwrite ("RIFF\145\330\073\0WAVEfmt ", 16, 1,
-		audio_output_file);
-	putc (0x10, audio_output_file);	// size
-	putc (0x00, audio_output_file);
-	putc (0x00, audio_output_file);
-	putc (0x00, audio_output_file);
-	putc (1, audio_output_file);	// PCM data
-	putc (0, audio_output_file);
+	fwrite("RIFF\145\330\073\0WAVEfmt ", 16, 1, audio_output_file);
+	putc(0x10, audio_output_file);	// size
+	putc(0x00, audio_output_file);
+	putc(0x00, audio_output_file);
+	putc(0x00, audio_output_file);
+	putc(1, audio_output_file);	// PCM data
+	putc(0, audio_output_file);
 
 	if (host.sound.stereo)
-		putc(2, audio_output_file);		// stereo
+		putc(2, audio_output_file);	// stereo
 	else
-		putc (1, audio_output_file);	// mono
+		putc(1, audio_output_file);	// mono
 
-	putc (0, audio_output_file);
+	putc(0, audio_output_file);
 
-	putc (host.sound.freq, audio_output_file);	// frequency
-	putc (host.sound.freq >> 8, audio_output_file);
-	putc (host.sound.freq >> 16, audio_output_file);
-	putc (host.sound.freq >> 24, audio_output_file);
+	putc(host.sound.freq, audio_output_file);	// frequency
+	putc(host.sound.freq >> 8, audio_output_file);
+	putc(host.sound.freq >> 16, audio_output_file);
+	putc(host.sound.freq >> 24, audio_output_file);
 
 	if (host.sound.stereo) {
-		putc (host.sound.freq << 1, audio_output_file);	// size of data per second
-		putc (host.sound.freq >> 7, audio_output_file);
-		putc (host.sound.freq >> 15, audio_output_file);
-		putc (host.sound.freq >> 23, audio_output_file);
+		putc(host.sound.freq << 1, audio_output_file);	// size of data per second
+		putc(host.sound.freq >> 7, audio_output_file);
+		putc(host.sound.freq >> 15, audio_output_file);
+		putc(host.sound.freq >> 23, audio_output_file);
 	} else {
-		putc (host.sound.freq, audio_output_file);	// size of data per second
-		putc (host.sound.freq >> 8, audio_output_file);
-		putc (host.sound.freq >> 16, audio_output_file);
-		putc (host.sound.freq >> 24, audio_output_file);
+		putc(host.sound.freq, audio_output_file);	// size of data per second
+		putc(host.sound.freq >> 8, audio_output_file);
+		putc(host.sound.freq >> 16, audio_output_file);
+		putc(host.sound.freq >> 24, audio_output_file);
 	}
 
 	if (host.sound.stereo)
-		putc (2, audio_output_file);	// byte per sample
+		putc(2, audio_output_file);	// byte per sample
 	else
-		putc (1, audio_output_file);
-	putc (0, audio_output_file);
+		putc(1, audio_output_file);
+	putc(0, audio_output_file);
 
-	putc (8, audio_output_file);	// 8 bits
-	putc (0, audio_output_file);
+	putc(8, audio_output_file);	// 8 bits
+	putc(0, audio_output_file);
 
-	fwrite ("data\377\377\377\377", 1, 9,
-		audio_output_file);
-	osd_gfx_set_message (MESSAGE[language]
-		[dump_on]);
+	fwrite("data\377\377\377\377", 1, 9, audio_output_file);
+	osd_gfx_set_message(MESSAGE[language]
+						[dump_on]);
 
 	return (audio_output_file != NULL ? 1 : 0);
 }
 
 
 void
-stop_dump_audio(void) {
+stop_dump_audio(void)
+{
 	uint32 dum;
 
 	if (audio_output_file == NULL)
 		return;
 
-	dum = sound_dump_length + 0x2C; // Total file size, header is 0x2C long
-	fseek (audio_output_file, 4, SEEK_SET);
-	putc(dum      , audio_output_file);
-	putc(dum >> 8 , audio_output_file);
+	dum = sound_dump_length + 0x2C;	// Total file size, header is 0x2C long
+	fseek(audio_output_file, 4, SEEK_SET);
+	putc(dum, audio_output_file);
+	putc(dum >> 8, audio_output_file);
 	putc(dum >> 16, audio_output_file);
 	putc(dum >> 24, audio_output_file);
 
-	dum = sound_dump_length; // Audio stream size
-	fseek (audio_output_file, 0x28, SEEK_SET);
-	putc(dum      , audio_output_file);
-	putc(dum >> 8 , audio_output_file);
+	dum = sound_dump_length;	// Audio stream size
+	fseek(audio_output_file, 0x28, SEEK_SET);
+	putc(dum, audio_output_file);
+	putc(dum >> 8, audio_output_file);
 	putc(dum >> 16, audio_output_file);
 	putc(dum >> 24, audio_output_file);
 
 	fclose(audio_output_file);
 
-	osd_gfx_set_message (MESSAGE[language]
-		[dump_off]);
+	osd_gfx_set_message(MESSAGE[language]
+						[dump_off]);
 }
 
 
 void
-dump_audio_chunck(uchar* content, int length) {
+dump_audio_chunck(uchar * content, int length)
+{
 	int cycle;
 	int real_length;
 
@@ -386,7 +386,7 @@ dump_audio_chunck(uchar* content, int length) {
 		sound_dump_last_cycle = CycleNew;
 
 		real_length = (unsigned) ((float) (host.sound.freq) * (float) cycle
-			/ (float) BaseClock);
+								  / (float) BaseClock);
 		// in fact, size of the data to write
 	};
 
@@ -395,7 +395,7 @@ dump_audio_chunck(uchar* content, int length) {
 	if (real_length > length)
 		real_length = length;
 
-		fwrite(content, real_length, 1, audio_output_file);
+	fwrite(content, real_length, 1, audio_output_file);
 
-		sound_dump_length += real_length;
+	sound_dump_length += real_length;
 }

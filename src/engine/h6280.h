@@ -252,10 +252,10 @@ extern int txa(void);
 extern int txs(void);
 extern int tya(void);
 
-#define INT_NONE        0            /* No interrupt required      */
-#define INT_IRQ         1            /* Standard IRQ interrupt     */
-#define INT_NMI         2            /* Non-maskable interrupt     */
-#define INT_QUIT        3            /* Exit the emulation         */
+#define INT_NONE        0		/* No interrupt required      */
+#define INT_IRQ         1		/* Standard IRQ interrupt     */
+#define INT_NMI         2		/* Non-maskable interrupt     */
+#define INT_QUIT        3		/* Exit the emulation         */
 #define	INT_TIMER       4
 #define	INT_IRQ2        8
 

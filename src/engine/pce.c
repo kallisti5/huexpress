@@ -63,8 +63,8 @@ const uint32 PopRAMsize = 0x8000;
 uchar *ROM;
 // IOAREA = a pointer to the emulated IO zone
 // vchange = array of boolean to know whether bg tiles have changed (i.e.
-//		vchanges[5]==1 means the 6th tile have changed and VRAM2 should be updated)
-//		[to check !]
+//      vchanges[5]==1 means the 6th tile have changed and VRAM2 should be updated)
+//      [to check !]
 // vchanges IDEM for sprites
 // ROM = the same thing as the ROM file (w/o header)
 
@@ -158,7 +158,7 @@ char ISO_filename[PATH_MAX] = "";
 uchar force_header = 1;
 // Force the first sector of the code track to be the correct header
 
-char* server_hostname = NULL;
+char *server_hostname = NULL;
 
 char *bmdefault = NULL;
 // Name of the backup memory
@@ -187,10 +187,10 @@ uchar debug_on_beginning = 0;
 
 uchar CD_emulation = 0;
 // Do we emulate CD ( == 1)
-//						or	ISO file	 ( == 2)
-//						or	ISQ file	 ( == 3)
-//						or	plain BIN file ( == 4)
-//						or	HCD ( == 5)
+//                      or  ISO file     ( == 2)
+//                      or  ISQ file     ( == 3)
+//                      or  plain BIN file ( == 4)
+//                      or  HCD ( == 5)
 
 uchar builtin_system_used = 0;
 // Have we used the .dat included rom or no ?
@@ -204,7 +204,7 @@ Track CD_track[0x100];
 // Track
 // beg_min -> beginning in minutes since the begin of the CD(BCD)
 // beg_sec -> beginning in seconds since the begin of the CD(BCD)
-// beg_fr -> beginning in frames	 since the begin of the CD(BCD)
+// beg_fr -> beginning in frames     since the begin of the CD(BCD)
 // type -> 0 = audio, 4 = data
 // beg_lsn -> beginning in number of sector (2048 bytes)
 // length -> number of sector
@@ -249,28 +249,39 @@ uchar binbcd[0x100] = {
 
 
 uchar bcdbin[0x100] = {
-	0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0, 0, 0, 0, 0, 0,
-	0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0, 0, 0, 0, 0, 0,
-	0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0, 0, 0, 0, 0, 0,
-	0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0, 0, 0, 0, 0, 0,
-	0x28, 0x29, 0x2a, 0x2b, 0x2c, 0x2d, 0x2e, 0x2f, 0x30, 0x31, 0, 0, 0, 0, 0, 0,
-	0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x3a, 0x3b, 0, 0, 0, 0, 0, 0,
-	0x3c, 0x3d, 0x3e, 0x3f, 0x40, 0x41, 0x42, 0x43, 0x44, 0x45, 0, 0, 0, 0, 0, 0,
-	0x46, 0x47, 0x48, 0x49, 0x4a, 0x4b, 0x4c, 0x4d, 0x4e, 0x4f, 0, 0, 0, 0, 0, 0,
-	0x50, 0x51, 0x52, 0x53, 0x54, 0x55, 0x56, 0x57, 0x58, 0x59, 0, 0, 0, 0, 0, 0,
-	0x5a, 0x5b, 0x5c, 0x5d, 0x5e, 0x5f, 0x60, 0x61, 0x62, 0x63, 0, 0, 0, 0, 0, 0,
+	0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0, 0, 0, 0,
+		0, 0,
+	0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0, 0, 0, 0,
+		0, 0,
+	0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0, 0, 0, 0,
+		0, 0,
+	0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0, 0, 0, 0,
+		0, 0,
+	0x28, 0x29, 0x2a, 0x2b, 0x2c, 0x2d, 0x2e, 0x2f, 0x30, 0x31, 0, 0, 0, 0,
+		0, 0,
+	0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x3a, 0x3b, 0, 0, 0, 0,
+		0, 0,
+	0x3c, 0x3d, 0x3e, 0x3f, 0x40, 0x41, 0x42, 0x43, 0x44, 0x45, 0, 0, 0, 0,
+		0, 0,
+	0x46, 0x47, 0x48, 0x49, 0x4a, 0x4b, 0x4c, 0x4d, 0x4e, 0x4f, 0, 0, 0, 0,
+		0, 0,
+	0x50, 0x51, 0x52, 0x53, 0x54, 0x55, 0x56, 0x57, 0x58, 0x59, 0, 0, 0, 0,
+		0, 0,
+	0x5a, 0x5b, 0x5c, 0x5d, 0x5e, 0x5f, 0x60, 0x61, 0x62, 0x63, 0, 0, 0, 0,
+		0, 0,
 };
 
 uchar pce_cd_adpcm_trans_done = 0;
 
 FILE *iso_FILE = NULL;
 
-const char* joymap_reverse[J_MAX] = {
+const char *joymap_reverse[J_MAX] = {
 	"UP", "DOWN", "LEFT", "RIGHT",
 	"I", "II", "SELECT", "RUN",
 	"AUTOI", "AUTOII", "PI", "PII",
 	"PSELECT", "PRUN", "PAUTOI", "PAUTOII",
-	"PXAXIS", "PYAXIS"};
+	"PXAXIS", "PYAXIS"
+};
 
 uint32 packed_iso_filesize = 0;
 
@@ -278,9 +289,9 @@ uint32 ISQ_position = 0;
 
 // struct cdrom_tocentry pce_cd_tocentry;
 
-uchar nb_max_track = 24;	//(NO MORE BCD!!!!!)
+uchar nb_max_track = 24;		//(NO MORE BCD!!!!!)
 
-//extern char	 *pCartName;
+//extern char    *pCartName;
 
 //extern char snd_bSound;
 
@@ -302,21 +313,21 @@ static int shm_rom_handle;
 #endif
 
 // Pre declaration of reading function routines
-void read_sector_dummy (uchar *, uint32);
-void read_sector_CD (uchar *, uint32);
-void read_sector_ISO (uchar *, uint32);
-void read_sector_ISQ (uchar *, uint32);
-void read_sector_BIN (uchar *, uint32);
-void read_sector_HCD (uchar *, uint32);
+void read_sector_dummy(uchar *, uint32);
+void read_sector_CD(uchar *, uint32);
+void read_sector_ISO(uchar *, uint32);
+void read_sector_ISQ(uchar *, uint32);
+void read_sector_BIN(uchar *, uint32);
+void read_sector_HCD(uchar *, uint32);
 
-void (*read_sector_method[6]) (uchar *, uint32) =
-{
+void (*read_sector_method[6]) (uchar *, uint32) = {
 read_sector_dummy,
 		read_sector_CD,
-		read_sector_ISO, read_sector_ISQ, read_sector_BIN, read_sector_HCD};
+		read_sector_ISO, read_sector_ISQ, read_sector_BIN,
+		read_sector_HCD};
 
 static char *
-check_char (char *s, char c)
+check_char(char *s, char c)
 {
 	while ((*s) && (*s != c))
 		s++;
@@ -325,18 +336,20 @@ check_char (char *s, char c)
 }
 
 
-uint32 interrupt_60hz (uint32 interval, void *param)
+uint32
+interrupt_60hz(uint32 interval, void *param)
 {
 	/* Refresh freezed values in RAM */
 	for (can_blit = 0; can_blit < current_freezed_values; can_blit++)
-		RAM[list_to_freeze[can_blit].position] = list_to_freeze[can_blit].value;
+		RAM[list_to_freeze[can_blit].position] =
+			list_to_freeze[can_blit].value;
 
 	/* Make the system understand it can blit */
 	can_blit = 1;
 
 	/* If we've displayed a message recently, make it less recent */
 	if (message_delay)
-	message_delay--;
+		message_delay--;
 
 	/* number of call of this function */
 	timer_60++;
@@ -354,7 +367,7 @@ uint32 interrupt_60hz (uint32 interval, void *param)
 
 *****************************************************************************/
 void
-init_log_file ()
+init_log_file()
 {
 	unlink(log_filename);
 	Log("Creating log file %s\n", __DATE__);
@@ -365,7 +378,7 @@ extern int op6502_nb;
 
 
 void
-fill_cd_info ()
+fill_cd_info()
 {
 	uchar Min, Sec, Fra;
 	uchar current_track;
@@ -383,7 +396,7 @@ fill_cd_info ()
 
 	CD_track[1].length = 47 * CD_FRAMES + 65;	// Most common
 
-	nb_sect2msf (CD_track[1].length, &Min, &Sec, &Fra);
+	nb_sect2msf(CD_track[1].length, &Min, &Sec, &Fra);
 
 	// Second track is the main code track
 
@@ -393,29 +406,32 @@ fill_cd_info ()
 
 	CD_track[2].type = 4;
 	CD_track[2].beg_lsn
-		= msf2nb_sect(bcdbin[CD_track[2].beg_min] - bcdbin[CD_track[1].beg_min],
-			bcdbin[CD_track[2].beg_sec] - bcdbin[CD_track[1].beg_sec],
-			bcdbin[CD_track[2].beg_fra] - bcdbin[CD_track[1].beg_fra]);
+		=
+		msf2nb_sect(bcdbin[CD_track[2].beg_min] -
+					bcdbin[CD_track[1].beg_min],
+					bcdbin[CD_track[2].beg_sec] -
+					bcdbin[CD_track[1].beg_sec],
+					bcdbin[CD_track[2].beg_fra] -
+					bcdbin[CD_track[1].beg_fra]);
 
-	switch (CD_emulation)
-	{
-		case 2:
-			CD_track[0x02].length = filesize(iso_FILE) / 2048;
-			break;
-		case 3:
-			CD_track[0x02].length = packed_iso_filesize / 2048;
-			break;
-		case 4:
-			CD_track[0x02].length = 140000;
-			break;
-		default:
-			break;
+	switch (CD_emulation) {
+	case 2:
+		CD_track[0x02].length = filesize(iso_FILE) / 2048;
+		break;
+	case 3:
+		CD_track[0x02].length = packed_iso_filesize / 2048;
+		break;
+	case 4:
+		CD_track[0x02].length = 140000;
+		break;
+	default:
+		break;
 	}
 
 	// Now most track are audio
 
 	for (current_track = 3; current_track < bcdbin[nb_max_track];
-		current_track++) {
+		 current_track++) {
 
 		Fra = CD_track[current_track - 1].length % CD_FRAMES;
 		Sec = (CD_track[current_track - 1].length / CD_FRAMES) % CD_SECS;
@@ -430,12 +446,12 @@ fill_cd_info ()
 
 		CD_track[current_track].type = 0;
 		CD_track[current_track].beg_lsn
-			= msf2nb_sect (bcdbin[CD_track[current_track].beg_min]
-				- bcdbin[CD_track[1].beg_min],
-				bcdbin[CD_track[current_track].beg_sec]
-				- bcdbin[CD_track[1].beg_sec],
-				bcdbin[CD_track[current_track].beg_fra]
-				- bcdbin[CD_track[1].beg_fra]);
+			= msf2nb_sect(bcdbin[CD_track[current_track].beg_min]
+						  - bcdbin[CD_track[1].beg_min],
+						  bcdbin[CD_track[current_track].beg_sec]
+						  - bcdbin[CD_track[1].beg_sec],
+						  bcdbin[CD_track[current_track].beg_fra]
+						  - bcdbin[CD_track[1].beg_fra]);
 		// 1 min for all
 		CD_track[current_track].length = 1 * CD_SECS * CD_FRAMES;
 	}
@@ -455,32 +471,32 @@ fill_cd_info ()
 
 	CD_track[nb_max_track].type = 4;
 	CD_track[nb_max_track].beg_lsn
-		= msf2nb_sect (bcdbin[CD_track[nb_max_track].beg_min]
-			- bcdbin[CD_track[1].beg_min],
-			bcdbin[CD_track[nb_max_track].beg_sec]
-			- bcdbin[CD_track[1].beg_sec],
-			bcdbin[CD_track[nb_max_track].beg_fra]
-			- bcdbin[CD_track[1].beg_fra]);
+		= msf2nb_sect(bcdbin[CD_track[nb_max_track].beg_min]
+					  - bcdbin[CD_track[1].beg_min],
+					  bcdbin[CD_track[nb_max_track].beg_sec]
+					  - bcdbin[CD_track[1].beg_sec],
+					  bcdbin[CD_track[nb_max_track].beg_fra]
+					  - bcdbin[CD_track[1].beg_fra]);
 
 	/* Thank to Nyef for having localised a little bug there */
 	switch (CD_emulation) {
-		case 2:
-			CD_track[nb_max_track].length = filesize (iso_FILE) / 2048;
-			break;
-		case 3:
-			CD_track[nb_max_track].length = packed_iso_filesize / 2048;
-			break;
-		case 4:
-			CD_track[nb_max_track].length = 14000;
-			break;
-		default:
-			break;
+	case 2:
+		CD_track[nb_max_track].length = filesize(iso_FILE) / 2048;
+		break;
+	case 3:
+		CD_track[nb_max_track].length = packed_iso_filesize / 2048;
+		break;
+	case 4:
+		CD_track[nb_max_track].length = 14000;
+		break;
+	default:
+		break;
 	}
 }
 
 
 void
-read_sector_BIN (uchar *p, uint32 sector)
+read_sector_BIN(uchar * p, uint32 sector)
 {
 	static int first_read = 1;
 	static long second_track_sector = 0;
@@ -492,22 +508,23 @@ read_sector_BIN (uchar *p, uint32 sector)
 		int index_in_header = 0;
 		unsigned long position;
 
-		fseek (iso_FILE, 0, SEEK_SET);
+		fseek(iso_FILE, 0, SEEK_SET);
 
-		while ((!found) && (!feof (iso_FILE))) {
-			dummy = getc (iso_FILE);
+		while ((!found) && (!feof(iso_FILE))) {
+			dummy = getc(iso_FILE);
 			if (dummy == ISO_header[0]) {
-				position = ftell (iso_FILE);
+				position = ftell(iso_FILE);
 				index_in_header = 1;
 				while ((index_in_header < 0x800)
-					&& (getc (iso_FILE) == ISO_header[index_in_header++]));
+					   && (getc(iso_FILE) ==
+						   ISO_header[index_in_header++]));
 
 				if (index_in_header == 0x800) {
 					found = 1;
 					second_track_sector = ftell(iso_FILE) - 0x800;
 				}
 
-				fseek (iso_FILE, position, SEEK_SET);
+				fseek(iso_FILE, position, SEEK_SET);
 			}
 		}
 
@@ -525,23 +542,22 @@ read_sector_BIN (uchar *p, uint32 sector)
 	if (result != 0x02) {
 		MESSAGE_ERROR("Read on non-track 2\n");
 		TRACE("Track %d asked, sector number: 0x%X\n",
-			result, pce_cd_sectoraddy);
-		exit (-10);
+			  result, pce_cd_sectoraddy);
+		exit(-10);
 	}
-
 #if ENABLE_TRACING
 	TRACE("BIN: Loading sector number %d\n", pce_cd_sectoraddy);
 #endif
 
 	fseek(iso_FILE, second_track_sector
-		+ (sector - CD_track[binbcd[result]].beg_lsn) * 2352, SEEK_SET);
+		  + (sector - CD_track[binbcd[result]].beg_lsn) * 2352, SEEK_SET);
 	fread(p, 2048, 1, iso_FILE);
 
 }
 
 
 void
-read_sector_ISQ (uchar *p, uint32 sector)
+read_sector_ISQ(uchar * p, uint32 sector)
 {
 	// Only for allegro?
 }
@@ -552,64 +568,65 @@ uint32 first_sector = 0;
 
 
 void
-read_sector_CD(uchar *p, uint32 sector)
+read_sector_CD(uchar * p, uint32 sector)
 {
 	int i;
-	#if ENABLE_TRACING_CD
+#if ENABLE_TRACING_CD
 	TRACE("CDRom2: Reading sector %d\n", sector);
-	#endif
+#endif
 
 	if (cd_buf != NULL) {
 		if ((sector >= first_sector)
 			&& (sector <= first_sector + CD_BUF_LENGTH - 1)) {
-				memcpy (p, cd_buf + 2048 * (sector - first_sector), 2048);
-				return;
+			memcpy(p, cd_buf + 2048 * (sector - first_sector), 2048);
+			return;
 		} else {
-				for (i = 0; i < CD_BUF_LENGTH; i++)
-					osd_cd_read(cd_buf + 2048 * i, sector + i);
-				first_sector = sector;
-				memcpy(p, cd_buf, 2048);
+			for (i = 0; i < CD_BUF_LENGTH; i++)
+				osd_cd_read(cd_buf + 2048 * i, sector + i);
+			first_sector = sector;
+			memcpy(p, cd_buf, 2048);
 		}
 	} else {
-		cd_buf = (uchar *) malloc (CD_BUF_LENGTH * 2048);
+		cd_buf = (uchar *) malloc(CD_BUF_LENGTH * 2048);
 		for (i = 0; i < CD_BUF_LENGTH; i++)
-			osd_cd_read (cd_buf + 2048 * i, sector + i);
+			osd_cd_read(cd_buf + 2048 * i, sector + i);
 		first_sector = sector;
-		memcpy (p, cd_buf, 2048);
+		memcpy(p, cd_buf, 2048);
 	}
 
 }
 
 
 void
-read_sector_ISO (uchar *p, uint32 sector)
+read_sector_ISO(uchar * p, uint32 sector)
 {
 	int result;
 
 	for (result = nb_max_track; result > 0x01; result--) {
 		if ((sector >= CD_track[result].beg_lsn)
-			&& (sector <= CD_track[result].beg_lsn + CD_track[result].length))
+			&& (sector <=
+				CD_track[result].beg_lsn + CD_track[result].length))
 			break;
 	}
 
-	#if ENABLE_TRACING_CD
+#if ENABLE_TRACING_CD
 	TRACE("CDRom2: Loading ISO sector %d...\n"
-		"           AX=%02x%02x; BX=%02x%02x; CX=%02x%02x; DX=%02x%02x\n"
-		"           Track #%d begins at %d\n",
-		pce_cd_sectoraddy,
-		RAM[0xf9], RAM[0xf8], RAM[0xfb], RAM[0xfa],
-		RAM[0xfd], RAM[0xfc], RAM[0xff], RAM[0xfe],
-		result, CD_track[result].beg_lsn);
+		  "           AX=%02x%02x; BX=%02x%02x; CX=%02x%02x; DX=%02x%02x\n"
+		  "           Track #%d begins at %d\n",
+		  pce_cd_sectoraddy,
+		  RAM[0xf9], RAM[0xf8], RAM[0xfb], RAM[0xfa],
+		  RAM[0xfd], RAM[0xfc], RAM[0xff], RAM[0xfe],
+		  result, CD_track[result].beg_lsn);
 	/*
-	Log
-		("Loading sector n�%d.\nAX=%02x%02x\nBX=%02x%02x\nCX=%02x%02x\nDX=%02x%02x\n\n",
-			pce_cd_sectoraddy, RAM[0xf9], RAM[0xf8], RAM[0xfb], RAM[0xfa], RAM[0xfd],
-			RAM[0xfc], RAM[0xff], RAM[0xfe]);
-	Log("temp+2-5 = %x %x %x\ntemp + 1 = %02x\n",RAM[5], RAM[6], RAM[7], RAM[4]);
-	Log("ISO : seek at %d\n", (sector - CD_track[result].beg_lsn) * 2048);
-	Log("Track n�%d begin at %d\n", result, CD_track[result].beg_lsn);
-	*/
-	#endif
+	   Log
+	   ("Loading sector n�%d.\nAX=%02x%02x\nBX=%02x%02x\nCX=%02x%02x\nDX=%02x%02x\n\n",
+	   pce_cd_sectoraddy, RAM[0xf9], RAM[0xf8], RAM[0xfb], RAM[0xfa], RAM[0xfd],
+	   RAM[0xfc], RAM[0xff], RAM[0xfe]);
+	   Log("temp+2-5 = %x %x %x\ntemp + 1 = %02x\n",RAM[5], RAM[6], RAM[7], RAM[4]);
+	   Log("ISO : seek at %d\n", (sector - CD_track[result].beg_lsn) * 2048);
+	   Log("Track n�%d begin at %d\n", result, CD_track[result].beg_lsn);
+	 */
+#endif
 
 	if (result != 0x02) {
 		int i;
@@ -617,19 +634,19 @@ read_sector_ISO (uchar *p, uint32 sector)
 		TRACE("Track %d asked\nsector : 0x%X", result, pce_cd_sectoraddy);
 
 		/* exit(-10);
-		* Don't quit anymore but fill the reading buffer with garbage
-		* easily recognizable
-		*/
+		 * Don't quit anymore but fill the reading buffer with garbage
+		 * easily recognizable
+		 */
 
 		for (i = 0; i < 2048; i += 4)
 			*(uint32 *) & p[i] = 0xDEADBEEF;
-			return;
-		}
+		return;
+	}
 
 	if (sector == CD_track[result].beg_lsn) {
 		/* We're reading the first sector, the header */
 		if (force_header) {
-			memcpy (p, ISO_header, 0x800);
+			memcpy(p, ISO_header, 0x800);
 			return;
 		}
 	}
@@ -641,7 +658,7 @@ read_sector_ISO (uchar *p, uint32 sector)
 
 
 void
-read_sector_dummy (uchar *p, uint32 sector)
+read_sector_dummy(uchar * p, uint32 sector)
 {
 	return;
 }
@@ -655,59 +672,50 @@ pce_cd_read_sector(void)
 
 #if ENABLE_TRACING_CD
 	TRACE("CDRom2: %s reading sector %d (via CDEmulation mode %d)\n",
-		__func__, pce_cd_sectoraddy, CD_emulation);
+		  __func__, pce_cd_sectoraddy, CD_emulation);
 #endif
 
-	(*read_sector_method[CD_emulation]) (cd_sector_buffer, pce_cd_sectoraddy);
+	(*read_sector_method[CD_emulation]) (cd_sector_buffer,
+										 pce_cd_sectoraddy);
 
 	pce_cd_sectoraddy++;
 
 #if 0
-	for (result = 0; result < 2048; result++)
-		{
-			if ((result & 15) == 0)
-				{
-					fprintf (stderr, "%03x: ", result);
-				}
-			fprintf (stderr, "%02x", cd_sector_buffer[result]);
-			if ((result & 15) == 15)
-				{
-					fprintf (stderr, "\n");
-				}
-			else
-				{
-					fprintf (stderr, " ");
-				}
+	for (result = 0; result < 2048; result++) {
+		if ((result & 15) == 0) {
+			fprintf(stderr, "%03x: ", result);
 		}
+		fprintf(stderr, "%02x", cd_sector_buffer[result]);
+		if ((result & 15) == 15) {
+			fprintf(stderr, "\n");
+		} else {
+			fprintf(stderr, " ");
+		}
+	}
 #endif
 
 #ifndef FINAL_RELEASE
 #if 0
 	{
 
-		FILE *g = fopen ("read.cd", "at");
+		FILE *g = fopen("read.cd", "at");
 		int result;
 
-		fprintf (g, "\nsector #%x\n", pce_cd_sectoraddy - 1);
+		fprintf(g, "\nsector #%x\n", pce_cd_sectoraddy - 1);
 
-		for (result = 0; result < 2048; result++)
-			{
-				if ((result & 15) == 0)
-					{
-						fprintf (g, "%03x: ", result);
-					}
-				fprintf (g, "%02x", cd_sector_buffer[result]);
-				if ((result & 15) == 15)
-					{
-						fprintf (g, "\n");
-					}
-				else
-					{
-						fprintf (g, " ");
-					}
+		for (result = 0; result < 2048; result++) {
+			if ((result & 15) == 0) {
+				fprintf(g, "%03x: ", result);
 			}
+			fprintf(g, "%02x", cd_sector_buffer[result]);
+			if ((result & 15) == 15) {
+				fprintf(g, "\n");
+			} else {
+				fprintf(g, " ");
+			}
+		}
 
-		fclose (g);
+		fclose(g);
 
 	}
 #endif
@@ -722,21 +730,20 @@ pce_cd_read_sector(void)
 
 
 void
-issue_ADPCM_dma (void)
+issue_ADPCM_dma(void)
 {
 #ifndef FINAL_RELEASE
-	fprintf (stderr, "Will make DMA transfer\n");
-	Log ("ADPCM DMA will begin\n");
+	fprintf(stderr, "Will make DMA transfer\n");
+	Log("ADPCM DMA will begin\n");
 #endif
 
-	while (cd_sectorcnt--)
-		{
-			memcpy (PCM + io.adpcm_dmaptr, cd_read_buffer, pce_cd_read_datacnt);
-			cd_read_buffer = NULL;
-			io.adpcm_dmaptr += pce_cd_read_datacnt;
-			pce_cd_read_datacnt = 0;
-			pce_cd_read_sector ();
-		}
+	while (cd_sectorcnt--) {
+		memcpy(PCM + io.adpcm_dmaptr, cd_read_buffer, pce_cd_read_datacnt);
+		cd_read_buffer = NULL;
+		io.adpcm_dmaptr += pce_cd_read_datacnt;
+		pce_cd_read_datacnt = 0;
+		pce_cd_read_sector();
+	}
 
 	pce_cd_read_datacnt = 0;
 	pce_cd_adpcm_trans_done = 1;
@@ -753,7 +760,7 @@ issue_ADPCM_dma (void)
 #endif
 
 void
-lba2msf (int lba, uchar *msf)
+lba2msf(int lba, uchar * msf)
 {
 	lba += CD_MSF_OFFSET;
 	msf[0] = binbcd[lba / (CD_SECS * CD_FRAMES)];
@@ -764,7 +771,7 @@ lba2msf (int lba, uchar *msf)
 
 
 uint32
-msf2nb_sect (uchar min, uchar sec, uchar frm)
+msf2nb_sect(uchar min, uchar sec, uchar frm)
 {
 	uint32 result = frm;
 	result += sec * CD_FRAMES;
@@ -774,7 +781,7 @@ msf2nb_sect (uchar min, uchar sec, uchar frm)
 
 
 void
-nb_sect2msf (uint32 lsn, uchar * min, uchar * sec, uchar * frm)
+nb_sect2msf(uint32 lsn, uchar * min, uchar * sec, uchar * frm)
 {
 
 	(*frm) = lsn % CD_FRAMES;
@@ -787,38 +794,35 @@ nb_sect2msf (uint32 lsn, uchar * min, uchar * sec, uchar * frm)
 
 
 void
-IO_write (uint16 A, uchar V)
+IO_write(uint16 A, uchar V)
 {
 	//printf("w%04x,%02x ",A&0x3FFF,V);
 
-	if ((A >= 0x800) && (A < 0x1800)) // We keep the io buffer value
+	if ((A >= 0x800) && (A < 0x1800))	// We keep the io buffer value
 		io.io_buffer = V;
 
 #ifndef FINAL_RELEASE
 	if ((A & 0x1F00) == 0x1A00)
-		Log ("\nAC Write %02x at %04x\n", V, A);
+		Log("\nAC Write %02x at %04x\n", V, A);
 #endif
 
-	switch (A & 0x1F00)
-		{
-		case 0x0000:		/* VDC */
-			switch (A & 3)
-	{
-	case 0:
-		io.vdc_reg = V & 31;
-		return;
-	case 1:
-		return;
-	case 2:
-		//printf("vdc_l%d,%02x ",io.vdc_reg,V);
-		switch (io.vdc_reg)
-			{
-			case VWR:		/* Write to video */
+	switch (A & 0x1F00) {
+	case 0x0000:				/* VDC */
+		switch (A & 3) {
+		case 0:
+			io.vdc_reg = V & 31;
+			return;
+		case 1:
+			return;
+		case 2:
+			//printf("vdc_l%d,%02x ",io.vdc_reg,V);
+			switch (io.vdc_reg) {
+			case VWR:			/* Write to video */
 				io.vdc_ratch = V;
 				return;
-			case HDR:		/* Horizontal Definition */
+			case HDR:			/* Horizontal Definition */
 				{
-					typeof (io.screen_w) old_value = io.screen_w;
+					typeof(io.screen_w) old_value = io.screen_w;
 					io.screen_w = (V + 1) * 8;
 
 					if (io.screen_w == old_value)
@@ -827,7 +831,8 @@ IO_write (uint16 A, uchar V)
 					// (*init_normal_mode[video_driver]) ();
 					gfx_need_video_mode_change = 1;
 					{
-						uint32 x, y = (WIDTH - io.screen_w) / 2 - 512 * WIDTH;
+						uint32 x, y =
+							(WIDTH - io.screen_w) / 2 - 512 * WIDTH;
 						for (x = 0; x < 1024; x++) {
 							spr_init_pos[x] = y;
 							y += WIDTH;
@@ -836,7 +841,7 @@ IO_write (uint16 A, uchar V)
 				}
 				break;
 
-			case MWR:	/* size of the virtual background screen */
+			case MWR:			/* size of the virtual background screen */
 				{
 					static uchar bgw[] = { 32, 64, 128, 128 };
 					io.bg_h = (V & 0x40) ? 64 : 32;
@@ -844,11 +849,11 @@ IO_write (uint16 A, uchar V)
 				}
 				break;
 
-			case BYR:		/* Vertical screen offset */
+			case BYR:			/* Vertical screen offset */
 				/*
-				if (io.VDC[BYR].B.l == V)
-					return;
-				*/
+				   if (io.VDC[BYR].B.l == V)
+				   return;
+				 */
 
 				save_gfx_context(0);
 
@@ -866,12 +871,12 @@ IO_write (uint16 A, uchar V)
 				gfx_debug_printf("ScrollY = %d (l)", ScrollY);
 #endif
 				return;
-			case BXR:		/* Horizontal screen offset */
+			case BXR:			/* Horizontal screen offset */
 
 				/*
-				if (io.VDC[BXR].B.l == V)
-					return;
-				*/
+				   if (io.VDC[BXR].B.l == V)
+				   return;
+				 */
 
 				save_gfx_context(0);
 
@@ -912,26 +917,25 @@ IO_write (uint16 A, uchar V)
 				return;
 			}
 
-		io.VDC[io.vdc_reg].B.l = V;
-		// all others reg just need to get the value, without additional stuff
+			io.VDC[io.vdc_reg].B.l = V;
+			// all others reg just need to get the value, without additional stuff
 
 
 #if ENABLE_TRACING_GFX
-					gfx_debug_printf("VDC[%02x]=0x%02x", io.vdc_reg, V);
+			gfx_debug_printf("VDC[%02x]=0x%02x", io.vdc_reg, V);
 #endif
 
 #ifndef FINAL_RELEASE
-		if (io.vdc_reg > 19)
-			{
-				fprintf (stderr, "ignore write lo vdc%d,%02x\n", io.vdc_reg, V);
+			if (io.vdc_reg > 19) {
+				fprintf(stderr, "ignore write lo vdc%d,%02x\n", io.vdc_reg,
+						V);
 			}
 #endif
 
-		return;
-	case 3:
-		switch (io.vdc_reg)
-			{
-			case VWR:		/* Write to mem */
+			return;
+		case 3:
+			switch (io.vdc_reg) {
+			case VWR:			/* Write to mem */
 				/* Writing to hi byte actually perform the action */
 				VRAM[io.VDC[MAWR].W * 2] = io.vdc_ratch;
 				VRAM[io.VDC[MAWR].W * 2 + 1] = V;
@@ -941,7 +945,7 @@ IO_write (uint16 A, uchar V)
 
 				io.VDC[MAWR].W += io.vdc_inc;
 
-							/* vdc_ratch shouldn't be reset between writes */
+				/* vdc_ratch shouldn't be reset between writes */
 				// io.vdc_ratch = 0;
 				return;
 
@@ -960,16 +964,16 @@ IO_write (uint16 A, uchar V)
 				gfx_need_video_mode_change = 1;
 				return;
 
-			case VDW:		/* screen height */
+			case VDW:			/* screen height */
 				io.VDC[io.vdc_reg].B.h = V;
 				gfx_need_video_mode_change = 1;
 				return;
 
-			case LENR:		/* DMA transfert */
+			case LENR:			/* DMA transfert */
 
 				io.VDC[LENR].B.h = V;
 
-				{ // black-- 's code
+				{				// black-- 's code
 
 					int sourcecount = (io.VDC[DCR].W & 8) ? -1 : 1;
 					int destcount = (io.VDC[DCR].W & 4) ? -1 : 1;
@@ -985,13 +989,13 @@ IO_write (uint16 A, uchar V)
 						source += sourcecount;
 					}
 
-				/*
-					io.VDC[SOUR].W = source;
-					io.VDC[DISTR].W = dest;
-				*/
-				// Erich Kitzmuller fix follows
-				io.VDC[SOUR].W = source / 2;
-				io.VDC[DISTR].W = dest / 2;
+					/*
+					   io.VDC[SOUR].W = source;
+					   io.VDC[DISTR].W = dest;
+					 */
+					// Erich Kitzmuller fix follows
+					io.VDC[SOUR].W = source / 2;
+					io.VDC[DISTR].W = dest / 2;
 
 				}
 
@@ -1006,39 +1010,38 @@ IO_write (uint16 A, uchar V)
 
 				return;
 
-			case CR:		/* Auto increment size */
+			case CR:			/* Auto increment size */
 				{
 					static uchar incsize[] = { 1, 32, 64, 128 };
 					/*
-						if (io.VDC[CR].B.h == V)
-						return;
-					*/
+					   if (io.VDC[CR].B.h == V)
+					   return;
+					 */
 					save_gfx_context(0);
 
 					io.vdc_inc = incsize[(V >> 3) & 3];
 					io.VDC[CR].B.h = V;
 				}
 				break;
-			case HDR:		/* Horizontal display end */
+			case HDR:			/* Horizontal display end */
 				/* TODO : well, maybe we should implement it */
 				//io.screen_w = (io.VDC_ratch[HDR]+1)*8;
 				//TRACE0("HDRh\n");
 #if ENABLE_TRACING_GFX
-							gfx_debug_printf("VDC[HDR].h = %d", V);
+				gfx_debug_printf("VDC[HDR].h = %d", V);
 #endif
 				break;
 
-			case BYR:		/* Vertical screen offset */
+			case BYR:			/* Vertical screen offset */
 
 				/*
-				if (io.VDC[BYR].B.h == (V & 1))
-					return;
-				*/
+				   if (io.VDC[BYR].B.h == (V & 1))
+				   return;
+				 */
 
 				save_gfx_context(0);
 
-				if (!scroll)
-				{
+				if (!scroll) {
 					oldScrollX = ScrollX;
 					oldScrollY = ScrollY;
 					oldScrollYDiff = ScrollYDiff;
@@ -1048,28 +1051,29 @@ IO_write (uint16 A, uchar V)
 				ScrollYDiff = scanline - 1;
 				ScrollYDiff -= io.VDC[VPR].B.h + io.VDC[VPR].B.l;
 #if ENABLE_TRACING_GFX
-							if (ScrollYDiff < 0)
-								gfx_debug_printf("ScrollYDiff went negative when substraction VPR.h/.l (%d,%d)", io.VDC[VPR].B.h, io.VDC[VPR].B.l);
-							gfx_debug_printf("ScrollY = %d (h)", ScrollY);
+				if (ScrollYDiff < 0)
+					gfx_debug_printf
+						("ScrollYDiff went negative when substraction VPR.h/.l (%d,%d)",
+						 io.VDC[VPR].B.h, io.VDC[VPR].B.l);
+				gfx_debug_printf("ScrollY = %d (h)", ScrollY);
 #endif
 
 				return;
 
-			case SATB:	/* DMA from VRAM to SATB */
+			case SATB:			/* DMA from VRAM to SATB */
 				io.VDC[SATB].B.h = V;
 				io.vdc_satb = 1;
 				io.vdc_status &= ~VDC_SATBfinish;
 				return;
 
-			case BXR:	/* Horizontal screen offset */
+			case BXR:			/* Horizontal screen offset */
 
 				if (io.VDC[BXR].B.h == (V & 3))
 					return;
 
 				save_gfx_context(0);
 
-				if (!scroll)
-				{
+				if (!scroll) {
 					oldScrollX = ScrollX;
 					oldScrollY = ScrollY;
 					oldScrollYDiff = ScrollYDiff;
@@ -1079,339 +1083,329 @@ IO_write (uint16 A, uchar V)
 				scroll = 1;
 				return;
 			}
-		io.VDC[io.vdc_reg].B.h = V;
+			io.VDC[io.vdc_reg].B.h = V;
 
 #ifndef FINAL_RELEASE
-		if (io.vdc_reg > 19)
-			{
-				fprintf (stderr, "ignore write hi vdc%d,%02x\n", io.vdc_reg, V);
+			if (io.vdc_reg > 19) {
+				fprintf(stderr, "ignore write hi vdc%d,%02x\n", io.vdc_reg,
+						V);
 			}
 #endif
 
-		return;
-	}
-			break;
-
-		case 0x0400:		/* VCE */
-			switch (A & 7)
-	{
-	case 0:
-		/*TRACE("VCE 0, V=%X\n", V); */
-					return;
-
-		/* Choose color index */
-	case 2:
-		io.vce_reg.B.l = V;
-		return;
-	case 3:
-		io.vce_reg.B.h = V & 1;
-		return;
-
-		/* Set RGB components for current choosen color */
-	case 4:
-		io.VCE[io.vce_reg.W].B.l = V;
-		{
-			uchar c;
-			int i, n;
-			n = io.vce_reg.W;
-			c = io.VCE[n].W >> 1;
-			if (n == 0)
-				{
-		for (i = 0; i < 256; i += 16)
-			Pal[i] = c;
-				}
-			else if (n & 15)
-				Pal[n] = c;
+			return;
 		}
-		return;
-
-	case 5:
-		io.VCE[io.vce_reg.W].B.h = V;
-		{
-			uchar c;
-			int i, n;
-			n = io.vce_reg.W;
-			c = io.VCE[n].W >> 1;
-			if (n == 0)
-				{
-		for (i = 0; i < 256; i += 16)
-			Pal[i] = c;
-				}
-			else if (n & 15)
-				Pal[n] = c;
-		}
-		io.vce_reg.W = (io.vce_reg.W + 1) & 0x1FF;
-		return;
-	}
-			break;
-
-
-		case 0x0800:		/* PSG */
-
-			switch (A & 15)
-	{
-
-		/* Select PSG channel */
-	case 0:
-		io.psg_ch = V & 7;
-		return;
-
-		/* Select global volume */
-	case 1:
-		io.psg_volume = V;
-		return;
-
-	/* Frequency setting, 8 lower bits */
-	case 2:
-		io.PSG[io.psg_ch][2] = V;
 		break;
 
-	/* Frequency setting, 4 upper bits */
-	case 3:
-		io.PSG[io.psg_ch][3] = V & 15;
+	case 0x0400:				/* VCE */
+		switch (A & 7) {
+		case 0:
+			/*TRACE("VCE 0, V=%X\n", V); */
+			return;
+
+			/* Choose color index */
+		case 2:
+			io.vce_reg.B.l = V;
+			return;
+		case 3:
+			io.vce_reg.B.h = V & 1;
+			return;
+
+			/* Set RGB components for current choosen color */
+		case 4:
+			io.VCE[io.vce_reg.W].B.l = V;
+			{
+				uchar c;
+				int i, n;
+				n = io.vce_reg.W;
+				c = io.VCE[n].W >> 1;
+				if (n == 0) {
+					for (i = 0; i < 256; i += 16)
+						Pal[i] = c;
+				} else if (n & 15)
+					Pal[n] = c;
+			}
+			return;
+
+		case 5:
+			io.VCE[io.vce_reg.W].B.h = V;
+			{
+				uchar c;
+				int i, n;
+				n = io.vce_reg.W;
+				c = io.VCE[n].W >> 1;
+				if (n == 0) {
+					for (i = 0; i < 256; i += 16)
+						Pal[i] = c;
+				} else if (n & 15)
+					Pal[n] = c;
+			}
+			io.vce_reg.W = (io.vce_reg.W + 1) & 0x1FF;
+			return;
+		}
 		break;
 
-	case 4:
-		io.PSG[io.psg_ch][4] = V;
+
+	case 0x0800:				/* PSG */
+
+		switch (A & 15) {
+
+			/* Select PSG channel */
+		case 0:
+			io.psg_ch = V & 7;
+			return;
+
+			/* Select global volume */
+		case 1:
+			io.psg_volume = V;
+			return;
+
+			/* Frequency setting, 8 lower bits */
+		case 2:
+			io.PSG[io.psg_ch][2] = V;
+			break;
+
+			/* Frequency setting, 4 upper bits */
+		case 3:
+			io.PSG[io.psg_ch][3] = V & 15;
+			break;
+
+		case 4:
+			io.PSG[io.psg_ch][4] = V;
 #if ENABLE_TRACING_AUDIO
-		if ((V & 0xC0) == 0x40)
-						io.PSG[io.psg_ch][PSG_DATA_INDEX_REG] = 0;
+			if ((V & 0xC0) == 0x40)
+				io.PSG[io.psg_ch][PSG_DATA_INDEX_REG] = 0;
 #endif
-		break;
+			break;
 
-		/* Set channel specific volume */
-	case 5:
-		io.PSG[io.psg_ch][5] = V;
-		break;
+			/* Set channel specific volume */
+		case 5:
+			io.PSG[io.psg_ch][5] = V;
+			break;
 
-		/* Put a value into the waveform or direct audio buffers */
-	case 6:
-					if (io.PSG[io.psg_ch][PSG_DDA_REG] & PSG_DDA_DIRECT_ACCESS)
-						{
-							io.psg_da_data[io.psg_ch][io.psg_da_index[io.psg_ch]] = V;
-							io.psg_da_index[io.psg_ch] = (io.psg_da_index[io.psg_ch] + 1) & 0x3FF;
-							if (io.psg_da_count[io.psg_ch]++ > (PSG_DIRECT_ACCESS_BUFSIZE - 1))
-								{
-									if (!io.psg_channel_disabled[io.psg_ch])
-										MESSAGE_INFO("Audio being put into the direct access buffer faster than it's being played.\n");
-									io.psg_da_count[io.psg_ch] = 0;
-								}
-						}
-					else
-						{
-							io.wave[io.psg_ch][io.PSG[io.psg_ch][PSG_DATA_INDEX_REG]] = V;
-							io.PSG[io.psg_ch][PSG_DATA_INDEX_REG] = (io.PSG[io.psg_ch][PSG_DATA_INDEX_REG] + 1) & 0x1F;
-						}
-		break;
+			/* Put a value into the waveform or direct audio buffers */
+		case 6:
+			if (io.PSG[io.psg_ch][PSG_DDA_REG] & PSG_DDA_DIRECT_ACCESS) {
+				io.psg_da_data[io.psg_ch][io.psg_da_index[io.psg_ch]] = V;
+				io.psg_da_index[io.psg_ch] =
+					(io.psg_da_index[io.psg_ch] + 1) & 0x3FF;
+				if (io.psg_da_count[io.psg_ch]++ >
+					(PSG_DIRECT_ACCESS_BUFSIZE - 1)) {
+					if (!io.psg_channel_disabled[io.psg_ch])
+						MESSAGE_INFO
+							("Audio being put into the direct access buffer faster than it's being played.\n");
+					io.psg_da_count[io.psg_ch] = 0;
+				}
+			} else {
+				io.wave[io.psg_ch][io.PSG[io.psg_ch][PSG_DATA_INDEX_REG]] =
+					V;
+				io.PSG[io.psg_ch][PSG_DATA_INDEX_REG] =
+					(io.PSG[io.psg_ch][PSG_DATA_INDEX_REG] + 1) & 0x1F;
+			}
+			break;
 
-	case 7:
-		io.PSG[io.psg_ch][7] = V;
-		break;
+		case 7:
+			io.PSG[io.psg_ch][7] = V;
+			break;
 
-	case 8:
-		io.psg_lfo_freq = V;
-		break;
+		case 8:
+			io.psg_lfo_freq = V;
+			break;
 
-	case 9:
-		io.psg_lfo_ctrl = V;
-		break;
+		case 9:
+			io.psg_lfo_ctrl = V;
+			break;
 
 #ifdef EXTRA_CHECKING
-	default:
-		fprintf (stderr, "ignored PSG write\n");
+		default:
+			fprintf(stderr, "ignored PSG write\n");
 #endif
-	}
+		}
+		return;
+
+	case 0x0c00:				/* timer */
+		//TRACE("Timer Access: A=%X,V=%X\n", A, V);
+		switch (A & 1) {
+		case 0:
+			io.timer_reload = V & 127;
 			return;
-
-		case 0x0c00:		/* timer */
-			//TRACE("Timer Access: A=%X,V=%X\n", A, V);
-			switch (A & 1)
-	{
-	case 0:
-		io.timer_reload = V & 127;
-		return;
-	case 1:
-		V &= 1;
-		if (V && !io.timer_start)
-			io.timer_counter = io.timer_reload;
-		io.timer_start = V;
-		return;
-	}
-			break;
-
-		case 0x1000:		/* joypad */
-//				TRACE("V=%02X\n", V);
-			io.joy_select = V & 1;
-			//io.joy_select = V;
-			if (V & 2)
-	io.joy_counter = 0;
-			return;
-
-		case 0x1400:		/* IRQ */
-			switch (A & 15)
-	{
-	case 2:
-		io.irq_mask = V;	/*TRACE("irq_mask = %02X\n", V); */
-		return;
-	case 3:
-		io.irq_status = (io.irq_status & ~TIRQ) | (V & 0xF8);
-		return;
-	}
-			break;
-
-		case 0x1A00:
-			{
-
-	if ((A & 0x1AF0) == 0x1AE0)
-		{
-			switch (A & 15)
-				{
-				case 0:
-		io.ac_shift = (io.ac_shift & 0xffffff00) | V;
-		break;
-				case 1:
-		io.ac_shift = (io.ac_shift & 0xffff00ff) | (V << 8);
-		break;
-				case 2:
-		io.ac_shift = (io.ac_shift & 0xff00ffff) | (V << 16);
-		break;
-				case 3:
-		io.ac_shift = (io.ac_shift & 0x00ffffff) | (V << 24);
-		break;
-				case 4:
-		io.ac_shiftbits = V & 0x0f;
-		if (io.ac_shiftbits != 0)
-			{
-				if (io.ac_shiftbits < 8)
-					{
-			io.ac_shift <<= io.ac_shiftbits;
-					}
-				else
-					{
-			io.ac_shift >>= (16 - io.ac_shiftbits);
-					}
-			}
-				default:
-		break;
-				}
+		case 1:
+			V &= 1;
+			if (V && !io.timer_start)
+				io.timer_counter = io.timer_reload;
+			io.timer_start = V;
 			return;
 		}
-	else
-		{
-			uchar ac_port = (A >> 4) & 3;
-			switch (A & 15)
-				{
-				case 0:
-				case 1:
+		break;
 
-		if (io.ac_control[ac_port] & AC_USE_OFFSET)
-			{
-				ac_extra_mem[((io.ac_base[ac_port]
-					+ io.ac_offset[ac_port]) & 0x1fffff)] = V;
+	case 0x1000:				/* joypad */
+//              TRACE("V=%02X\n", V);
+		io.joy_select = V & 1;
+		//io.joy_select = V;
+		if (V & 2)
+			io.joy_counter = 0;
+		return;
+
+	case 0x1400:				/* IRQ */
+		switch (A & 15) {
+		case 2:
+			io.irq_mask = V;	/*TRACE("irq_mask = %02X\n", V); */
+			return;
+		case 3:
+			io.irq_status = (io.irq_status & ~TIRQ) | (V & 0xF8);
+			return;
+		}
+		break;
+
+	case 0x1A00:
+		{
+
+			if ((A & 0x1AF0) == 0x1AE0) {
+				switch (A & 15) {
+				case 0:
+					io.ac_shift = (io.ac_shift & 0xffffff00) | V;
+					break;
+				case 1:
+					io.ac_shift = (io.ac_shift & 0xffff00ff) | (V << 8);
+					break;
+				case 2:
+					io.ac_shift = (io.ac_shift & 0xff00ffff) | (V << 16);
+					break;
+				case 3:
+					io.ac_shift = (io.ac_shift & 0x00ffffff) | (V << 24);
+					break;
+				case 4:
+					io.ac_shiftbits = V & 0x0f;
+					if (io.ac_shiftbits != 0) {
+						if (io.ac_shiftbits < 8) {
+							io.ac_shift <<= io.ac_shiftbits;
+						} else {
+							io.ac_shift >>= (16 - io.ac_shiftbits);
+						}
+					}
+				default:
+					break;
+				}
+				return;
 			} else {
-				ac_extra_mem[((io.ac_base[ac_port]) & 0x1fffff)] = V;
-			}
+				uchar ac_port = (A >> 4) & 3;
+				switch (A & 15) {
+				case 0:
+				case 1:
 
-		if (io.ac_control[ac_port] & AC_ENABLE_INC)
-			{
-				if (io.ac_control[ac_port] & AC_INCREMENT_BASE)
-					io.ac_base[ac_port] =
-			(io.ac_base[ac_port] +
-			 io.ac_incr[ac_port]) & 0xffffff;
-				else
-					io.ac_offset[ac_port] =
-			(io.ac_offset[ac_port] +
-			 io.ac_incr[ac_port]) & 0xffffff;
-			}
+					if (io.ac_control[ac_port] & AC_USE_OFFSET) {
+						ac_extra_mem[((io.ac_base[ac_port]
+									   +
+									   io.
+									   ac_offset[ac_port]) & 0x1fffff)] =
+							V;
+					} else {
+						ac_extra_mem[((io.ac_base[ac_port]) & 0x1fffff)] =
+							V;
+					}
 
-		return;
+					if (io.ac_control[ac_port] & AC_ENABLE_INC) {
+						if (io.ac_control[ac_port] & AC_INCREMENT_BASE)
+							io.ac_base[ac_port] =
+								(io.ac_base[ac_port] +
+								 io.ac_incr[ac_port]) & 0xffffff;
+						else
+							io.ac_offset[ac_port] =
+								(io.ac_offset[ac_port] +
+								 io.ac_incr[ac_port]) & 0xffffff;
+					}
+
+					return;
 				case 2:
-		io.ac_base[ac_port] = (io.ac_base[ac_port] & 0xffff00) | V;
-		return;
+					io.ac_base[ac_port] =
+						(io.ac_base[ac_port] & 0xffff00) | V;
+					return;
 				case 3:
-		io.ac_base[ac_port] =
-			(io.ac_base[ac_port] & 0xff00ff) | (V << 8);
-		return;
+					io.ac_base[ac_port] =
+						(io.ac_base[ac_port] & 0xff00ff) | (V << 8);
+					return;
 				case 4:
-		io.ac_base[ac_port] =
-			(io.ac_base[ac_port] & 0x00ffff) | (V << 16);
-		return;
+					io.ac_base[ac_port] =
+						(io.ac_base[ac_port] & 0x00ffff) | (V << 16);
+					return;
 				case 5:
-		io.ac_offset[ac_port] = (io.ac_offset[ac_port] & 0xff00) | V;
-		return;
+					io.ac_offset[ac_port] =
+						(io.ac_offset[ac_port] & 0xff00) | V;
+					return;
 				case 6:
-		io.ac_offset[ac_port] =
-			(io.ac_offset[ac_port] & 0x00ff) | (V << 8);
-		if (io.ac_control[ac_port] & (AC_ENABLE_OFFSET_BASE_6))
-			io.ac_base[ac_port] =
-				(io.ac_base[ac_port] + io.ac_offset[ac_port]) & 0xffffff;
-		return;
+					io.ac_offset[ac_port] =
+						(io.ac_offset[ac_port] & 0x00ff) | (V << 8);
+					if (io.ac_control[ac_port] & (AC_ENABLE_OFFSET_BASE_6))
+						io.ac_base[ac_port] =
+							(io.ac_base[ac_port] +
+							 io.ac_offset[ac_port]) & 0xffffff;
+					return;
 				case 7:
-		io.ac_incr[ac_port] = (io.ac_incr[ac_port] & 0xff00) | V;
-		return;
+					io.ac_incr[ac_port] =
+						(io.ac_incr[ac_port] & 0xff00) | V;
+					return;
 				case 8:
-		io.ac_incr[ac_port] =
-			(io.ac_incr[ac_port] & 0x00ff) | (V << 8);
-		return;
+					io.ac_incr[ac_port] =
+						(io.ac_incr[ac_port] & 0x00ff) | (V << 8);
+					return;
 				case 9:
-		io.ac_control[ac_port] = V;
-		return;
+					io.ac_control[ac_port] = V;
+					return;
 				case 0xa:
-		if ((io.ac_control[ac_port]
-										& (AC_ENABLE_OFFSET_BASE_A | AC_ENABLE_OFFSET_BASE_6))
-										== (AC_ENABLE_OFFSET_BASE_A | AC_ENABLE_OFFSET_BASE_6))
-			io.ac_base[ac_port] =
-				(io.ac_base[ac_port] + io.ac_offset[ac_port]) & 0xffffff;
-		return;
+					if ((io.ac_control[ac_port]
+						 & (AC_ENABLE_OFFSET_BASE_A |
+							AC_ENABLE_OFFSET_BASE_6))
+						== (AC_ENABLE_OFFSET_BASE_A |
+							AC_ENABLE_OFFSET_BASE_6))
+						io.ac_base[ac_port] =
+							(io.ac_base[ac_port] +
+							 io.ac_offset[ac_port]) & 0xffffff;
+					return;
 				default:
-		Log ("\nUnknown AC write %d into 0x%04X\n", V, A);
+					Log("\nUnknown AC write %d into 0x%04X\n", V, A);
 				}
 
-		}
 			}
-			break;
-
-		case 0x1800:		/* CD-ROM extention */
-#if defined(BSD_CD_HARDWARE_SUPPORT)
-			pce_cd_handle_write_1800(A, V);
-#else
-			gpl_pce_cd_handle_write_1800(A, V);
-#endif
-			break;
 		}
-#ifndef FINAL_RELEASE
-	fprintf (stderr,
-		 "ignore I/O write %04x,%02x\tBase adress of port %X\nat PC = %04X\n",
-		 A, V, A & 0x1CC0,
-#ifdef KERNEL_DS
-		 reg_pc);
+		break;
+
+	case 0x1800:				/* CD-ROM extention */
+#if defined(BSD_CD_HARDWARE_SUPPORT)
+		pce_cd_handle_write_1800(A, V);
 #else
-		 M.PC.W);
+		gpl_pce_cd_handle_write_1800(A, V);
+#endif
+		break;
+	}
+#ifndef FINAL_RELEASE
+	fprintf(stderr,
+			"ignore I/O write %04x,%02x\tBase adress of port %X\nat PC = %04X\n",
+			A, V, A & 0x1CC0,
+#ifdef KERNEL_DS
+			reg_pc);
+#else
+			M.PC.W);
 #endif
 
 #endif
-//			DebugDumpTrace(4, TRUE);
+//          DebugDumpTrace(4, TRUE);
 }
 
 
 uchar
-TimerInt ()
+TimerInt()
 {
-	if (io.timer_start)
-		{
-			io.timer_counter--;
-			if (io.timer_counter > 128)
-	{
-		io.timer_counter = io.timer_reload;
+	if (io.timer_start) {
+		io.timer_counter--;
+		if (io.timer_counter > 128) {
+			io.timer_counter = io.timer_reload;
 
-		if (!(io.irq_mask & TIRQ))
-			{
+			if (!(io.irq_mask & TIRQ)) {
 				io.irq_status |= TIRQ;
 				return INT_TIMER;
 			}
 
-	}
 		}
+	}
 	return INT_NONE;
 }
 
@@ -1430,27 +1424,27 @@ static char syscard_filename[PATH_MAX];
 							its name
 
 *****************************************************************************/
-char*
+char *
 search_possible_syscard()
 {
 	MESSAGE_INFO("We need a syscard to load a CD, begining search...\n");
-	FILE* f;
+	FILE *f;
 
-	#if defined(__haiku__)
-	#define POSSIBLE_LOCATION_COUNT 3
-	const char* POSSIBLE_LOCATION[POSSIBLE_LOCATION_COUNT] = {
-		"./","../","/boot/common/data/huexpress/"
+#if defined(__haiku__)
+#define POSSIBLE_LOCATION_COUNT 3
+	const char *POSSIBLE_LOCATION[POSSIBLE_LOCATION_COUNT] = {
+		"./", "../", "/boot/common/data/huexpress/"
 	};
-	#else
-	#define POSSIBLE_LOCATION_COUNT 3
-	const char* POSSIBLE_LOCATION[POSSIBLE_LOCATION_COUNT] = {
-		"./","../","/usr/local/lib/huexpress/"
+#else
+#define POSSIBLE_LOCATION_COUNT 3
+	const char *POSSIBLE_LOCATION[POSSIBLE_LOCATION_COUNT] = {
+		"./", "../", "/usr/local/lib/huexpress/"
 	};
-	#endif
+#endif
 
-	#define POSSIBLE_FILENAME_COUNT	4
-	const char* POSSIBLE_FILENAME[POSSIBLE_FILENAME_COUNT] = {
-		"syscard.pce","syscard3.pce","syscard30.pce","cd-rom~1.pce"
+#define POSSIBLE_FILENAME_COUNT	4
+	const char *POSSIBLE_FILENAME[POSSIBLE_FILENAME_COUNT] = {
+		"syscard.pce", "syscard3.pce", "syscard30.pce", "cd-rom~1.pce"
 	};
 
 	int location, filename;
@@ -1459,22 +1453,24 @@ search_possible_syscard()
 	for (location = 0; location <= POSSIBLE_LOCATION_COUNT; location++)
 		for (filename = 0; filename < POSSIBLE_FILENAME_COUNT; filename++) {
 
-				if (location < POSSIBLE_LOCATION_COUNT)
-					strcpy(temp_buffer, POSSIBLE_LOCATION[location]);
-				else {
-					strcpy(temp_buffer, short_exe_name);
-					strcat(temp_buffer, "/");
-				}
-
-				strcat(temp_buffer, POSSIBLE_FILENAME[filename]);
-				TRACE("Checking for CD syscard at : %s\n", temp_buffer);
-				if ((f = fopen(temp_buffer,"rb")) != NULL) {
-					fclose(f);
-					strncpy(syscard_filename, temp_buffer, sizeof(syscard_filename));
-					MESSAGE_INFO("Found CD system card at %s\n", syscard_filename);
-					return syscard_filename;
-				}
+			if (location < POSSIBLE_LOCATION_COUNT)
+				strcpy(temp_buffer, POSSIBLE_LOCATION[location]);
+			else {
+				strcpy(temp_buffer, short_exe_name);
+				strcat(temp_buffer, "/");
 			}
+
+			strcat(temp_buffer, POSSIBLE_FILENAME[filename]);
+			TRACE("Checking for CD syscard at : %s\n", temp_buffer);
+			if ((f = fopen(temp_buffer, "rb")) != NULL) {
+				fclose(f);
+				strncpy(syscard_filename, temp_buffer,
+						sizeof(syscard_filename));
+				MESSAGE_INFO("Found CD system card at %s\n",
+							 syscard_filename);
+				return syscard_filename;
+			}
+		}
 
 	return NULL;
 }
@@ -1493,12 +1489,13 @@ search_possible_syscard()
 int32
 search_syscard()
 {
-	char* syscard_location;
+	char *syscard_location;
 
 	syscard_location = search_possible_syscard();
 
 	if (NULL == syscard_location) {
-		MESSAGE_ERROR("No CD system cards were found, can not continue.\n");
+		MESSAGE_ERROR
+			("No CD system cards were found, can not continue.\n");
 		return -1;
 	} else {
 		int CD_emulation_bak = CD_emulation;
@@ -1531,8 +1528,7 @@ CartLoad(char *name)
 
 	MESSAGE_INFO("Opening %s...\n", name);
 
-	if (CD_emulation == 1
-		|| strstr(name, "/dev/disk/atapi/")) {
+	if (CD_emulation == 1 || strstr(name, "/dev/disk/atapi/")) {
 		MESSAGE_INFO("Using Hardware CD Device to load CDRom2\n");
 		CD_emulation = 1;
 
@@ -1545,7 +1541,7 @@ CartLoad(char *name)
 		CD_emulation = 0;
 		strcpy(true_file_name, name);
 		fp = fopen(name, "rb");
-	} else if (strcasestr (name, ".HCD")) {
+	} else if (strcasestr(name, ".HCD")) {
 		// HuGO! CD definition provided
 		CD_emulation = 5;
 		MESSAGE_INFO("Using Hu-Go! CD definition emulation\n");
@@ -1557,7 +1553,7 @@ CartLoad(char *name)
 			return 1;
 
 		LOAD_INTEGRATED_SYS_FILE;
-	} else if (strcasestr (name, ".ISO")) {
+	} else if (strcasestr(name, ".ISO")) {
 		// Enable ISO support
 		CD_emulation = 2;
 		MESSAGE_INFO("Using CD ISO emulation\n");
@@ -1566,7 +1562,7 @@ CartLoad(char *name)
 		strcpy(ISO_filename, name);
 
 		LOAD_INTEGRATED_SYS_FILE;
-	} else if (strcasestr (name, ".ISQ")) {
+	} else if (strcasestr(name, ".ISQ")) {
 		// Enable ISQ support
 		CD_emulation = 3;
 		MESSAGE_INFO("Using CD ISQ emulation\n");
@@ -1575,7 +1571,7 @@ CartLoad(char *name)
 		strcpy(ISO_filename, name);
 
 		LOAD_INTEGRATED_SYS_FILE;
-	} else if (strcasestr (name, ".BIN")) {
+	} else if (strcasestr(name, ".BIN")) {
 		// Enable BIN support
 		CD_emulation = 4;
 		MESSAGE_INFO("Using CD BIN emulation\n");
@@ -1584,42 +1580,45 @@ CartLoad(char *name)
 		strcpy(ISO_filename, name);
 
 		LOAD_INTEGRATED_SYS_FILE;
-	} else if (strcasestr (name, ".ZIP")) {
-		char* filename_in_archive = NULL;
+	} else if (strcasestr(name, ".ZIP")) {
+		char *filename_in_archive = NULL;
 
 		MESSAGE_INFO("Parsing possible ZIP archive\n");
 
 		Log("Testing archive %s\n", name);
 		filename_in_archive = find_possible_filename_in_zip(name);
-		Log("Return value = (%p) %s\n", filename_in_archive, filename_in_archive);
+		Log("Return value = (%p) %s\n", filename_in_archive,
+			filename_in_archive);
 		if (strcmp(filename_in_archive, "")) {
-			char* unzipped_rom;
+			char *unzipped_rom;
 			size_t unzipped_rom_size;
 
 			Log("Found %s in %s\n", filename_in_archive, name);
-			unzipped_rom = extract_file_in_memory(name, filename_in_archive,
-				&unzipped_rom_size);
+			unzipped_rom =
+				extract_file_in_memory(name, filename_in_archive,
+									   &unzipped_rom_size);
 
 			ROM_size = unzipped_rom_size / 0x2000;
 
 #if defined(SHARED_MEMORY)
 			shm_rom_handle
-				= shmget ((key_t) SHM_ROM_HANDLE, unzipped_rom_size,
-					IPC_CREAT | IPC_EXCL | 0666);
+				= shmget((key_t) SHM_ROM_HANDLE, unzipped_rom_size,
+						 IPC_CREAT | IPC_EXCL | 0666);
 
 			if (shm_rom_handle == -1) {
-				fprintf (stderr, "Couldn't get shared memory (%d bytes)\n", fsize);
+				fprintf(stderr, "Couldn't get shared memory (%d bytes)\n",
+						fsize);
 				return 1;
 			} else {
-				ROM = (char *) shmat (shm_rom_handle, NULL, 0);
+				ROM = (char *) shmat(shm_rom_handle, NULL, 0);
 				if (ROM == NULL) {
-					fprintf (stderr, "Couldn't attach shared memory\n");
+					fprintf(stderr, "Couldn't attach shared memory\n");
 					return 1;
 				} else {
 					// Copy into the shared memory, by skipping an eventual header
 					memcpy(ROM,
-						unzipped_rom + (unzipped_rom_size & 0x1FF),
-						unzipped_rom_size & ~0x1FF);
+						   unzipped_rom + (unzipped_rom_size & 0x1FF),
+						   unzipped_rom_size & ~0x1FF);
 					free(unzipped_rom);
 				}
 			}
@@ -1630,37 +1629,37 @@ CartLoad(char *name)
 			} else {
 				ROM = malloc(unzipped_rom_size & ~0x1FFF);
 				memcpy(ROM,
-					unzipped_rom + (unzipped_rom_size & 0x1FFF),
-					unzipped_rom_size & ~0x1FFF);
+					   unzipped_rom + (unzipped_rom_size & 0x1FFF),
+					   unzipped_rom_size & ~0x1FFF);
 				free(unzipped_rom);
 			}
 #endif
 			return 0;
 		}
 		/*
-		strcpy (true_file_name, tmp_path);
-		fp = fopen (tmp_path, "rb");
-		*/
+		   strcpy (true_file_name, tmp_path);
+		   fp = fopen (tmp_path, "rb");
+		 */
 	}
 	/*else {
-		// unknown media format
-		CD_emulation = 0;
-		strcpy (true_file_name, name);
-		fp = fopen(name, "rb");
-	}
-	*/
+	   // unknown media format
+	   CD_emulation = 0;
+	   strcpy (true_file_name, name);
+	   fp = fopen(name, "rb");
+	   }
+	 */
 
 	if (fp == NULL) {
-		if (!check_char (name, '.')) {
+		if (!check_char(name, '.')) {
 			// if dot omitted, we try with PCE extension
-			strcat (name, ".pce");
+			strcat(name, ".pce");
 			return CartLoad(name);
 		}
 
 		if (strcasestr(name, ".pce")
 			|| strcasestr(name, ".iso")) {
 			// if filename with .PCE doesn't exist, it may be in ZIP
-			strcpy(&name[strlen (name) - 4], ".zip");
+			strcpy(&name[strlen(name) - 4], ".zip");
 			return CartLoad(name);
 		};
 
@@ -1669,54 +1668,52 @@ CartLoad(char *name)
 
 	if (cart_name != name) {
 		// Avoids warning when copying passing cart_name as parameter
-		#warning find where this weird call is done
-		strcpy (cart_name, name);
+#warning find where this weird call is done
+		strcpy(cart_name, name);
 	}
-
 	// find file size
-	fseek (fp, 0, SEEK_END);
-	fsize = ftell (fp);
+	fseek(fp, 0, SEEK_END);
+	fsize = ftell(fp);
 
 	// ajust var if header present
-	fseek (fp, fsize & 0x1fff, SEEK_SET);
+	fseek(fp, fsize & 0x1fff, SEEK_SET);
 	fsize &= ~0x1fff;
 
 	// read ROM
 #if defined(SHARED_MEMORY)
 	shm_rom_handle
-		= shmget ((key_t) SHM_ROM_HANDLE, fsize,
-			IPC_CREAT | IPC_EXCL | 0666);
+		= shmget((key_t) SHM_ROM_HANDLE, fsize,
+				 IPC_CREAT | IPC_EXCL | 0666);
 
 	if (shm_rom_handle == -1)
-		fprintf (stderr, "Couldn't get shared memory (%d bytes)\n", fsize);
-	else
-	{
-		ROM = (char *) shmat (shm_rom_handle, NULL, 0);
+		fprintf(stderr, "Couldn't get shared memory (%d bytes)\n", fsize);
+	else {
+		ROM = (char *) shmat(shm_rom_handle, NULL, 0);
 		if (ROM == NULL)
-			fprintf (stderr, "Couldn't attach shared memory\n");
+			fprintf(stderr, "Couldn't attach shared memory\n");
 	}
 
 #else
 	ROM = (uchar *) malloc(fsize);
 #endif
 	ROM_size = fsize / 0x2000;
-	fread (ROM, 1, fsize, fp);
+	fread(ROM, 1, fsize, fp);
 
-	fclose (fp);
+	fclose(fp);
 
 	return 0;
 }
 
 
 int
-ResetPCE ()
+ResetPCE()
 {
 	int i;
 
-	memset (SPRAM, 0, 64 * 8);
+	memset(SPRAM, 0, 64 * 8);
 
 	TimerCount = TimerPeriod;
-	memset (&io, 0, sizeof (IO));
+	memset(&io, 0, sizeof(IO));
 	scanline = 0;
 	io.vdc_status = 0;
 	io.vdc_inc = 1;
@@ -1738,7 +1735,7 @@ ResetPCE ()
 	/* TEST */
 
 	/* TEST */
-	//	io.screen_h = 240;
+	//  io.screen_h = 240;
 	/* TEST */
 
 	io.screen_h = 224;
@@ -1760,77 +1757,74 @@ ResetPCE ()
 
 #if !defined(TEST_ROM_RELOCATED)
 	mmr[7] = 0x00;
-	bank_set (7, 0x00);
+	bank_set(7, 0x00);
 
 	mmr[6] = 0x05;
-	bank_set (6, 0x05);
+	bank_set(6, 0x05);
 
 	mmr[5] = 0x04;
-	bank_set (5, 0x04);
+	bank_set(5, 0x04);
 
 	mmr[4] = 0x03;
-	bank_set (4, 0x03);
+	bank_set(4, 0x03);
 
 	mmr[3] = 0x02;
-	bank_set (3, 0x02);
+	bank_set(3, 0x02);
 
 	mmr[2] = 0x01;
-	bank_set (2, 0x01);
+	bank_set(2, 0x01);
 #else
 	mmr[7] = 0x68;
-	bank_set (7, 0x68);
+	bank_set(7, 0x68);
 
 	mmr[6] = 0x05;
-	bank_set (6, 0x05 + 0x68);
+	bank_set(6, 0x05 + 0x68);
 
 	mmr[5] = 0x04;
-	bank_set (5, 0x04 + 0x68);
+	bank_set(5, 0x04 + 0x68);
 
 	mmr[4] = 0x03;
-	bank_set (4, 0x03 + 0x68);
+	bank_set(4, 0x03 + 0x68);
 
 	mmr[3] = 0x02;
-	bank_set (3, 0x02 + 0x68);
+	bank_set(3, 0x02 + 0x68);
 
 	mmr[2] = 0x01;
-	bank_set (2, 0x01 + 0x68);
-#endif /* TEST_ROM_RELOCATED */
+	bank_set(2, 0x01 + 0x68);
+#endif							/* TEST_ROM_RELOCATED */
 
 	mmr[1] = 0xF8;
-	bank_set (1, 0xF8);
+	bank_set(1, 0xF8);
 
 	mmr[0] = 0xFF;
-	bank_set (0, 0xFF);
+	bank_set(0, 0xFF);
 
 	reg_a = reg_x = reg_y = 0x00;
 	reg_p = FL_TIQ;
 
 	reg_s = 0xFF;
 
-	reg_pc = Op6502 (VEC_RESET) + 256 * Op6502 (VEC_RESET + 1);
+	reg_pc = Op6502(VEC_RESET) + 256 * Op6502(VEC_RESET + 1);
 
 	CycleNew = 0;
 
 	if (debug_on_beginning) {
 		Bp_list[GIVE_HAND_BP].position = reg_pc;
-		Bp_list[GIVE_HAND_BP].original_op = Op6502 (reg_pc);
+		Bp_list[GIVE_HAND_BP].original_op = Op6502(reg_pc);
 		Bp_list[GIVE_HAND_BP].flag = ENABLED;
-		Wr6502 (
-			reg_pc,
-			0xB + 0x10 * GIVE_HAND_BP
-		);
+		Wr6502(reg_pc, 0xB + 0x10 * GIVE_HAND_BP);
 	}
 
 	if (((CD_emulation >= 2) && (CD_emulation <= 5))
-		&& (!strcmp (ISO_filename, ""))) {
+		&& (!strcmp(ISO_filename, ""))) {
 		CD_emulation = 0;
-			// if no ISO name given, give up the emulation
+		// if no ISO name given, give up the emulation
 	}
 
 
 	if ((CD_emulation == 2) || (CD_emulation == 4)) {
 
-		if (!(iso_FILE = fopen (ISO_filename, "rb"))) {
+		if (!(iso_FILE = fopen(ISO_filename, "rb"))) {
 			MESSAGE_ERROR("Couldn't read ISO at %s\n", ISO_filename);
 			return 1;
 		}
@@ -1853,14 +1847,14 @@ ResetPCE ()
 				if (x != 0x22) {
 					// the 0x22th jump is special, points to a one byte routine
 					uint16 dest;
-					dest = Op6502 (0xE000 + x * 3 + 1);
-					dest += 256 * Op6502 (0xE000 + x * 3 + 2);
+					dest = Op6502(0xE000 + x * 3 + 1);
+					dest += 256 * Op6502(0xE000 + x * 3 + 2);
 
-					CDBIOS_replace[x][0] = Op6502 (dest);
-					CDBIOS_replace[x][1] = Op6502 (dest + 1);
+					CDBIOS_replace[x][0] = Op6502(dest);
+					CDBIOS_replace[x][1] = Op6502(dest + 1);
 
-					Wr6502 (dest, 0xFC);
-					Wr6502 (dest + 1, x);
+					Wr6502(dest, 0xFC);
+					Wr6502(dest + 1, x);
 				}
 
 	}
@@ -1870,7 +1864,7 @@ ResetPCE ()
 
 
 int
-InitPCE (char *name, char *backmemname)
+InitPCE(char *name, char *backmemname)
 {
 	int i = 0, ROMmask;
 	unsigned long CRC;
@@ -1886,65 +1880,64 @@ InitPCE (char *name, char *backmemname)
 
 	osd_fix_filename_slashes(cart_name);
 
-	if (!(tmp_dummy = (char *) (strrchr (cart_name, '/'))))
+	if (!(tmp_dummy = (char *) (strrchr(cart_name, '/'))))
 		tmp_dummy = &cart_name[0];
 	else
 		tmp_dummy++;
 
-	memset (short_cart_name, 0, 80);
+	memset(short_cart_name, 0, 80);
 	while ((tmp_dummy[i]) && (tmp_dummy[i] != '.')) {
 		short_cart_name[i] = tmp_dummy[i];
 		i++;
 	}
 
-	if (strlen (short_cart_name))
-		if (short_cart_name[strlen (short_cart_name) - 1] != '.')
-			{
-	short_cart_name[strlen (short_cart_name) + 1] = 0;
-	short_cart_name[strlen (short_cart_name)] = '.';
-			}
+	if (strlen(short_cart_name))
+		if (short_cart_name[strlen(short_cart_name) - 1] != '.') {
+			short_cart_name[strlen(short_cart_name) + 1] = 0;
+			short_cart_name[strlen(short_cart_name)] = '.';
+		}
 
 	osd_fix_filename_slashes(ISO_filename);
 
-	if (!(tmp_dummy = (char *) (strrchr (ISO_filename, '\\'))))
+	if (!(tmp_dummy = (char *) (strrchr(ISO_filename, '\\'))))
 		tmp_dummy = &ISO_filename[0];
 	else
 		tmp_dummy++;
 
 
-	memset (short_iso_name, 0, 80);
+	memset(short_iso_name, 0, 80);
 	i = 0;
 	while ((tmp_dummy[i]) && (tmp_dummy[i] != '.')) {
 		short_iso_name[i] = tmp_dummy[i];
 		i++;
 	}
 
-	if (strlen (short_iso_name)) {
-		if (short_iso_name[strlen (short_iso_name) - 1] != '.') {
-				short_iso_name[strlen (short_iso_name) + 1] = 0;
-				short_iso_name[strlen (short_iso_name)] = '.';
+	if (strlen(short_iso_name)) {
+		if (short_iso_name[strlen(short_iso_name) - 1] != '.') {
+			short_iso_name[strlen(short_iso_name) + 1] = 0;
+			short_iso_name[strlen(short_iso_name)] = '.';
 		}
 	}
 
 	char home_directory[256];
 
-	strcpy(home_directory, getenv ("HOME"));
+	strcpy(home_directory, getenv("HOME"));
 
 	switch (CD_emulation) {
-		case 0:
-			sprintf (sav_path, "%s/.huexpress/%ssav", home_directory,
+	case 0:
+		sprintf(sav_path, "%s/.huexpress/%ssav", home_directory,
 				short_cart_name);
-			break;
-		case 1:
-			sprintf (sav_path, "%s/cd_sav", short_exe_name);
-			break;
-		case 2:
-		case 3:
-		case 4:
-		case 5:
-			sprintf (sav_path, "%s/cd.svi", short_exe_name);
-			break;
-		}
+		break;
+	case 1:
+		sprintf(sav_path, "%s/cd_sav", short_exe_name);
+		break;
+	case 2:
+	case 3:
+	case 4:
+	case 5:
+		sprintf(sav_path, "%s/cd.svi", short_exe_name);
+		break;
+	}
 
 	MESSAGE_INFO("Saved path is %s\n", sav_path);
 
@@ -1963,50 +1956,50 @@ InitPCE (char *name, char *backmemname)
 	/* TEST */
 	io.screen_w = 256;
 
-	#if 0
-	if (!builtin_system_used)
-		{
+#if 0
+	if (!builtin_system_used) {
 
-			CRC = CRC_file (true_file_name);
-			/* I'm doing it only here 'coz cartload set
-				 true_file_name		*/
+		CRC = CRC_file(true_file_name);
+		/* I'm doing it only here 'coz cartload set
+		   true_file_name       */
 
-			NO_ROM = 0xFFFF;
+		NO_ROM = 0xFFFF;
 
-			for (dummy = 0; dummy < pce_romlist_size; dummy++)
-	if (CRC == pce_romlist[dummy].CRC)
-		NO_ROM = dummy;
-		} else {
-			NO_ROM = 255;
-			printf("ROM not in database: CRC=%lx\n", CRC);
-		}
-	#endif
+		for (dummy = 0; dummy < pce_romlist_size; dummy++)
+			if (CRC == pce_romlist[dummy].CRC)
+				NO_ROM = dummy;
+	} else {
+		NO_ROM = 255;
+		printf("ROM not in database: CRC=%lx\n", CRC);
+	}
+#endif
 
-	memset (WRAM, 0, 0x2000);
-	WRAM[0] = 0x48;		/* 'H' */
-	WRAM[1] = 0x55;		/* 'U' */
-	WRAM[2] = 0x42;		/* 'B' */
-	WRAM[3] = 0x4D;		/* 'M' */
-	WRAM[5] = 0xA0;		/* WRAM[4-5] = 0xA000, end of free mem ? */
-	WRAM[6] = 0x10;		/* WRAM[6-7] = 0x8010, beginning of free mem ? */
+	memset(WRAM, 0, 0x2000);
+	WRAM[0] = 0x48;				/* 'H' */
+	WRAM[1] = 0x55;				/* 'U' */
+	WRAM[2] = 0x42;				/* 'B' */
+	WRAM[3] = 0x4D;				/* 'M' */
+	WRAM[5] = 0xA0;				/* WRAM[4-5] = 0xA000, end of free mem ? */
+	WRAM[6] = 0x10;				/* WRAM[6-7] = 0x8010, beginning of free mem ? */
 	WRAM[7] = 0x80;
 
-	memset (VRAM, 0, VRAMSIZE);
+	memset(VRAM, 0, VRAMSIZE);
 
-	memset (VRAM2, 0, VRAMSIZE);
+	memset(VRAM2, 0, VRAMSIZE);
 
-	memset (VRAMS, 0, VRAMSIZE);
+	memset(VRAMS, 0, VRAMSIZE);
 
-	IOAREA = (uchar *) malloc (0x2000);
-	memset (IOAREA, 0xFF, 0x2000);
+	IOAREA = (uchar *) malloc(0x2000);
+	memset(IOAREA, 0xFF, 0x2000);
 
-	memset (vchange, 1, VRAMSIZE / 32);
+	memset(vchange, 1, VRAMSIZE / 32);
 
-	memset (vchanges, 1, VRAMSIZE / 128);
+	memset(vchanges, 1, VRAMSIZE / 128);
 
 #ifndef FINAL_RELEASE
 	if (NO_ROM != 0xFFFF)
-		fprintf (stderr, "flags = %x\n", (pce_romlist + NO_ROM) ? pce_romlist[NO_ROM].flags : 0);
+		fprintf(stderr, "flags = %x\n",
+				(pce_romlist + NO_ROM) ? pce_romlist[NO_ROM].flags : 0);
 #endif
 
 	local_us_encoded_card = US_encoded_card;
@@ -2018,7 +2011,8 @@ InitPCE (char *name, char *backmemname)
 	if (ROM[0x1FFF] < 0xE0) {
 		Log("This rom is probably US encrypted, decrypting ..\n");
 #if !defined(FINAL_RELEASE)
-		fprintf(stderr, "This rom is probably US encrypted, decrypting ..\n");
+		fprintf(stderr,
+				"This rom is probably US encrypted, decrypting ..\n");
 #endif
 		local_us_encoded_card = 1;
 	}
@@ -2076,131 +2070,134 @@ InitPCE (char *name, char *backmemname)
 	ROMmask--;
 
 #ifndef FINAL_RELEASE
-	fprintf (stderr, "ROMmask=%02X, ROM_size=%02X\n", ROMmask, ROM_size);
+	fprintf(stderr, "ROMmask=%02X, ROM_size=%02X\n", ROMmask, ROM_size);
 #endif
 
 	for (i = 0; i < 0xFF; i++) {
-			ROMMapR[i] = trap_ram_read;
-			ROMMapW[i] = trap_ram_write;
+		ROMMapR[i] = trap_ram_read;
+		ROMMapW[i] = trap_ram_write;
 	}
 
 #if ! defined(TEST_ROM_RELOCATED)
 	for (i = 0; i < 0x80; i++) {
-			if (ROM_size == 0x30) {
-					switch (i & 0x70) {
-							case 0x00:
-							case 0x10:
-							case 0x50:
-								ROMMapR[i] = ROM + (i & ROMmask) * 0x2000;
-								break;
-							case 0x20:
-							case 0x60:
-								ROMMapR[i] = ROM + ((i - 0x20) & ROMmask) * 0x2000;
-								break;
-							case 0x30:
-							case 0x70:
-								ROMMapR[i] = ROM + ((i - 0x10) & ROMmask) * 0x2000;
-								break;
-							case 0x40:
-								ROMMapR[i] = ROM + ((i - 0x20) & ROMmask) * 0x2000;
-								break;
-					}
-			} else {
+		if (ROM_size == 0x30) {
+			switch (i & 0x70) {
+			case 0x00:
+			case 0x10:
+			case 0x50:
 				ROMMapR[i] = ROM + (i & ROMmask) * 0x2000;
+				break;
+			case 0x20:
+			case 0x60:
+				ROMMapR[i] = ROM + ((i - 0x20) & ROMmask) * 0x2000;
+				break;
+			case 0x30:
+			case 0x70:
+				ROMMapR[i] = ROM + ((i - 0x10) & ROMmask) * 0x2000;
+				break;
+			case 0x40:
+				ROMMapR[i] = ROM + ((i - 0x20) & ROMmask) * 0x2000;
+				break;
 			}
+		} else {
+			ROMMapR[i] = ROM + (i & ROMmask) * 0x2000;
+		}
 	}
 #else
-	for (i = 0x68; i < 0x88; i++)
-		{
-			if (ROM_size == 0x30)
-				{
-					switch (i & 0x70) {
-							case 0x00:
-							case 0x10:
-							case 0x50:
-								ROMMapR[i] = ROM + ((i - 0x68) & ROMmask) * 0x2000;
-								ROMMapW[i] = ROM + ((i - 0x68) & ROMmask) * 0x2000;
-								break;
-							case 0x20:
-							case 0x60:
-								ROMMapR[i] = ROM + (((i - 0x68) - 0x20) & ROMmask) * 0x2000;
-								ROMMapW[i] = ROM + (((i - 0x68) - 0x20) & ROMmask) * 0x2000;
-								break;
-							case 0x30:
-							case 0x70:
-								ROMMapR[i] = ROM + (((i - 0x68) - 0x10) & ROMmask) * 0x2000;
-								ROMMapW[i] = ROM + (((i - 0x68) - 0x10) & ROMmask) * 0x2000;
-								break;
-							case 0x40:
-								ROMMapR[i] = ROM + (((i - 0x68) - 0x20) & ROMmask) * 0x2000;
-								ROMMapW[i] = ROM + (((i - 0x68) - 0x20) & ROMmask) * 0x2000;
-								break;
-					}
-				} else {
-					ROMMapR[i] = ROM + ((i - 0x68) & ROMmask) * 0x2000;
-					ROMMapW[i] = ROM + ((i - 0x68) & ROMmask) * 0x2000;
-				}
+	for (i = 0x68; i < 0x88; i++) {
+		if (ROM_size == 0x30) {
+			switch (i & 0x70) {
+			case 0x00:
+			case 0x10:
+			case 0x50:
+				ROMMapR[i] = ROM + ((i - 0x68) & ROMmask) * 0x2000;
+				ROMMapW[i] = ROM + ((i - 0x68) & ROMmask) * 0x2000;
+				break;
+			case 0x20:
+			case 0x60:
+				ROMMapR[i] =
+					ROM + (((i - 0x68) - 0x20) & ROMmask) * 0x2000;
+				ROMMapW[i] =
+					ROM + (((i - 0x68) - 0x20) & ROMmask) * 0x2000;
+				break;
+			case 0x30:
+			case 0x70:
+				ROMMapR[i] =
+					ROM + (((i - 0x68) - 0x10) & ROMmask) * 0x2000;
+				ROMMapW[i] =
+					ROM + (((i - 0x68) - 0x10) & ROMmask) * 0x2000;
+				break;
+			case 0x40:
+				ROMMapR[i] =
+					ROM + (((i - 0x68) - 0x20) & ROMmask) * 0x2000;
+				ROMMapW[i] =
+					ROM + (((i - 0x68) - 0x20) & ROMmask) * 0x2000;
+				break;
+			}
+		} else {
+			ROMMapR[i] = ROM + ((i - 0x68) & ROMmask) * 0x2000;
+			ROMMapW[i] = ROM + ((i - 0x68) & ROMmask) * 0x2000;
 		}
+	}
 #endif
 
 	if (NO_ROM != 0xFFFF) {
-			MESSAGE_INFO("Rom Name: %s\n",
-				(pce_romlist + NO_ROM) ? pce_romlist[NO_ROM].name : "Unknown");
-		} else {
-			MESSAGE_ERROR("Unknown ROM\n");
-		}
+		MESSAGE_INFO("Rom Name: %s\n",
+					 (pce_romlist +
+					  NO_ROM) ? pce_romlist[NO_ROM].name : "Unknown");
+	} else {
+		MESSAGE_ERROR("Unknown ROM\n");
+	}
 
 	if ((NO_ROM != 0xFFFF)
-		&& (pce_romlist + NO_ROM) && (pce_romlist[NO_ROM].flags & POPULOUS))
-		{
-			populus = TRUE;
+		&& (pce_romlist + NO_ROM)
+		&& (pce_romlist[NO_ROM].flags & POPULOUS)) {
+		populus = TRUE;
 
-			MESSAGE_INFO("Special Rom: Populous detected!\n");
-			if (!(PopRAM = (uchar *) malloc (PopRAMsize)))
-				perror (MESSAGE[language][no_mem]);
+		MESSAGE_INFO("Special Rom: Populous detected!\n");
+		if (!(PopRAM = (uchar *) malloc(PopRAMsize)))
+			perror(MESSAGE[language][no_mem]);
 
-			ROMMapW[0x40] = PopRAM;
-			ROMMapW[0x41] = PopRAM + 0x2000;
-			ROMMapW[0x42] = PopRAM + 0x4000;
-			ROMMapW[0x43] = PopRAM + 0x6000;
+		ROMMapW[0x40] = PopRAM;
+		ROMMapW[0x41] = PopRAM + 0x2000;
+		ROMMapW[0x42] = PopRAM + 0x4000;
+		ROMMapW[0x43] = PopRAM + 0x6000;
 
-			ROMMapR[0x40] = PopRAM;
-			ROMMapR[0x41] = PopRAM + 0x2000;
-			ROMMapR[0x42] = PopRAM + 0x4000;
-			ROMMapR[0x43] = PopRAM + 0x6000;
+		ROMMapR[0x40] = PopRAM;
+		ROMMapR[0x41] = PopRAM + 0x2000;
+		ROMMapR[0x42] = PopRAM + 0x4000;
+		ROMMapR[0x43] = PopRAM + 0x6000;
 
-		} else {
-			populus = FALSE;
-			PopRAM = NULL;
+	} else {
+		populus = FALSE;
+		PopRAM = NULL;
+	}
+
+	if (CD_emulation) {
+		ROMMapR[0x80] = cd_extra_mem;
+		ROMMapR[0x81] = cd_extra_mem + 0x2000;
+		ROMMapR[0x82] = cd_extra_mem + 0x4000;
+		ROMMapR[0x83] = cd_extra_mem + 0x6000;
+		ROMMapR[0x84] = cd_extra_mem + 0x8000;
+		ROMMapR[0x85] = cd_extra_mem + 0xA000;
+		ROMMapR[0x86] = cd_extra_mem + 0xC000;
+		ROMMapR[0x87] = cd_extra_mem + 0xE000;
+
+		ROMMapW[0x80] = cd_extra_mem;
+		ROMMapW[0x81] = cd_extra_mem + 0x2000;
+		ROMMapW[0x82] = cd_extra_mem + 0x4000;
+		ROMMapW[0x83] = cd_extra_mem + 0x6000;
+		ROMMapW[0x84] = cd_extra_mem + 0x8000;
+		ROMMapW[0x85] = cd_extra_mem + 0xA000;
+		ROMMapW[0x86] = cd_extra_mem + 0xC000;
+		ROMMapW[0x87] = cd_extra_mem + 0xE000;
+
+		for (i = 0x68; i < 0x80; i++) {
+			ROMMapR[i] = cd_extra_super_mem + 0x2000 * (i - 0x68);
+			ROMMapW[i] = cd_extra_super_mem + 0x2000 * (i - 0x68);
 		}
 
-	if (CD_emulation)
-		{
-			ROMMapR[0x80] = cd_extra_mem;
-			ROMMapR[0x81] = cd_extra_mem + 0x2000;
-			ROMMapR[0x82] = cd_extra_mem + 0x4000;
-			ROMMapR[0x83] = cd_extra_mem + 0x6000;
-			ROMMapR[0x84] = cd_extra_mem + 0x8000;
-			ROMMapR[0x85] = cd_extra_mem + 0xA000;
-			ROMMapR[0x86] = cd_extra_mem + 0xC000;
-			ROMMapR[0x87] = cd_extra_mem + 0xE000;
-
-			ROMMapW[0x80] = cd_extra_mem;
-			ROMMapW[0x81] = cd_extra_mem + 0x2000;
-			ROMMapW[0x82] = cd_extra_mem + 0x4000;
-			ROMMapW[0x83] = cd_extra_mem + 0x6000;
-			ROMMapW[0x84] = cd_extra_mem + 0x8000;
-			ROMMapW[0x85] = cd_extra_mem + 0xA000;
-			ROMMapW[0x86] = cd_extra_mem + 0xC000;
-			ROMMapW[0x87] = cd_extra_mem + 0xE000;
-
-			for (i = 0x68; i < 0x80; i++)
-				{
-					ROMMapR[i] = cd_extra_super_mem + 0x2000 * (i - 0x68);
-					ROMMapW[i] = cd_extra_super_mem + 0x2000 * (i - 0x68);
-				}
-
-		}
+	}
 
 	ROMMapR[0xF7] = WRAM;
 	ROMMapW[0xF7] = WRAM;
@@ -2219,39 +2216,38 @@ InitPCE (char *name, char *backmemname)
 	}
 
 	/*
-	#warning REMOVE ME
-	// ROMMapR[0xFC] = RAM + 0x6000;
-	ROMMapW[0xFC] = NULL;
-	*/
+	   #warning REMOVE ME
+	   // ROMMapR[0xFC] = RAM + 0x6000;
+	   ROMMapW[0xFC] = NULL;
+	 */
 
 	ROMMapR[0xFF] = IOAREA;
 	ROMMapW[0xFF] = IOAREA;
 
 	{
 		FILE *fp;
-		fp = fopen (backmemname, "rb");
+		fp = fopen(backmemname, "rb");
 
 		if (fp == NULL)
-			fprintf (stderr, "Can't open %s\n", backmemname);
+			fprintf(stderr, "Can't open %s\n", backmemname);
 		else {
-			fread (WRAM, 0x2000, 1, fp);
-			fclose (fp);
+			fread(WRAM, 0x2000, 1, fp);
+			fclose(fp);
 		}
 
 	}
 
 	if ((NO_ROM != 0xFFFF) && (pce_romlist + NO_ROM)
-		&& (pce_romlist[NO_ROM].flags & CD_SYSTEM))
-		{
-			uint16 offset;
-			uchar new_val;
+		&& (pce_romlist[NO_ROM].flags & CD_SYSTEM)) {
+		uint16 offset;
+		uchar new_val;
 
-			offset = atoi (pce_romlist[NO_ROM].note);
-			new_val = atoi (&pce_romlist[NO_ROM].note[6]);
+		offset = atoi(pce_romlist[NO_ROM].note);
+		new_val = atoi(&pce_romlist[NO_ROM].note[6]);
 
-			if (offset)
-				ROMMapW[0xE1][offset & 0x1fff] = new_val;
-		}
+		if (offset)
+			ROMMapW[0xE1][offset & 0x1fff] = new_val;
+	}
 
 	return 0;
 }
@@ -2259,15 +2255,15 @@ InitPCE (char *name, char *backmemname)
 
 #ifndef KERNEL_DS
 int
-RunPCE (void)
+RunPCE(void)
 {
-	if (!ResetPCE (&M))
+	if (!ResetPCE(&M))
 		Run6502();
 	return 1;
 }
 #else
 int
-RunPCE (void)
+RunPCE(void)
 {
 	if (!ResetPCE())
 		exe_go();
@@ -2280,15 +2276,15 @@ void
 TrashPCE(char *backmemname)
 {
 	FILE *fp;
-	char *tmp_buf = (char *) alloca (256);
+	char *tmp_buf = (char *) alloca(256);
 
 	// Save the backup ram into file
-	if (!(fp = fopen (backmemname, "wb"))) {
-		memset (WRAM, 0, 0x2000);
+	if (!(fp = fopen(backmemname, "wb"))) {
+		memset(WRAM, 0, 0x2000);
 		MESSAGE_ERROR("Can't open %s for saving RAM\n", backmemname);
 	} else {
-		fwrite (WRAM, 0x2000, 1, fp);
-		fclose (fp);
+		fwrite(WRAM, 0x2000, 1, fp);
+		fclose(fp);
 		MESSAGE_INFO("%s used for saving RAM\n", backmemname);
 	}
 
@@ -2298,34 +2294,34 @@ TrashPCE(char *backmemname)
 	sprintf(tmp_buf, "rm -rf %s/tmp/*", short_exe_name);
 	system(tmp_buf);
 
-	sprintf (tmp_buf, "%s/tmp", short_exe_name);
-	rmdir (tmp_buf);
+	sprintf(tmp_buf, "%s/tmp", short_exe_name);
+	rmdir(tmp_buf);
 
 	if (CD_emulation == 1)
-		osd_cd_close ();
+		osd_cd_close();
 
 	if ((CD_emulation == 2) || (CD_emulation == 4))
-		fclose (iso_FILE);
+		fclose(iso_FILE);
 
 	if (CD_emulation == 5)
 		HCD_shutdown();
 
 	if (IOAREA)
-		free (IOAREA);
+		free(IOAREA);
 
 	if (ROM) {
 
 #if defined(SHARED_MEMORY)
-	if (shmctl (shm_rom_handle, IPC_RMID, NULL) == -1)
-		fprintf (stderr, "Couldn't destroy shared memory\n");
+		if (shmctl(shm_rom_handle, IPC_RMID, NULL) == -1)
+			fprintf(stderr, "Couldn't destroy shared memory\n");
 #else
-	free(ROM);
+		free(ROM);
 #endif
 
 	}
 
 	if (PopRAM)
-		free (PopRAM);
+		free(PopRAM);
 /*
 	if (CD_emulation)
 		{
@@ -2352,13 +2348,12 @@ unsigned nb_used[256], time_used[256];
 #endif
 
 #ifndef FINAL_RELEASE
-extern int mseq (unsigned *);
-extern void mseq_end ();
-extern void WriteBuffer_end ();
-extern void write_psg_end ();
-extern void WriteBuffer (char *, int, unsigned);
+extern int mseq(unsigned *);
+extern void mseq_end();
+extern void WriteBuffer_end();
+extern void write_psg_end();
+extern void WriteBuffer(char *, int, unsigned);
 #endif
 
 
 FILE *out_snd;
-

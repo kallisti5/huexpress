@@ -20,7 +20,7 @@
  * \return 0 else
  */
 int osd_keyboard(void);
-	
+
 /*!
  * Initialize the input services
  * \return 1 if the initialization failed
@@ -57,73 +57,71 @@ extern uchar current_config;
  *
  *
  */
-typedef enum
-{
-  J_UP = 0,
-  J_DOWN,
-  J_LEFT,
-  J_RIGHT,
-  J_I,
-  J_II,
-  J_SELECT,
-  J_RUN,
-  J_AUTOI,
-  J_AUTOII,
-  J_PI,
-  J_PII,
-  J_PSELECT,
-  J_PRUN,
-  J_PAUTOI,
-  J_PAUTOII,
-  J_PXAXIS,
-  J_PYAXIS,
-  J_MAX,
+typedef enum {
+	J_UP = 0,
+	J_DOWN,
+	J_LEFT,
+	J_RIGHT,
+	J_I,
+	J_II,
+	J_SELECT,
+	J_RUN,
+	J_AUTOI,
+	J_AUTOII,
+	J_PI,
+	J_PII,
+	J_PSELECT,
+	J_PRUN,
+	J_PAUTOI,
+	J_PAUTOII,
+	J_PXAXIS,
+	J_PYAXIS,
+	J_MAX,
 
-  J_PAD_START = J_PI
+	J_PAD_START = J_PI
 } joymap;
 
-extern const char* joymap_reverse[J_MAX];
+extern const char *joymap_reverse[J_MAX];
 
 /* 
  * input_config
  *
  * Definition of the type representating an input configuration
- */	  
+ */
 
 /*
  * local_input means the input data can be read locally and need not been relayed
  * server_input means the data 
  */
 
-typedef enum { LOCAL_PROTOCOL, LAN_PROTOCOL, INTERNET_PROTOCOL } netplay_type ;
+typedef enum { LOCAL_PROTOCOL, LAN_PROTOCOL,
+		INTERNET_PROTOCOL } netplay_type;
 
-typedef struct
-{
-	
+typedef struct {
+
 	//! Mouse device, 0 for none
 	uchar mousedev;
-	
+
 	//! Joypad device, 0 for none
 	uchar joydev;
-	
+
 	//! whether autofire is set
 	uchar autoI;
 	uchar autoII;
-	
+
 	//! whether autofire triggered event
 	uchar firedI;
 	uchar firedII;
-	
+
 	//! mapping for joypad and keyboard
 	//! J_UP to J_PAD_START (excluded) are for use with the keyboard, others are
 	//! for the joypad
 	uint16 joy_mapping[J_MAX];
-	
+
 } individual_input_config;
 
-typedef struct
-{
-  individual_input_config individual_config[5];
+typedef struct {
+	individual_input_config individual_config[5];
 } input_config;
 
 /*

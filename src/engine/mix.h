@@ -7,11 +7,9 @@
 #include "debug.h"
 
 
-uint32 WriteBufferAdpcm8(uchar *buf,
-	uint32 begin,
-	uint32 size,
-	char* Index,
-	int32* PreviousValue);
+uint32 WriteBufferAdpcm8(uchar * buf,
+						 uint32 begin,
+						 uint32 size, char *Index, int32 * PreviousValue);
 
 void WriteBuffer(char *buf, int ch, unsigned dwSize);
 

@@ -28,9 +28,10 @@ extern const char nb_fadein;
 extern const char nb_fadeout;
 // used to know how many functions we have
 
-extern void (*fade_in_proc[5])(uchar*,unsigned,unsigned,unsigned,unsigned);
+extern void (*fade_in_proc[5]) (uchar *, unsigned, unsigned, unsigned,
+								unsigned);
 
-extern void (*fade_out_proc[5])(unsigned,unsigned,unsigned,unsigned);
+extern void (*fade_out_proc[5]) (unsigned, unsigned, unsigned, unsigned);
 
 
 #endif

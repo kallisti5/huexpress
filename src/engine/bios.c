@@ -143,173 +143,174 @@
 int testadpcm = 0;
 
 #if ENABLE_TRACING_BIOS
-const char *cdbios_functions(int index)
+const char *
+cdbios_functions(int index)
 {
-	switch(index) {
-		case CD_BOOT:
-			return "CD_BOOT";
-		case CD_RESET:
-			return "CD_RESET";
-		case CD_BASE:
-			return "CD_BASE";
-		case CD_READ:
-			return "CD_READ";
-		case CD_SEEK:
-			return "CD_SEEK";
-		case CD_EXEC:
-			return "CD_EXEC";
-		case CD_PLAY:
-			return "CD_PLAY";
-		case CD_SEARCH:
-			return "CD_SEARCH";
-		case CD_PAUSE:
-			return "CD_PAUSE";
-		case CD_STAT:
-			return "CD_STAT";
-		case CD_SUBA:
-			return "CD_SUBA";
-		case CD_DINFO:
-			return "CD_DINFO";
-		case CD_CONTENTS:
-			return "CD_CONTENTS";
-		case CD_SUBRQ:
-			return "CD_SUBRQ";
-		case CD_PCMRD:
-			return "CD_PCMRD";
-		case CD_FADE:
-			return "CD_FADE";
+	switch (index) {
+	case CD_BOOT:
+		return "CD_BOOT";
+	case CD_RESET:
+		return "CD_RESET";
+	case CD_BASE:
+		return "CD_BASE";
+	case CD_READ:
+		return "CD_READ";
+	case CD_SEEK:
+		return "CD_SEEK";
+	case CD_EXEC:
+		return "CD_EXEC";
+	case CD_PLAY:
+		return "CD_PLAY";
+	case CD_SEARCH:
+		return "CD_SEARCH";
+	case CD_PAUSE:
+		return "CD_PAUSE";
+	case CD_STAT:
+		return "CD_STAT";
+	case CD_SUBA:
+		return "CD_SUBA";
+	case CD_DINFO:
+		return "CD_DINFO";
+	case CD_CONTENTS:
+		return "CD_CONTENTS";
+	case CD_SUBRQ:
+		return "CD_SUBRQ";
+	case CD_PCMRD:
+		return "CD_PCMRD";
+	case CD_FADE:
+		return "CD_FADE";
 
-		case AD_RESET:
-			return "AD_RESET";
-		case AD_TRANS:
-			return "AD_TRANS";
-		case AD_READ:
-			return "AD_READ";
-		case AD_WRITE:
-			return "AD_WRITE";
-		case AD_PLAY:
-			return "AD_PLAY";
-		case AD_CPLAY:
-			return "AD_CPLAY";
-		case AD_STOP:
-			return "AD_STOP";
-		case AD_STAT:
-			return "AD_STAT";
+	case AD_RESET:
+		return "AD_RESET";
+	case AD_TRANS:
+		return "AD_TRANS";
+	case AD_READ:
+		return "AD_READ";
+	case AD_WRITE:
+		return "AD_WRITE";
+	case AD_PLAY:
+		return "AD_PLAY";
+	case AD_CPLAY:
+		return "AD_CPLAY";
+	case AD_STOP:
+		return "AD_STOP";
+	case AD_STAT:
+		return "AD_STAT";
 
-		case BM_FORMAT:
-			return "BM_FORMAT";
-		case BM_FREE:
-			return "BM_FREE";
-		case BM_READ:
-			return "BM_READ";
-		case BM_WRITE:
-			return "BM_WRITE";
-		case BM_DELETE:
-			return "BM_DELETE";
-		case BM_FILES:
-			return "BM_FILES";
+	case BM_FORMAT:
+		return "BM_FORMAT";
+	case BM_FREE:
+		return "BM_FREE";
+	case BM_READ:
+		return "BM_READ";
+	case BM_WRITE:
+		return "BM_WRITE";
+	case BM_DELETE:
+		return "BM_DELETE";
+	case BM_FILES:
+		return "BM_FILES";
 
-		case EX_GETVER:
-			return "EX_GETVER";
-		case EX_SETVEC:
-			return "EX_SETVEC";
-		case EX_GETFNT:
-			return "EX_GETFNT";
-		case EX_JOYSNS:
-			return "EX_JOYSNS";
-		case EX_JOYREP:
-			return "EX_JOYREP";
+	case EX_GETVER:
+		return "EX_GETVER";
+	case EX_SETVEC:
+		return "EX_SETVEC";
+	case EX_GETFNT:
+		return "EX_GETFNT";
+	case EX_JOYSNS:
+		return "EX_JOYSNS";
+	case EX_JOYREP:
+		return "EX_JOYREP";
 
-		case EX_SCRSIZ:
-			return "EX_SCRSIZ";
-		case EX_DOTMOD:
-			return "EX_DOTMOD";
-		case EX_SCRMOD:
-			return "EX_SCRMOD";
-		case EX_IMODE:
-			return "EX_IMODE";
-		case EX_VMOD:
-			return "EX_VMOD";
-		case EX_HMOD:
-			return "EX_HMOD";
-		case EX_VSYNC:
-			return "EX_VSYNC";
-		case EX_RCRON:
-			return "EX_RCRON";
-		case EX_RCROFF:
-			return "EX_RCROFF";
-		case EX_IRQON:
-			return "EX_IRQON";
-		case EX_IRQOFF:
-			return "EX_IRQOFF";
-		case EX_BGON:
-			return "EX_BGON";
-		case EX_BGOFF:
-			return "EX_BGOFF";
-		case EX_SPRON:
-			return "EX_SPRON";
-		case EX_SPROFF:
-			return "EX_SPROFF";
-		case EX_DSPON:
-			return "EX_DSPON";
-		case EX_DSPOFF:
-			return "EX_DSPOFF";
-		case EX_DMAMOD:
-			return "EX_DMAMOD";
-		case EX_SPRDMA:
-			return "EX_SPRDMA";
-		case EX_SATCLR:
-			return "EX_SATCLR";
-		case EX_SPRPUT:
-			return "EX_SPRPUT";
-		case EX_SETRCR:
-			return "EX_SETRCR";
-		case EX_SETRED:
-			return "EX_SETRED";
-		case EX_SETWRT:
-			return "EX_SETWRT";
-		case EX_SETDMA:
-			return "EX_SETDMA";
-		case EX_BINBCD:
-			return "EX_BINBCD";
-		case EX_BCDBIN:
-			return "EX_BCDBIN";
-		case EX_RND:
-			return "EX_RND";
+	case EX_SCRSIZ:
+		return "EX_SCRSIZ";
+	case EX_DOTMOD:
+		return "EX_DOTMOD";
+	case EX_SCRMOD:
+		return "EX_SCRMOD";
+	case EX_IMODE:
+		return "EX_IMODE";
+	case EX_VMOD:
+		return "EX_VMOD";
+	case EX_HMOD:
+		return "EX_HMOD";
+	case EX_VSYNC:
+		return "EX_VSYNC";
+	case EX_RCRON:
+		return "EX_RCRON";
+	case EX_RCROFF:
+		return "EX_RCROFF";
+	case EX_IRQON:
+		return "EX_IRQON";
+	case EX_IRQOFF:
+		return "EX_IRQOFF";
+	case EX_BGON:
+		return "EX_BGON";
+	case EX_BGOFF:
+		return "EX_BGOFF";
+	case EX_SPRON:
+		return "EX_SPRON";
+	case EX_SPROFF:
+		return "EX_SPROFF";
+	case EX_DSPON:
+		return "EX_DSPON";
+	case EX_DSPOFF:
+		return "EX_DSPOFF";
+	case EX_DMAMOD:
+		return "EX_DMAMOD";
+	case EX_SPRDMA:
+		return "EX_SPRDMA";
+	case EX_SATCLR:
+		return "EX_SATCLR";
+	case EX_SPRPUT:
+		return "EX_SPRPUT";
+	case EX_SETRCR:
+		return "EX_SETRCR";
+	case EX_SETRED:
+		return "EX_SETRED";
+	case EX_SETWRT:
+		return "EX_SETWRT";
+	case EX_SETDMA:
+		return "EX_SETDMA";
+	case EX_BINBCD:
+		return "EX_BINBCD";
+	case EX_BCDBIN:
+		return "EX_BCDBIN";
+	case EX_RND:
+		return "EX_RND";
 
-		case MA_MUL8U:
-			return "MA_MUL8U";
-		case MA_MUL8S:
-			return "MA_MUL8S";
-		case MA_MUL16U:
-			return "MA_MUL16U";
-		case MA_DIV16S:
-			return "MA_DIV16S";
-		case MA_DIV16U:
-			return "MA_DIV16U";
-		case MA_SQRT:
-			return "MA_SQRT";
-		case MA_SIN:
-			return "MA_SIN";
-		case MA_COS:
-			return "MA_COS";
-		case MA_ATNI:
-			return "MA_ATNI";
+	case MA_MUL8U:
+		return "MA_MUL8U";
+	case MA_MUL8S:
+		return "MA_MUL8S";
+	case MA_MUL16U:
+		return "MA_MUL16U";
+	case MA_DIV16S:
+		return "MA_DIV16S";
+	case MA_DIV16U:
+		return "MA_DIV16U";
+	case MA_SQRT:
+		return "MA_SQRT";
+	case MA_SIN:
+		return "MA_SIN";
+	case MA_COS:
+		return "MA_COS";
+	case MA_ATNI:
+		return "MA_ATNI";
 
-		case PSG_BIOS:
-			return "PSG_BIOS";
+	case PSG_BIOS:
+		return "PSG_BIOS";
 
-		case GRP_BIOS:
-			return "GRP_BIOS";
-		case KEY_BIOS:
-			return "KEY_BIOS";
-		case PSG_DRIVE:
-			return "PSG_DRIVE";
-		case EX_COLORC:
-			return "EX_COLORC";
+	case GRP_BIOS:
+		return "GRP_BIOS";
+	case KEY_BIOS:
+		return "KEY_BIOS";
+	case PSG_DRIVE:
+		return "PSG_DRIVE";
+	case EX_COLORC:
+		return "EX_COLORC";
 
-		default:
-			break;
+	default:
+		break;
 	}
 
 	return "?UNKNOWN?";
@@ -317,28 +318,32 @@ const char *cdbios_functions(int index)
 #endif
 
 
-int handle_bios()
+int
+handle_bios()
 {
 #if ENABLE_TRACING_BIOS
-	static int last_op = -1, last_ax = -1, last_bx = -1, last_cx = -1, last_dx = -1;
-	int this_op = imm_operand(reg_pc + 1), this_ax = get_16bit_zp(_ax), this_bx = get_16bit_zp(_bx),
-			this_cx = get_16bit_zp(_cx), this_dx = get_16bit_zp(_dx);
+	static int last_op = -1, last_ax = -1, last_bx = -1, last_cx =
+		-1, last_dx = -1;
+	int this_op = imm_operand(reg_pc + 1), this_ax =
+		get_16bit_zp(_ax), this_bx = get_16bit_zp(_bx), this_cx =
+		get_16bit_zp(_cx), this_dx = get_16bit_zp(_dx);
 
 	/*
 	 * Skip over polling functions to avoid the spam
 	 */
 	if ((this_op != CD_PCMRD) && (this_op != CD_SUBA)
 		&& (this_op != EX_JOYSNS) && (this_op != AD_STAT)) {
-		if ((last_op != this_op) || (last_ax != this_ax) || (last_bx != this_bx)
+		if ((last_op != this_op) || (last_ax != this_ax)
+			|| (last_bx != this_bx)
 			|| (last_cx != this_cx)
 			|| (last_dx != this_dx)) {
 			TRACE("%s: ax=%d ah=%d al=%d bx=%d bh=%d bl=%d\ncx=%d "
-				"ch=%d cl=%d dx=%d dh=%d dl=%d\n",
-				cdbios_functions(imm_operand(reg_pc + 1)),
-				get_16bit_zp(_ax), get_8bit_zp(_ah), get_8bit_zp(_al),
-				get_16bit_zp(_bx), get_8bit_zp(_bh), get_8bit_zp(_bl),
-				get_16bit_zp(_cx), get_8bit_zp(_ch), get_8bit_zp(_cl),
-				get_16bit_zp(_dx), get_8bit_zp(_dh), get_8bit_zp(_dl));
+				  "ch=%d cl=%d dx=%d dh=%d dl=%d\n",
+				  cdbios_functions(imm_operand(reg_pc + 1)),
+				  get_16bit_zp(_ax), get_8bit_zp(_ah), get_8bit_zp(_al),
+				  get_16bit_zp(_bx), get_8bit_zp(_bh), get_8bit_zp(_bl),
+				  get_16bit_zp(_cx), get_8bit_zp(_ch), get_8bit_zp(_cl),
+				  get_16bit_zp(_dx), get_8bit_zp(_dh), get_8bit_zp(_dl));
 			last_op = this_op;
 			last_ax = this_ax;
 			last_bx = this_bx;
@@ -348,30 +353,30 @@ int handle_bios()
 	}
 #endif
 
-	switch(imm_operand((uint16)(reg_pc + 1))) {
-		case CD_RESET:
-			switch(CD_emulation) {
-				case 1: /* true CD */
-					if (osd_cd_init(ISO_filename) != 0) {
-						MESSAGE_ERROR("CDRom2: Init error!\n");
-						exit(4);
-					}
-					break;
-				case 2: /* ISO */
-				case 3: /* ISQ */
-				case 4: /* BIN */
-					fill_cd_info();
-					break;
-				/* HCD : nothing to be done */
+	switch (imm_operand((uint16) (reg_pc + 1))) {
+	case CD_RESET:
+		switch (CD_emulation) {
+		case 1:				/* true CD */
+			if (osd_cd_init(ISO_filename) != 0) {
+				MESSAGE_ERROR("CDRom2: Init error!\n");
+				exit(4);
 			}
-
-			put_8bit_addr(0x222D, 1);
-			// This byte is set to 1 if a disc if present
-
-			rts();
 			break;
+		case 2:				/* ISO */
+		case 3:				/* ISQ */
+		case 4:				/* BIN */
+			fill_cd_info();
+			break;
+			/* HCD : nothing to be done */
+		}
 
-		case CD_READ:
+		put_8bit_addr(0x222D, 1);
+		// This byte is set to 1 if a disc if present
+
+		rts();
+		break;
+
+	case CD_READ:
 		{
 			uchar mode = get_8bit_zp(_dh);
 			uint32 nb_to_read = get_8bit_zp(_al);
@@ -382,69 +387,71 @@ int handle_bios()
 				+ (get_8bit_zp(_dl));
 
 			pce_cd_sectoraddy += (get_8bit_addr(0x2274 + 3
-				* get_8bit_addr(0x2273)) << 16)
-					+ (get_8bit_addr(0x2275 + 3 * get_8bit_addr(0x2273)) << 8)
-					+ (get_8bit_addr(0x2276 + 3 * get_8bit_addr(0x2273)));
+												*
+												get_8bit_addr(0x2273)) <<
+								  16)
+				+ (get_8bit_addr(0x2275 + 3 * get_8bit_addr(0x2273)) << 8)
+				+ (get_8bit_addr(0x2276 + 3 * get_8bit_addr(0x2273)));
 
-			switch(mode) {
-				case 0: // local, size in byte
-					nb_to_read = get_16bit_zp(_ax);
-					while (nb_to_read >= 2048) {
-						int index;
+			switch (mode) {
+			case 0:			// local, size in byte
+				nb_to_read = get_16bit_zp(_ax);
+				while (nb_to_read >= 2048) {
+					int index;
 
-						pce_cd_read_sector();
-						for (index = 0; index < 2048; index++)
-							put_8bit_addr(offset++, cd_read_buffer[index]);
-						nb_to_read -= 2048;
-					}
+					pce_cd_read_sector();
+					for (index = 0; index < 2048; index++)
+						put_8bit_addr(offset++, cd_read_buffer[index]);
+					nb_to_read -= 2048;
+				}
 
-					if (nb_to_read) {
-						uint32 index;
+				if (nb_to_read) {
+					uint32 index;
 
-						pce_cd_read_sector();
-						for (index = 0; index < nb_to_read; index++)
-							put_8bit_addr(offset++, cd_read_buffer[index]);
-					}
+					pce_cd_read_sector();
+					for (index = 0; index < nb_to_read; index++)
+						put_8bit_addr(offset++, cd_read_buffer[index]);
+				}
 
-					reg_p = ((reg_p & (~(FL_N|FL_T|FL_Z)))
-						| flnz_list[reg_a = 0]);
+				reg_p = ((reg_p & (~(FL_N | FL_T | FL_Z)))
+						 | flnz_list[reg_a = 0]);
 
-					cd_sectorcnt = 0;
-					cd_read_buffer = NULL;
-					pce_cd_read_datacnt = 0;
+				cd_sectorcnt = 0;
+				cd_read_buffer = NULL;
+				pce_cd_read_datacnt = 0;
 
-					rts();
-					break;
+				rts();
+				break;
 
 
-				case 1: // local, size in sector
-					while (nb_to_read) {
-						int index;
+			case 1:			// local, size in sector
+				while (nb_to_read) {
+					int index;
 
-						pce_cd_read_sector();
-						for (index = 0; index < 2048; index++)
-							put_8bit_addr(offset++, cd_read_buffer[index]);
-						nb_to_read--;
-					}
-					reg_p = ((reg_p & (~(FL_N|FL_T|FL_Z)))
-						| flnz_list[reg_a = 0]);
+					pce_cd_read_sector();
+					for (index = 0; index < 2048; index++)
+						put_8bit_addr(offset++, cd_read_buffer[index]);
+					nb_to_read--;
+				}
+				reg_p = ((reg_p & (~(FL_N | FL_T | FL_Z)))
+						 | flnz_list[reg_a = 0]);
 
-					// TEST
-					io.cd_port_1800 |= 0xD0;
-					// TEST
+				// TEST
+				io.cd_port_1800 |= 0xD0;
+				// TEST
 
-					cd_sectorcnt = 0;
-					cd_read_buffer = NULL;
-					pce_cd_read_datacnt = 0;
+				cd_sectorcnt = 0;
+				cd_read_buffer = NULL;
+				pce_cd_read_datacnt = 0;
 
-					rts();
-					break;
+				rts();
+				break;
 
-				case 2:
-				case 3:
-				case 4:
-				case 5:
-				case 6:
+			case 2:
+			case 3:
+			case 4:
+			case 5:
+			case 6:
 				{
 					uchar nb_bank_to_fill_completely = nb_to_read >> 2;
 					uchar remaining_block_to_write = nb_to_read & 3;
@@ -454,19 +461,19 @@ int handle_bios()
 					while (nb_bank_to_fill_completely--) {
 						pce_cd_read_sector();
 						memcpy(ROMMapW[bank_where_to_write],
-							cd_read_buffer, 2048);
+							   cd_read_buffer, 2048);
 
 						pce_cd_read_sector();
 						memcpy(ROMMapW[bank_where_to_write] + 2048,
-							cd_read_buffer, 2048);
+							   cd_read_buffer, 2048);
 
 						pce_cd_read_sector();
 						memcpy(ROMMapW[bank_where_to_write] + 2048 * 2,
-							cd_read_buffer, 2048);
+							   cd_read_buffer, 2048);
 
 						pce_cd_read_sector();
 						memcpy(ROMMapW[bank_where_to_write] + 2048 * 3,
-							cd_read_buffer, 2048);
+							   cd_read_buffer, 2048);
 
 						bank_where_to_write++;
 					}
@@ -474,30 +481,31 @@ int handle_bios()
 					offset_in_bank = 0;
 					while (remaining_block_to_write--) {
 						pce_cd_read_sector();
-						#if ENABLE_TRACING_BIOS
-						TRACE("BIOS: Writing quarter to ROMMap[0x%x] + 0x%x\n",
-							bank_where_to_write, offset_in_bank);
-						#endif
-						memcpy(ROMMapW[bank_where_to_write] + offset_in_bank,
-							cd_read_buffer, 2048);
+#if ENABLE_TRACING_BIOS
+						TRACE
+							("BIOS: Writing quarter to ROMMap[0x%x] + 0x%x\n",
+							 bank_where_to_write, offset_in_bank);
+#endif
+						memcpy(ROMMapW[bank_where_to_write] +
+							   offset_in_bank, cd_read_buffer, 2048);
 						offset_in_bank += 2048;
 					}
 				}
 
-					cd_sectorcnt = 0;
-					cd_read_buffer = NULL;
-					pce_cd_read_datacnt = 0;
+				cd_sectorcnt = 0;
+				cd_read_buffer = NULL;
+				pce_cd_read_datacnt = 0;
 
-					reg_p = ((reg_p & (~(FL_N|FL_T|FL_Z)))
-						| flnz_list[reg_a = 0]);
-					rts();
-					break;
+				reg_p = ((reg_p & (~(FL_N | FL_T | FL_Z)))
+						 | flnz_list[reg_a = 0]);
+				rts();
+				break;
 
-				case 0xFE:
-					IO_write(0, 0);
-					IO_write(2, (uchar)(offset & 0xFF));
-					IO_write(3, (uchar)(offset >> 8));
-					IO_write(0, 2);
+			case 0xFE:
+				IO_write(0, 0);
+				IO_write(2, (uchar) (offset & 0xFF));
+				IO_write(3, (uchar) (offset >> 8));
+				IO_write(0, 2);
 				{
 					uint32 nb_sector;
 					nb_to_read = get_16bit_zp(_ax);
@@ -505,7 +513,7 @@ int handle_bios()
 						+ ((nb_to_read & 2047) ? 1 : 0);
 
 					while (nb_sector) {
-						int x, index = MIN(2048, (int)nb_to_read);
+						int x, index = MIN(2048, (int) nb_to_read);
 
 						pce_cd_read_sector();
 
@@ -515,7 +523,7 @@ int handle_bios()
 							IO_write(3, cd_read_buffer[x + 1]);
 						}
 
-						nb_to_read-=index;
+						nb_to_read -= index;
 						nb_sector--;
 					}
 
@@ -523,97 +531,98 @@ int handle_bios()
 					cd_read_buffer = NULL;
 					pce_cd_read_datacnt = 0;
 
-					reg_p = ((reg_p & (~(FL_N|FL_T|FL_Z)))
-						| flnz_list[reg_a = 0]);
+					reg_p = ((reg_p & (~(FL_N | FL_T | FL_Z)))
+							 | flnz_list[reg_a = 0]);
 					rts();
 				}
-					break;
+				break;
 
-				case 0xFF:
-					if (!nb_to_read)
-						reg_p = ((reg_p & (~(FL_N|FL_T|FL_Z)))
-							| flnz_list[reg_a = 0x22]);
-					else {
-						IO_write(0, 0);
-						IO_write(2, (uchar)(offset & 0xFF));
-						IO_write(3, (uchar)(offset >> 8));
-						IO_write(0, 2);
+			case 0xFF:
+				if (!nb_to_read)
+					reg_p = ((reg_p & (~(FL_N | FL_T | FL_Z)))
+							 | flnz_list[reg_a = 0x22]);
+				else {
+					IO_write(0, 0);
+					IO_write(2, (uchar) (offset & 0xFF));
+					IO_write(3, (uchar) (offset >> 8));
+					IO_write(0, 2);
 
-						while (nb_to_read) {
-							int index;
+					while (nb_to_read) {
+						int index;
 
-							pce_cd_read_sector();
+						pce_cd_read_sector();
 
-							for (index = 0; index < 2048; index += 2) {
-								IO_write(2, cd_read_buffer[index]);
-								IO_write(3, cd_read_buffer[index + 1]);
-							}
-
-							nb_to_read--;
+						for (index = 0; index < 2048; index += 2) {
+							IO_write(2, cd_read_buffer[index]);
+							IO_write(3, cd_read_buffer[index + 1]);
 						}
 
-						cd_sectorcnt = 0;
-						cd_read_buffer = NULL;
-						pce_cd_read_datacnt = 0;
-
-						reg_p = ((reg_p & (~(FL_N|FL_T|FL_Z)))
-							| flnz_list[reg_a = 0]);
+						nb_to_read--;
 					}
-					rts();
-					break;
 
-				default:
-					/* the reading mode isn't supported and we simulate the
-					* behaviour of the 2 first byte opcode and keep going
-					* thus hooking further calls to this function
-					*/
-					put_8bit_addr(0x2273, 0);
-					reg_pc += 2;
-					#if ENABLE_TRACING_BIOS
-					TRACE("BIOS: CDRom2: Reading mode not supported:"
-						" %d\n_AX=0x%04x\n_BX=0x%04x\n_CX=0x%04x\n_DX=0x%04x\n",
-						mode, get_16bit_zp(_ax), get_16bit_zp(_bx),
-						get_16bit_zp(_cx), get_16bit_zp(_dx));
-					#endif
+					cd_sectorcnt = 0;
+					cd_read_buffer = NULL;
+					pce_cd_read_datacnt = 0;
+
+					reg_p = ((reg_p & (~(FL_N | FL_T | FL_Z)))
+							 | flnz_list[reg_a = 0]);
+				}
+				rts();
+				break;
+
+			default:
+				/* the reading mode isn't supported and we simulate the
+				 * behaviour of the 2 first byte opcode and keep going
+				 * thus hooking further calls to this function
+				 */
+				put_8bit_addr(0x2273, 0);
+				reg_pc += 2;
+#if ENABLE_TRACING_BIOS
+				TRACE("BIOS: CDRom2: Reading mode not supported:"
+					  " %d\n_AX=0x%04x\n_BX=0x%04x\n_CX=0x%04x\n_DX=0x%04x\n",
+					  mode, get_16bit_zp(_ax), get_16bit_zp(_bx),
+					  get_16bit_zp(_cx), get_16bit_zp(_dx));
+#endif
 			}
 		}
-			break;
+		break;
 
-		case CD_PAUSE:
-			switch(CD_emulation) {
-				case 1:
-					osd_cd_pause();
-					break;
-				case 2:
-				case 3:
-				case 4:
-					break;
-				case 5:
-					HCD_pause_playing();
-					break;
-			}
-			reg_p = ((reg_p & (~(FL_N|FL_T|FL_Z))) | flnz_list[reg_a = 0]);
-			rts();
+	case CD_PAUSE:
+		switch (CD_emulation) {
+		case 1:
+			osd_cd_pause();
 			break;
+		case 2:
+		case 3:
+		case 4:
+			break;
+		case 5:
+			HCD_pause_playing();
+			break;
+		}
+		reg_p = ((reg_p & (~(FL_N | FL_T | FL_Z))) | flnz_list[reg_a = 0]);
+		rts();
+		break;
 
-		case CD_STAT:
+	case CD_STAT:
 		{
 			/* TODO : makes this function work for cd and hcd at least
-			* gives info on the status of playing music
-			*/
+			 * gives info on the status of playing music
+			 */
 			int retval;
 
 			osd_cd_status(&retval);
 
-			reg_p = ((reg_p & (~(FL_N | FL_T | FL_Z))) | flnz_list[reg_a = 0]);
+			reg_p =
+				((reg_p & (~(FL_N | FL_T | FL_Z))) | flnz_list[reg_a = 0]);
 		}
-			rts();
-			break;
+		rts();
+		break;
 
-		case CD_SUBA:
-			/* TODO : check the real functionality of this function */
-			/* seems to fill a whole buffer of 10 bytes but */
-			/* meaning of this array is mostly unknown */
+	case CD_SUBA:
+		/* TODO : check the real functionality of this function */
+		/* seems to fill a whole buffer of 10 bytes but */
+		/* meaning of this array is mostly unknown */
 		{
 			uint16 offset = get_16bit_zp(_bx);
 			// static uchar result = 3;
@@ -621,68 +630,68 @@ int handle_bios()
 			// result = 3 - result;
 
 			// Wr6502(offset, result);
-				// TEST, for golden axe (3) and solid force (0)
+			// TEST, for golden axe (3) and solid force (0)
 			osd_cd_subchannel_info(offset);
 		}
 
-			reg_p = ((reg_p & (~(FL_N|FL_T|FL_Z))) | flnz_list[reg_a = 0]);
-			rts();
-			break;
+		reg_p = ((reg_p & (~(FL_N | FL_T | FL_Z))) | flnz_list[reg_a = 0]);
+		rts();
+		break;
 
-		case CD_PCMRD:
-			// do almost nothing
-			// fake the audio player, maybe not other piece of code
-			reg_p = ((reg_p & (~(FL_N|FL_T|FL_Z)))
-				| flnz_list[reg_a = get_8bit_zp(0x41)]);
-			rts();
-			break;
+	case CD_PCMRD:
+		// do almost nothing
+		// fake the audio player, maybe not other piece of code
+		reg_p = ((reg_p & (~(FL_N | FL_T | FL_Z)))
+				 | flnz_list[reg_a = get_8bit_zp(0x41)]);
+		rts();
+		break;
 
-		case CD_SEARCH:
-			/* unsure how this operates
-			* needed for playing audio discs with a system card
-			*
-			* _al contains the track we're "searching" for.
-			* If I'm not mistaken _bh is a flag with that 7th bit (128) set
-			* for SEEK_SET type behaviour, while if the 2nd bit (2) is set
-			* we play the track after searching for it.
-			*/
+	case CD_SEARCH:
+		/* unsure how this operates
+		 * needed for playing audio discs with a system card
+		 *
+		 * _al contains the track we're "searching" for.
+		 * If I'm not mistaken _bh is a flag with that 7th bit (128) set
+		 * for SEEK_SET type behaviour, while if the 2nd bit (2) is set
+		 * we play the track after searching for it.
+		 */
 		{
-			//	if (get_8bit_zp(_bh) & 0x02) {
-			//		osd_cd_play_audio_track(bcdbin[get_8bit_zp(_al)]);
-			//	} else
-				/* uint16 bufaddr = get_16bit_zp(_bx); */
-				int min, sec, fra, con;
+			//  if (get_8bit_zp(_bh) & 0x02) {
+			//      osd_cd_play_audio_track(bcdbin[get_8bit_zp(_al)]);
+			//  } else
+			/* uint16 bufaddr = get_16bit_zp(_bx); */
+			int min, sec, fra, con;
 
-				osd_cd_stop_audio();
+			osd_cd_stop_audio();
 
-				osd_cd_track_info(bcdbin[get_8bit_zp(_al)],
-					&min, &sec, &fra, &con);
+			osd_cd_track_info(bcdbin[get_8bit_zp(_al)],
+							  &min, &sec, &fra, &con);
 
-				/*
-				put_8bit_addr(bufaddr, min);
-				put_8bit_addr(bufaddr + 1, sec);
-				put_8bit_addr(bufaddr + 2, fra);
-				put_8bit_addr(bufaddr + 3, con);
-				*/
+			/*
+			   put_8bit_addr(bufaddr, min);
+			   put_8bit_addr(bufaddr + 1, sec);
+			   put_8bit_addr(bufaddr + 2, fra);
+			   put_8bit_addr(bufaddr + 3, con);
+			 */
 
-				if (get_8bit_zp(_bh) & 0x02)
-					osd_cd_play_audio_track(bcdbin[get_8bit_zp(_al)]);
-				// else
-					// osd_cd_stop_audio();
+			if (get_8bit_zp(_bh) & 0x02)
+				osd_cd_play_audio_track(bcdbin[get_8bit_zp(_al)]);
+			// else
+			// osd_cd_stop_audio();
 		}
-			reg_p = ((reg_p & (~(FL_N | FL_T | FL_Z)))
-				| flnz_list[reg_a = 0]);
-			rts();
-			break;
+		reg_p = ((reg_p & (~(FL_N | FL_T | FL_Z)))
+				 | flnz_list[reg_a = 0]);
+		rts();
+		break;
 
-		case AD_RESET:
-			// do nothing
-			// don't return any value
-			// reg_p = ((reg_p & (~(FL_N | FL_T | FL_Z))) | flnz_list[reg_a = 0]);
-			rts();
-			break;
+	case AD_RESET:
+		// do nothing
+		// don't return any value
+		// reg_p = ((reg_p & (~(FL_N | FL_T | FL_Z))) | flnz_list[reg_a = 0]);
+		rts();
+		break;
 
-		case AD_TRANS:
+	case AD_TRANS:
 		{
 			uint32 nb_to_read = get_8bit_zp(_al);
 			uint16 ADPCM_offset = get_16bit_zp(_bx);
@@ -692,7 +701,8 @@ int handle_bios()
 				+ (get_8bit_zp(_dl));
 
 			pce_cd_sectoraddy
-				+= (get_8bit_addr(0x2274 + 3 * get_8bit_addr(0x2273)) << 16)
+				+=
+				(get_8bit_addr(0x2274 + 3 * get_8bit_addr(0x2273)) << 16)
 				+ (get_8bit_addr(0x2275 + 3 * get_8bit_addr(0x2273)) << 8)
 				+ (get_8bit_addr(0x2276 + 3 * get_8bit_addr(0x2273)));
 
@@ -710,57 +720,59 @@ int handle_bios()
 
 			io.adpcm_dmaptr = ADPCM_offset;
 
-			reg_p = ((reg_p & (~(FL_N|FL_T|FL_Z))) | flnz_list[reg_a = 0]);
+			reg_p =
+				((reg_p & (~(FL_N | FL_T | FL_Z))) | flnz_list[reg_a = 0]);
 		}
-			rts();
-			break;
+		rts();
+		break;
 
-		case AD_READ:
+	case AD_READ:
 		{
 			uint16 ADPCM_buffer = get_16bit_zp(_cx);
 			uchar type = get_8bit_zp(_dh);
 			uint16 address = get_16bit_zp(_bx);
 			uint16 size = get_16bit_zp(_ax);
 
-			switch(type) {
-				case 0: // memory write
-					io.adpcm_rptr = ADPCM_buffer;
-					while (size) {
-						put_8bit_addr(address++, PCM[io.adpcm_rptr++]);
+			switch (type) {
+			case 0:			// memory write
+				io.adpcm_rptr = ADPCM_buffer;
+				while (size) {
+					put_8bit_addr(address++, PCM[io.adpcm_rptr++]);
+					size--;
+				}
+				break;
+			case 0xFF:			// VRAM write
+				io.adpcm_rptr = ADPCM_buffer;
+
+				IO_write(0, 0);
+				IO_write(2, (uchar) (address & 0xFF));
+				IO_write(3, (uchar) (address >> 8));
+
+				IO_write(0, 2);
+
+				while (size) {
+					IO_write(2, PCM[io.adpcm_rptr++]);
+					size--;
+
+					if (size) {
+						IO_write(3, PCM[io.adpcm_rptr++]);
 						size--;
 					}
-					break;
-				case 0xFF: // VRAM write
-					io.adpcm_rptr = ADPCM_buffer;
-
-					IO_write(0, 0);
-					IO_write(2, (uchar)(address & 0xFF));
-					IO_write(3, (uchar)(address >> 8));
-
-					IO_write(0, 2);
-
-					while (size) {
-						IO_write(2, PCM[io.adpcm_rptr++]);
-						size--;
-
-						if (size) {
-							IO_write(3, PCM[io.adpcm_rptr++]);
-							size--;
-						}
-					}
-					break;
-				case 2:
-				case 3:
-				case 4:
-				case 5:
-				case 6:
+				}
+				break;
+			case 2:
+			case 3:
+			case 4:
+			case 5:
+			case 6:
 				{
 					uchar bank_to_fill = get_8bit_zp(_bl);
 					uint32 i;
 
 					while (size >= 2048) {
 						for (i = 0; i < 2048; i++)
-							ROMMapW[bank_to_fill][i] = PCM[io.adpcm_rptr++];
+							ROMMapW[bank_to_fill][i] =
+								PCM[io.adpcm_rptr++];
 
 						bank_to_fill++;
 
@@ -770,37 +782,38 @@ int handle_bios()
 					for (i = 0; i < size; i++)
 						ROMMapW[bank_to_fill][i] = PCM[io.adpcm_rptr++];
 
-					}
-					break;
-				default:
-					TRACE("BIOS: Type reading not supported in AD_READ : %x\n",
-						type);
-					exit(-2);
+				}
+				break;
+			default:
+				TRACE("BIOS: Type reading not supported in AD_READ : %x\n",
+					  type);
+				exit(-2);
 			}
-			reg_p = ((reg_p & (~(FL_N|FL_T|FL_Z))) | flnz_list[reg_a = 0]);
+			reg_p =
+				((reg_p & (~(FL_N | FL_T | FL_Z))) | flnz_list[reg_a = 0]);
 			rts();
 		}
 		break;
 
-		case AD_PLAY:
-			io.adpcm_pptr = get_16bit_zp(_bx) << 1;
+	case AD_PLAY:
+		io.adpcm_pptr = get_16bit_zp(_bx) << 1;
 
-			io.adpcm_psize = get_16bit_zp(_ax) << 1;
+		io.adpcm_psize = get_16bit_zp(_ax) << 1;
 
-			io.adpcm_rate = (uchar)(32 / (16 - (get_8bit_zp(_dh) & 15)));
+		io.adpcm_rate = (uchar) (32 / (16 - (get_8bit_zp(_dh) & 15)));
 
-			new_adpcm_play = 1;
+		new_adpcm_play = 1;
 
-			reg_p = ((reg_p & (~(FL_N|FL_T|FL_Z))) | flnz_list[reg_a = 0]);
-			rts();
-			break;
+		reg_p = ((reg_p & (~(FL_N | FL_T | FL_Z))) | flnz_list[reg_a = 0]);
+		rts();
+		break;
 
-		case AD_STOP:
-			AdpcmFilledBuf = new_adpcm_play = 0;
-			rts();
-			break;
+	case AD_STOP:
+		AdpcmFilledBuf = new_adpcm_play = 0;
+		rts();
+		break;
 
-		case AD_STAT:
+	case AD_STAT:
 		{
 
 			if (AdpcmFilledBuf > (io.adpcm_psize / 2))
@@ -810,228 +823,247 @@ int handle_bios()
 			else
 				reg_x = 0;
 
-			reg_p = ((reg_p & (~(FL_N|FL_T|FL_Z))) | flnz_list[reg_a = (uchar)(reg_x == 1 ? 0 : 1)]);
+			reg_p =
+				((reg_p & (~(FL_N | FL_T | FL_Z))) |
+				 flnz_list[reg_a = (uchar) (reg_x == 1 ? 0 : 1)]);
 		}
 		rts();
 		break;
 
-		case CD_DINFO:
-			switch(get_8bit_zp(_al)) {
-				case CD_DINFO_TRACK:
-				{
-					uint16 buf_offset = get_16bit_zp(_bx);
-					// usually 0x2256 in system 3.0
-					// _ah contain the number of the track
+	case CD_DINFO:
+		switch (get_8bit_zp(_al)) {
+		case CD_DINFO_TRACK:
+			{
+				uint16 buf_offset = get_16bit_zp(_bx);
+				// usually 0x2256 in system 3.0
+				// _ah contain the number of the track
 
-					switch(CD_emulation) {
-						case 2:
-						case 3:
-						case 4:
-						case 5:
-							put_8bit_addr( (uint16)buf_offset,
-								CD_track[bcdbin[get_8bit_zp(_ah)]].beg_min);
-							put_8bit_addr( (uint16)(buf_offset + 1),
-								CD_track[bcdbin[get_8bit_zp(_ah)]].beg_sec);
-							put_8bit_addr( (uint16)(buf_offset + 2),
-								CD_track[bcdbin[get_8bit_zp(_ah)]].beg_fra);
-							put_8bit_addr( (uint16)(buf_offset + 3),
-								CD_track[bcdbin[get_8bit_zp(_ah)]].type);
-							break;
-						case 1:
-						{
-							int Min, Sec, Fra, Ctrl;
+				switch (CD_emulation) {
+				case 2:
+				case 3:
+				case 4:
+				case 5:
+					put_8bit_addr((uint16) buf_offset,
+								  CD_track[bcdbin[get_8bit_zp(_ah)]].
+								  beg_min);
+					put_8bit_addr((uint16) (buf_offset + 1),
+								  CD_track[bcdbin[get_8bit_zp(_ah)]].
+								  beg_sec);
+					put_8bit_addr((uint16) (buf_offset + 2),
+								  CD_track[bcdbin[get_8bit_zp(_ah)]].
+								  beg_fra);
+					put_8bit_addr((uint16) (buf_offset + 3),
+								  CD_track[bcdbin[get_8bit_zp(_ah)]].type);
+					break;
+				case 1:
+					{
+						int Min, Sec, Fra, Ctrl;
 
-							osd_cd_track_info(bcdbin[get_8bit_zp(_ah)],
-								&Min, &Sec, &Fra, &Ctrl);
+						osd_cd_track_info(bcdbin[get_8bit_zp(_ah)],
+										  &Min, &Sec, &Fra, &Ctrl);
 
-							put_8bit_addr((uint16)(buf_offset), binbcd[Min]);
-							put_8bit_addr((uint16)(buf_offset + 1), binbcd[Sec]);
-							put_8bit_addr((uint16)(buf_offset + 2), binbcd[Fra]);
-							put_8bit_addr((uint16)(buf_offset + 3), (uchar)Ctrl);
-						}
-							break;
+						put_8bit_addr((uint16) (buf_offset), binbcd[Min]);
+						put_8bit_addr((uint16) (buf_offset + 1),
+									  binbcd[Sec]);
+						put_8bit_addr((uint16) (buf_offset + 2),
+									  binbcd[Fra]);
+						put_8bit_addr((uint16) (buf_offset + 3),
+									  (uchar) Ctrl);
 					}
-					reg_p = ((reg_p & (~(FL_N|FL_T|FL_Z))) | flnz_list[reg_a = 0]);
+					break;
 				}
-				rts();
-				break;
-
-			case CD_DINFO_NB_TRACKS:
-				{
-					#if ENABLE_TRACING_BIOS
-					TRACE("BIOS: Request for number of CDRom2 tracks\n");
-					#endif
-					uint16 buf_offset = get_16bit_zp(_bx);
-
-					switch(CD_emulation) {
-						case 2:
-						case 3:
-						case 4:
-							put_8bit_addr((uint16)(buf_offset), binbcd[01]);
-								// Number of first track	(BCD)
-							put_8bit_addr((uint16)(buf_offset + 1),
-								binbcd[nb_max_track]);
-								// Number of last track (BCD)
-							break;
-						case 1:
-							{
-							int first_track, last_track;
-
-							osd_cd_nb_tracks(&first_track, &last_track);
-
-							put_8bit_addr((uint16)(buf_offset),
-								binbcd[first_track]);
-							put_8bit_addr((uint16)(buf_offset + 1),
-								binbcd[last_track]);
-							}
-							break;
-						case 5:
-							put_8bit_addr( (uint16)(buf_offset), binbcd[HCD_first_track]);
-							put_8bit_addr( (uint16)(buf_offset + 1), binbcd[HCD_last_track]);
-							break;
-					}
-				}
-				reg_p = ((reg_p & (~(FL_N|FL_T|FL_Z))) | flnz_list[reg_a = 0]);
-				rts();
-				break;
-
-			case CD_DINFO_LENGTH:
-				{
-					uint16 buf_offset = get_16bit_zp(_bx);
-					int min, sec, frame;
-
-					osd_cd_length(&min, &sec, &frame);
-					#if ENABLE_TRACING_BIOS
-					TRACE("BIOS: CD length - Min: %d, Sec: %d, Frame: %d\n",
-						min, sec, frame);
-					#endif
-
-					put_8bit_addr( (uint16)(buf_offset), binbcd[min]);
-					put_8bit_addr( (uint16)(buf_offset + 1), binbcd[sec]);
-					put_8bit_addr( (uint16)(buf_offset + 2), binbcd[frame]);
-
-					reg_p = ((reg_p & (~(FL_N|FL_T|FL_Z)))
-						| flnz_list[reg_a = 0]);
-				}
-				rts();
-				break;
-
-			default:
-				TRACE("BIOS: Sub function 0X%02X from CD_DINFO not handled\n",
-					get_8bit_zp(_al));
-				reg_p = ((reg_p & (~(FL_N|FL_T|FL_Z))) | flnz_list[reg_a = 1]);
-				rts();
-				break;
+				reg_p =
+					((reg_p & (~(FL_N | FL_T | FL_Z))) |
+					 flnz_list[reg_a = 0]);
 			}
+			rts();
 			break;
 
-		case CD_PLAY:
-			if (get_8bit_zp(_bh) == 0x80) {
-				int status;
+		case CD_DINFO_NB_TRACKS:
+			{
+#if ENABLE_TRACING_BIOS
+				TRACE("BIOS: Request for number of CDRom2 tracks\n");
+#endif
+				uint16 buf_offset = get_16bit_zp(_bx);
 
-				// playing a whole track
+				switch (CD_emulation) {
+				case 2:
+				case 3:
+				case 4:
+					put_8bit_addr((uint16) (buf_offset), binbcd[01]);
+					// Number of first track    (BCD)
+					put_8bit_addr((uint16) (buf_offset + 1),
+								  binbcd[nb_max_track]);
+					// Number of last track (BCD)
+					break;
+				case 1:
+					{
+						int first_track, last_track;
 
-				switch(CD_emulation) {
-					case 1:
-						osd_cd_status(&status);
+						osd_cd_nb_tracks(&first_track, &last_track);
 
-						if (status == CDROM_AUDIO_PAUSED)
-							osd_cd_resume();
-						else if (status == CDROM_AUDIO_PLAY)
-							osd_cd_stop_audio();
-
-						osd_cd_play_audio_track(bcdbin[get_8bit_zp(_al)]);
-						break;
-
-					case 2:
-					case 3:
-					case 4:
-						// ignoring cd playing
-						break;
-					case 5:
-						HCD_play_track(bcdbin[get_8bit_zp(_al)], (char)(get_8bit_zp(_dh) & 1) );
-						break;
+						put_8bit_addr((uint16) (buf_offset),
+									  binbcd[first_track]);
+						put_8bit_addr((uint16) (buf_offset + 1),
+									  binbcd[last_track]);
+					}
+					break;
+				case 5:
+					put_8bit_addr((uint16) (buf_offset),
+								  binbcd[HCD_first_track]);
+					put_8bit_addr((uint16) (buf_offset + 1),
+								  binbcd[HCD_last_track]);
+					break;
 				}
-			} else if (get_8bit_zp(_bh) == 192) { /* resume from pause if paused */
-				int status;
+			}
+			reg_p =
+				((reg_p & (~(FL_N | FL_T | FL_Z))) | flnz_list[reg_a = 0]);
+			rts();
+			break;
 
+		case CD_DINFO_LENGTH:
+			{
+				uint16 buf_offset = get_16bit_zp(_bx);
+				int min, sec, frame;
+
+				osd_cd_length(&min, &sec, &frame);
+#if ENABLE_TRACING_BIOS
+				TRACE("BIOS: CD length - Min: %d, Sec: %d, Frame: %d\n",
+					  min, sec, frame);
+#endif
+
+				put_8bit_addr((uint16) (buf_offset), binbcd[min]);
+				put_8bit_addr((uint16) (buf_offset + 1), binbcd[sec]);
+				put_8bit_addr((uint16) (buf_offset + 2), binbcd[frame]);
+
+				reg_p = ((reg_p & (~(FL_N | FL_T | FL_Z)))
+						 | flnz_list[reg_a = 0]);
+			}
+			rts();
+			break;
+
+		default:
+			TRACE("BIOS: Sub function 0X%02X from CD_DINFO not handled\n",
+				  get_8bit_zp(_al));
+			reg_p =
+				((reg_p & (~(FL_N | FL_T | FL_Z))) | flnz_list[reg_a = 1]);
+			rts();
+			break;
+		}
+		break;
+
+	case CD_PLAY:
+		if (get_8bit_zp(_bh) == 0x80) {
+			int status;
+
+			// playing a whole track
+
+			switch (CD_emulation) {
+			case 1:
 				osd_cd_status(&status);
 
 				if (status == CDROM_AUDIO_PAUSED)
 					osd_cd_resume();
-				else
-					osd_cd_play_audio_track(bcdbin[get_8bit_zp(_al)]);
+				else if (status == CDROM_AUDIO_PLAY)
+					osd_cd_stop_audio();
 
-			} else {
-				int status;
+				osd_cd_play_audio_track(bcdbin[get_8bit_zp(_al)]);
+				break;
 
-				int min1 = bcdbin[get_8bit_zp(_al)];
-				int sec1 = bcdbin[get_8bit_zp(_ah)];
-				int fra1 = bcdbin[get_8bit_zp(_bl)];
-
-				int min2 = bcdbin[get_8bit_zp(_cl)];
-				int sec2 = bcdbin[get_8bit_zp(_ch)];
-				int fra2 = bcdbin[get_8bit_zp(_dl)];
-
-				switch(CD_emulation) {
-					case 1:
-						osd_cd_status(&status);
-						if ((status == CDROM_AUDIO_PLAY)
-							|| (status == CDROM_AUDIO_PAUSED))
-							osd_cd_stop_audio();
-						osd_cd_play_audio_range((uchar)min1, (uchar)sec1,
-							(uchar)fra1, (uchar)min2, (uchar)sec2, (uchar)fra2);
-						break;
-					case 2:
-					case 3:
-					case 4:
-						// ignoring cd playing
-						break;
-					case 5:
-	//					HCD_play_sectors(begin_sect, sect_len, get_8bit_zp(_dh) & 1);
-						break;
-				}
+			case 2:
+			case 3:
+			case 4:
+				// ignoring cd playing
+				break;
+			case 5:
+				HCD_play_track(bcdbin[get_8bit_zp(_al)],
+							   (char) (get_8bit_zp(_dh) & 1));
+				break;
 			}
-			reg_p = ((reg_p & (~(FL_N|FL_T|FL_Z))) | flnz_list[reg_a = 0]);
-			rts();
-			break;
+		} else if (get_8bit_zp(_bh) == 192) {	/* resume from pause if paused */
+			int status;
 
-		case EX_JOYSNS:
+			osd_cd_status(&status);
+
+			if (status == CDROM_AUDIO_PAUSED)
+				osd_cd_resume();
+			else
+				osd_cd_play_audio_track(bcdbin[get_8bit_zp(_al)]);
+
+		} else {
+			int status;
+
+			int min1 = bcdbin[get_8bit_zp(_al)];
+			int sec1 = bcdbin[get_8bit_zp(_ah)];
+			int fra1 = bcdbin[get_8bit_zp(_bl)];
+
+			int min2 = bcdbin[get_8bit_zp(_cl)];
+			int sec2 = bcdbin[get_8bit_zp(_ch)];
+			int fra2 = bcdbin[get_8bit_zp(_dl)];
+
+			switch (CD_emulation) {
+			case 1:
+				osd_cd_status(&status);
+				if ((status == CDROM_AUDIO_PLAY)
+					|| (status == CDROM_AUDIO_PAUSED))
+					osd_cd_stop_audio();
+				osd_cd_play_audio_range((uchar) min1, (uchar) sec1,
+										(uchar) fra1, (uchar) min2,
+										(uchar) sec2, (uchar) fra2);
+				break;
+			case 2:
+			case 3:
+			case 4:
+				// ignoring cd playing
+				break;
+			case 5:
+				//                  HCD_play_sectors(begin_sect, sect_len, get_8bit_zp(_dh) & 1);
+				break;
+			}
+		}
+		reg_p = ((reg_p & (~(FL_N | FL_T | FL_Z))) | flnz_list[reg_a = 0]);
+		rts();
+		break;
+
+	case EX_JOYSNS:
 		{
 			uchar dummy[5], index;
 
 			for (index = 0; index < 5; index++) {
 				dummy[index] = get_8bit_addr(0x2228 + index);
-				put_8bit_addr( (uint16)(0x2232 + index), dummy[index]);
-				put_8bit_addr( (uint16)(0x2228 + index), io.JOY[index]);
-				put_8bit_addr( (uint16)(0x222D + index), (io.JOY[index] ^ dummy[index]) & io.JOY[index]);
+				put_8bit_addr((uint16) (0x2232 + index), dummy[index]);
+				put_8bit_addr((uint16) (0x2228 + index), io.JOY[index]);
+				put_8bit_addr((uint16) (0x222D + index),
+							  (io.JOY[index] ^ dummy[index]) & io.
+							  JOY[index]);
 			}
 		}
-			/* TODO : check if A <- 0 is needed here */
-			rts();
-			break;
+		/* TODO : check if A <- 0 is needed here */
+		rts();
+		break;
 
-		case BM_FREE:
+	case BM_FREE:
 		{
 			Sint16 free_mem;
 
-			free_mem = (Sint16)(WRAM[4] + (WRAM[5] << 8));
+			free_mem = (Sint16) (WRAM[4] + (WRAM[5] << 8));
 			free_mem -= WRAM[6] + (WRAM[7] << 8);
-			free_mem -= 0x12; /* maybe the header */
+			free_mem -= 0x12;	/* maybe the header */
 
 			if (free_mem < 0)
 				free_mem = 0;
 
-			put_8bit_zp(_cl, (uchar)(free_mem & 0xFF));
-			put_8bit_zp(_ch, (uchar)(free_mem >> 8));
+			put_8bit_zp(_cl, (uchar) (free_mem & 0xFF));
+			put_8bit_zp(_ch, (uchar) (free_mem >> 8));
 
-			reg_p = ((reg_p & (~(FL_N|FL_T|FL_Z))) | flnz_list[reg_a = 0]);
+			reg_p =
+				((reg_p & (~(FL_N | FL_T | FL_Z))) | flnz_list[reg_a = 0]);
 			rts();
 			break;
 		}
 
 #if ENABLE_TRACING_BIOS
-		case MA_MUL8U:
+	case MA_MUL8U:
 		{
 			uint16 res;
 
@@ -1044,7 +1076,7 @@ int handle_bios()
 			break;
 		}
 
-		case MA_MUL8S:
+	case MA_MUL8S:
 		{
 			Sint16 res;
 
@@ -1057,7 +1089,7 @@ int handle_bios()
 			break;
 		}
 
-		case MA_MUL16U:
+	case MA_MUL16U:
 		{
 			uint32 res;
 
@@ -1072,7 +1104,7 @@ int handle_bios()
 			break;
 		}
 
-		case MA_DIV16U:
+	case MA_DIV16U:
 		{
 			uint16 res, rem;
 
@@ -1088,7 +1120,7 @@ int handle_bios()
 			break;
 		}
 
-		case MA_DIV16S:
+	case MA_DIV16S:
 		{
 			Sint16 res, rem;
 
@@ -1104,7 +1136,7 @@ int handle_bios()
 			break;
 		}
 
-		case MA_MUL16S:
+	case MA_MUL16S:
 		{
 			int32 res;
 
@@ -1120,12 +1152,14 @@ int handle_bios()
 		}
 #endif
 
-		default:
-			/* unhandled function, restoring initial behaviour */
-			put_8bit_addr( (uint16)(reg_pc),
-				CDBIOS_replace[imm_operand((uint16)(reg_pc + 1))][0]);
-			put_8bit_addr( (uint16)(reg_pc + 1),
-				CDBIOS_replace[imm_operand( (uint16)(reg_pc + 1))][1]);
+	default:
+		/* unhandled function, restoring initial behaviour */
+		put_8bit_addr((uint16) (reg_pc),
+					  CDBIOS_replace[imm_operand((uint16) (reg_pc + 1))]
+					  [0]);
+		put_8bit_addr((uint16) (reg_pc + 1),
+					  CDBIOS_replace[imm_operand((uint16) (reg_pc + 1))]
+					  [1]);
 	}
 	return 0;
 }

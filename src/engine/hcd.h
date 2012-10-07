@@ -18,27 +18,27 @@ extern uint32 HCD_frame_at_beginning_of_track;
  * used to make subtitle
  */
 
-extern char   HCD_cover_filename[256];
+extern char HCD_cover_filename[256];
 
-extern FILE * HCD_iso_FILE;
+extern FILE *HCD_iso_FILE;
 
 
 #ifdef SDL_mixer
-  #include "osd_linux_sdl_music.h"
+#include "osd_linux_sdl_music.h"
 #endif
 
 #ifdef OGG_SUPPORT
-  #include "ogglength.h"
+#include "ogglength.h"
 #endif
 
-int fill_HCD_info(char* name);
+int fill_HCD_info(char *name);
 void HCD_play_sectors(int begin_sect, int sect_len, char repeat);
 void HCD_pause_playing();
 void HCD_play_track(uchar track, char repeat);
 void HCD_shutdown();
 void HCD_handle_subtitle();
-void HCD_iso_read_sector(uchar *p, uint32 dum, uint32 result);
-void HCD_cd_read_sector(uchar *p, uint32 dum, uint32 result);
+void HCD_iso_read_sector(uchar * p, uint32 dum, uint32 result);
+void HCD_cd_read_sector(uchar * p, uint32 dum, uint32 result);
 
 
 #endif

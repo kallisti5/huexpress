@@ -35,6 +35,6 @@ extern freezed_value list_to_freeze[MAX_FREEZED_VALUE];
 extern uchar current_freezed_values;
 /* Current number of values to freeze */
 
-int freeze_value (void);
+int freeze_value(void);
 
 #endif

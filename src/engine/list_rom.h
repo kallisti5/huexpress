@@ -32,11 +32,10 @@
 
 
 
-struct pce_rom_info
-{
-  unsigned long CRC;
-  char *name, *producer, *date, *note;
-  unsigned short flags;
+struct pce_rom_info {
+	unsigned long CRC;
+	char *name, *producer, *date, *note;
+	unsigned short flags;
 };
 
 #define NB_ROM 542
@@ -48,7 +47,7 @@ extern int pce_romlist_size;
 
 // extern ROM_TYPE ROM_LIST[NB_ROM];
 
-unsigned long filesize(FILE *F);
+unsigned long filesize(FILE * F);
 uint32 CRC_file(char *name);
 void pce_build_romlist(void);
 

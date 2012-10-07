@@ -14,9 +14,11 @@ const char nb_fadeout = 5;
 
 
 void (*fade_in_proc[5]) (uchar *, unsigned, unsigned, unsigned, unsigned)
-  = {};
+	= {
+};
 
 // Array of function for random calls
 
 void (*fade_out_proc[5]) (unsigned, unsigned, unsigned, unsigned)
-  = {};	
+	= {
+};

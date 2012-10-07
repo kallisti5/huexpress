@@ -27,16 +27,15 @@
 #define DISABLED   2
 
 #if ENABLE_TRACING
-	#define TRACE(x...) printf("DD " x)
+#define TRACE(x...) printf("DD " x)
 #else
-	#define TRACE(x...)
+#define TRACE(x...)
 #endif
 
 #define MESSAGE_ERROR(x...) printf("!! " x)
 #define MESSAGE_INFO(x...) printf(" * " x)
 
-typedef struct
-{
+typedef struct {
 	uint16 position;
 	uchar flag;
 	uchar original_op;
@@ -51,24 +50,24 @@ extern Breakpoint Bp_list[MAX_BP];
 extern uchar save_background;
 // Do we have to preserve the background
 
-uchar Op6502 (unsigned int A);
+uchar Op6502(unsigned int A);
 
-void disass_menu ();
+void disass_menu();
 // Kind of front end for the true disassemble function
 
-int toggle_user_breakpoint (uint16);
+int toggle_user_breakpoint(uint16);
 // Toggle the breakpoint at the specified address
 
-void display_debug_help ();
+void display_debug_help();
 // Display a help screen
 
-uint32 cvtnum (char *string);
+uint32 cvtnum(char *string);
 // Convert a hexa string into a number
 
-void set_bp_following (uint16 where, uchar nb);
+void set_bp_following(uint16 where, uchar nb);
 // Set a bp at the location that follows a given address
 
-uchar change_value (int X, int Y, uchar length, uint32 * result);
+uchar change_value(int X, int Y, uchar length, uint32 * result);
 // Wait for user to enter a value and display in on screen
 
 #endif

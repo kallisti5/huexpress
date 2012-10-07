@@ -51,34 +51,33 @@
 #define SERVER_HOSTNAME_MAX_SIZE 256
 
 
-int32 CheckSprites (void);
-void RefreshLine (int Y1, int Y2);
-void RefreshScreen (void);
-uint32 CRC_file (char *);
-int CartLoad (char *name);
+int32 CheckSprites(void);
+void RefreshLine(int Y1, int Y2);
+void RefreshScreen(void);
+uint32 CRC_file(char *);
+int CartLoad(char *name);
 #ifndef KERNEL_DS
-int ResetPCE (M6502 * M);
+int ResetPCE(M6502 * M);
 #else
-int ResetPCE ();
+int ResetPCE();
 #endif
-int32 InitMachine (void);
-void TrashMachine (void);
-int32 Joysticks (void);
-uint32 msf2nb_sect (uchar min, uchar sec, uchar fra);
-void fill_cd_info ();
-void nb_sect2msf (uint32 lsn, uchar * min, uchar * sec, uchar * frm);
-void delete_file_tmp (char *name, int dummy, int dummy2);
-uchar TimerInt ();
+int32 InitMachine(void);
+void TrashMachine(void);
+int32 Joysticks(void);
+uint32 msf2nb_sect(uchar min, uchar sec, uchar fra);
+void fill_cd_info();
+void nb_sect2msf(uint32 lsn, uchar * min, uchar * sec, uchar * frm);
+void delete_file_tmp(char *name, int dummy, int dummy2);
+uchar TimerInt();
 
-void init_log_file ();
-int InitPCE (char *name, char *backmemname);
-void TrashPCE (char *backmemname);
-int RunPCE (void);
-void pce_cd_read_sector (void);
-void issue_ADPCM_dma (void);
+void init_log_file();
+int InitPCE(char *name, char *backmemname);
+void TrashPCE(char *backmemname);
+int RunPCE(void);
+void pce_cd_read_sector(void);
+void issue_ADPCM_dma(void);
 
-char*
-search_possible_syscard();
+char *search_possible_syscard();
 
 extern FILE *out_snd;
 // The file used to put sound into
@@ -185,97 +184,89 @@ extern uchar binbcd[0x100];
 
 extern uint32 pce_cd_sectoraddy;
 
-struct host_video
-{
-  boolean hardware_scaling;
+struct host_video {
+	boolean hardware_scaling;
 };
 
-struct host_sound
-{
-  boolean stereo;
-  uint32 freq;
-  uint16 sample_size;
-  boolean signed_sound;
+struct host_sound {
+	boolean stereo;
+	uint32 freq;
+	uint16 sample_size;
+	boolean signed_sound;
 };
 
-struct host_machine
-{
-  struct host_video video;
-  struct host_sound sound;
+struct host_machine {
+	struct host_video video;
+	struct host_sound sound;
 };
 
 extern struct host_machine host;
 
-struct hugo_options
-{
-  boolean want_stereo;
-  boolean want_fullscreen;
-  boolean want_fullscreen_aspect;
-  boolean want_hardware_scaling;
-  boolean configure_joypads;
-  boolean want_arcade_card_emulation;
-  boolean want_supergraphx_emulation;
-  boolean want_television_size_emulation;
-  uchar window_size;
-  uint16 fullscreen_width;
-  uint16 fullscreen_height;
-  uint32 want_snd_freq;
-  uint32 wanted_hardware_format;
+struct hugo_options {
+	boolean want_stereo;
+	boolean want_fullscreen;
+	boolean want_fullscreen_aspect;
+	boolean want_hardware_scaling;
+	boolean configure_joypads;
+	boolean want_arcade_card_emulation;
+	boolean want_supergraphx_emulation;
+	boolean want_television_size_emulation;
+	uchar window_size;
+	uint16 fullscreen_width;
+	uint16 fullscreen_height;
+	uint32 want_snd_freq;
+	uint32 wanted_hardware_format;
 #if defined(ENABLE_NETPLAY)
-  netplay_type want_netplay;
-  char server_hostname[SERVER_HOSTNAME_MAX_SIZE];
-  uchar local_input_mapping[5];
+	netplay_type want_netplay;
+	char server_hostname[SERVER_HOSTNAME_MAX_SIZE];
+	uchar local_input_mapping[5];
 #endif
 };
 
 extern struct hugo_options option;
 
-typedef struct
-{
+typedef struct {
 
-  uint32 offset;
+	uint32 offset;
 
-  uchar new_val;
+	uchar new_val;
 
 } PatchEntry;
 
-typedef struct
-{
+typedef struct {
 
-  uint32 StartTime;
-  uint32 Duration;
-  char data[32];
+	uint32 StartTime;
+	uint32 Duration;
+	char data[32];
 
 } SubtitleEntry;
 
 
-typedef enum
-{
-  HCD_SOURCE_REGULAR_FILE,
-  HCD_SOURCE_CD_TRACK
+typedef enum {
+	HCD_SOURCE_REGULAR_FILE,
+	HCD_SOURCE_CD_TRACK
 } hcd_source_type;
 
-typedef struct
-{
-  uchar beg_min;
-  uchar beg_sec;
-  uchar beg_fra;
+typedef struct {
+	uchar beg_min;
+	uchar beg_sec;
+	uchar beg_fra;
 
-  uchar type;
+	uchar type;
 
-  uint32 beg_lsn;
-  uint32 length;
+	uint32 beg_lsn;
+	uint32 length;
 
-  hcd_source_type source_type;
-  char filename[256];
+	hcd_source_type source_type;
+	char filename[256];
 
-  uint32 patch_number;
-  uint32 subtitle_number;
+	uint32 patch_number;
+	uint32 subtitle_number;
 
-  uchar subtitle_synchro_type;
+	uchar subtitle_synchro_type;
 
-  PatchEntry *patch;
-  SubtitleEntry *subtitle;
+	PatchEntry *patch;
+	SubtitleEntry *subtitle;
 
 } Track;
 
@@ -353,7 +344,7 @@ extern uchar can_write_debug;
 
 // Post include to avoid circular definitions
 
-#include "list_rom.h" // List of known rom
+#include "list_rom.h"			// List of known rom
 
 #include "config.h"
 
@@ -363,14 +354,14 @@ extern uchar can_write_debug;
 
 
 #if defined(SEAL_SOUND)
-#include </djgpp/audio/include/audio.h> // SEAL include
-#endif /* SEAL sound */
+#include </djgpp/audio/include/audio.h>	// SEAL include
+#endif							/* SEAL sound */
 
 #include <time.h>
 
 #ifdef SOUND
 #include "sound.h"
-#endif // SOUND
+#endif							// SOUND
 
 
 #endif

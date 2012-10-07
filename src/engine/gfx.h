@@ -25,17 +25,16 @@
  * generic_rect - Used to keep calc_fullscreen_aspect gfx lib independant.  Currently
  *   used to remap values to an SDL_Rect structure.
  */
-struct generic_rect
-{
-  unsigned short start_x, start_y;
-  unsigned short end_x, end_y;
+struct generic_rect {
+	unsigned short start_x, start_y;
+	unsigned short end_x, end_y;
 };
 
 typedef struct {
 	typeof(io.VDC[BXR].W) scroll_x;
 	typeof(io.VDC[BYR].W) scroll_y;
-	int	scroll_y_diff;
-	typeof(io.VDC[CR].W) cr;
+	int scroll_y_diff;
+	 typeof(io.VDC[CR].W) cr;
 } gfx_context;
 
 #ifdef SDL
@@ -51,8 +50,11 @@ extern SDL_Color olay_cmap[256];
 extern int video_dump_flag;
 extern int gfx_need_video_mode_change;
 
-void calc_fullscreen_aspect(unsigned short physical_screen_width, unsigned short physical_screen_height,
-                            struct generic_rect *rect, unsigned short pce_screen_width, unsigned short pce_screen_height);
+void calc_fullscreen_aspect(unsigned short physical_screen_width,
+							unsigned short physical_screen_height,
+							struct generic_rect *rect,
+							unsigned short pce_screen_width,
+							unsigned short pce_screen_height);
 void change_pce_screen_height();
 
 void save_gfx_context(int slot_number);
@@ -67,6 +69,6 @@ uchar Loop6502();
 
 #if ENABLE_TRACING_GFX
 void gfx_debug_printf(char *format, ...);
-#endif														
+#endif
 
 #endif

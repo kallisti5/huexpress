@@ -61,9 +61,9 @@ Op6502 (register unsigned A)
        */
 
 uchar
-Op6502 (unsigned int A)
+Op6502(unsigned int A)
 {
-  return (PageR[A >> 13][A]);
+	return (PageR[A >> 13][A]);
 }
 
 /*
@@ -71,44 +71,41 @@ Op6502 (unsigned int A)
         */
 
 void
-disass_menu ()
+disass_menu()
 {
 
 #ifdef ALLEGRO
-  if (save_background)
+	if (save_background)
+	{
 
-    {
+		save_bg = create_bitmap(vwidth, vheight);
 
-      save_bg = create_bitmap (vwidth, vheight);
+		blit(screen, save_bg, 0, 0, 0, 0, vwidth, vheight);
 
-      blit (screen, save_bg, 0, 0, 0, 0, vwidth, vheight);
+		get_palette(save_pal);
 
-      get_palette (save_pal);
-
-    }
+	}
 #endif
 
 #ifndef KERNEL_DS
-  disassemble (M.PC.W);
+	disassemble(M.PC.W);
 #else
-  disassemble (reg_pc);
+	disassemble(reg_pc);
 #endif
 
 #ifdef ALLEGRO
-  if (save_background)
+	if (save_background)
+	{
 
-    {
+		set_palette(save_pal);
 
-      set_palette (save_pal);
+		blit(save_bg, screen, 0, 0, 0, 0, vwidth, vheight);
 
-      blit (save_bg, screen, 0, 0, 0, 0, vwidth, vheight);
+		destroy_bitmap(save_bg);
 
-      destroy_bitmap (save_bg);
-
-    }
-
+	}
 #endif
-  return;
+	return;
 
 };
 
@@ -126,53 +123,52 @@ disass_menu ()
 *****************************************************************************/
 
 int
-toggle_user_breakpoint (uint16 where)
+toggle_user_breakpoint(uint16 where)
 {
 
-  uchar dum;
+	uchar dum;
 
-  for (dum = 0; dum < MAX_USER_BP; dum++)
+	for (dum = 0; dum < MAX_USER_BP; dum++)
+	{
 
-    {
+
+		if ((Bp_list[dum].position == where)
+			&& (Bp_list[dum].flag != NOT_USED))
+		{						//Already set, unset it and put the right opcode
+
+			Bp_list[dum].flag = NOT_USED;
+
+			Wr6502(where, Bp_list[dum].original_op);
+
+			return 1;
+
+		}
 
 
-      if ((Bp_list[dum].position == where) && (Bp_list[dum].flag != NOT_USED))
+		if (Bp_list[dum].flag == NOT_USED)
 
-	{			//Already set, unset it and put the right opcode
+			break;
 
-	  Bp_list[dum].flag = NOT_USED;
-
-	  Wr6502 (where, Bp_list[dum].original_op);
-
-	  return 1;
 
 	}
 
+	if (dum == MAX_USER_BP)
 
-      if (Bp_list[dum].flag == NOT_USED)
-
-	break;
-
-
-    }
-
-  if (dum == MAX_USER_BP)
-
-    return 0;
+		return 0;
 
 
-  Bp_list[dum].flag = ENABLED;
+	Bp_list[dum].flag = ENABLED;
 
-  Bp_list[dum].position = where;
+	Bp_list[dum].position = where;
 
-  Bp_list[dum].original_op = Op6502 (where);
+	Bp_list[dum].original_op = Op6502(where);
 
 
-  Wr6502 (where, (uchar)(0xB + 0x10 * dum));
+	Wr6502(where, (uchar) (0xB + 0x10 * dum));
 
-  // Put an invalid opcode
+	// Put an invalid opcode
 
-  return 1;
+	return 1;
 
 }
 
@@ -188,37 +184,37 @@ toggle_user_breakpoint (uint16 where)
 *****************************************************************************/
 
 void
-display_debug_help ()
+display_debug_help()
 {
 #ifdef ALLEGRO
-  uint32 x;
+	uint32 x;
 
-  BITMAP *bg;
-
-
-  bg = create_bitmap (vwidth, vheight);
-
-  blit (screen, bg, 0, 0, 0, 0, vwidth, vheight);
-
-  clear (screen);
+	BITMAP *bg;
 
 
-  for (x = 0; x < help_debug_size; x++)
+	bg = create_bitmap(vwidth, vheight);
 
-    textout_centre (screen, font, MESSAGE[language][help_debug + x],
-		    vwidth / 2, blit_y + 10 * x, -1);
+	blit(screen, bg, 0, 0, 0, 0, vwidth, vheight);
 
-  while (osd_keypressed ())
-    osd_readkey ();
-
-  osd_readkey ();
+	clear(screen);
 
 
-  blit (bg, screen, 0, 0, 0, 0, vwidth, vheight);
+	for (x = 0; x < help_debug_size; x++)
 
-  destroy_bitmap (bg);
+		textout_centre(screen, font, MESSAGE[language][help_debug + x],
+					   vwidth / 2, blit_y + 10 * x, -1);
 
-  return;
+	while (osd_keypressed())
+		osd_readkey();
+
+	osd_readkey();
+
+
+	blit(bg, screen, 0, 0, 0, 0, vwidth, vheight);
+
+	destroy_bitmap(bg);
+
+	return;
 #endif
 }
 
@@ -235,57 +231,50 @@ display_debug_help ()
 	 directly taken from Dave Shadoff emulator TGSIM*
 
 *****************************************************************************/
-uint32 cvtnum (char *string)
+uint32
+cvtnum(char *string)
 {
 
-  uint32 value = 0;
+	uint32 value = 0;
 
-  char *c = string;
-
-
-  while (*c != '\0')
-    {
+	char *c = string;
 
 
-      value *= 16;
+	while (*c != '\0') {
 
 
-      if ((*c >= '0') && (*c <= '9'))
-	{
-
-	  value += (*c - '0');
+		value *= 16;
 
 
-	}
-      else if ((*c >= 'A') && (*c <= 'F'))
-	{
+		if ((*c >= '0') && (*c <= '9')) {
 
-	  value += (*c - 'A' + 10);
+			value += (*c - '0');
 
 
-	}
-      else if ((*c >= 'a') && (*c <= 'f'))
-	{
+		} else if ((*c >= 'A') && (*c <= 'F')) {
 
-	  value += (*c - 'a' + 10);
+			value += (*c - 'A' + 10);
 
 
-	}
-      else
-	{
+		} else if ((*c >= 'a') && (*c <= 'f')) {
+
+			value += (*c - 'a' + 10);
 
 
-	  return (-1);
+		} else {
+
+
+			return (-1);
+
+		}
+
+
+		c++;
 
 	}
 
 
-      c++;
-
-    }
-
-
-  return (value);
+	return (value);
 
 }
 
@@ -304,30 +293,30 @@ uint32 cvtnum (char *string)
 
 *****************************************************************************/
 void
-set_bp_following (uint16 where, uchar nb)
+set_bp_following(uint16 where, uchar nb)
 {
 
-  uint16 next_pos;
+	uint16 next_pos;
 
-  uchar op = Op6502 (where);
-
-
-  next_pos = (*optable_debug[op].following_IP) (where);
+	uchar op = Op6502(where);
 
 
-  Bp_list[nb].position = next_pos;
+	next_pos = (*optable_debug[op].following_IP) (where);
 
 
-  Bp_list[nb].flag = ENABLED;
+	Bp_list[nb].position = next_pos;
 
 
-  Bp_list[nb].original_op = Op6502 (next_pos);
+	Bp_list[nb].flag = ENABLED;
 
 
-  Wr6502 (next_pos, (uchar)(0xB + 0x10 * nb));
+	Bp_list[nb].original_op = Op6502(next_pos);
 
 
-  return;
+	Wr6502(next_pos, (uchar) (0xB + 0x10 * nb));
+
+
+	return;
 
 }
 
@@ -342,49 +331,47 @@ set_bp_following (uint16 where, uchar nb)
     Return: the new value in int pointed by result
 
 *****************************************************************************/
-uchar change_value (int X, int Y, uchar length, uint32 * result)
+uchar
+change_value(int X, int Y, uchar length, uint32 * result)
 {
 #ifdef ALLEGRO
-  char index = 0;
+	char index = 0;
 
-  char value[9] = "\0\0\0\0\0\0\0\0";
+	char value[9] = "\0\0\0\0\0\0\0\0";
 
-  int ch;
+	int ch;
 
 
-  do
-    {
-      rectfill (screen, X, Y, X + 16, Y + 9, -15);
-      textout (screen, font, value, X, Y + 1, -1);
-      ch = osd_readkey ();
+	do {
+		rectfill(screen, X, Y, X + 16, Y + 9, -15);
+		textout(screen, font, value, X, Y + 1, -1);
+		ch = osd_readkey();
 
-      // first switch by scancode
-      switch (ch >> 8)
-	{
-	case KEY_ESC:
-	  return 0;
-	case KEY_ENTER:
-	  *result = cvtnum (value);
-	  return 1;
-	case KEY_BACKSPACE:
-	  if (index)
-	    value[--index] = 0;
-	  break;
+		// first switch by scancode
+		switch (ch >> 8) {
+		case KEY_ESC:
+			return 0;
+		case KEY_ENTER:
+			*result = cvtnum(value);
+			return 1;
+		case KEY_BACKSPACE:
+			if (index)
+				value[--index] = 0;
+			break;
+		}
+
+		// Now by ascii code
+		switch (ch & 0xff) {
+		case '0' ... '9':
+		case 'a' ... 'f':
+		case 'A' ... 'F':
+			if (index < length)
+				value[index++] = toupper(ch & 0xff);
+			break;
+		}
 	}
-
-      // Now by ascii code
-      switch (ch & 0xff)
-	{
-	case '0'...'9':
-	case 'a'...'f':
-	case 'A'...'F':
-	  if (index < length)
-	    value[index++] = toupper (ch & 0xff);
-	  break;
-	}
-    }
-  while (1);
+	while (1);
 #endif
 
-  return 0;
+	return 0;
 }

@@ -31,41 +31,41 @@
 
 #endif
 
-#define PSG_VOICE_REG           0 /* voice index */
+#define PSG_VOICE_REG           0	/* voice index */
 
-#define PSG_VOLUME_REG          1 /* master volume */
+#define PSG_VOLUME_REG          1	/* master volume */
 
-#define PSG_FREQ_LSB_REG        2 /* lower 8 bits of 12 bit frequency */
+#define PSG_FREQ_LSB_REG        2	/* lower 8 bits of 12 bit frequency */
 
-#define PSG_FREQ_MSB_REG        3 /* actually most significant nibble */
+#define PSG_FREQ_MSB_REG        3	/* actually most significant nibble */
 
 #define PSG_DDA_REG             4
-#define PSG_DDA_ENABLE          0x80 /* bit 7 */
-#define PSG_DDA_DIRECT_ACCESS   0x40 /* bit 6 */
-#define PSG_DDA_VOICE_VOLUME    0x1F /* bits 0-4 */
+#define PSG_DDA_ENABLE          0x80	/* bit 7 */
+#define PSG_DDA_DIRECT_ACCESS   0x40	/* bit 6 */
+#define PSG_DDA_VOICE_VOLUME    0x1F	/* bits 0-4 */
 
 #define PSG_BALANCE_REG         5
-#define PSG_BALANCE_LEFT        0xF0 /* bits 4-7 */
-#define PSG_BALANCE_RIGHT       0x0F /* bits 0-3 */
+#define PSG_BALANCE_LEFT        0xF0	/* bits 4-7 */
+#define PSG_BALANCE_RIGHT       0x0F	/* bits 0-3 */
 
 #define PSG_DATA_INDEX_REG      6
 
 #define PSG_NOISE_REG           7
-#define PSG_NOISE_ENABLE        0x80 /* bit 7 */
+#define PSG_NOISE_ENABLE        0x80	/* bit 7 */
 
 /**
   * Exported functions to access hardware
   **/
 
-void hard_init (void);
-void hard_term (void);
+void hard_init(void);
+void hard_term(void);
 
-void	IO_write (uint16 A,uchar V);
-uchar	IO_read  (uint16 A);
-void	bank_set (uchar P, uchar V);
+void IO_write(uint16 A, uchar V);
+uchar IO_read(uint16 A);
+void bank_set(uchar P, uchar V);
 
-extern void	(*write_memory_function)(uint16,uchar);
-extern uchar	(*read_memory_function)(uint16);
+extern void (*write_memory_function) (uint16, uchar);
+extern uchar(*read_memory_function) (uint16);
 
 #define Wr6502(A,V) ((*write_memory_function)((A),(V)))
 
@@ -83,7 +83,7 @@ void dump_pce_cpu_environment();
   * Exported variables
   **/
 
-extern struct_hard_pce* hard_pce;
+extern struct_hard_pce *hard_pce;
 // The global structure for all hardware variables
 
 #define io (*p_io)
@@ -117,11 +117,11 @@ extern uchar *Pal;
 // Each of the 512 available PCE colors (333 RGB -> 512 colors)
 // got a correspondancy in the 256 fixed colors palette
 
-extern uchar *VRAM2,*VRAMS;
+extern uchar *VRAM2, *VRAMS;
 // These are array to keep in memory the result of the linearisation of
 // PCE sprites and tiles
 
-extern uchar *vchange,*vchanges;
+extern uchar *vchange, *vchanges;
 // These array are boolean array to know if we must update the
 // corresponding linear sprite representation in VRAM2 and VRAMS or not
 // if (vchanges[5] != 0) 6th pattern in VRAM2 must be updated
@@ -159,13 +159,13 @@ extern uchar cd_sectorcnt;
 //! number of the current command of the cd interface
 extern uchar pce_cd_curcmd;
 
-extern uchar* zp_base;
+extern uchar *zp_base;
 // pointer to the beginning of the Zero Page area
 
-extern uchar* sp_base;
+extern uchar *sp_base;
 // pointer to the beginning of the Stack Area
 
-extern uchar* mmr;
+extern uchar *mmr;
 // Value of each of the MMR registers
 
 extern uchar *IOAREA;
@@ -179,8 +179,8 @@ extern uchar *PageW[8];
 extern uchar *ROMMapW[256];
 
 //! False "ram"s in which you can read/write (to homogeneize writes into RAM, BRAM, ... as well as in rom) but the result isn't coherent
-extern uchar* trap_ram_read;
-extern uchar* trap_ram_write;
+extern uchar *trap_ram_read;
+extern uchar *trap_ram_write;
 
 // physical address on emulator machine of each of the 256 banks
 
@@ -213,19 +213,19 @@ extern const uint32 TimerPeriod;
 #define reg_s   (*p_reg_s)
 
 extern uint16 *p_reg_pc;
-extern uchar  *p_reg_a;
-extern uchar  *p_reg_x;
-extern uchar  *p_reg_y;
-extern uchar  *p_reg_p;
-extern uchar  *p_reg_s;
+extern uchar *p_reg_a;
+extern uchar *p_reg_x;
+extern uchar *p_reg_y;
+extern uchar *p_reg_p;
+extern uchar *p_reg_s;
 
 #else
 extern uint16 reg_pc;
-extern uchar  reg_a;
-extern uchar  reg_x;
-extern uchar  reg_y;
-extern uchar  reg_p;
-extern uchar  reg_s;
+extern uchar reg_a;
+extern uchar reg_x;
+extern uchar reg_y;
+extern uchar reg_p;
+extern uchar reg_s;
 #endif
 
 // These are the main h6280 register, reg_p is the flag register
@@ -241,26 +241,26 @@ extern uint32 *p_cycles;
 
 #define	VRR	2
 enum _VDC_REG {
-  MAWR,	/*  0 */ /* Memory Address Write Register */
-  MARR,	/*  1 */ /* Memory Adress Read Register */
-  VWR,	/*  2 */ /* VRAM Read Register / VRAM Write Register */
-  vdc3,	/*  3 */
-  vdc4,	/*  4 */
-  CR,   /*  5 */ /* Control Register */
-  RCR,	/*  6 */ /* Raster Compare Register */
-  BXR,	/*  7 */ /* Horizontal scroll offset */
-  BYR,	/*  8 */ /* Vertical scroll offset */
-  MWR,	/*  9 */ /* Memory Width Register */
-  HSR,	/*  A */ /* Unknown, other horizontal definition */
-  HDR,	/*  B */ /* Horizontal Definition */
-  VPR,	/*  C */ /* Higher byte = VDS, lower byte = VSW */
-  VDW,	/*  D */ /* Vertical Definition */
-  VCR,	/*  E */ /* Vertical counter between restarting of display*/
-  DCR,	/*  F */ /* DMA Control */
-  SOUR,	/* 10 */ /* Source Address of DMA transfert */
-  DISTR,/* 11 */ /* Destination Address of DMA transfert */
-  LENR,	/* 12 */ /* Length of DMA transfert */
-  SATB	/* 13 */ /* Adress of SATB */
+	MAWR,						/*  0 *//* Memory Address Write Register */
+	MARR,						/*  1 *//* Memory Adress Read Register */
+	VWR,						/*  2 *//* VRAM Read Register / VRAM Write Register */
+	vdc3,						/*  3 */
+	vdc4,						/*  4 */
+	CR,							/*  5 *//* Control Register */
+	RCR,						/*  6 *//* Raster Compare Register */
+	BXR,						/*  7 *//* Horizontal scroll offset */
+	BYR,						/*  8 *//* Vertical scroll offset */
+	MWR,						/*  9 *//* Memory Width Register */
+	HSR,						/*  A *//* Unknown, other horizontal definition */
+	HDR,						/*  B *//* Horizontal Definition */
+	VPR,						/*  C *//* Higher byte = VDS, lower byte = VSW */
+	VDW,						/*  D *//* Vertical Definition */
+	VCR,						/*  E *//* Vertical counter between restarting of display */
+	DCR,						/*  F *//* DMA Control */
+	SOUR,						/* 10 *//* Source Address of DMA transfert */
+	DISTR,						/* 11 *//* Destination Address of DMA transfert */
+	LENR,						/* 12 *//* Length of DMA transfert */
+	SATB						/* 13 *//* Adress of SATB */
 };
 
 #define	NODATA	   0xff

@@ -90,88 +90,86 @@ void change_value()
 
 *****************************************************************************/
 void
-ram_key ()
+ram_key()
 {
 
-  /* TODO: deallegroize here too */
+	/* TODO: deallegroize here too */
 #ifdef ALLEGRO
-  int ch = osd_readkey ();
+	int ch = osd_readkey();
 
-  switch (ch >> 8)
-    {
-      // The two first are a bit special
-    case KEY_HOME:
-      selected_byte = 0;
-      frame_up = 0;
-      frame_down = NB_BYTE_LINE * NB_LINE;
-      return;
-    case KEY_END:
-      selected_byte = 0x7FFF;
-      frame_down = 0x8000;
-      frame_up = frame_down - NB_BYTE_LINE * NB_LINE;
-      return;
-    case KEY_PGUP:
-      if (selected_byte >= NB_BYTE_LINE * NB_LINE)
-	selected_byte -= NB_BYTE_LINE * NB_LINE;
-      break;
-    case KEY_PGDN:
-      if (selected_byte <= 0x7FFF - NB_BYTE_LINE * NB_LINE);
-      selected_byte += NB_BYTE_LINE * NB_LINE;
-      break;
-    case KEY_UP:
-      if (selected_byte >= NB_BYTE_LINE)
-	selected_byte -= NB_BYTE_LINE;
-      break;
-    case KEY_DOWN:
-      if (selected_byte <= 0x7FFF - NB_BYTE_LINE)
-	selected_byte += NB_BYTE_LINE;
-      break;
-    case KEY_RIGHT:
-      if (selected_byte < 0x7FFF)
-	selected_byte++;
-      break;
-    case KEY_LEFT:
-      if (selected_byte)
-	selected_byte--;
-      break;
-    case KEY_SPACE:
-      {
-	uint32 dummy = RAM[selected_byte];
+	switch (ch >> 8) {
+		// The two first are a bit special
+	case KEY_HOME:
+		selected_byte = 0;
+		frame_up = 0;
+		frame_down = NB_BYTE_LINE * NB_LINE;
+		return;
+	case KEY_END:
+		selected_byte = 0x7FFF;
+		frame_down = 0x8000;
+		frame_up = frame_down - NB_BYTE_LINE * NB_LINE;
+		return;
+	case KEY_PGUP:
+		if (selected_byte >= NB_BYTE_LINE * NB_LINE)
+			selected_byte -= NB_BYTE_LINE * NB_LINE;
+		break;
+	case KEY_PGDN:
+		if (selected_byte <= 0x7FFF - NB_BYTE_LINE * NB_LINE);
+		selected_byte += NB_BYTE_LINE * NB_LINE;
+		break;
+	case KEY_UP:
+		if (selected_byte >= NB_BYTE_LINE)
+			selected_byte -= NB_BYTE_LINE;
+		break;
+	case KEY_DOWN:
+		if (selected_byte <= 0x7FFF - NB_BYTE_LINE)
+			selected_byte += NB_BYTE_LINE;
+		break;
+	case KEY_RIGHT:
+		if (selected_byte < 0x7FFF)
+			selected_byte++;
+		break;
+	case KEY_LEFT:
+		if (selected_byte)
+			selected_byte--;
+		break;
+	case KEY_SPACE:
+		{
+			uint32 dummy = RAM[selected_byte];
 
-	change_value (
-		      (((selected_byte & 0x04) / 4) * 2 + 6 +
-		       3 * (selected_byte & 0x07)) * 8 + blit_x,
-		      (selected_byte - frame_up) / NB_BYTE_LINE * 10 +
-		      blit_y - 1, 2, &dummy);
+			change_value((((selected_byte & 0x04) / 4) * 2 + 6 +
+						  3 * (selected_byte & 0x07)) * 8 + blit_x,
+						 (selected_byte - frame_up) / NB_BYTE_LINE * 10 +
+						 blit_y - 1, 2, &dummy);
 
-	RAM[selected_byte] = (uchar) dummy;
+			RAM[selected_byte] = (uchar) dummy;
 
-      }
-      break;
-    case KEY_F12:
-    case KEY_ESC:
-      out = 1;
-      break;
-    }
+		}
+		break;
+	case KEY_F12:
+	case KEY_ESC:
+		out = 1;
+		break;
+	}
 
-  // Now ajust the frame
-  if ((selected_byte < 3 * NB_BYTE_LINE) ||
-      (selected_byte > 0x7FFF - 3 * NB_BYTE_LINE))
-    return;
+	// Now ajust the frame
+	if ((selected_byte < 3 * NB_BYTE_LINE) ||
+		(selected_byte > 0x7FFF - 3 * NB_BYTE_LINE))
+		return;
 
-  if (selected_byte >= frame_down - 3 * NB_BYTE_LINE)
-    {
-      frame_down = MIN(0x8000, (selected_byte + 3 * NB_BYTE_LINE) & 0x7FF8);
-      frame_up = frame_down - NB_BYTE_LINE * NB_LINE;
-    }
+	if (selected_byte >= frame_down - 3 * NB_BYTE_LINE) {
+		frame_down =
+			MIN(0x8000, (selected_byte + 3 * NB_BYTE_LINE) & 0x7FF8);
+		frame_up = frame_down - NB_BYTE_LINE * NB_LINE;
+	}
 
-  if (selected_byte < frame_up + 3 * NB_BYTE_LINE)
-    {
-      frame_up = MAX(0, (int) ((selected_byte - 3 * NB_BYTE_LINE) & 0x7FF8));
-      frame_down = frame_up + NB_BYTE_LINE * NB_LINE;
-    }
+	if (selected_byte < frame_up + 3 * NB_BYTE_LINE) {
+		frame_up =
+			MAX(0, (int) ((selected_byte - 3 * NB_BYTE_LINE) & 0x7FF8));
+		frame_down = frame_up + NB_BYTE_LINE * NB_LINE;
+	}
 
-  return;
+	return;
 
 #endif
 
@@ -187,67 +185,65 @@ ram_key ()
 
 *****************************************************************************/
 void
-edit_ram ()
+edit_ram()
 {
 
 #ifdef ALLEGRO
 
-  BITMAP *bg;
-  uchar line, col;
-  char *tmp_buf = (char *) alloca (100);
-  unsigned short dum;
+	BITMAP *bg;
+	uchar line, col;
+	char *tmp_buf = (char *) alloca(100);
+	unsigned short dum;
 
-  bg = create_bitmap (vheight, vwidth);
-  blit (screen, bg, 0, 0, 0, 0, vheight, vwidth);
+	bg = create_bitmap(vheight, vwidth);
+	blit(screen, bg, 0, 0, 0, 0, vheight, vwidth);
 
-  selected_byte = 0;
-  out = 0;
-  frame_up = 0;
-  frame_down = frame_up + NB_LINE * NB_BYTE_LINE;
+	selected_byte = 0;
+	out = 0;
+	frame_up = 0;
+	frame_down = frame_up + NB_LINE * NB_BYTE_LINE;
 
-  while (!out)
-    {
-      clear (screen);
-      for (line = 0; line < NB_LINE; line++)
-	{
-	  sprintf (tmp_buf, "%04X", frame_up + line * NB_BYTE_LINE);
-	  textoutshadow (screen, font, tmp_buf, blit_x, blit_y + 10 * line,
-			 -15, 2, 1, 1);
-	  for (col = 0; col < NB_BYTE_LINE / 2; col++)
-	    {
-	      if ((dum = frame_up + line * NB_BYTE_LINE + col) ==
-		  selected_byte)
-		rectfill (screen, blit_x + (6 + col * 3) * 8,
-			  blit_y + 10 * line - 1, blit_x + (8 + col * 3) * 8,
-			  blit_y + 10 * (line + 1) - 2, -15);
-	      sprintf (tmp_buf, "%02X", RAM[dum]);
-	      textoutshadow (screen, font, tmp_buf,
-			     blit_x + (6 + col * 3) * 8, blit_y + 10 * line,
-			     -1, 2, 1, 1);
-	    }
-	  for (; col < NB_BYTE_LINE; col++)
-	    {
-	      if ((dum = frame_up + line * NB_BYTE_LINE + col) ==
-		  selected_byte)
-		rectfill (screen, blit_x + (8 + col * 3) * 8,
-			  blit_y + 10 * line - 1, blit_x + (10 + col * 3) * 8,
-			  blit_y + 10 * (line + 1) - 2, -15);
-	      sprintf (tmp_buf, "%02X",
-		       RAM[frame_up + line * NB_BYTE_LINE + col]);
-	      textoutshadow (screen, font, tmp_buf,
-			     blit_x + (8 + col * 3) * 8, blit_y + 10 * line,
-			     -1, 2, 1, 1);
-	    }
+	while (!out) {
+		clear(screen);
+		for (line = 0; line < NB_LINE; line++) {
+			sprintf(tmp_buf, "%04X", frame_up + line * NB_BYTE_LINE);
+			textoutshadow(screen, font, tmp_buf, blit_x,
+						  blit_y + 10 * line, -15, 2, 1, 1);
+			for (col = 0; col < NB_BYTE_LINE / 2; col++) {
+				if ((dum = frame_up + line * NB_BYTE_LINE + col) ==
+					selected_byte)
+					rectfill(screen, blit_x + (6 + col * 3) * 8,
+							 blit_y + 10 * line - 1,
+							 blit_x + (8 + col * 3) * 8,
+							 blit_y + 10 * (line + 1) - 2, -15);
+				sprintf(tmp_buf, "%02X", RAM[dum]);
+				textoutshadow(screen, font, tmp_buf,
+							  blit_x + (6 + col * 3) * 8,
+							  blit_y + 10 * line, -1, 2, 1, 1);
+			}
+			for (; col < NB_BYTE_LINE; col++) {
+				if ((dum = frame_up + line * NB_BYTE_LINE + col) ==
+					selected_byte)
+					rectfill(screen, blit_x + (8 + col * 3) * 8,
+							 blit_y + 10 * line - 1,
+							 blit_x + (10 + col * 3) * 8,
+							 blit_y + 10 * (line + 1) - 2, -15);
+				sprintf(tmp_buf, "%02X",
+						RAM[frame_up + line * NB_BYTE_LINE + col]);
+				textoutshadow(screen, font, tmp_buf,
+							  blit_x + (8 + col * 3) * 8,
+							  blit_y + 10 * line, -1, 2, 1, 1);
+			}
 
+		}
+
+		ram_key();
+		vsync();
 	}
 
-      ram_key ();
-      vsync ();
-    }
-
-  blit (bg, screen, 0, 0, 0, 0, vheight, vwidth);
-  destroy_bitmap (bg);
-  return;
+	blit(bg, screen, 0, 0, 0, 0, vheight, vwidth);
+	destroy_bitmap(bg);
+	return;
 
 #endif
 

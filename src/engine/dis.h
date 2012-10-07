@@ -35,7 +35,7 @@
 
 #define  _PC_ M.PC.W
 
-#define  OPBUF_SIZE    7  /* max size of opcodes */
+#define  OPBUF_SIZE    7		/* max size of opcodes */
 
 #define  MAX_TRY       5
 

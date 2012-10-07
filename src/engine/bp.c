@@ -18,154 +18,173 @@
 
 int handle_bp(int nb_bp);
 
-int handle_bp0()
+int
+handle_bp0()
 {
-  return handle_bp(0);
+	return handle_bp(0);
 }
 
-int handle_bp1()
+int
+handle_bp1()
 {
-  return handle_bp(1);
+	return handle_bp(1);
 }
 
-int handle_bp2()
+int
+handle_bp2()
 {
-  return handle_bp(2);
+	return handle_bp(2);
 }
 
-int handle_bp3()
+int
+handle_bp3()
 {
-  return handle_bp(3);
+	return handle_bp(3);
 }
 
-int handle_bp4()
+int
+handle_bp4()
 {
-  return handle_bp(4);
+	return handle_bp(4);
 }
 
-int handle_bp5()
+int
+handle_bp5()
 {
-  return handle_bp(5);
+	return handle_bp(5);
 }
 
-int handle_bp6()
+int
+handle_bp6()
 {
-  return handle_bp(6);
+	return handle_bp(6);
 }
 
-int handle_bp7()
+int
+handle_bp7()
 {
-  return handle_bp(7);
+	return handle_bp(7);
 }
 
-int handle_bp8()
+int
+handle_bp8()
 {
-  return handle_bp(8);
+	return handle_bp(8);
 }
 
-int handle_bp9()
+int
+handle_bp9()
 {
-  return handle_bp(9);
+	return handle_bp(9);
 }
 
-int handle_bp10()
+int
+handle_bp10()
 {
-  return handle_bp(10);
+	return handle_bp(10);
 }
 
-int handle_bp11()
+int
+handle_bp11()
 {
-  return handle_bp(11);
+	return handle_bp(11);
 }
 
-int handle_bp12()
+int
+handle_bp12()
 {
-  return handle_bp(12);
+	return handle_bp(12);
 }
 
-int handle_bp13()
+int
+handle_bp13()
 {
-  return handle_bp(13);
+	return handle_bp(13);
 }
 
-int handle_bp(int nb_bp)
+int
+handle_bp(int nb_bp)
 {
 
 #ifndef FINAL_RELEASE
-	  if (reg_pc!=Bp_list[nb_bp].position)
-		 fprintf(stderr,"there's a problem, the breakpoint hasn't been correctly hit\n");
-     else
-		 fprintf(stderr,"The breakpoint %d has been correctly hit\n",nb_bp);
+	if (reg_pc != Bp_list[nb_bp].position)
+		fprintf(stderr,
+				"there's a problem, the breakpoint hasn't been correctly hit\n");
+	else
+		fprintf(stderr, "The breakpoint %d has been correctly hit\n",
+				nb_bp);
 
-	  fprintf(stderr,"After Breakpoint, position is %X\n",reg_pc);
+	fprintf(stderr, "After Breakpoint, position is %X\n", reg_pc);
 #endif
 
-	  disass_menu(reg_pc);
-	  // And call the disassembler
+	disass_menu(reg_pc);
+	// And call the disassembler
 
 #ifndef FINAL_RELEASE
-   fprintf(stderr,"After the disassembly function, the position is %X\n",reg_pc);
+	fprintf(stderr, "After the disassembly function, the position is %X\n",
+			reg_pc);
 #endif
 
-     if ((get_8bit_addr(reg_pc)&0x0F)==0x0B)
-       {  // We only look here for Bp since PC or bp status can have changed
+	if ((get_8bit_addr(reg_pc) & 0x0F) == 0x0B) {	// We only look here for Bp since PC or bp status can have changed
 
 #ifndef FINAL_RELEASE
-   fprintf(stderr,"run trick: a bp has been asked to be put at %X\n",reg_pc);
+		fprintf(stderr, "run trick: a bp has been asked to be put at %X\n",
+				reg_pc);
 #endif
 
-	  Wr6502(reg_pc,Bp_list[get_8bit_addr(reg_pc)>>4].original_op);
-          // Replace the opcode in the rom
+		Wr6502(reg_pc, Bp_list[get_8bit_addr(reg_pc) >> 4].original_op);
+		// Replace the opcode in the rom
 
-          Bp_list[get_8bit_addr(reg_pc)>>4].flag=NOT_USED;
-	  // Temporary, the breakpoint disappears
-	  // to be replaced by the restore_bp
+		Bp_list[get_8bit_addr(reg_pc) >> 4].flag = NOT_USED;
+		// Temporary, the breakpoint disappears
+		// to be replaced by the restore_bp
 
-          Bp_pos_to_restore=reg_pc;
-          // We know we must restore a breakpoint at this point
+		Bp_pos_to_restore = reg_pc;
+		// We know we must restore a breakpoint at this point
 
-         set_bp_following(reg_pc,RESTORE_BP);
-         // since we call this after disassembly call, we handle correctly
-         // any changes in reg value e.g.
+		set_bp_following(reg_pc, RESTORE_BP);
+		// since we call this after disassembly call, we handle correctly
+		// any changes in reg value e.g.
 
-     }
+	}
 
-   return 0;
+	return 0;
 
 }
 
 int
 handle_bp14()
 {
-     // We must restore the Bp_to_restore Breakpoint
-     Wr6502(reg_pc,Bp_list[14].original_op);
+	// We must restore the Bp_to_restore Breakpoint
+	Wr6502(reg_pc, Bp_list[14].original_op);
 
-     // Replace the opcode in the rom
+	// Replace the opcode in the rom
 
-     Bp_list[14].flag=NOT_USED;
-     // This BP is no more used
+	Bp_list[14].flag = NOT_USED;
+	// This BP is no more used
 
 #ifndef FINAL_RELEASE
-   fprintf(stderr,"We're restoring bp at %X\n",Bp_pos_to_restore);
+	fprintf(stderr, "We're restoring bp at %X\n", Bp_pos_to_restore);
 #endif
 
-     toggle_user_breakpoint(Bp_pos_to_restore);
-     // We set another Bp at the location we just left
+	toggle_user_breakpoint(Bp_pos_to_restore);
+	// We set another Bp at the location we just left
 
-     return 0;
+	return 0;
 }
 
 int
-handle_bp15(){
-   // We must make it disappear and call the disassembler
+handle_bp15()
+{
+	// We must make it disappear and call the disassembler
 
-   Wr6502(reg_pc,Bp_list[15].original_op);
-   // Replace the opcode in the rom
+	Wr6502(reg_pc, Bp_list[15].original_op);
+	// Replace the opcode in the rom
 
-   Bp_list[15].flag=NOT_USED;
-   // This breakpoint is no more used
+	Bp_list[15].flag = NOT_USED;
+	// This breakpoint is no more used
 
-   disass_menu(reg_pc);
+	disass_menu(reg_pc);
 
-   return 0;
+	return 0;
 }
