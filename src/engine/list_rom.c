@@ -9736,8 +9736,7 @@ CRC_file(char *name)
 	return CRC;
 }
 
-static
-	void
+static void
 pce_build_romlist_fail(FILE * rlf, int entry)
 {
 	fprintf(stdout, "Error in entry %d of roms.db\n", entry + 1);
@@ -9773,9 +9772,13 @@ pce_build_romlist(void)
 		return;
 	}
 
-	pce_romlist =
-		(struct pce_rom_info *) malloc(pce_romlist_size *
-									   sizeof(struct pce_rom_info));
+	pce_romlist = (struct pce_rom_info*)malloc(pce_romlist_size
+		* sizeof(struct pce_rom_info));
+
+	if (pce_romlist == NULL) {
+		MESSAGE_ERROR("Error: Unable to malloc pce_romlist!\n");
+		return;
+	}
 
 	for (i = 0; i < pce_romlist_size; i++) {
 		if (fscanf(rlf, "%lx\n", &pce_romlist[i].CRC) == EOF) {

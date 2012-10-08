@@ -1997,22 +1997,23 @@ InitPCE(char *name, char *backmemname)
 	memset(vchanges, 1, VRAMSIZE / 128);
 
 #ifndef FINAL_RELEASE
-	if (NO_ROM != 0xFFFF)
+	if (pce_romlist != NULL && NO_ROM != 0xFFFF)
 		fprintf(stderr, "flags = %x\n",
 				(pce_romlist + NO_ROM) ? pce_romlist[NO_ROM].flags : 0);
 #endif
 
 	local_us_encoded_card = US_encoded_card;
 
-	if ((NO_ROM != 0xFFFF) && (pce_romlist + NO_ROM)
+	if (pce_romlist != NULL && (NO_ROM != 0xFFFF)
+		&& (pce_romlist + NO_ROM)
 		&& (pce_romlist[NO_ROM].flags & US_ENCODED))
 		local_us_encoded_card = 1;
 
 	if (ROM[0x1FFF] < 0xE0) {
-		Log("This rom is probably US encrypted, decrypting ..\n");
+		Log("This rom is probably US encrypted, decrypting...\n");
 #if !defined(FINAL_RELEASE)
 		fprintf(stderr,
-				"This rom is probably US encrypted, decrypting ..\n");
+				"This rom is probably US encrypted, decrypting...\n");
 #endif
 		local_us_encoded_card = 1;
 	}
@@ -2058,7 +2059,7 @@ InitPCE(char *name, char *backmemname)
 		}
 */
 
-	if ((NO_ROM != 0xFFFF) && (pce_romlist + NO_ROM)
+	if (pce_romlist != NULL && (NO_ROM != 0xFFFF) && (pce_romlist + NO_ROM)
 		&& (pce_romlist[NO_ROM].flags & TWO_PART_ROM)) {
 		ROM_size = 0x30;
 		// Used for example with Devil Crush 512Ko
@@ -2143,13 +2144,12 @@ InitPCE(char *name, char *backmemname)
 
 	if (NO_ROM != 0xFFFF) {
 		MESSAGE_INFO("Rom Name: %s\n",
-					 (pce_romlist +
-					  NO_ROM) ? pce_romlist[NO_ROM].name : "Unknown");
+			(pce_romlist + NO_ROM) ? pce_romlist[NO_ROM].name : "Unknown");
 	} else {
 		MESSAGE_ERROR("Unknown ROM\n");
 	}
 
-	if ((NO_ROM != 0xFFFF)
+	if (pce_romlist != NULL && (NO_ROM != 0xFFFF)
 		&& (pce_romlist + NO_ROM)
 		&& (pce_romlist[NO_ROM].flags & POPULOUS)) {
 		populus = TRUE;
@@ -2237,7 +2237,7 @@ InitPCE(char *name, char *backmemname)
 
 	}
 
-	if ((NO_ROM != 0xFFFF) && (pce_romlist + NO_ROM)
+	if (pce_romlist != NULL && (NO_ROM != 0xFFFF) && (pce_romlist + NO_ROM)
 		&& (pce_romlist[NO_ROM].flags & CD_SYSTEM)) {
 		uint16 offset;
 		uchar new_val;
