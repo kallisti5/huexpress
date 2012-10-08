@@ -43,7 +43,7 @@ static char possible_filename_in_zip[PATH_MAX];
  * storage containing the filename found inside
  */
 char *
-find_possible_filename_in_zip (char *zipfilename)
+find_possible_filename_in_zip(char *zipfilename)
 {
 	uLong i;
 	unz_global_info gi;
@@ -88,10 +88,23 @@ find_possible_filename_in_zip (char *zipfilename)
 		if (err != UNZ_OK)
 			return NULL;
 
-		if (strcasestr(filename_inzip, ".HCD")
-			|| strcasestr(filename_inzip, ".PCE")) {
-			MESSAGE_INFO("Found a valid game within zip file: %s\n",
+		if (strcasestr(filename_inzip, ".PCE")) {
+			MESSAGE_INFO("Found a valid rom within zip file: %s\n",
 				filename_inzip);
+			strncpy(possible_filename_in_zip, filename_inzip, PATH_MAX);
+			return possible_filename_in_zip;
+		}
+
+		if (strcasestr(filename_inzip, ".HCD")) {
+			MESSAGE_INFO("Found a valid cd game definition within zip file: "
+				"%s\n", filename_inzip);
+
+			// TODO: We should set the cd emulation in this case and extract
+			// the *whole* zip somewhere... otherwise this won't work.
+			MESSAGE_INFO("Warning: You will need to extract this zip and run "
+				"the emulator on the %s file to successfully emulate this.\n",
+				filename_inzip);
+
 			strncpy(possible_filename_in_zip, filename_inzip, PATH_MAX);
 			return possible_filename_in_zip;
 		}
@@ -129,7 +142,7 @@ do_extract_currentfile_in_memory(unzFile uf, size_t * unzipped_size)
 	unz_file_info file_info;
 	char *return_value = NULL;
 
-	err = unzGetCurrentFileInfo (uf, &file_info, filename_inzip,
+	err = unzGetCurrentFileInfo(uf, &file_info, filename_inzip,
 		sizeof (filename_inzip), NULL, 0, NULL, 0);
 
 	if (err != UNZ_OK) {
@@ -204,8 +217,8 @@ do_extract_currentfile_in_memory(unzFile uf, size_t * unzipped_size)
  * @return NULL in case of problem or a pointer to the archived file content. It is allocated
  */
 static char *
-do_extract_onefile_in_memory (unzFile uf, const char *filename,
-						size_t * unzipped_size)
+do_extract_onefile_in_memory(unzFile uf, const char *filename,
+	size_t * unzipped_size)
 {
 	if (unzLocateFile (uf, filename, CASESENSITIVITY) != UNZ_OK) {
 		Log ("file %s not found in the zipfile\n", filename);
@@ -225,7 +238,7 @@ do_extract_onefile_in_memory (unzFile uf, const char *filename,
  * dynamically and needs to be explicitely freed
  */
 extern char *
-extract_file_in_memory (char *zipfilename, char *archivedfile,
+extract_file_in_memory(char *zipfilename, char *archivedfile,
 	size_t * unzipped_size)
 {
 	unzFile uf;
