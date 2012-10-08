@@ -9750,7 +9750,6 @@ pce_build_romlist(void)
 {
 	FILE *rlf;
 	char rlf_path[PATH_MAX], line[MAX_INPUT];
-	int i;
 
 	snprintf(rlf_path, PATH_MAX, "%s/roms.db", short_exe_name);
 
@@ -9761,14 +9760,13 @@ pce_build_romlist(void)
 
 	if (fscanf(rlf, "%d\n", &pce_romlist_size) == EOF) {
 		MESSAGE_ERROR("Format of roms database at %s is invalid\n",
-					  rlf_path);
+			rlf_path);
 		return;
 	}
 
 	if (pce_romlist_size < 1) {
 		MESSAGE_ERROR("Invalid number of records in rom database at %s\n",
-					  rlf_path);
-		TRACE("Records: %d\n", i);
+			rlf_path);
 		return;
 	}
 
@@ -9780,6 +9778,7 @@ pce_build_romlist(void)
 		return;
 	}
 
+	int i;
 	for (i = 0; i < pce_romlist_size; i++) {
 		if (fscanf(rlf, "%lx\n", &pce_romlist[i].CRC) == EOF) {
 			pce_build_romlist_fail(rlf, i);
