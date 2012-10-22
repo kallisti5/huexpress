@@ -18,8 +18,6 @@ extern uint32 HCD_frame_at_beginning_of_track;
  * used to make subtitle
  */
 
-extern char HCD_cover_filename[256];
-
 extern FILE *HCD_iso_FILE;
 
 
