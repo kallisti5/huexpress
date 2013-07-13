@@ -60,7 +60,7 @@ uchar flnz_list[256] = {
 //
 //  as a function:
 
-inline uchar
+uchar
 imm_operand(uint16 addr)
 {
 	register unsigned short int memreg = addr >> 13;
@@ -72,7 +72,7 @@ imm_operand(uint16 addr)
 
 
 // This is the more generalized access routine:
-inline uchar
+uchar
 get_8bit_addr(uint16 addr)
 {
 	register unsigned short int memreg = addr >> 13;
@@ -83,7 +83,7 @@ get_8bit_addr(uint16 addr)
 		return ((uchar) (PageR[memreg][addr]));
 }
 
-inline void
+void
 put_8bit_addr(uint16 addr, uchar byte)
 {
 	register unsigned int memreg = addr >> 13;
@@ -95,7 +95,7 @@ put_8bit_addr(uint16 addr, uchar byte)
 	}
 }
 
-inline uint16
+uint16
 get_16bit_addr(uint16 addr)
 {
 	register unsigned int memreg = addr >> 13;
@@ -124,13 +124,13 @@ get_16bit_addr(uint16 addr)
 
 #define chk_flnz_8bit(x) reg_p = ((reg_p & (~(FL_N|FL_T|FL_Z))) | flnz_list[x]);
 
-inline uchar
+uchar
 get_8bit_zp(uchar zp_addr)
 {
 	return ((uchar) * (zp_base + zp_addr));
 }
 
-inline uint16
+uint16
 get_16bit_zp(uchar zp_addr)
 {
 	uint16 n = *(zp_base + zp_addr);
@@ -138,25 +138,25 @@ get_16bit_zp(uchar zp_addr)
 	return (n);
 }
 
-inline void
+void
 put_8bit_zp(uchar zp_addr, uchar byte)
 {
 	*(zp_base + zp_addr) = byte;
 }
 
-inline void
+void
 push_8bit(uchar byte)
 {
 	*(sp_base + reg_s--) = byte;
 }
 
-inline uchar
+uchar
 pull_8bit(void)
 {
 	return ((uchar) * (sp_base + ++reg_s));
 }
 
-inline void
+void
 push_16bit(uint16 addr)
 {
 	*(sp_base + reg_s--) = (uchar) (addr >> 8);
@@ -164,7 +164,7 @@ push_16bit(uint16 addr)
 	return;
 }
 
-inline uint16
+uint16
 pull_16bit(void)
 {
 	uint16 n = (uchar) * (sp_base + ++reg_s);

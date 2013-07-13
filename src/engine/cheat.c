@@ -17,14 +17,14 @@
 #include "cheat.h"
 
 
-inline void
+void
 fputw(uint16 value, FILE * F)
 {
 	fputc((int) (value & 0xFF), F);
 	fputc((int) (value >> 8), F);
 }
 
-inline uint16
+uint16
 fgetw(FILE * F)
 {
 	return (uint16) (fgetc(F) + (fgetc(F) << 8));
