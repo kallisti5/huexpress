@@ -4,7 +4,7 @@
 #include "pce.h"
 
 #if defined(SDL)
-#include "osd_haiku_sdl_machine.h"
+#include "osd_sdl_machine.h"
 #endif // !SDL
 
 typedef struct

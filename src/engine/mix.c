@@ -1,6 +1,6 @@
 #include <SDL_audio.h>
 
-#include "osd_haiku_sdl_machine.h"
+#include "osd_sdl_machine.h"
 #include "mix.h"
 
 

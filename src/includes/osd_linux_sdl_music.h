@@ -2,7 +2,7 @@
 #define  _DJGPP_INCLUDE_SDL_MIXER_MUSIC_H
 
 #include "mix.h"
-#include "osd_haiku_sdl_machine.h"
+#include "osd_sdl_machine.h"
 
 #if defined(SDL_mixer)
   #include <SDL_mixer.h>
