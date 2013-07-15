@@ -1,5 +1,5 @@
-#ifndef _INCLUDE_HUGO_H
-#define _INCLUDE_HUGO_H
+#ifndef _INCLUDE_HUEXPRESS_H
+#define _INCLUDE_HUEXPRESS_H
 
 #include "debug.h"
 #include "pce.h"

@@ -1,4 +1,4 @@
-#include "osd_freebsd_cd.h"
+#include "osd_dummy_cd.h"
 
 int osd_cd_init(char *device)
 {
