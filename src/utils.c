@@ -66,13 +66,6 @@ Log(char *format, ...)
 }
 
 
-#ifdef GTK
-void gtk_menu_ensure_uline_accel_group()
-{
-}
-#endif
-
-
 #ifndef BENCHMARK
 static double osd_getTime(void)
 {

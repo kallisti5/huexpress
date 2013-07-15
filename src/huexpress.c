@@ -165,15 +165,6 @@ main(int argc, char *argv[])
 	// initialize host emulator
 	int error = init_host(argc, argv);
 
-#if defined(GTK)
-	if (!error) {
-		if (game_asked()) {
-			while (play_game());
-		} else {
-			build_gtk_interface(argc, argv);
-		}
-	}
-#else							// not defined(GTK)
 	if (!error) {
 		if (game_asked()) {
 			while (play_game());
@@ -181,7 +172,6 @@ main(int argc, char *argv[])
 			MESSAGE_ERROR("No game specified\n");
 		}
 	}
-#endif
 
 	cleanup();
 	return 0;

@@ -17,9 +17,6 @@
 /* defined if user wants a 'clean' binary ( = not for hugo developpers) */
 #define FINAL_RELEASE 1
 
-/* defined if user have GTK2 installed */
-/* #undef GTK */
-
 /* defined if inlined accessors should be used */
 #undef INLINED_ACCESSORS
 

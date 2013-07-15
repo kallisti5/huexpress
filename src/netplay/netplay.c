@@ -16,8 +16,6 @@
 
 #include "netplay.h"
 
-extern int gtk_stop_asked;
-
 #define DEBUG
 
 const int PACKET_IDENTIFIER = 0;
@@ -703,23 +701,8 @@ serve_clients_lan_protocol (global_status_type * global_status,
 	       global_status->frame_number);
 #endif
 
-#if defined(GTK)
-	while (gtk_events_pending())
-	{
-	  if (gtk_main_iteration())
-	  {
-	  	return;
-	  }
-	}
-
-	if (gtk_stop_asked)
-	{
-		return;
-	}
-#endif
-
       number_ready_socket =
-	SDLNet_CheckSockets (global_status->server_socket_set,
+        SDLNet_CheckSockets (global_status->server_socket_set,
 			     SERVER_SOCKET_TIMEOUT);
 
       if (number_ready_socket == -1)
@@ -1164,21 +1147,6 @@ serve_clients_internet_protocol (global_status_type * global_status,
       fprintf (stderr,
 	       "Waiting for status packets while preparing frame %u\ntime = %u\n",
 	       global_status->frame_number, SDL_GetTicks ());
-#endif
-
-#if defined(GTK)
-	while (gtk_events_pending())
-	{
-	  if (gtk_main_iteration())
-	  {
-	  	return;
-	  }
-	}
-	
-	if (gtk_stop_asked)
-	{
-		return;
-	}
 #endif
 
       /* Let packets accumulate for a short amount of time */
