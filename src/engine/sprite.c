@@ -446,16 +446,20 @@ PutSpriteHandleFull(uchar * P, uchar * C, uchar * C2, uchar * R,
 }
 
 
-#warning The uint32 C2 is a bug here.. it should be uchar!
 static void
-PutSpriteHflip(uchar * P, uchar * C, uint32 * C2, uchar * R, int16 h,
+PutSpriteHflip(uchar * P, uchar * C, uchar * C2, uchar * R, int16 h,
 	int16 inc)
 {
 	uint16 J;
 	uint32 L;
 
+	// TODO: This is a hack, see issue #1
+	// the graphics are mis-aligned on flipped sprites when we go
+	// with the uchar that everything else uses.
+	uint32* C2r = (uint32*)C2;
+
 	int16 i;
-	for (i = 0; i < h; i++, C += inc, C2 += inc, P += XBUF_WIDTH) {
+	for (i = 0; i < h; i++, C += inc, C2r += inc, P += XBUF_WIDTH) {
 		J = (C[0] + (C[1] << 8)) | (C[32] + (C[33] << 8))
 			| (C[64] + (C[65] << 8)) | (C[96] + (C[97] << 8));
 #if 0
@@ -465,7 +469,7 @@ PutSpriteHflip(uchar * P, uchar * C, uint32 * C2, uchar * R, int16 h,
 
 		if (!J)
 			continue;
-		L = C2[1];				//sp2pixel(C+1);
+		L = C2r[1];				//sp2pixel(C+1);
 		if (J & 0x8000)
 			P[15] = PAL((L >> 4) & 15);
 		if (J & 0x4000)
@@ -482,7 +486,7 @@ PutSpriteHflip(uchar * P, uchar * C, uint32 * C2, uchar * R, int16 h,
 			P[9] = PAL((L >> 16) & 15);
 		if (J & 0x0100)
 			P[8] = PAL((L >> 24) & 15);
-		L = C2[0];				//sp2pixel(C);
+		L = C2r[0];				//sp2pixel(C);
 		if (J & 0x80)
 			P[7] = PAL((L >> 4) & 15);
 		if (J & 0x40)
@@ -869,8 +873,6 @@ RefreshSpriteExact(int Y1, int Y2, uchar bg)
 
 	for (n = 0; n < 64; n++, spr--) {
 		int x, y, no, atr, inc, cgx, cgy;
-		uchar *R, *C;
-		uchar *C2;
 		int pos;
 		int h, t, i, j;
 		int y_sum;
@@ -906,7 +908,7 @@ RefreshSpriteExact(int Y1, int Y2, uchar bg)
 			continue;
 		}
 
-		R = &SPal[(atr & 15) * 16];
+		uchar* R = &SPal[(atr & 15) * 16];
 		for (i = 0; i < cgy * 2 + cgx + 1; i++) {
 			if (vchanges[no + i]) {
 				vchanges[no + i] = 0;
@@ -915,8 +917,8 @@ RefreshSpriteExact(int Y1, int Y2, uchar bg)
 			if (!cgx)
 				i++;
 		}
-		C = VRAM + (no * 128);
-		C2 = VRAMS + (no * 32) * 4;	/* TEST */
+		uchar* C = VRAM + (no * 128);
+		uchar* C2 = VRAMS + (no * 32) * 4;	/* TEST */
 		pos = XBUF_WIDTH * (y + 0) + x;
 		inc = 2;
 		if (atr & V_FLIP) {
