@@ -370,7 +370,7 @@ PutSprite(uchar * P, uchar * C, uchar * C2, uchar * R, int16 h, int16 inc)
 
 void
 PutSpriteHandleFull(uchar * P, uchar * C, uchar * C2, uchar * R,
-					int16 h, int16 inc)
+	int16 h, int16 inc)
 {
 	uint16 J;
 	uint32 L;
@@ -449,7 +449,7 @@ PutSpriteHandleFull(uchar * P, uchar * C, uchar * C2, uchar * R,
 
 static void
 PutSpriteHflip(uchar * P, uchar * C, uchar * C2, uchar * R, int16 h,
-			   int16 inc)
+	int16 inc)
 {
 	uint16 J;
 	uint32 L;
@@ -462,6 +462,7 @@ PutSpriteHflip(uchar * P, uchar * C, uchar * C2, uchar * R, int16 h,
 		J = ((uint16 *) C)[0] | ((uint16 *) C)[16] | ((uint16 *) C)[32]
 			| ((uint16 *) C)[48];
 #endif
+
 		if (!J)
 			continue;
 		L = C2[1];				//sp2pixel(C+1);
@@ -520,14 +521,14 @@ PutSpriteHflip(uchar * P, uchar * C, uchar * C2, uchar * R, int16 h,
 *****************************************************************************/
 void
 PutSpriteM(uchar * P, uchar * C, uchar * C2, uchar * R, int16 h, int16 inc,
-		   uchar * M, uchar pr)
+	uchar * M, uchar pr)
 {
 	uint16 J;
 	uint32 L;
 
 	int16 i;
 	for (i = 0; i < h; i++, C += inc, C2 += inc * 4,
-		 P += XBUF_WIDTH, M += XBUF_WIDTH) {
+		P += XBUF_WIDTH, M += XBUF_WIDTH) {
 		J = (C[0] + (C[1] << 8)) | (C[32] + (C[33] << 8))
 			| (C[64] + (C[65] << 8)) | (C[96] + (C[97] << 8));
 
@@ -589,11 +590,9 @@ PutSpriteHflipM(uchar * P, uchar * C, uchar * C2, uchar * R, int16 h,
 
 	int16 i;
 	for (i = 0; i < h; i++, C += inc, C2 += inc * 4,
-		 P += XBUF_WIDTH, M += XBUF_WIDTH) {
+		P += XBUF_WIDTH, M += XBUF_WIDTH) {
 		J = (C[0] + (C[1] << 8)) | (C[32] + (C[33] << 8)) | (C[64]
-															 +
-															 (C[65] << 8))
-			| (C[96] + (C[97] << 8));
+			+ (C[65] << 8)) | (C[96] + (C[97] << 8));
 #if 0
 		J = ((uint16 *) C)[0] | ((uint16 *) C)[16] | ((uint16 *) C)[32]
 			| ((uint16 *) C)[48];
@@ -643,33 +642,30 @@ PutSpriteHflipM(uchar * P, uchar * C, uchar * C2, uchar * R, int16 h,
 
 void
 PutSpriteMakeMask(uchar * P, uchar * C, uchar * C2, uchar * R, int16 h,
-				  int16 inc, uchar * M, uchar pr)
+	int16 inc, uchar * M, uchar pr)
 {
 	uint16 J;
 	uint32 L;
 
 	int16 i;
 	for (i = 0; i < h; i++, C += inc, C2 += inc * 4,
-		 P += XBUF_WIDTH, M += XBUF_WIDTH) {
+		P += XBUF_WIDTH, M += XBUF_WIDTH) {
 
 #if 0
 		J = ((uint16 *) C)[0] | ((uint16 *) C)[16] | ((uint16 *) C)[32]
 			| ((uint16 *) C)[48];
 #endif
 
-		J = (C[0] + (C[1] << 8)) | (C[32] + (C[33] << 8)) | (C[64] +
-															 +(C[65] << 8))
-			| (C[96] + (C[97] << 8));
+		J = (C[0] + (C[1] << 8)) | (C[32] + (C[33] << 8)) | (C[64]
+			+ (C[65] << 8)) | (C[96] + (C[97] << 8));
 
 #if 0
 		if ((uint16) J !=
 			(uint16) ((C[0] + (C[1] << 8)) | (C[32] + (C[33] << 8))
-					  | (C[64] + (C[65] << 8)) | (C[92] + (C[93] << 8)))) {
+			| (C[64] + (C[65] << 8)) | (C[92] + (C[93] << 8)))) {
 			Log("J != ... ( 0x%x != 0x%x )\n", J,
-				(C[0] + (C[1] << 8)) | (C[32] + (C[33] << 8)) | (C[64] +
-																 (C[65] <<
-																  8)) |
-				(C[92] + (C[93] << 8)));
+				(C[0] + (C[1] << 8)) | (C[32] + (C[33] << 8)) | (C[64]
+				+ (C[65] << 8)) | (C[92] + (C[93] << 8)));
 			Log("((uint16 *) C)[0] = %x\t(C[0] + (C[1] << 8)) = %x\n",
 				((uint16 *) C)[0], (C[0] + (C[1] << 8)));
 			Log("((uint16 *) C)[16] = %x\t(C[32] + (C[33] << 8)) = %x\n",
@@ -759,14 +755,14 @@ PutSpriteMakeMask(uchar * P, uchar * C, uchar * C2, uchar * R, int16 h,
 
 static void
 PutSpriteHflipMakeMask(uchar * P, uchar * C, uchar * C2, uchar * R,
-					   int16 h, int16 inc, uchar * M, uchar pr)
+	int16 h, int16 inc, uchar * M, uchar pr)
 {
 	uint16 J;
 	uint32 L;
 
 	int16 i;
 	for (i = 0; i < h; i++, C += inc, C2 += inc * 4,
-		 P += XBUF_WIDTH, M += XBUF_WIDTH) {
+		P += XBUF_WIDTH, M += XBUF_WIDTH) {
 		J = (C[0] + (C[1] << 8)) | (C[32] + (C[33] << 8))
 			| (C[64] + (C[65] << 8)) | (C[96] + (C[97] << 8));
 #if 0
@@ -851,7 +847,8 @@ PutSpriteHflipMakeMask(uchar * P, uchar * C, uchar * C2, uchar * R,
 		Function: RefreshSpriteExact
 
 		Description: draw all sprites between two lines, with the normal method
-		Parameters: int Y1, int Y2 (the 'ordonee' to draw between), uchar bg (do we draw fg or bg sprites)
+		Parameters: int Y1, int Y2 (the 'ordonee' to draw between), uchar bg
+			(do we draw fg or bg sprites)
 		Return: absolutly nothing
 
 *****************************************************************************/
@@ -945,45 +942,41 @@ RefreshSpriteExact(int Y1, int Y2, uchar bg)
 				if (atr & H_FLIP) {
 					for (j = 0; j <= cgx; j++) {
 						PutSpriteHflipMakeMask(osd_gfx_buffer + pos
-											   + (cgx - j) * 16,
-											   C + j * 128,
-											   C2 + j * 32 * 4, R, h, inc,
-											   SPM + pos + (cgx - j) * 16,
-											   n);
+							+ (cgx - j) * 16, C + j * 128, C2 + j * 32 * 4, R,
+							h, inc, SPM + pos + (cgx - j) * 16, n);
 					}
 				} else {
 					for (j = 0; j <= cgx; j++) {
 						PutSpriteMakeMask(osd_gfx_buffer + pos + (j) * 16,
-										  C + j * 128, C2 + j * 32 * 4, R,
-										  h, inc, SPM + pos + j * 16, n);
+							C + j * 128, C2 + j * 32 * 4, R, h, inc,
+							SPM + pos + j * 16, n);
 					}
 				}
 			} else if (usespbg) {
 				if (atr & H_FLIP) {
 					for (j = 0; j <= cgx; j++) {
-						PutSpriteHflipM(osd_gfx_buffer + pos +
-										(cgx - j) * 16, C + j * 128,
-										C2 + j * 32 * 4, R, h, inc,
-										SPM + pos + (cgx - j) * 16, n);
+						PutSpriteHflipM(osd_gfx_buffer + pos + (cgx - j) * 16,
+							C + j * 128, C2 + j * 32 * 4, R,
+							h, inc, SPM + pos + (cgx - j) * 16, n);
 					}
 				} else {
 					for (j = 0; j <= cgx; j++) {
 						PutSpriteM(osd_gfx_buffer + pos + (j) * 16,
-								   C + j * 128, C2 + j * 32 * 4, R, h, inc,
-								   SPM + pos + j * 16, n);
+							C + j * 128, C2 + j * 32 * 4, R, h, inc,
+							SPM + pos + j * 16, n);
 					}
 				}
 			} else {
 				if (atr & H_FLIP) {
 					for (j = 0; j <= cgx; j++) {
-						PutSpriteHflip(osd_gfx_buffer + pos +
-									   (cgx - j) * 16, C + j * 128,
-									   C2 + j * 32 * 4, R, h, inc);
+						PutSpriteHflip(osd_gfx_buffer + pos
+							+ (cgx - j) * 16, C + j * 128, C2 + j * 32 * 4, R,
+							h, inc);
 					}
 				} else {
 					for (j = 0; j <= cgx; j++) {
 						PutSprite(osd_gfx_buffer + pos + (j) * 16,
-								  C + j * 128, C2 + j * 32 * 4, R, h, inc);
+							C + j * 128, C2 + j * 32 * 4, R, h, inc);
 					}
 				}
 			}
