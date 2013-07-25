@@ -175,6 +175,8 @@ osd_snd_trash_sound(void)
 		memset(sbuf[chan], 0, SBUF_SIZE_BYTE);
 
 	memset(adpcmbuf, 0, SBUF_SIZE_BYTE);
+
+	free(stream);
 }
 
 
