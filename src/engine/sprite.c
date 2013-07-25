@@ -446,8 +446,9 @@ PutSpriteHandleFull(uchar * P, uchar * C, uchar * C2, uchar * R,
 }
 
 
+#warning The uint32 C2 is a bug here.. it should be uchar!
 static void
-PutSpriteHflip(uchar * P, uchar * C, uchar * C2, uchar * R, int16 h,
+PutSpriteHflip(uchar * P, uchar * C, uint32 * C2, uchar * R, int16 h,
 	int16 inc)
 {
 	uint16 J;
@@ -968,9 +969,8 @@ RefreshSpriteExact(int Y1, int Y2, uchar bg)
 			} else {
 				if (atr & H_FLIP) {
 					for (j = 0; j <= cgx; j++) {
-						PutSpriteHflip(osd_gfx_buffer + pos
-							+ (cgx - j) * 16, C + j * 128, C2 + j * 32 * 4, R,
-							h, inc);
+						PutSpriteHflip(osd_gfx_buffer + pos + (cgx - j) * 16,
+							C + j * 128, C2 + j * 32 * 4, R, h, inc);
 					}
 				} else {
 					for (j = 0; j <= cgx; j++) {
