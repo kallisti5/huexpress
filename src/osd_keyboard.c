@@ -16,8 +16,9 @@ int16 joy[J_MAX];
 input_config config[16] = {
 	{  // Config 0
 		{
-			{ 0, 0, 0, 0, 0, 0, { SDLK_UP, SDLK_DOWN, SDLK_LEFT, SDLK_RIGHT,
-				SDLK_SPACE, SDLK_LALT, SDLK_TAB, SDLK_RETURN, SDLK_c, SDLK_x,
+			{ 0, 0, 0, 0, 0, 0,
+				{ SDLK_UP, SDLK_DOWN, SDLK_LEFT, SDLK_RIGHT,
+				SDLK_z, SDLK_x, SDLK_TAB, SDLK_RETURN, SDLK_q, SDLK_w,
 				-1, -1, -1, -1, -1, -1, -1, -1 } },
 			{ 0, 0, 0, 0, 0, 0, { 0 } },
 			{ 0, 0, 0, 0, 0, 0, { 0 } },
