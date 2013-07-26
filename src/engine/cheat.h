@@ -6,7 +6,6 @@
 #include <unistd.h>
 
 #include "pce.h"
-#include "lang.h"
 #include "utils.h"
 
 

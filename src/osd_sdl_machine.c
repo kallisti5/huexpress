@@ -55,7 +55,6 @@ osd_init_machine(void)
 		return (0);
 	}
 
-	printf (MESSAGE[language][clear_buffer]);
 	MESSAGE_INFO("Clearing buffers...\n");
 	bzero(XBuf, XBUF_WIDTH * XBUF_HEIGHT);
 

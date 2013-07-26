@@ -5,7 +5,6 @@
 #include "debug.h"
 
 #include "interf.h"
-#include "lang.h"
 
 
 #define SETTINGS_FILENAME "huexpress.cfg"

@@ -186,38 +186,16 @@ toggle_user_breakpoint(uint16 where)
 void
 display_debug_help()
 {
-#ifdef ALLEGRO
-	uint32 x;
-
-	BITMAP *bg;
-
-
-	bg = create_bitmap(vwidth, vheight);
-
-	blit(screen, bg, 0, 0, 0, 0, vwidth, vheight);
-
-	clear(screen);
-
-
-	for (x = 0; x < help_debug_size; x++)
-
-		textout_centre(screen, font, MESSAGE[language][help_debug + x],
-					   vwidth / 2, blit_y + 10 * x, -1);
-
-	while (osd_keypressed())
-		osd_readkey();
-
-	osd_readkey();
-
-
-	blit(bg, screen, 0, 0, 0, 0, vwidth, vheight);
-
-	destroy_bitmap(bg);
-
+	// TODO: Display help
+	// "F2 - TOGGLE BREAKPOINT"
+	// "R  - RAM EDITOR"
+	// "Z  - VIEW ZERO PAGE"
+	// "F5 - SET PC TO CURRENT POS"
+	// "F6 - NOP CURRENT INSTRUCTION"
+	// "F7 - TRACE TROUGHT INSTRUCTIONS"
+	// "F8 - STEP TROUGHT INSTRUCTIONS"
 	return;
-#endif
 }
-
 
 
 /*****************************************************************************

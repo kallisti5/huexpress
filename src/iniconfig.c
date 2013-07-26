@@ -446,11 +446,6 @@ parse_INIfile_raw ()
 
 	Log ("Setting joypad config number to %d\n", current_config);
 
-	language = MIN(get_config_int ("main", "language", 0), NB_LANG - 1);
-	// language setting
-
-	Log ("Setting language to %d\n", language);
-
 	smode = get_config_int ("main", "smode", -1);
 	// sound mode setting
 
@@ -701,7 +696,6 @@ save_config (void)
 
 	set_config_var_str("main", "rom_dir", initial_path);
 	set_config_var_int("main", "config", current_config);
-	set_config_var_int("main", "language", language);
 	set_config_var_int("main", "smode", smode);
 	set_config_var_int("main", "eagle", use_eagle);
 	set_config_var_int("main", "scanline", use_scanline);

@@ -334,8 +334,7 @@ start_dump_audio(void)
 	putc(0, audio_output_file);
 
 	fwrite("data\377\377\377\377", 1, 9, audio_output_file);
-	osd_gfx_set_message(MESSAGE[language]
-						[dump_on]);
+	osd_gfx_set_message("Audio dumping on");
 
 	return (audio_output_file != NULL ? 1 : 0);
 }
@@ -365,8 +364,7 @@ stop_dump_audio(void)
 
 	fclose(audio_output_file);
 
-	osd_gfx_set_message(MESSAGE[language]
-						[dump_off]);
+	osd_gfx_set_message("Audio dumping off");
 }
 
 

@@ -627,7 +627,7 @@ osd_keyboard (void)
 							fseek (out_snd, 0x28, SEEK_SET);
 							fwrite (&dummy, 1, 4, out_snd);
 							fclose (out_snd);
-							osd_gfx_set_message (MESSAGE[language][dump_off]);
+							osd_gfx_set_message ("Audio dumping off");
 						} else {
 							unsigned short tmp = 0;
 							strcpy (tmp_buf, "snd0000.wav");
@@ -660,7 +660,7 @@ osd_keyboard (void)
 							putc (8, out_snd);	// 8 bits
 							putc (0, out_snd);
 							fwrite ("data\377\377\377\377", 1, 9, out_snd);
-							osd_gfx_set_message (MESSAGE[language][dump_on]);
+							osd_gfx_set_message ("Audio dumping on");
 						}
 						dump_snd = !dump_snd;
 						key_delay = 10;
@@ -672,8 +672,7 @@ osd_keyboard (void)
 					{
 						if (UPeriod < 15) {
 							UPeriod++;
-							sprintf (tmp_buf,
-								MESSAGE[language][frame_skip], UPeriod);
+							sprintf (tmp_buf, "Frame Skip: %d", UPeriod);
 							osd_gfx_set_message (tmp_buf);
 							message_delay = 180;
 						};
@@ -686,10 +685,9 @@ osd_keyboard (void)
 						if (UPeriod) {
 							UPeriod--;
 							if (!UPeriod) {
-								osd_gfx_set_message(MESSAGE[language][all_frame]);
+								osd_gfx_set_message("Frame Skip: Disabled");
 							} else {
-								sprintf (tmp_buf,
-									MESSAGE[language][frame_skip], UPeriod);
+								sprintf (tmp_buf, "Frame Skip: %d", UPeriod);
 								osd_gfx_set_message (tmp_buf);
 							};
 							message_delay = 180;

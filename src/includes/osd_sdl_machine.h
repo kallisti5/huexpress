@@ -4,13 +4,12 @@
 #include "debug.h"
 
 #include "sys_dep.h"
-#include "lang.h"
 #include "pce.h"
 #include "osd_sdl_gfx.h"
 
 
-#ifndef _INCLUDE_HAIKU_OSD_INIT_MACHINE
-#define _INCLUDE_HAIKU_OSD_INIT_MACHINE
+#ifndef _INCLUDE_OSD_INIT_MACHINE
+#define _INCLUDE_OSD_INIT_MACHINE
 
 extern uchar gamepad;
 // gamepad detected ?
@@ -24,9 +23,7 @@ extern int *fd[4];
 extern int test_parameter;
 
 #if defined(ENABLE_NETPLAY)
-
 #include "netplay.h"
-
 #endif
 
-#endif // end _INCLUDE_HAIKU_OSD_INIT_MACHINE
+#endif // end _INCLUDE_OSD_INIT_MACHINE

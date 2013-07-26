@@ -123,7 +123,7 @@ pokebyte()
 
 	{
 		char *tmp_buf = (char *) malloc(100);
-		snprintf(tmp_buf, 100, MESSAGE[language][byte_set], addr, new_val);
+		snprintf(tmp_buf, 100, "Byte at %d set to %d", addr, new_val);
 		osd_gfx_set_message(tmp_buf);
 		message_delay = 180;
 		free(tmp_buf);
@@ -267,7 +267,7 @@ searchbyte()
 
 	rename(data_filename, old_filename);
 	if (!file_size(old_filename)) {
-		osd_gfx_set_message(MESSAGE[language][search_failed]);
+		osd_gfx_set_message("Search failed");
 		message_delay = 180;
 		unlink(old_filename);
 		return 1;
@@ -275,12 +275,12 @@ searchbyte()
 
 	if (file_size(old_filename) == 4) {
 		char *tmp_buf = (char *) malloc(100);
-		snprintf(tmp_buf, 100, MESSAGE[language][found_at], last_index);
+		snprintf(tmp_buf, 100, "Found at %d", last_index);
 		osd_gfx_set_message(tmp_buf);
 		message_delay = 60 * 5;
 		free(tmp_buf);
 	} else {
-		osd_gfx_set_message(MESSAGE[language][still_need_search]);
+		osd_gfx_set_message("Still need to search");
 		message_delay = 60 * 3;
 	}
 

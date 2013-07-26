@@ -21,7 +21,7 @@
 /*                                                                      */
 /*  Modified 1998 by hmmx hmmx@geocities.co.jp                          */
 /*	Modified 1999-2005 by Zeograd (Olivier Jolly) zeograd@zeograd.com   */
-/*	Modified 2011 by Alexander von Gluck kallisti5@unixzen.com          */
+/*	Modified 2011-2013 by Alexander von Gluck kallisti5@unixzen.com     */
 /************************************************************************/
 
 /* Header section */
@@ -222,19 +222,6 @@ volatile uint32 message_delay = 0;
 
 char exit_message[256] = "";
 // What we must display at the end
-
-uchar language;
-/* The language of the messages
- * 0 -> English
- * 1 -> French
- * 2 -> Spanish
- * 3 -> Slovenian
- * 4 -> Portuguese
- * 5 -> German
- * 6 -> Dutch
- * 7 -> Polish
- * 8 -> Italian
- */
 
 uchar binbcd[0x100] = {
 	0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09,
@@ -2149,8 +2136,8 @@ InitPCE(char *name, char *backmemname)
 		populus = TRUE;
 
 		MESSAGE_INFO("Special Rom: Populous detected!\n");
-		if (!(PopRAM = (uchar *) malloc(PopRAMsize)))
-			perror(MESSAGE[language][no_mem]);
+		if (!(PopRAM = (uchar*)malloc(PopRAMsize)))
+			perror("Populous: Not enough memory!");
 
 		ROMMapW[0x40] = PopRAM;
 		ROMMapW[0x41] = PopRAM + 0x2000;

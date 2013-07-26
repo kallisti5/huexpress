@@ -155,9 +155,6 @@ extern int32 smode;
 extern char silent;
 // use sound?
 
-extern uchar language;
-// the current language
-
 extern int BaseClock, UPeriod;
 
 extern uchar US_encoded_card;
