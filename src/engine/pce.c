@@ -1517,7 +1517,8 @@ CartLoad(char *name)
 
 	MESSAGE_INFO("Opening %s...\n", name);
 
-	if (CD_emulation == 1 || strstr(name, "/dev/disk/atapi/")) {
+	if (CD_emulation == 1 || strstr(name, "/dev/disk/atapi/")
+		|| strstr(name, "/dev/sr")) {
 		MESSAGE_INFO("Using Hardware CD Device to load CDRom2\n");
 		CD_emulation = 1;
 
@@ -2127,6 +2128,8 @@ InitPCE(char *name, char *backmemname)
 	if (NO_ROM != 0xFFFF) {
 		MESSAGE_INFO("Rom Name: %s\n",
 			(kKnownRoms[NO_ROM].Name) ? kKnownRoms[NO_ROM].Name : "Unknown");
+		MESSAGE_INFO("Publisher: %s\n",
+			(kKnownRoms[NO_ROM].Publisher) ? kKnownRoms[NO_ROM].Publisher : "Unknown");
 	} else {
 		MESSAGE_ERROR("Unknown ROM\n");
 	}
