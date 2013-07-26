@@ -43,6 +43,7 @@ engine_sources = [
 	'engine/optable.c',
 	'engine/pce.c',
 	'engine/pcecd.c',
+	'engine/romdb.c',
 	'engine/sound.c',
 	'engine/sprite.c',
 	'engine/subs_eagle.c',

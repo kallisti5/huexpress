@@ -34,6 +34,8 @@
 #include "pcecd.h"
 #endif
 
+#include "romdb.h"
+
 #define LOG_NAME "huexpress.log"
 
 #define CD_FRAMES 75
@@ -1867,8 +1869,6 @@ int
 InitPCE(char *name, char *backmemname)
 {
 	int i = 0, ROMmask;
-	unsigned long CRC;
-	int dummy;
 	char *tmp_dummy;
 	char local_us_encoded_card = 0;
 
@@ -1949,30 +1949,26 @@ InitPCE(char *name, char *backmemname)
 
 	hard_init();
 
-	pce_build_romlist();
-
 	/* TEST */
 	io.screen_h = 224;
 	/* TEST */
 	io.screen_w = 256;
 
-#if 0
-	if (!builtin_system_used) {
+	uint32 CRC = CRC_file(true_file_name);
 
-		CRC = CRC_file(true_file_name);
-		/* I'm doing it only here 'coz cartload set
-		   true_file_name       */
+	/* I'm doing it only here 'coz cartload set
+	   true_file_name       */
 
-		NO_ROM = 0xFFFF;
+	NO_ROM = 0xFFFF;
 
-		for (dummy = 0; dummy < pce_romlist_size; dummy++)
-			if (CRC == pce_romlist[dummy].CRC)
-				NO_ROM = dummy;
-	} else {
-		NO_ROM = 255;
-		printf("ROM not in database: CRC=%lx\n", CRC);
+	int index;
+	for (index = 0; index < KNOWN_ROM_COUNT; index++) {
+		if (CRC == kKnownRoms[index].CRC)
+			NO_ROM = index;
 	}
-#endif
+
+	if (NO_ROM == 0xFFFF)
+		printf("ROM not in database: CRC=%lx\n", CRC);
 
 	memset(WRAM, 0, 0x2000);
 	WRAM[0] = 0x48;				/* 'H' */
@@ -1997,16 +1993,15 @@ InitPCE(char *name, char *backmemname)
 	memset(vchanges, 1, VRAMSIZE / 128);
 
 #ifndef FINAL_RELEASE
-	if (pce_romlist != NULL && NO_ROM != 0xFFFF)
+	if (kKnownRoms != NULL && NO_ROM != 0xFFFF)
 		fprintf(stderr, "flags = %x\n",
-				(pce_romlist + NO_ROM) ? pce_romlist[NO_ROM].flags : 0);
+				kKnownRoms[NO_ROM]->Flags);
 #endif
 
 	local_us_encoded_card = US_encoded_card;
 
-	if (pce_romlist != NULL && (NO_ROM != 0xFFFF)
-		&& (pce_romlist + NO_ROM)
-		&& (pce_romlist[NO_ROM].flags & US_ENCODED))
+	if (kKnownRoms != NULL && (NO_ROM != 0xFFFF)
+		&& (kKnownRoms[NO_ROM].Flags & US_ENCODED))
 		local_us_encoded_card = 1;
 
 	if (ROM[0x1FFF] < 0xE0) {
@@ -2059,8 +2054,8 @@ InitPCE(char *name, char *backmemname)
 		}
 */
 
-	if (pce_romlist != NULL && (NO_ROM != 0xFFFF) && (pce_romlist + NO_ROM)
-		&& (pce_romlist[NO_ROM].flags & TWO_PART_ROM)) {
+	if (kKnownRoms != NULL && (NO_ROM != 0xFFFF)
+		&& (kKnownRoms[NO_ROM].Flags & TWO_PART_ROM)) {
 		ROM_size = 0x30;
 		// Used for example with Devil Crush 512Ko
 	}
@@ -2144,14 +2139,13 @@ InitPCE(char *name, char *backmemname)
 
 	if (NO_ROM != 0xFFFF) {
 		MESSAGE_INFO("Rom Name: %s\n",
-			(pce_romlist + NO_ROM) ? pce_romlist[NO_ROM].name : "Unknown");
+			(kKnownRoms[NO_ROM].Name) ? kKnownRoms[NO_ROM].Name : "Unknown");
 	} else {
 		MESSAGE_ERROR("Unknown ROM\n");
 	}
 
-	if (pce_romlist != NULL && (NO_ROM != 0xFFFF)
-		&& (pce_romlist + NO_ROM)
-		&& (pce_romlist[NO_ROM].flags & POPULOUS)) {
+	if (kKnownRoms != NULL && (NO_ROM != 0xFFFF)
+		&& (kKnownRoms[NO_ROM].Flags & POPULOUS)) {
 		populus = TRUE;
 
 		MESSAGE_INFO("Special Rom: Populous detected!\n");
@@ -2237,15 +2231,35 @@ InitPCE(char *name, char *backmemname)
 
 	}
 
-	if (pce_romlist != NULL && (NO_ROM != 0xFFFF) && (pce_romlist + NO_ROM)
-		&& (pce_romlist[NO_ROM].flags & CD_SYSTEM)) {
-		uint16 offset;
-		uchar new_val;
+	if (kKnownRoms != NULL && (NO_ROM != 0xFFFF)
+		&& (kKnownRoms[NO_ROM].Flags & CD_SYSTEM)) {
+		uint16 offset = 0;
+		uchar new_val = 0;
 
-		offset = atoi(pce_romlist[NO_ROM].note);
-		new_val = atoi(&pce_romlist[NO_ROM].note[6]);
+		switch(kKnownRoms[NO_ROM].CRC) {
+			case 0X3F9F95A4:
+				// CD-ROM SYSTEM VER. 1.00
+				offset = 56254;
+				new_val = 17;
+				break;
+			case 0X52520BC6:
+			case 0X283B74E0:
+				// CD-ROM SYSTEM VER. 2.00
+				// CD-ROM SYSTEM VER. 2.10
+				offset = 51356;
+				new_val = 128;
+				break;
+			case 0XDD35451D:
+			case 0XE6F16616:
+				// CD ROM 2 SYSTEM 3.0
+				// SUPER CD-ROM2 SYSTEM VER. 3.00
+				// SUPER CD-ROM2 SYSTEM VER. 3.00
+				offset = 51401;
+				new_val = 128;
+				break;
+		}
 
-		if (offset)
+		if (offset > 0)
 			ROMMapW[0xE1][offset & 0x1fff] = new_val;
 	}
 
