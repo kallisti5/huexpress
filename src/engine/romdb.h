@@ -23,7 +23,7 @@
 #define JAP          0x8000
 
 // Known Rom Count (from kKnownRoms)
-#define KNOWN_ROM_COUNT 421
+#define KNOWN_ROM_COUNT 422
 
 
 struct rom_database {
