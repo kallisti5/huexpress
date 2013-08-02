@@ -9,6 +9,12 @@
 
 #include "romdb.h"
 
+#if defined(__linux__)
+#include <limits.h>
+#endif
+
+#include "utils.h"
+
 // Known NEC PC-Engine HuCards: 323
 // Known NEC PC-Engine CD-ROMs: 438
 // Known NEC TurboGrafx-16 HuCards: 96
@@ -161,6 +167,7 @@ struct rom_database kKnownRoms[KNOWN_ROM_COUNT] = {
 {0x6FD6827C, "Gaia no Monshou", "NCS", "NCS63001", "09-23-1988", JAP},
 {0x1A8393C6, "Galaga '88", "Namco", "NC63002", "7/15/1988", JAP},
 {0x2909DEC6, "Galaga '90", "Namco", "TGX020018", __DATE, USA},
+{0xEC42622E, "Galaga '90", "Tai Sang", __ID, __DATE, JAP},
 {0x27A4D11A, "Ganbare! Golf Boys", "Masynya", "NCS89003", "03-28-1989", JAP},
 {0xE8702D51, "Gekisha Boy", __PUBLISHER, __ID, __DATE, JAP},
 {0xAD450DFC, "Genji Tsuushin Agedama", __PUBLISHER, __ID, __DATE, JAP},
@@ -277,7 +284,7 @@ struct rom_database kKnownRoms[KNOWN_ROM_COUNT] = {
 {0xFF898F87, "Operation Wolf", "NEC", "NAPH-1010", "08-31-1990", JAP},
 {0xFAE0FC60, "Order of the Griffon", "SSL", "TGX040072", __DATE, USA},
 {0xE7BF2A74, "Ordyne", "Namco", "NC89004", "09-08-1989", USA},
-{0x8C565CB6, "Ordyne", __PUBLISHER, __ID, __DATE, JAP},
+{0x8C565CB6, "Ordyne", "Namco", __ID, __DATE, JAP},
 {0x5CDB3F5B, "Out Live", __PUBLISHER, __ID, __DATE, JAP},
 {0xE203F223, "Out Run", "SEGA", "NAPH-1016", "12-21-1990", JAP},
 {0xB74EC562, "Override", "DEKA", "DE90006", "01-08-1991", JAP},
@@ -443,3 +450,67 @@ struct rom_database kKnownRoms[KNOWN_ROM_COUNT] = {
 {0xB77F2E2F, "Zero 4 Champ  (v1.5)", "Media Rings", __ID, __DATE, JAP},
 {0x67AAB7A1, "Zipang", "PACK-IN-VIDEO", "PV-1005", "12-14-1990", JAP},
 };
+
+
+unsigned long
+filesize(FILE * fp)
+{
+	int prev = ftell(fp);
+	fseek(fp, 0, SEEK_END);
+	int size = ftell(fp);
+	fseek(fp, prev, SEEK_SET);
+	return size;
+}
+
+#if 0
+unsigned long pack_filesize(PACKFILE *F)
+  {
+   unsigned long old_pos,end;
+   pack_ftell(F,(long*)&old_pos);
+
+   end=old_pos;
+
+   while (!pack_feof(F))
+     {
+      pack_getc(F);
+      end++;
+      }
+
+
+   fseek(F,0,SEEK_END);
+   fgetpos(F,(long*)&end);
+   fseek(F,old_pos,SEEK_SET);
+   return end;
+   }
+#endif
+
+uint32
+CRC_file(char *name)
+{
+	FILE *F = fopen(name, "rb");
+	uchar *tmp_data;
+	uint32 taille, index, CRC = -1, true_size;
+
+	if (!F)
+		return -1;
+
+	taille = filesize(F);
+	true_size = taille & 0xFFFFF000;
+	if (taille & 0x0FFF) {
+		//fprintf(stderr,"HEADER OF 0X%X BYTES\n",taille & 0x0FFF);
+		fseek(F, taille & 0x0FFF, SEEK_SET);
+	}
+	if (!(tmp_data = (uchar *) (malloc(true_size))))
+		exit(-1);
+	fread(tmp_data, true_size, 1, F);
+	for (index = 0; index < true_size; index++) {
+		tmp_data[index] ^= CRC;
+		CRC >>= 8;
+		CRC ^= TAB_CONST[tmp_data[index]];
+	}
+	free(tmp_data);
+	CRC = ~CRC;
+//      fprintf(stderr,"CRC = 0X%lX\n",CRC);
+	fclose(F);
+	return CRC;
+}

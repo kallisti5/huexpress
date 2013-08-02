@@ -341,7 +341,7 @@ extern uchar can_write_debug;
 
 // Post include to avoid circular definitions
 
-#include "list_rom.h"			// List of known rom
+#include "romdb.h"
 
 #include "config.h"
 

@@ -9,6 +9,8 @@
 #define _ROMDB_H
 
 
+#include <stdio.h>
+
 #include "cleantypes.h"
 
 
@@ -23,8 +25,7 @@
 #define JAP          0x8000
 
 // Known Rom Count (from kKnownRoms)
-#define KNOWN_ROM_COUNT 422
-
+#define KNOWN_ROM_COUNT 423
 
 struct rom_database {
 	uint32      CRC;
@@ -36,6 +37,10 @@ struct rom_database {
 };
 
 extern struct rom_database kKnownRoms[KNOWN_ROM_COUNT];
+
+
+unsigned long filesize(FILE * F);
+uint32 CRC_file(char *name);
 
 
 #endif /* _ROMDB_H */

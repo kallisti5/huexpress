@@ -35,7 +35,6 @@ engine_sources = [
 	'engine/h6280.c',
 	'engine/hard_pce.c',
 	'engine/hcd.c',
-	'engine/list_rom.c',
 	'engine/lsmp3.c',
 	'engine/mix.c',
 	'engine/ogglength.c',
@@ -72,3 +71,4 @@ huexpress = env.Clone()
 huexpress.ParseConfig('pkg-config --cflags --libs sdl')
 huexpress.ParseConfig('pkg-config --cflags --libs SDL_mixer')
 huexpress.Program(target = 'huexpress', source = program_sources)
+huexpress.Program(target = 'hucrc', source = ['hucrc.c', 'utils.c', 'engine/romdb.c'])
