@@ -6,8 +6,8 @@
                                        |__|
 
                 Core-GraphX / PC Engine / Turbo GraphX Emulator
-                               Version 2.15
-                             April 11th, 2011
+                               Version 2.16
+                             August 2nd, 2013
 
 --[ DISCLAIMER ]-------------------------------------------------------------
 
@@ -45,14 +45,14 @@
     You can use hugo by just typing
 	huexpress [ROM] [BACKUPMEM] [OPTION]
     
-    where ROM is the name of the ROM, ISO, ISQ, or HCD.
+    where ROM is the name of the ROM, ISO, ISQ, ZIP, or HCD.
 
     Check out the HCD section later for details.
     If ROM has no extension, HuExpress! will look for ROM.PCE then ROM.ZIP.
 
     ISO games must be specified with ISO extension to be recognized.
 
-    For OPTIONS, see later...
+    For OPTIONS, see below...
 
     BACKUPMEM is the name of the file containing the backup RAM.
     These two last are optionals. The order shouldn't import but the ROM name
@@ -85,12 +85,12 @@
 --[ KEYBOARD CONTROLS ]------------------------------------------------------
 
     Cursor keys          Direction
-    Alt                  Button 1
-    Space                Button 2
+    z                    Button 1
+    x                    Button 2
     Tab                  Select key
     Enter                Start key
-    X                    Toggle Autofire 1
-    C                    Toggle autofire 2
+    a                    Toggle Autofire 1
+    s                    Toggle autofire 2
 
     (These are default keys for all players)
     You can edit yours using the HU-GO!.INI (dos/windows) or hugo.ini (un*x)
@@ -228,18 +228,6 @@
     line with config=1. It's not very clear but the built-in menu allows easier
 	configuration.
 
-    -- language : Language of most messages during the emulation
-          0 -> English (default) (by me)
-          1 -> Français (by me)
-          2 -> Espanol (by my gf, and Juan roman Soriano)
-          3 -> Slovensko (by ]pit[ )
-          4 -> Portuguese (by CodeMaster)
-          5 -> German (by sALTY)
-          6 -> Dutch (by Fixo)
-          7 -> Polish (by Dox and Faust)
-          8 -> Italian (by Gareth Jax)
-		  9 -> Russian (by Lord Mardulak)
-
     -- rom_dir : Directory of your roms. It's the default directory the
     fileselector will look in. Use either '/' or '\'.
     (If no value given, current path is assumed)
@@ -273,126 +261,15 @@
 
 --[ HCD ]--------------------------------------------------------------------
 
-   Then what is this new format.
-   HCD means : Hu-Go!! Cd Definition. Such a file allow you to use multi-code
-   CDs and emulate audio tracks with MP3
-   It's only a beginning and there are still troubles with ISQ to emulate
-   Code tracks but it should work fine later.
-   HCD are divided in sections :
-   [main]
-   for main info :
-   first_track=XX
-   last_track=XX
+    HCD is a definition file included with TurboGrafx and PC Engine CD games.
 
-   that indicates the first and last track (easy)
+    The HCD contains information on the game, as well as information on the
+    audio CD tracks included.
 
-   ISO_path=XXX
-   MP3_path=XXX
+    HCDFormat in doc/ documents the current HCD format for HuExpress.
 
-   which are the default path for ISO and MP3 files, convenient when moving
-   of directory e.g.
-   If you don't specify anything there, the default path is the .HCD one
-
-   minimum_bios=X
-
-   where X is 0 or 1. Use to enable this mode (see in command line option)
-   when launching a particular HCD. (Now, this mode is 'no bios' but for
-   obvious compatibility reason, I've not changed the name...)
-
-   Then for each track you can find a section :
-   [trackXX]
-   where you'll find :
-
-   filename=...
-
-   i.e. the filename of the file to use to emulate this track (.ISO or .ISQ
-   for code or .MP3 for audio)
-   then :
-
-   type=CODE
-
-   that specify if the track is a code one (audio is default)
-   et finally
-
-   begin=lsn,XXX
-
-   to specify the beginning of the track in LSN format (# of sector since the
-   beginning of the first one) or LBA (# of sector since the beginning of the
-   CD) or MSF (theoricaly, only LSN really tested) (as for MSF, just do :
-   begin=msf,mm:ss:ff
-   add zeros if compulsory)
-   even if just a beginning, it allows playing multi-code tracks
-   and MP3 in games. (even if .MP3 control isn't yet perfect)
-   You'll find an example in the archive.
-
-   There's now another mode available. It's the cd one.
-   Write
-   type=CD
-   and you'll have the ability to fake a track from the .hcd file with a
-   track coming from a real cd.
-   In this mode, you have 2 mode fields:
-   drive=0
-   which specify the drive in which is the track you want to use, using the
-   format in which the cd driver is used to. i.e. 0, 1 and such.. for aspi
-   driver and letter D, E, and such for the mscdex driver.
-
-   Then you can specify the number of the track to use on the cd driver with
-   track=5
-   If you don't specify this field, the default value for the track field will
-   be the track number of the track to fake.
-
-
-   You can also use patching functions
-
-   patch_number=XX
-
-   where XX is the number of patch you want to apply
-
-   then
-
-   patchX=0X????????,0X??
-
-   where X goes from 0 to patch_number-1 and two hexa numbers represent
-   the offset and new val of the patch in the ISO file.
-
-   On the same model, you can also find a way of adding subtitle when audio
-   tracks are played (even if you don't own the MP3 for it). You can choose
-   the number of subtitles with : 
-   
-   subtitle_number=XX
-   
-   where XX is the number of subtitle you want to have for the track.
-
-   You can also choose to synchronize the subtitles with the game or the
-   music with
-
-   synchro_mode=XX
-
-   if XX = 0, synchronisation is done with the game as in the first release
-   supporting it, else it's synchronised with music and you can replace
-   the words 'number of frame' by '60th of sec' in the following explanation,
-   concerning the meaning of the begin field.
-
-   Then, for each subtitle, you must choose the time where it should begin,
-   its duration and the message to display.
-   The syntax is as follow :
-   
-   subtitleXX=<begin>,<duration>,<message>
-   
-   where XX is the number of the subtitle (XX is between 0 and subtitle_number-1)
-   <begin> is the number of frame elapsed since the beginning of the track.
-   There's normally 60 frame per sec but using the number of frame instead
-   of time make subtitles synchronized with the real game and not the music.
-   Since it's harder to guess how many frame have been displayed, I've added
-   a display of such a number with the tilde key. The value that you'll see
-   when pressing the key is the exact value you'll have to put in the <begin>
-   field (ajusting them a bit if needed...)
-   The <duration> field is in 60th of second, i.e. putting 60 there will
-   display the message for 1 sec and finally, the last field is the message
-   that will be displayed. It shouldn't contain any comma.
-   One last thing : you must sort the subtitle according to the order of
-   appearition.
-   Don't hesitate looking at the example or sending a mail if needed.
+    HuExpress uses a new 1.1 revision format, but should be backwards
+    compatible with the old HuGO 1.0 revision.
 
 --[ CHEATING ]---------------------------------------------------------------
 
@@ -477,58 +354,3 @@
 	  -1 => Full speed
 	  0  => Emulation paused
 	 >0  => Number of opcodes to run before pausing
-
---[ THANKS ]-----------------------------------------------------------------
-
-   Special thanks :
-    -- Zerograd, for making Hu-Go! http://zeograd.com
- *> -- Bacon boy 99 (Ex-Planet Rom webmaster, the former logo,    <*
-       having sent me some Cds and in fact, lots of things)
-	-- Ixion for the lots of bugs/improvements he worked on recently
-	-- Blake- for the bugs he fixed while doing his pce emu on gp32
-    -- ]pit[ for all his help (among all the new logo and banners)
-    -- Nyef for all the infos he gave me on CD emulation
-    -- Lester Barrows for his help on the linux code (notably, pad support from
-              his work)
-	-- Bt Garner (ideas, lots of stuff including hosting my site now, ...)
-    -- Ishan (ex Vlendr'it) for the mailing list, tweak mode tests, finding
-       nice code resources on the web and scanline mode
-    -- TOZTWO for the nice HTML doc
-    -- Tormod Tjaberg for the MP3 length detection code
-    -- fixo, cools, sALTY, codemaster, Raoh, MrF, dus, Yuu and all the #emu
-       dudes on IrcNet ;)
-    -- ElmerYud coz' he's Hu-Go! publicity manager ^_^
-    -- tAGGY for two nice pictures
-    -- SirJaguar, Nico, Ded, ZePoulpe, Leto_II, Ziller, Readiosys and guys on
-       #utopiasoft or #nec4ever
-    -- Dirk Steven (EAGLE is really very nice)
-    -- Dave Shadoff (TGSIM and TGSIMGPP, longs mails and lots of ideas,
-       author of the little rom included, very nice guy)
-    -- Marat Fayzullin (BASE SOURCE for 6502)
-    -- Bero (Additional SOURCE)
-    -- Hmmx (More additional SOURCE)
-    -- DJ Delorie (DJGPP, what a great thing!)
-    -- Shawn Hargreaves (ALLEGRO is great)
-    -- David Michel (MAGIC ENGINE is still the best emu!!!, futhermore he's
-       very friendly and fair-play. Also the Author of the Magic Kit which
-       allow you to create your own PC Engine games)
-    -- The info-zip group for making unzipping easy (sometimes ^_^)
-
-    -- Zophar domain (www.zophar.net)
-    -- Jens Christian Restemeier (DOCS)
-    -- Joe LoCicero (DOCS)
-    -- David Woodford (DOCS)
-    -- Videoman (DOCS)
-    -- Charles W Sandmann (CWSDPMI, this program is under GPL license and you
-       can get the source at http://www.delorie.com/djgpp/ )
-    -- Markus F.X.J. Oberhumer & Laszlo Molnar (contribution to UPX, an
-       excellent EXE-packer used in this release)
-
-    Diverse thanks:
-    -- Bouli (www.multimania.com/booemu/
-              arcades.le-village.com/megrom/)
-       for using Hu-Go! for his screenshots ;)
-    -- Michael Sheldows (www.homestead.com/sheldows)
-       for trying to port Hu-Go! to a new OS of his own
-    -- Mr Iceberg (www.multimania.com/pceaudit)
-       for offering a PCE ROM manager based on FPCEID
