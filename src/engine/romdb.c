@@ -439,7 +439,7 @@ struct rom_database kKnownRoms[KNOWN_ROM_COUNT] = {
 {0x3CA7DB48, "Yo, Bro", __PUBLISHER, __ID, __DATE, USA},
 {0xF131B706, "Youkai Douchuuki", __PUBLISHER, __ID, __DATE, JAP},
 {0xC0905CA9, "Yuu Yuu Jinsei - Victory Life", "TAKARA", "HC63008", "04-22-1988", JAP},
-{0xEE156721, "Zero 4 Champ", "MEDIA RINGS", "MR91003", "03-08-1991", JAP},
-{0xB77F2E2F, "Zero 4 Champ  (v1.5)", __PUBLISHER, __ID, __DATE, JAP},
+{0xEE156721, "Zero 4 Champ", "Media Rings", "MR91003", "03-08-1991", JAP},
+{0xB77F2E2F, "Zero 4 Champ  (v1.5)", "Media Rings", __ID, __DATE, JAP},
 {0x67AAB7A1, "Zipang", "PACK-IN-VIDEO", "PV-1005", "12-14-1990", JAP},
 };
