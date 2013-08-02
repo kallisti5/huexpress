@@ -12,6 +12,7 @@
 #if defined(__linux__)
 #include <limits.h>
 #endif
+#include <stdlib.h>
 
 #include "utils.h"
 
@@ -29,7 +30,7 @@ struct rom_database kKnownRoms[KNOWN_ROM_COUNT] = {
 {0x3F9F95A4, "[BIOS] CD-ROM System (v1.0)", "NEC", __ID, __DATE, JAP | CD_SYSTEM},
 {0x52520BC6, "[BIOS] CD-ROM System (v2.0)", "NEC", __ID, __DATE, JAP | CD_SYSTEM},
 {0x283B74E0, "[BIOS] CD-ROM System (v2.1)", "NEC", __ID, __DATE, JAP | CD_SYSTEM},
-{0x51A12D90, "[BIOS] Games Express CD Card", __PUBLISHER, __ID, __DATE, JAP | CD_SYSTEM},
+{0x51A12D90, "[BIOS] Games Express CD Card", "Games Express", __ID, __DATE, JAP | CD_SYSTEM},
 {0x6D9A73EF, "[BIOS] Super CD-ROM System (v3.0)", "NEC", "PCE-SC1", __DATE, JAP | CD_SYSTEM},
 {0x2B5B75FE, "[BIOS] TurboGrafx CD Super System Card (v3.0)", "NEC", __ID, __DATE, USA | CD_SYSTEM},
 {0xFF2A5EC3, "[BIOS] TurboGrafx CD System Card (v2.0)", "NEC", __ID, __DATE, USA | CD_SYSTEM},
@@ -274,6 +275,8 @@ struct rom_database kKnownRoms[KNOWN_ROM_COUNT] = {
 {0xC4ED4307, "Neutopia II", "Hudson", "TGX060078", __DATE, USA},
 {0x756A1802, "New Adventure Island", "Hudson", "TGX040080", __DATE, USA},
 {0x8E4D75A8, "New Zealand Story, The", "Taito", "TP02007", "02-23-1990", JAP},
+{0x20A7D128, "Nexat Stadium", "Nexat", __ID, __DATE, JAP},
+{0xFBA3A1A4, "Nexat Stadium", "Tai Sang", __ID, __DATE, JAP},
 {0xA32430D5, "NHK Taiga Drama - Taiheiki", __PUBLISHER, __ID, __DATE, JAP},
 {0xC159761B, "Night Creatures", "MANLEY __PUBLISHER ASSOCIATES", "TGX040069", __DATE, USA},
 {0x82DEF9EE, "Niko Niko Pun", "KSS", "NV91001", "12-13-1991", JAP},
@@ -293,6 +296,7 @@ struct rom_database kKnownRoms[KNOWN_ROM_COUNT] = {
 {0xD6E30CCD, "Pac-Land", "Namco", __ID, __DATE, USA},
 {0x4148FD7C, "Pachio-kun - Juuban Shoubu", __PUBLISHER, __ID, __DATE, JAP},
 {0xA980E0E9, "Panza Kick Boxing", __PUBLISHER, __ID, __DATE, USA},
+{0xBB4429B6, "Paranoia", "Naxat", "NX90001", "03-01-1990", JAP},
 {0x9893E0E6, "Paranoia", "Naxat", "NX90001", "03-01-1990", JAP},
 {0x51E86451, "Parasol Stars - The Story of Bubble Bobble 3", "Taito", __ID, __DATE, JAP},
 {0xE6458212, "Parasol Stars - The Story of Bubble Bobble III", __PUBLISHER, __ID, __DATE, USA},
@@ -330,9 +334,11 @@ struct rom_database kKnownRoms[KNOWN_ROM_COUNT] = {
 {0xFAA6E187, "Puzzle Boy", "TELENET", __ID, __DATE, JAP},
 {0x965C95B3, "Puzznic", "Taito", "TP02011", "06-29-1990", JAP},
 {0xF2E6856D, "Quiz Toukou Shashin", __PUBLISHER, __ID, __DATE, JAP},
-{0x91CE5156, "R-Type", __PUBLISHER, __ID, __DATE, USA | US_ENCODED},
-{0xCEC3D28A, "R-Type Part-1", __PUBLISHER, __ID, __DATE, JAP},
-{0xF207ECAE, "R-Type Part-2", __PUBLISHER, __ID, __DATE, JAP},
+{0x91CE5156, "R-Type", "Hudson", __ID, __DATE, USA | US_ENCODED},
+{0x45FC8CB9, "R-Type", "Tai Sang", __ID, __DATE, JAP},
+{0xCEC3D28A, "R-Type Part-1", "Hudson", __ID, __DATE, JAP},
+{0xF207ECAE, "R-Type Part-2", "Hudson", __ID, __DATE, JAP},
+{0xCE4FBEFE, "R-Type Part-2", "Tai Sang", __ID, __DATE, JAP},
 {0xD8373DE6, "Rabio Lepus Special", __PUBLISHER, __ID, __DATE, JAP},
 {0x3E79734C, "Racing Damashii", __PUBLISHER, __ID, __DATE, JAP},
 {0x850829F2, "Raiden", "SEIBU KAIHATSU", "HC91049", "11-22-1991", JAP},
