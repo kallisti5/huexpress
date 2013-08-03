@@ -17,6 +17,24 @@ The HCD format used by HuExpress should be fully compatible with the
 version used by HuGO!, although some optional enhancements exist within the
 HuExpress format.
 
+Breaking apart ISO images
+^^^^^^^^^^^^^^
+Some game rips are contained within a flat iso image. To get the most out of
+the game with the smallest footprint, breaking apart the iso is recommended.
+
+bchunk can break the iso/cue into several track files. (data and audio)..
+  bchunk -v -w game.iso game.cue Track
+
+Then, encoding the tracks to ogg..
+  oggenc *.wav
+
+And removing the *.wav files..
+  rm *.wav
+
+Then, adding your track information into the hcd.
+
+This process can easily take a 500MB+ iso and make it under 50MB.
+
 CD File Layout
 ^^^^^^^^^^^^^^
 The standard filesystem layout of HCD enabled archive/game is as follows:
