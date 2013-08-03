@@ -634,7 +634,7 @@ void
 drawVolume(char* name, int volume)
 {
 	int i;
-	char template[] = "[---------------]";
+	char volumeTemplate[] = "[---------------]";
 	char result[255];
 
 	// Load result with the bar title
@@ -643,10 +643,10 @@ drawVolume(char* name, int volume)
 	// 17 rounds easily into 255 and gives us 15 bars
 	for (i = 1; i < 16; i++) {
 		if ((i * 17) <= volume)
-			template[i] = '|';
+			volumeTemplate[i] = '|';
 	}
 
-	strcat(result, template);
+	strcat(result, volumeTemplate);
 
 	osd_gfx_set_message(result);
 }
