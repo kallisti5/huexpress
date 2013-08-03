@@ -270,7 +270,6 @@ fill_HCD_info(char *name)
 					 current_track, CD_track[current_track].filename,
 					 CD_track[current_track].length);
 			}
-#ifdef OGG_SUPPORT
 			// littletux: use ogginfo hack to guess OGG length
 			if (strcasestr(CD_track[current_track].filename, ".ogg")) {
 				CD_track[current_track].length
@@ -281,7 +280,6 @@ fill_HCD_info(char *name)
 					 current_track, CD_track[current_track].filename,
 					 CD_track[current_track].length);
 			}
-#endif
 
 			if (CD_track[current_track].length == 0)
 				CD_track[current_track].length = 30 * 75;	// 30 sec track

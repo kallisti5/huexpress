@@ -1,6 +1,5 @@
 #include "ogglength.h"
 
-#ifdef OGG_SUPPORT
 //Inspired from ogginfo.c
 // part of the vorbis-tools package of the OGG Vorbis project
 int
@@ -35,5 +34,3 @@ OGG_length(const char *filename)
 
 	return (int) (playtime * 75.0);
 }
-
-#endif

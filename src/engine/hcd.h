@@ -1,11 +1,15 @@
-#ifndef _DJGPP_INCLUDE_HCD_H
-#define _DJGPP_INCLUDE_HCD_H
+#ifndef _HCD_H
+#define _HCD_H
 
 
 #include "cleantypes.h"
 #include "pce.h"
 #include "lsmp3.h"
+#include "ogglength.h"
 
+#ifdef SDL_mixer
+#include "osd_linux_sdl_music.h"
+#endif
 
 extern uint32 HCD_first_track;
 /* first track of emulated cd */
@@ -21,14 +25,6 @@ extern uint32 HCD_frame_at_beginning_of_track;
 extern FILE *HCD_iso_FILE;
 
 
-#ifdef SDL_mixer
-#include "osd_linux_sdl_music.h"
-#endif
-
-#ifdef OGG_SUPPORT
-#include "ogglength.h"
-#endif
-
 int fill_HCD_info(char *name);
 void HCD_play_sectors(int begin_sect, int sect_len, char repeat);
 void HCD_pause_playing();
@@ -39,4 +35,4 @@ void HCD_iso_read_sector(uchar * p, uint32 dum, uint32 result);
 void HCD_cd_read_sector(uchar * p, uint32 dum, uint32 result);
 
 
-#endif
+#endif /* _HCD_H */

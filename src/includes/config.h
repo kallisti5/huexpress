@@ -32,9 +32,6 @@
 /* for hugo developers working on netplay emulation */
 #undef NETPLAY_DEBUG
 
-/* defined if user wants ogg support in hcd */
-#define OGG_SUPPORT 1
-
 /* Name of package */
 #undef PACKAGE
 
