@@ -12,7 +12,8 @@
 
 #include "hcd.h"
 
-
+#include <stdio.h>
+#include <stdlib.h>
 #include <sys/stat.h>
 
 #include "iniconfig.h"
@@ -30,58 +31,25 @@ uchar HCD_current_played_track = 0;
 
 
 static int
-get_HCD_path(char *name, char* var, char* result, size_t len)
+get_HCD_path(char* hcdFile, char* result)
 {
-	char path_tmp[len];
-	char cw_dir[len];
+	// we write our own dirname to stay portable
+	char fullPath[PATH_MAX + 1];
+	realpath(hcdFile, fullPath);
 
-	get_config_string("main", var, "", result);
+#ifdef _WIN32
+	const char slash = '\\';
+#else
+	const char slash = '/';
+#endif
 
-	memset(path_tmp, 0, sizeof(char) * len);
-	memset(cw_dir, 0, sizeof(char) * len);
-	strcpy(path_tmp, name);
+	char *lastSlash = strrchr(fullPath, slash);
+	if (lastSlash)
+		lastSlash[1] = '\0';
+	else
+		snprintf(fullPath, 3, ".%s", slash);
 
-	int i;
-
-	for (i = 0; path_tmp[i]; i++) {
-		if (path_tmp[i] == '\\') {
-			path_tmp[i] = '/';
-		}
-	}
-
-	if (strrchr(path_tmp, '/'))
-		*(strrchr(path_tmp, '/') + 1) = 0;
-
-	// path_tmp is now the root of the hcd dir
-
-	if (strcmp(result, "")) {
-		// We found an override within the HCD
-		// Override paths are relative to the HCD directory
-		strncat(path_tmp, result, len);
-	}
-
-	strcpy(result, path_tmp);
-
-	/*
-	   if (!strcmp(path, "")) {
-	   if ((strcmp(path_tmp, name)==0)
-	   || (strncmp(path_tmp, ".", 1)==0)) {
-
-	   if (strcmp(path_tmp, name)==0) {
-	   strcpy(path_tmp, "/");
-	   getcwd(cw_dir, 256);
-	   strncat(cw_dir, path_tmp, 256);
-	   path = cw_dir;
-	   } else {
-	   path = path_tmp;
-	   }
-	   }
-	   } else {
-	   strcpy(path_tmp, path);
-	   path = path_tmp;
-	   }
-	 */
-	return 1;
+	strncpy(result, fullPath, PATH_MAX);
 }
 
 
@@ -137,12 +105,8 @@ fill_HCD_info(char *name)
 
 		if (strcmp(tmp_buf, "CODE") == 0) {
 			// FOUND: CODE TRACK
-
-			char ISO_path[PATH_MAX];
-			if (!get_HCD_path(name, "ISO_path", ISO_path, PATH_MAX)) {
-				MESSAGE_ERROR("Error: CODE type without ISO_path\n");
-				continue;
-			}
+			char ISO_path[PATH_MAX + 1];
+			get_HCD_path(name, ISO_path);
 			// find where ISO's live
 
 			CD_track[current_track].type = 4;
@@ -233,24 +197,19 @@ fill_HCD_info(char *name)
 
 			CD_track[current_track].type = (control & 4);
 		} else {
-
 #ifdef SDL_mixer
 			// FOUND: OTHER (AUDIO)
-
-			char MP3_path[PATH_MAX];
-			if (!get_HCD_path(name, "MP3_path", MP3_path, PATH_MAX)) {
-				MESSAGE_ERROR("Error: AUDIO type without MP3_path\n");
-				continue;
-			}
+			char audio_path[PATH_MAX];
+			get_HCD_path(name, audio_path);
 			//find where audio tracks live
 
 			CD_track[current_track].type = 0;	// Audio track
 			CD_track[current_track].source_type = HCD_SOURCE_REGULAR_FILE;
 
-			strcpy(tmp_buf, MP3_path);
+			strcpy(tmp_buf, audio_path);
 			char fileNameBuffer[PATH_MAX];
 			get_config_string(section_name, "filename", "",
-							  fileNameBuffer);
+				fileNameBuffer);
 			strcat(tmp_buf, fileNameBuffer);
 			strcpy(CD_track[current_track].filename, tmp_buf);
 
