@@ -138,7 +138,7 @@ for i in $(find . -name "*.wav" -or -name "*.ugh" -or -name "*.iso" | sort); do
         track=$[track+1];
 done;
 
-zip -c "${gameID}" -9 "${gameName} - ${gameID}.zip" *
+zip -9 "${gameName} - ${gameID}.zip" *
 cd -
 echo "Complete! ${gameName} - ${gameID}.zip was created."
 
