@@ -47,39 +47,51 @@ else
 fi
 
 # Check for required tools...
-checkTools cdrdao toc2cue bchunk oggenc
+checkTools cdrdao toc2cue bchunk oggenc grep wc
 
-#read -p "What is the name of this game? " -e gameName
-read -p "What is the ID of this game? " -e  gameID
-#read -p "Who was the publisher of this game? " -e gamePublisher
-#read -p "Is this game from Japan or USA? " -e gameCountry
+read -p "What is the ID of this game? " -e givenID
+
+gameID=$(grep "${givenID}" pcecd.csv | head -1 | cut -d"," -f1)
+gameName="unknown"
+gameDeveloper="unknown"
+gameRelease="unknown"
+gameCountry="unknown"
+gameMedia="CDROM2"
+if [ $(echo ${gameID} | wc -c) -le 2 ]; then
+	echo "Warning: ${gameCountry} id ${gameID} is not known to me. Metadata is unknown"
+else
+	gameName=$(grep "${gameID}" pcecd.csv | head -1 | cut -d"," -f2)
+	gameDeveloper=$(grep "${gameID}" pcecd.csv | head -1 | cut -d"," -f3)
+	gameRelease=$(grep "${gameID}" pcecd.csv | head -1 | cut -d"," -f4)
+	gameCountry=$(grep "${gameID}" pcecd.csv | head -1 | cut -d"," -f5)
+	gameMedia=$(grep "${gameID}" pcecd.csv | head -1 | cut -d"," -f6)
+	echo "Found game name \"${gameName}\" (${gameCountry}) in local database."
+fi
 
 cd $2
 # Rip CD
-echo "Examining CDROM2 game information..."
+echo "Examining ${gameMedia} game information..."
 lastTrack=$(cdrdao disk-info --device /dev/sr0 2>/dev/null | grep "Last Track" | cut -d":" -f2 | tr -d ' ')
-echo "Ripping CDROM2 image..."
+echo "Ripping ${gameMedia} image..."
 cdrdao read-cd -v 0 --read-raw --device ${1} --datafile ${gameID}.bin ${gameID}.toc &> /dev/null
 echo "Converting TOC to CUE..."
 toc2cue ${gameID}.toc ${gameID}.cue &> /dev/null
 # Break out tracks
-echo "Breaking apart CD tracks..."
+echo "Breaking apart disc tracks..."
 bchunk -w -s ${gameID}.bin ${gameID}.cue Track &> /dev/null
 rm ${gameID}.bin ${gameID}.toc
 
 hcdFile=${gameID}.hcd
 
 # Generate a basic hcd
-
 echo "Generating hcd metadata and encoding wav tracks..."
-# TODO: Find information for this CD somehow and auto-populate
 echo "[main]" > ${hcdFile}
 echo "id=${gameID}" >> ${hcdFile}
-echo "media=unknown" >> ${hcdFile}
-echo "country=unknown" >> ${hcdFile}
-echo "title=unknown" >> ${hcdFile}
-echo "developer=unknown" >> ${hcdFile}
-echo "release=unknown" >> ${hcdFile}
+echo "media=${gameMedia}" >> ${hcdFile}
+echo "country=${gameCountry}" >> ${hcdFile}
+echo "title=${gameName}" >> ${hcdFile}
+echo "developer=${gameDeveloper}" >> ${hcdFile}
+echo "release=${gameRelease}" >> ${hcdFile}
 echo "price=unknown" >> ${hcdFile}
 echo "genere=unknown" >> ${hcdFile}
 echo "first_track=1" >> ${hcdFile}
@@ -126,9 +138,8 @@ for i in $(find . -name "*.wav" -or -name "*.ugh" -or -name "*.iso" | sort); do
         track=$[track+1];
 done;
 
-#zip -c "PCEngine CD ${gameID}" -9 "${gameID}.zip" *
+zip -c "${gameID}" -9 "${gameName} - ${gameID}.zip" *
 cd -
-echo "Complete!"
-echo "*Please* remember to edit ${hcdFile} to add additional metadata!"
+echo "Complete! ${gameName} - ${gameID}.zip was created."
 
 echo 
