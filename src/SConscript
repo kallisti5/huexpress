@@ -11,7 +11,8 @@ main_sources = [
 	'unzip.c',
 	'utils.c',
 	'view_inf.c',
-	'view_zp.c'
+	'view_zp.c',
+	'zipmgr.c'
 ]
 
 sdl_sources = [
@@ -70,5 +71,6 @@ program_sources = [
 huexpress = env.Clone()
 huexpress.ParseConfig('pkg-config --cflags --libs sdl')
 huexpress.ParseConfig('pkg-config --cflags --libs SDL_mixer')
+huexpress.ParseConfig('pkg-config --cflags --libs --static libzip')
 huexpress.Program(target = 'huexpress', source = program_sources)
 huexpress.Program(target = 'hucrc', source = ['hucrc.c', 'utils.c', 'engine/romdb.c'])

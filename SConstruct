@@ -30,7 +30,7 @@ if not conf.CheckPKG('sdl'):
 env = conf.Finish()
 
 env.Append(CPPPATH = ['#src/includes/', '#src/engine/'])
-env.Append(LIBS = ['-lSDL_ttf', '-lz', '-lvorbisfile'])
+env.Append(LIBS = ['-lSDL_ttf', '-lvorbisfile'])
 env.Append(CFLAGS = ['-g'])
 env.Append(LINKFLAGS = ['-g'])
 

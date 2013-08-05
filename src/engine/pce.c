@@ -29,6 +29,7 @@
 #include "pce.h"
 #include "iso_ent.h"
 #include "miniunz.h"
+#include "zipmgr.h"
 #include "utils.h"
 #if defined(BSD_CD_HARDWARE_SUPPORT)
 #include "pcecd.h"
@@ -1550,6 +1551,9 @@ CartInit(char* name)
 		Log("Testing archive %s\n", name);
 		uint32 result = find_possible_filename_in_zip(name,
 			filename_in_archive);
+
+		zipmgr_probe_file(name, filename_in_archive);
+
 		if (result == ZIP_FLAG_ERROR) {
 			MESSAGE_ERROR("ZIP file error!\n");
 			return 1;
