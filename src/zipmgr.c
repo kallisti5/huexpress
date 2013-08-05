@@ -24,15 +24,35 @@ zipmgr_probe_file(char* zipFilename, char* foundGameFile)
 		return ZIP_ERROR;
 	}
 
-	zip_int64_t locatedIndex = -1;
+	zip_int64_t numberOfFiles = zip_get_num_entries(zipHandle,
+		ZIP_FL_UNCHANGED);
+
+	zip_int64_t position;
+	for (position = 0; position < numberOfFiles; position++) {
+		const char* filename = zip_get_name(zipHandle, position, 0);
+		if (strcasestr(filename, ".PCE")) {
+			MESSAGE_INFO("Found a valid rom within zip file: %s\n",
+				filename);
+			strncpy(foundGameFile, filename, PATH_MAX);
+			zip_close(zipHandle);
+			return ZIP_HAS_PCE;
+		}
+		if (strcasestr(filename, ".HCD")) {
+			MESSAGE_INFO("Found a valid cd game definition within zip file: "
+				"%s\n", filename);
+			strncpy(foundGameFile, filename, PATH_MAX);
+			zip_close(zipHandle);
+			return ZIP_HAS_HCD;
+		}
+		if (strcasestr(filename, ".ISO")) {
+			MESSAGE_INFO("Found an ISO within the zip file: %s\n",
+				filename);
+			strncpy(foundGameFile, filename, PATH_MAX);
+			zip_close(zipHandle);
+			return ZIP_HAS_ISO;
+		}
+	}
 	
-	locatedIndex = zip_name_locate(zipHandle, ".pce", ZIP_FL_NOCASE | ZIP_FL_NODIR);
-
-	if (locatedIndex != -1)
-		MESSAGE_INFO("Match!\n");
-	else
-		MESSAGE_INFO("No-Match!\n");
-
 	zip_close(zipHandle);
 	return ZIP_HAS_NONE;
 }

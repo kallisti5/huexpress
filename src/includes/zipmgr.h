@@ -22,10 +22,10 @@
 
 
 uint32 zipmgr_probe_file(char* zipFilename, char* foundGameFile);
-
-/*
-char* extract_file_in_memory(char *zipfilename, char *archivedfile,
-        size_t * unzipped_size);
-*/
+#if 0
+char* zipmgr_extract_to_memory(char* zipFilename, char* archivedFile,
+	size_t* archivedFileSize);
+uint32 zipmgr_extract_to_disk(char* zipFilename, char* destination);
+#endif
 
 #endif

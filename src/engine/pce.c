@@ -1549,22 +1549,20 @@ CartInit(char* name)
 		MESSAGE_INFO("Parsing possible ZIP archive\n");
 
 		Log("Testing archive %s\n", name);
-		uint32 result = find_possible_filename_in_zip(name,
-			filename_in_archive);
 
-		zipmgr_probe_file(name, filename_in_archive);
+		uint32 result = zipmgr_probe_file(name, filename_in_archive);
 
-		if (result == ZIP_FLAG_ERROR) {
+		if (result == ZIP_ERROR) {
 			MESSAGE_ERROR("ZIP file error!\n");
 			return 1;
-		} else if (result == ZIP_FLAG_NONE) {
+		} else if (result == ZIP_HAS_NONE) {
 			MESSAGE_ERROR("No valid game files found in ZIP file!\n");
 			return 1;
 		}
 
 		if (strcmp(filename_in_archive, "")) {
 			Log("Found %s in %s\n", filename_in_archive, name);
-			if (result == ZIP_FLAG_PCE) {
+			if (result == ZIP_HAS_PCE) {
 				size_t unzipped_rom_size;
 				char* unzipped_rom = extract_file_in_memory(name,
 					filename_in_archive, &unzipped_rom_size);
