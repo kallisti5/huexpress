@@ -55,6 +55,7 @@ int32 CheckSprites(void);
 void RefreshLine(int Y1, int Y2);
 void RefreshScreen(void);
 uint32 CRC_file(char *);
+uchar CartInit(char* name);
 int CartLoad(char *name);
 #ifndef KERNEL_DS
 int ResetPCE(M6502 * M);

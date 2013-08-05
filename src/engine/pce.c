@@ -62,7 +62,7 @@ const uint32 PopRAMsize = 0x8000;
 //byte ZBuf[ZW*256];
 //BOOL IsROM[8];
 
-uchar *ROM;
+uchar *ROM = NULL;
 // IOAREA = a pointer to the emulated IO zone
 // vchange = array of boolean to know whether bg tiles have changed (i.e.
 //      vchanges[5]==1 means the 6th tile have changed and VRAM2 should be updated)
@@ -133,7 +133,7 @@ uchar use_eagle = 0;
 uchar use_scanline = 0;
 // use scanline mode ?
 
-char true_file_name[PATH_MAX];
+char rom_file_name[PATH_MAX];
 // the name of the file containing the ROM (with path, ext)
 // Now needed 'coz of ZIP archiving...
 
@@ -1399,8 +1399,6 @@ TimerInt()
 }
 
 
-#define LOAD_INTEGRATED_SYS_FILE return search_syscard();
-
 static char syscard_filename[PATH_MAX];
 
 /*****************************************************************************
@@ -1471,11 +1469,9 @@ search_possible_syscard()
 
 		Description: Search for a system card rom
 		Parameters: none
-		Return: -1 on error else 0
-						 set true_file_name
 
 *****************************************************************************/
-int32
+void
 search_syscard()
 {
 	char *syscard_location;
@@ -1485,17 +1481,142 @@ search_syscard()
 	if (NULL == syscard_location) {
 		MESSAGE_ERROR
 			("No CD system cards were found, can not continue.\n");
-		return -1;
 	} else {
-		int CD_emulation_bak = CD_emulation;
-		int return_value;
-
-		CD_emulation = 0;
-		return_value = CartLoad(syscard_location);
-		CD_emulation = CD_emulation_bak;
-		return return_value;
+		CartInit(syscard_location);
 	}
+}
 
+
+uchar
+CartInit(char* name)
+{
+	MESSAGE_INFO("Opening %s...\n", name);
+	uchar CDemulation = 0;
+
+	if (CD_emulation == 1 || strstr(name, "/dev/disk/atapi/")
+		|| strstr(name, "/dev/sr")) {
+		CDemulation = 1;
+		MESSAGE_INFO("Using Hardware CD Device to load CDRom2\n");
+		strcpy(ISO_filename, name);
+		search_syscard();
+	} else if (strcasestr(name, ".PCE")) {
+		// ROM Image or CD system card
+		CDemulation = 0;
+		strcpy(rom_file_name, name);
+	} else if (strcasestr(name, ".HCD")) {
+		// HuGO! CD definition provided
+		CDemulation = 5;
+		MESSAGE_INFO("Using Hu-Go! CD definition emulation\n");
+
+		// Load correct ISO filename
+		strcpy(ISO_filename, name);
+
+		if (!fill_HCD_info(name))
+			return 1;
+
+		search_syscard();
+	} else if (strcasestr(name, ".ISO")) {
+		// Enable ISO support
+		CDemulation = 2;
+		MESSAGE_INFO("Using CD ISO emulation\n");
+
+		// Load correct ISO filename
+		strcpy(ISO_filename, name);
+
+		search_syscard();
+	} else if (strcasestr(name, ".ISQ")) {
+		// Enable ISQ support
+		CDemulation = 3;
+		MESSAGE_INFO("Using CD ISQ emulation\n");
+
+		// Load correct ISO filename
+		strcpy(ISO_filename, name);
+
+		search_syscard();
+	} else if (strcasestr(name, ".BIN")) {
+		// Enable BIN support
+		CDemulation = 4;
+		MESSAGE_INFO("Using CD BIN emulation\n");
+
+		// Load correct ISO filename
+		strcpy(ISO_filename, name);
+
+		search_syscard();
+	} else if (strcasestr(name, ".ZIP")) {
+		char filename_in_archive[PATH_MAX];
+
+		MESSAGE_INFO("Parsing possible ZIP archive\n");
+
+		Log("Testing archive %s\n", name);
+		uint32 result = find_possible_filename_in_zip(name,
+			filename_in_archive);
+		if (result == ZIP_FLAG_ERROR) {
+			MESSAGE_ERROR("ZIP file error!\n");
+			return 1;
+		} else if (result == ZIP_FLAG_NONE) {
+			MESSAGE_ERROR("No valid game files found in ZIP file!\n");
+			return 1;
+		}
+
+		if (strcmp(filename_in_archive, "")) {
+			Log("Found %s in %s\n", filename_in_archive, name);
+			if (result == ZIP_FLAG_PCE) {
+				size_t unzipped_rom_size;
+				char* unzipped_rom = extract_file_in_memory(name,
+					filename_in_archive, &unzipped_rom_size);
+
+				ROM_size = unzipped_rom_size / 0x2000;
+
+#if defined(SHARED_MEMORY)
+				shm_rom_handle
+					= shmget((key_t) SHM_ROM_HANDLE, unzipped_rom_size,
+							 IPC_CREAT | IPC_EXCL | 0666);
+	
+				if (shm_rom_handle == -1) {
+					fprintf(stderr, "Couldn't get shared memory (%d bytes)\n",
+						unzipped_rom_size);
+					return 1;
+				} else {
+					ROM = (char *)shmat(shm_rom_handle, NULL, 0);
+					if (ROM == NULL) {
+						fprintf(stderr, "Couldn't attach shared memory\n");
+						return 1;
+					} else {
+						// Copy into the shared memory, by skipping an eventual header
+						memcpy(ROM, unzipped_rom + (unzipped_rom_size & 0x1FF),
+							unzipped_rom_size & ~0x1FF);
+						free(unzipped_rom);
+					}
+				}
+#else
+				if ((unzipped_rom_size & 0x1FFF) == 0) {
+					/* No header */
+					ROM = unzipped_rom;
+				} else {
+					ROM = malloc(unzipped_rom_size & ~0x1FFF);
+					memcpy(ROM, unzipped_rom + (unzipped_rom_size & 0x1FFF),
+						unzipped_rom_size & ~0x1FFF);
+					free(unzipped_rom);
+				}
+				return 0;
+			} else {
+				MESSAGE_ERROR("TODO: extract CD files from zip\n");
+			}
+#endif
+		}
+		/*
+		   strcpy (rom_file_name, tmp_path);
+		   fp = fopen (tmp_path, "rb");
+		 */
+	}
+	/*else {
+	   // unknown media format
+	   CDemulation = 0;
+	   strcpy (rom_file_name, name);
+	   fp = fopen(name, "rb");
+	   }
+	 */
+	return CDemulation;
 }
 
 
@@ -1506,164 +1627,30 @@ search_syscard()
 		Description: load a card
 		Parameters: char* name (the filename to load)
 		Return: -1 on error else 0
-		set true_file_name or builtin_system
+		set rom_file_name or builtin_system
 
 *****************************************************************************/
 int
 CartLoad(char *name)
 {
-	FILE *fp = NULL;
-	int fsize;
-
-	MESSAGE_INFO("Opening %s...\n", name);
-
-	if (CD_emulation == 1 || strstr(name, "/dev/disk/atapi/")
-		|| strstr(name, "/dev/sr")) {
-		MESSAGE_INFO("Using Hardware CD Device to load CDRom2\n");
-		CD_emulation = 1;
-
-		strcpy(ISO_filename, name);
-
-		LOAD_INTEGRATED_SYS_FILE;
-		return 1;
-	} else if (strcasestr(name, ".PCE")) {
-		// ROM Image or CD system card
-		CD_emulation = 0;
-		strcpy(true_file_name, name);
-		fp = fopen(name, "rb");
-	} else if (strcasestr(name, ".HCD")) {
-		// HuGO! CD definition provided
-		CD_emulation = 5;
-		MESSAGE_INFO("Using Hu-Go! CD definition emulation\n");
-
-		// Load correct ISO filename
-		strcpy(ISO_filename, name);
-
-		if (!fill_HCD_info(name))
-			return 1;
-
-		LOAD_INTEGRATED_SYS_FILE;
-	} else if (strcasestr(name, ".ISO")) {
-		// Enable ISO support
-		CD_emulation = 2;
-		MESSAGE_INFO("Using CD ISO emulation\n");
-
-		// Load correct ISO filename
-		strcpy(ISO_filename, name);
-
-		LOAD_INTEGRATED_SYS_FILE;
-	} else if (strcasestr(name, ".ISQ")) {
-		// Enable ISQ support
-		CD_emulation = 3;
-		MESSAGE_INFO("Using CD ISQ emulation\n");
-
-		// Load correct ISO filename
-		strcpy(ISO_filename, name);
-
-		LOAD_INTEGRATED_SYS_FILE;
-	} else if (strcasestr(name, ".BIN")) {
-		// Enable BIN support
-		CD_emulation = 4;
-		MESSAGE_INFO("Using CD BIN emulation\n");
-
-		// Load correct ISO filename
-		strcpy(ISO_filename, name);
-
-		LOAD_INTEGRATED_SYS_FILE;
-	} else if (strcasestr(name, ".ZIP")) {
-		char *filename_in_archive = NULL;
-
-		MESSAGE_INFO("Parsing possible ZIP archive\n");
-
-		Log("Testing archive %s\n", name);
-		filename_in_archive = find_possible_filename_in_zip(name);
-		Log("Return value = (%p) %s\n", filename_in_archive,
-			filename_in_archive);
-		if (strcmp(filename_in_archive, "")) {
-			char *unzipped_rom;
-			size_t unzipped_rom_size;
-
-			Log("Found %s in %s\n", filename_in_archive, name);
-			unzipped_rom =
-				extract_file_in_memory(name, filename_in_archive,
-									   &unzipped_rom_size);
-
-			ROM_size = unzipped_rom_size / 0x2000;
-
-#if defined(SHARED_MEMORY)
-			shm_rom_handle
-				= shmget((key_t) SHM_ROM_HANDLE, unzipped_rom_size,
-						 IPC_CREAT | IPC_EXCL | 0666);
-
-			if (shm_rom_handle == -1) {
-				fprintf(stderr, "Couldn't get shared memory (%d bytes)\n",
-						fsize);
-				return 1;
-			} else {
-				ROM = (char *) shmat(shm_rom_handle, NULL, 0);
-				if (ROM == NULL) {
-					fprintf(stderr, "Couldn't attach shared memory\n");
-					return 1;
-				} else {
-					// Copy into the shared memory, by skipping an eventual header
-					memcpy(ROM,
-						   unzipped_rom + (unzipped_rom_size & 0x1FF),
-						   unzipped_rom_size & ~0x1FF);
-					free(unzipped_rom);
-				}
-			}
-#else
-			if ((unzipped_rom_size & 0x1FFF) == 0) {
-				/* No header */
-				ROM = unzipped_rom;
-			} else {
-				ROM = malloc(unzipped_rom_size & ~0x1FFF);
-				memcpy(ROM,
-					   unzipped_rom + (unzipped_rom_size & 0x1FFF),
-					   unzipped_rom_size & ~0x1FFF);
-				free(unzipped_rom);
-			}
-#endif
-			return 0;
-		}
-		/*
-		   strcpy (true_file_name, tmp_path);
-		   fp = fopen (tmp_path, "rb");
-		 */
-	}
-	/*else {
-	   // unknown media format
-	   CD_emulation = 0;
-	   strcpy (true_file_name, name);
-	   fp = fopen(name, "rb");
-	   }
-	 */
-
-	if (fp == NULL) {
-		if (!check_char(name, '.')) {
-			// if dot omitted, we try with PCE extension
-			strcat(name, ".pce");
-			return CartLoad(name);
-		}
-
-		if (strcasestr(name, ".pce")
-			|| strcasestr(name, ".iso")) {
-			// if filename with .PCE doesn't exist, it may be in ZIP
-			strcpy(&name[strlen(name) - 4], ".zip");
-			return CartLoad(name);
-		};
-
-		return -1;
-	}
+	CD_emulation = CartInit(name);
 
 	if (cart_name != name) {
 		// Avoids warning when copying passing cart_name as parameter
-#warning find where this weird call is done
+		#warning find where this weird call is done
 		strcpy(cart_name, name);
 	}
+
+	if (ROM != NULL) {
+		// ROM was already loaded, likely from memory / zip file
+		return 0;
+	}
+
+	// Load PCE, we always load a PCE even with a cd (syscard)
+	FILE *fp = fopen(rom_file_name, "rb");
 	// find file size
 	fseek(fp, 0, SEEK_END);
-	fsize = ftell(fp);
+	int fsize = ftell(fp);
 
 	// ajust var if header present
 	fseek(fp, fsize & 0x1fff, SEEK_SET);
@@ -1684,7 +1671,7 @@ CartLoad(char *name)
 	}
 
 #else
-	ROM = (uchar *) malloc(fsize);
+	ROM = (uchar *)malloc(fsize);
 #endif
 	ROM_size = fsize / 0x2000;
 	fread(ROM, 1, fsize, fp);
@@ -1942,7 +1929,7 @@ InitPCE(char *name, char *backmemname)
 	/* TEST */
 	io.screen_w = 256;
 
-	uint32 CRC = CRC_file(true_file_name);
+	uint32 CRC = CRC_file(rom_file_name);
 
 	/* I'm doing it only here 'coz cartload set
 	   true_file_name       */

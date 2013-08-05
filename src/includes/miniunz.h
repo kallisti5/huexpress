@@ -16,11 +16,24 @@
 #ifndef MINIUNZ_H
 #define MINIUNZ_H
 
+
+#include "cleantypes.h"
+
+#include <string.h>
+
+
+#define ZIP_FLAG_ERROR  0x0000
+#define ZIP_FLAG_NONE   0x0001
+#define ZIP_FLAG_PCE    0x0002
+#define ZIP_FLAG_ISO    0x0004
+#define ZIP_FLAG_HCD    0x0008
+
+
 //! Look for possible filename in zip archive
-char* find_possible_filename_in_zip (char *zipfilename);
+uint32 find_possible_filename_in_zip(char* zipfilename, char* foundGameFile);
 
 //! Extract file content from zip archive
-char* extract_file_in_memory (char *zipfilename, char *archivedfile,
-			    size_t * unzipped_size);
+char* extract_file_in_memory(char *zipfilename, char *archivedfile,
+	size_t * unzipped_size);
 
 #endif

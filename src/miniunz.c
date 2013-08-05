@@ -13,6 +13,10 @@
  *	along with this program; if not, write to the Free Software
  *	Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
+
+
+#include "miniunz.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -33,17 +37,14 @@
 #define MAXFILENAME (256)
 
 
-static char possible_filename_in_zip[PATH_MAX];
-
-
 /*!
  * find_possible_filename_in_zip : Look whether the given archive contains a rom
  * @param zipfilename Name of the archive file in zip format in which to search for a rom
- * @return NULL in case of error or no rom found else a pointer to a statically allocated
- * storage containing the filename found inside
+ * @param foundGameFile Result of file search
+ * @return ZIP_FLAG_ERROR, ZIP_FLAG_NONE, ZIP_FLAG_PCE, ZIP_FLAG_ISO, ZIP_FLAG_HCD
  */
-char *
-find_possible_filename_in_zip(char *zipfilename)
+uint32
+find_possible_filename_in_zip(char* zipfilename, char* foundGameFile)
 {
 	uLong i;
 	unz_global_info gi;
@@ -57,7 +58,7 @@ find_possible_filename_in_zip(char *zipfilename)
 #endif
 
 	if (zipfilename == NULL)
-		return NULL;
+		return ZIP_FLAG_ERROR;
 
 	uf = unzOpen (zipfilename);
 
@@ -67,7 +68,7 @@ find_possible_filename_in_zip(char *zipfilename)
 	}
 
 	if (uf == NULL)
-		return NULL;
+		return ZIP_FLAG_ERROR;
 
 #if !defined(FINAL_RELEASE)
 	fprintf (stderr, "Opened the archive");
@@ -75,7 +76,7 @@ find_possible_filename_in_zip(char *zipfilename)
 
 	err = unzGetGlobalInfo (uf, &gi);
 	if (err != UNZ_OK) {
-			return NULL;
+			return ZIP_FLAG_ERROR;
 	}
 
 	for (i = 0; i < gi.number_entry; i++) {
@@ -86,37 +87,37 @@ find_possible_filename_in_zip(char *zipfilename)
 			sizeof (filename_inzip), NULL, 0, NULL, 0);
 
 		if (err != UNZ_OK)
-			return NULL;
+			return ZIP_FLAG_ERROR;
 
 		if (strcasestr(filename_inzip, ".PCE")) {
 			MESSAGE_INFO("Found a valid rom within zip file: %s\n",
 				filename_inzip);
-			strncpy(possible_filename_in_zip, filename_inzip, PATH_MAX);
-			return possible_filename_in_zip;
+			strncpy(foundGameFile, filename_inzip, PATH_MAX);
+			return ZIP_FLAG_PCE;
 		}
 
 		if (strcasestr(filename_inzip, ".HCD")) {
 			MESSAGE_INFO("Found a valid cd game definition within zip file: "
 				"%s\n", filename_inzip);
+			strncpy(foundGameFile, filename_inzip, PATH_MAX);
+			return ZIP_FLAG_HCD;
+		}
 
-			// TODO: We should set the cd emulation in this case and extract
-			// the *whole* zip somewhere... otherwise this won't work.
-			MESSAGE_INFO("Warning: You will need to extract this zip and run "
-				"the emulator on the %s file to successfully emulate this.\n",
+		if (strcasestr(filename_inzip, ".ISO")) {
+			MESSAGE_INFO("Found an ISO within the zip file: %s\n",
 				filename_inzip);
-
-			strncpy(possible_filename_in_zip, filename_inzip, PATH_MAX);
-			return possible_filename_in_zip;
+			strncpy(foundGameFile, filename_inzip, PATH_MAX);
+			return ZIP_FLAG_ISO;
 		}
 
 		if ((i + 1) < gi.number_entry) {
 			err = unzGoToNextFile(uf);
 			if (err != UNZ_OK)
-				return NULL;
+				return ZIP_FLAG_NONE;
 		}
 	}
 
-	return NULL;
+	return ZIP_FLAG_ERROR;
 }
 
 
