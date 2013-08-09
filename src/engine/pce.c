@@ -1602,7 +1602,14 @@ CartInit(char* name)
 				}
 				return 0;
 			} else {
-				MESSAGE_ERROR("TODO: extract CD files from zip\n");
+				if (zipmgr_extract_to_disk(name, tmp_basepath)) {
+					MESSAGE_ERROR("Error extracting zipfile\n");
+					return 1;
+				}
+				char tmpGame[PATH_MAX];
+				snprintf(tmpGame, PATH_MAX, "%s%s%s", tmp_basepath, PATH_SLASH,
+					filename_in_archive);
+				CDemulation = CartInit(tmpGame);
 			}
 #endif
 		}

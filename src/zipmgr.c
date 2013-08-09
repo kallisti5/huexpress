@@ -56,3 +56,72 @@ zipmgr_probe_file(char* zipFilename, char* foundGameFile)
 	zip_close(zipHandle);
 	return ZIP_HAS_NONE;
 }
+
+
+static void
+safe_create_dir(const char *dir)
+{
+	if (mkdir(dir, 0755) < 0) {
+		if (errno != EEXIST) {
+			perror(dir);
+			exit(1);
+		}
+	}
+}
+
+
+uint32
+zipmgr_extract_to_disk(char* zipFilename, char* destination)
+{
+	struct zip* zipHandle = zip_open(zipFilename, 0, NULL);
+	if (zipHandle == NULL) {
+		MESSAGE_ERROR("Zip %s error: %s\n", zipFilename,
+			zip_strerror(zipHandle));
+		return ZIP_ERROR;
+	}
+
+	safe_create_dir(destination);
+	printf("Extracting.");
+	int i = 0;
+	for (i = 0; i < zip_get_num_entries(zipHandle, 0); i++) {
+		struct zip_stat sb;
+		if (zip_stat_index(zipHandle, i, 0, &sb) == 0) {
+			char outputFile[PATH_MAX];
+			snprintf(outputFile, PATH_MAX, "%s%s%s", destination, PATH_SLASH, sb.name);
+			int len = strlen(outputFile);
+			if (outputFile[len - 1] == '/') {
+				safe_create_dir(outputFile);
+			} else {
+				struct zip_file* zf = zip_fopen_index(zipHandle, i, 0);
+				if (!zf) {
+					fprintf(stderr, "boese, boese/n");
+					return 1;
+				}
+				int fd = open(outputFile, O_RDWR | O_TRUNC | O_CREAT, 0644);
+				if (fd < 0) {
+					fprintf(stderr, "boese, boese/n");
+					return 1;
+				}
+ 
+				long long sum = 0;
+				while (sum != sb.size) {
+					char buf[100];
+					len = zip_fread(zf, buf, 100);
+					if (len < 0) {
+						fprintf(stderr, "boese, boese/n");
+						return 1;
+					}
+					write(fd, buf, len);
+					sum += len;
+				}
+				close(fd);
+				zip_fclose(zf);
+			}
+			printf(".");
+		} else {
+			printf("File[%s] Line[%d]/n", __FILE__, __LINE__);
+		}
+	}
+	printf("\n");
+	return 0;
+}

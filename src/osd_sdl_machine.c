@@ -216,5 +216,4 @@ osd_init_paths(int argc, char* argv[])
 	// Set the video output directory
 	sprintf (video_path, "%s/video/", short_exe_name);
 	mkdir(video_path, 0777);
-
 }
