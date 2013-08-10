@@ -90,7 +90,7 @@ backward_one_line()
 	char line;
 	uchar Try;
 	uint16 try_pos[MAX_TRY] = { 1, 2, 3, 4, 7 };
-	unsigned short temp_pos;
+	unsigned short temp_pos = 0;
 	char possible;
 	uchar op, size, i;
 
