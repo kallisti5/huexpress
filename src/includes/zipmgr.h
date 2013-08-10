@@ -26,12 +26,12 @@
 #define PATH_SLASH "\\"
 #endif
 
+
 uint32 zipmgr_probe_file(char* zipFilename, char* foundGameFile);
 uint32 zipmgr_extract_to_disk(char* zipFilename, char* destination);
+char* zipmgr_extract_to_memory(char* zipFilename, char* cartFilename,
+	size_t* cartSize);
 
-#if 0
-char* zipmgr_extract_to_memory(char* zipFilename, char* archivedFile,
-	size_t* archivedFileSize);
-#endif
 
-#endif
+
+#endif /* ZIPMGR_H */

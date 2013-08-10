@@ -28,7 +28,6 @@
 
 #include "pce.h"
 #include "iso_ent.h"
-#include "miniunz.h"
 #include "zipmgr.h"
 #include "utils.h"
 #if defined(BSD_CD_HARDWARE_SUPPORT)
@@ -1563,16 +1562,22 @@ CartInit(char* name)
 		if (strcmp(filename_in_archive, "")) {
 			Log("Found %s in %s\n", filename_in_archive, name);
 			if (result == ZIP_HAS_PCE) {
-				size_t unzipped_rom_size;
-				char* unzipped_rom = extract_file_in_memory(name,
+				size_t unzipped_rom_size = 0;
+				char* unzipped_rom = zipmgr_extract_to_memory(name,
 					filename_in_archive, &unzipped_rom_size);
+
+				if (unzipped_rom == NULL || unzipped_rom_size == 0) {
+					MESSAGE_ERROR("Error expanding rom to memory!\n");
+					return 1;
+				}
+
+				MESSAGE_INFO("unzipped rom size: %d\n", unzipped_rom_size);
 
 				ROM_size = unzipped_rom_size / 0x2000;
 
 #if defined(SHARED_MEMORY)
-				shm_rom_handle
-					= shmget((key_t) SHM_ROM_HANDLE, unzipped_rom_size,
-							 IPC_CREAT | IPC_EXCL | 0666);
+				shm_rom_handle = shmget((key_t) SHM_ROM_HANDLE,
+					unzipped_rom_size, IPC_CREAT | IPC_EXCL | 0666);
 	
 				if (shm_rom_handle == -1) {
 					fprintf(stderr, "Couldn't get shared memory (%d bytes)\n",
@@ -1601,9 +1606,10 @@ CartInit(char* name)
 					free(unzipped_rom);
 				}
 				return 0;
+#endif
 			} else {
 				if (zipmgr_extract_to_disk(name, tmp_basepath)) {
-					MESSAGE_ERROR("Error extracting zipfile\n");
+					MESSAGE_ERROR("Error eixtracting zipfile\n");
 					return 1;
 				}
 				char tmpGame[PATH_MAX];
@@ -1611,7 +1617,6 @@ CartInit(char* name)
 					filename_in_archive);
 				CDemulation = CartInit(tmpGame);
 			}
-#endif
 		}
 		/*
 		   strcpy (rom_file_name, tmp_path);

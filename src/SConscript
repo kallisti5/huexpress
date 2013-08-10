@@ -7,8 +7,6 @@ Import("env")
 main_sources = [
 	'huexpress.c',
 	'iniconfig.c',
-	'miniunz.c',
-	'unzip.c',
 	'utils.c',
 	'view_inf.c',
 	'view_zp.c',

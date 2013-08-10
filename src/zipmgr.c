@@ -125,3 +125,59 @@ zipmgr_extract_to_disk(char* zipFilename, char* destination)
 	printf("\n");
 	return 0;
 }
+
+
+char*
+zipmgr_extract_to_memory(char* zipFilename, char* cartFilename,
+	size_t* cartSize)
+{
+	struct zip* zipHandle = zip_open(zipFilename, 0, NULL);
+	if (zipHandle == NULL) {
+		MESSAGE_ERROR("Zip %s error: %s\n", zipFilename,
+			zip_strerror(zipHandle));
+		return NULL;
+	}
+
+	zip_int64_t fileIndex = zip_name_locate(zipHandle, cartFilename, 0);
+	if (fileIndex < 0) {
+		MESSAGE_ERROR("Zip %s error: %s\n", zipFilename,
+			zip_strerror(zipHandle));
+		return NULL;
+	}
+
+	struct zip_stat fileStat;
+	zip_stat_index(zipHandle, fileIndex, 0, &fileStat);
+
+	struct zip_file* cartHandle = zip_fopen_index(zipHandle, fileIndex, 0);
+	if (cartHandle == NULL) {
+		MESSAGE_ERROR("Zip %s error: %s\n", zipFilename,
+			zip_strerror(zipHandle));
+		zip_close(zipHandle);
+		return NULL;
+	}
+
+	size_t alignedSize = fileStat.size + (fileStat.size % 16);
+	char* extractedCart = calloc(alignedSize / 16, 16);
+
+	if (extractedCart == NULL) {
+		MESSAGE_ERROR("Memory allocation error!\n");
+		zip_fclose(cartHandle);
+		zip_close(zipHandle);
+		return NULL;
+	}
+
+	size_t bytesExtracted = zip_fread(cartHandle, extractedCart, fileStat.size);
+
+	if (bytesExtracted != fileStat.size) {
+		MESSAGE_ERROR("Error reading file from zip archive!\n");
+		zip_fclose(cartHandle);
+		zip_close(zipHandle);
+		free(extractedCart);
+		return NULL;
+	} else
+		*cartSize = bytesExtracted;
+
+	zip_fclose(cartHandle);
+	zip_close(zipHandle);
+	return extractedCart;
+}
