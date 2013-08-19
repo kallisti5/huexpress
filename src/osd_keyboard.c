@@ -6,6 +6,12 @@
 #include <sys/timeb.h>
 #endif
 
+#ifndef SDLK_NUMLOCK
+// SDL 2.0>
+#define SDLK_NUMLOCK SDLK_NUMLOCKCLEAR
+#endif
+
+
 Uint16 read_input (Uint16 port);
 
 // info about the input config 

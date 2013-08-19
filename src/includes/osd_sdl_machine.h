@@ -1,5 +1,5 @@
 #include <SDL.h>
-#include <SDL_keysym.h>
+#include <SDL_keyboard.h>
 
 #include "debug.h"
 

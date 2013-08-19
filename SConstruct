@@ -23,14 +23,14 @@ conf = Configure(env, custom_tests = { 'CheckPKGConfig' : CheckPKGConfig,
 if not conf.CheckPKGConfig('0.15.0'):
 	print 'pkg-config >= 0.15.0 not found.'
 	Exit(1)
-if not conf.CheckPKG('sdl'):
-	print 'sdl not found.'
+if not conf.CheckPKG('sdl2'):
+	print 'sdl 2.x not found.'
 	Exit(1)
 
 env = conf.Finish()
 
 env.Append(CPPPATH = ['#src/includes/', '#src/engine/'])
-env.Append(LIBS = ['-lSDL_ttf', '-lvorbisfile'])
+env.Append(LIBS = ['-lSDL2_ttf', '-lvorbisfile'])
 env.Append(CFLAGS = ['-g'])
 env.Append(LINKFLAGS = ['-g'])
 

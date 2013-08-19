@@ -143,7 +143,7 @@ osd_readkey(void)
 	while (SDL_PollEvent(&event)) {
 		switch (event.type) {
 			case SDL_KEYDOWN:
-				return event.key.keysym.unicode;
+				return event.key.keysym.scancode;
 			case SDL_QUIT:
 				return 0;
 		}

@@ -168,7 +168,7 @@ void osd_gfx_put_image_normal(void)
 
 		Sulock(screen);
 
-		if (physical_screen->flags & SDL_FULLSCREEN)
+		if (physical_screen->flags & SDL_WINDOW_FULLSCREEN)
 			SDL_SoftStretch(screen, NULL, physical_screen,
 				&physical_screen_rect);
 		else if (option.window_size > 1)
@@ -286,7 +286,7 @@ int osd_gfx_init(void)
 			option.want_fullscreen ? option.fullscreen_height
 			: fake_io_screen_h * option.window_size,
 		(option.want_hardware_scaling ? 0 : 8),
-		(option.want_fullscreen ? SDL_FULLSCREEN : 0)
+		(option.want_fullscreen ? SDL_WINDOW_FULLSCREEN : 0)
 		| (option.want_hardware_scaling ? SDL_HWSURFACE : SDL_SWSURFACE)
 		| (option.want_hardware_scaling ? 0 : SDL_HWPALETTE))) == NULL)
 	{
@@ -330,7 +330,7 @@ int osd_gfx_init(void)
 							option.want_fullscreen
 							? option.fullscreen_width : fake_io_screen_h
 								* option.window_size,
-							8, (option.want_fullscreen ? SDL_FULLSCREEN : 0)
+							8, (option.want_fullscreen ? SDL_WINDOW_FULLSCREEN : 0)
 								| SDL_SWSURFACE | SDL_HWPALETTE)) == NULL) {
 							MESSAGE_ERROR("SDL: Set video mode failed - %s\n",
 								SDL_GetError());
@@ -418,7 +418,7 @@ int osd_gfx_init_normal_mode()
 		io.screen_h = 224;
 	}
 
-	if (physical_screen->flags & SDL_FULLSCREEN)
+	if (physical_screen->flags & SDL_WINDOW_FULLSCREEN)
 	{
 		SDL_FillRect(physical_screen, NULL, 0);
 	}
@@ -591,7 +591,7 @@ int ToggleFullScreen(void)
 
 	SDL_PauseAudio(SDL_ENABLE);
 
-	if (physical_screen->flags & SDL_FULLSCREEN)
+	if (physical_screen->flags & SDL_WINDOW_FULLSCREEN)
 	{
 		if ((physical_screen = SDL_SetVideoMode(io.screen_w * option.window_size, io.screen_h * option.window_size,
 																						(host.video.hardware_scaling ? 0 : 8),
@@ -605,7 +605,7 @@ int ToggleFullScreen(void)
 		if ((physical_screen = SDL_SetVideoMode(option.fullscreen_width, option.fullscreen_height,
 																						(host.video.hardware_scaling ? 0 : 8),
 																						(host.video.hardware_scaling ? SDL_HWSURFACE : SDL_SWSURFACE) |
-																						(host.video.hardware_scaling ? 0 : SDL_HWPALETTE) | SDL_FULLSCREEN)) == NULL)
+																						(host.video.hardware_scaling ? 0 : SDL_HWPALETTE) | SDL_WINDOW_FULLSCREEN)) == NULL)
 		{
 			Log("Can't get physical_screen for full screen\n");
 			printf("Can't get physical screen\n");
@@ -623,7 +623,7 @@ int ToggleFullScreen(void)
 
 	SDL_PauseAudio(SDL_DISABLE);
 
-	return (physical_screen->flags & SDL_FULLSCREEN) ? 0 : 1;
+	return (physical_screen->flags & SDL_WINDOW_FULLSCREEN) ? 0 : 1;
 }
 
 
