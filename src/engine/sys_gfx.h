@@ -57,14 +57,6 @@ void osd_gfx_set_color(uchar index, uchar r, uchar g, uchar b);
    */
 uint16 osd_gfx_savepict(void);
 
-  /*
-   * osd_gfx_set_hugo_mode
-   *
-   * Asks to set up a screen sized width x height, using the mode 'mode'
-   * which can be a driver in fact (X, SVGA, VESA, etc...)
-   */
-int32 osd_gfx_set_hugo_mode(int32 mode, int32 width, int32 height);
-
 	/*
 	 * osd_gfx_set_message
 	 *

@@ -94,7 +94,7 @@ read_input (uint16 port)
 	static char autoI_delay = 0, autoII_delay = 0;
 	uint16 tmp;
 
-	key = SDL_GetKeyState (NULL);
+	key = SDL_GetKeyboardState(NULL);
 
 	for (tmp = J_PAD_START; tmp < J_MAX; tmp++)
 		joy[tmp] = 0;
