@@ -11,6 +11,9 @@
 #include "osd_sdl_gfx.h"
 #include "utils.h"
 
+SDL_Renderer *sdlRenderer = NULL;
+SDL_Window *sdlWindow = NULL;
+
 //! PC Engine rendered screen
 SDL_Surface *screen = NULL;
 
@@ -186,7 +189,7 @@ osd_gfx_put_image_normal(void)
 			message_delay--;
 		}
 
-		SDL_RenderPresent(physical_screen); // was SDL_Flip
+		SDL_RenderPresent(sdlRenderer); // was SDL_Flip
 
 	} else {
 		// TODO: Fix hardware scaling
@@ -281,7 +284,7 @@ osd_gfx_init(void)
 	if (!SDL_WasInit(SDL_INIT_VIDEO)) {
 		if (SDL_InitSubSystem(SDL_INIT_VIDEO)) {
 			MESSAGE_ERROR("SDL: %s failed at %s:%d - %s\n",
-						  __func__, __FILE__, __LINE__, SDL_GetError());
+				__func__, __FILE__, __LINE__, SDL_GetError());
 			return 0;
 		}
 	}
@@ -290,20 +293,31 @@ osd_gfx_init(void)
 		? option.fullscreen_width : fake_io_screen_w * option.window_size;
 	uint16 height = option.want_fullscreen
 		? option.fullscreen_height : fake_io_screen_h * option.window_size;
-	uint16 bpp = option.want_hardware_scaling ? 0 : 8;
-	// TODO: Fix RGBSurfaceFlags
-	#if 0
-	uint32 flags = (option.want_fullscreen ?  SDL_WINDOW_FULLSCREEN : 0)
-		| (option.want_hardware_scaling ? SDL_HWSURFACE : SDL_SWSURFACE)
-		| (option.want_hardware_scaling ? 0 : SDL_HWPALETTE);
-	#endif
+	uint16 bpp = option.want_hardware_scaling ? 0 : 32;
 
+	SDL_CreateWindowAndRenderer(width, height,
+		option.want_fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0,
+		&sdlWindow, &sdlRenderer);
+
+	if (sdlWindow == NULL) {
+		MESSAGE_ERROR("SDL: %s failed at %s:%d - %s\n", __func__, __FILE__,
+			__LINE__, SDL_GetError());
+		return 0;
+	}
+
+	SDL_SetWindowTitle(sdlWindow, "HuExpress");
+
+	#if SDL_BYTEORDER == SDL_BIG_ENDIAN
 	physical_screen = SDL_CreateRGBSurface(0, width, height, bpp,
-		0x00FF000, 0x0000FF00, 0x000000FF, 0xFF000000);
+		0xFF000000, 0x00FF0000, 0x0000FF00, 0x000000FF);
+	#else
+	physical_screen = SDL_CreateRGBSurface(0, width, height, bpp,
+		0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000);
+	#endif
 
 	if (physical_screen == NULL) {
 		MESSAGE_ERROR("SDL: %s failed at %s:%d - %s\n", __func__, __FILE__,
-					  __LINE__, SDL_GetError());
+			__LINE__, SDL_GetError());
 		return 0;
 	}
 
@@ -376,6 +390,8 @@ osd_gfx_init(void)
 			host.video.hardware_scaling = FALSE;
 	#endif
 	}
+
+
 	// TODO: Hack to disable hardware scaling
 	host.video.hardware_scaling = FALSE;
 
@@ -522,6 +538,9 @@ osd_gfx_shut_normal_mode(void)
 	}
 
 	TTF_CloseFont(osd_font);
+
+	if (sdlWindow != NULL)
+		SDL_DestroyWindow(sdlWindow);
 
 	/* SDL will free physical_screen internally */
 	SDL_QuitSubSystem(SDL_INIT_VIDEO);
