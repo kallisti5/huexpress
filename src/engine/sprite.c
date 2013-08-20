@@ -197,11 +197,10 @@ RefreshLine(int Y1, int Y2)
 
 #if ENABLE_TRACING_GFX
 	if (Y1 == 0) {
-		gfx_debug_printf
-			("= %d =================================================",
+		TRACE("\n= %d =================================================\n",
 			frame);
 	}
-	gfx_debug_printf("Rendering lines %3d - %3d\tScroll: (%3d,%3d,%3d)",
+	TRACE("Rendering lines %3d - %3d\tScroll: (%3d,%3d,%3d)\n",
 		Y1, Y2, ScrollX, ScrollY, ScrollYDiff);
 #endif
 

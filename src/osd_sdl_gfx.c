@@ -164,16 +164,18 @@ osd_gfx_put_image_normal(void)
 {
 	uint16 y;
 
+	uint32 sdlFlags = SDL_GetWindowFlags(sdlWindow);
+
 	if (!host.video.hardware_scaling) {
 		Slock(screen);
 
 		for (y = 0; y < io.screen_h; y++)
 			memmove(screen->pixels + y * io.screen_w,
-					osd_gfx_buffer + y * XBUF_WIDTH, io.screen_w);
+				osd_gfx_buffer + y * XBUF_WIDTH, io.screen_w);
 
 		Sulock(screen);
 
-		if (physical_screen->flags & SDL_WINDOW_FULLSCREEN)
+		if (sdlFlags & SDL_WINDOW_FULLSCREEN)
 			SDL_SoftStretch(screen, NULL, physical_screen,
 				&physical_screen_rect);
 		else if (option.window_size > 1)
@@ -415,8 +417,7 @@ osd_gfx_init(void)
 
 	if (!host.video.hardware_scaling) {
 		if ((screen = SDL_CreateRGBSurface(SDL_SWSURFACE, fake_io_screen_w,
-										   fake_io_screen_h, 8, 0, 0, 0,
-										   0)) == NULL) {
+			fake_io_screen_h, 32, 0, 0, 0, 0)) == NULL) {
 			MESSAGE_ERROR("SDL: CreateRGBSurface failed at %s:%d - %s\n",
 						  __FILE__, __LINE__, SDL_GetError());
 			return 0;
@@ -440,6 +441,8 @@ osd_gfx_init(void)
 int
 osd_gfx_init_normal_mode()
 {
+	uint32 sdlFlags = SDL_GetWindowFlags(sdlWindow);
+
 	struct generic_rect rect;
 
 	// TODO: Fix hardware scaling
@@ -472,7 +475,7 @@ osd_gfx_init_normal_mode()
 		io.screen_h = 224;
 	}
 
-	if (physical_screen->flags & SDL_WINDOW_FULLSCREEN) {
+	if (sdlFlags & SDL_WINDOW_FULLSCREEN) {
 		SDL_FillRect(physical_screen, NULL, 0);
 	} else if (((physical_screen->w / option.window_size) != io.screen_w)
 			   || ((physical_screen->h / option.window_size) !=
@@ -645,12 +648,13 @@ int
 ToggleFullScreen(void)
 {
 	struct generic_rect rect;
+	uint32 sdlFlags = SDL_GetWindowFlags(sdlWindow);
 
 	SDL_PauseAudio(SDL_ENABLE);
 
 	// TODO: Fix FullScreen
 	#if 0
-	if (physical_screen->flags & SDL_WINDOW_FULLSCREEN) {
+	if (sdlFlags & SDL_WINDOW_FULLSCREEN) {
 		if ((physical_screen =
 			 SDL_SetVideoMode(io.screen_w * option.window_size,
 							  io.screen_h * option.window_size,
@@ -693,7 +697,7 @@ ToggleFullScreen(void)
 
 	SDL_PauseAudio(SDL_DISABLE);
 
-	return (physical_screen->flags & SDL_WINDOW_FULLSCREEN) ? 0 : 1;
+	return (sdlFlags & SDL_WINDOW_FULLSCREEN) ? 0 : 1;
 }
 
 

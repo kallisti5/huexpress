@@ -412,8 +412,8 @@ IO_read_raw(uint16 A)
 		switch (A & 3) {
 		case 0:
 #if ENABLE_TRACING_GFX
-			gfx_debug_printf("Returning vdc_status = 0x%02x",
-							 io.vdc_status);
+			TRACE("Returning vdc_status = 0x%02x\n",
+				io.vdc_status);
 #endif
 			ret = io.vdc_status;
 			io.vdc_status = 0;	//&=VDC_InVBlank;//&=~VDC_BSY;

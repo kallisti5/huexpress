@@ -690,7 +690,7 @@ pce_cd_read_sector(void)
 		FILE *g = fopen("read.cd", "at");
 		int result;
 
-		fprintf(g, "\nsector #%x\n", pce_cd_sectoraddy - 1);
+		fprintf(g, "sector #%x\n", pce_cd_sectoraddy - 1);
 
 		for (result = 0; result < 2048; result++) {
 			if ((result & 15) == 0) {
@@ -792,7 +792,7 @@ IO_write(uint16 A, uchar V)
 
 #ifndef FINAL_RELEASE
 	if ((A & 0x1F00) == 0x1A00)
-		Log("\nAC Write %02x at %04x\n", V, A);
+		Log("AC Write %02x at %04x\n", V, A);
 #endif
 
 	switch (A & 0x1F00) {
@@ -856,8 +856,8 @@ IO_write(uint16 A, uchar V)
 				ScrollYDiff = scanline - 1;
 				ScrollYDiff -= io.VDC[VPR].B.h + io.VDC[VPR].B.l;
 
-#if ENABLE_TRACING_GFX
-				gfx_debug_printf("ScrollY = %d (l)", ScrollY);
+#if ENABLE_TRACING_DEEP_GFX
+				TRACE("ScrollY = %d (l), ", ScrollY);
 #endif
 				return;
 			case BXR:			/* Horizontal screen offset */
@@ -909,9 +909,8 @@ IO_write(uint16 A, uchar V)
 			io.VDC[io.vdc_reg].B.l = V;
 			// all others reg just need to get the value, without additional stuff
 
-
-#if ENABLE_TRACING_GFX
-			gfx_debug_printf("VDC[%02x]=0x%02x", io.vdc_reg, V);
+#if ENABLE_TRACING_DEEP_GFX
+			TRACE("VDC[%02x]=0x%02x, ", io.vdc_reg, V);
 #endif
 
 #ifndef FINAL_RELEASE
@@ -1016,8 +1015,8 @@ IO_write(uint16 A, uchar V)
 				/* TODO : well, maybe we should implement it */
 				//io.screen_w = (io.VDC_ratch[HDR]+1)*8;
 				//TRACE0("HDRh\n");
-#if ENABLE_TRACING_GFX
-				gfx_debug_printf("VDC[HDR].h = %d", V);
+#if ENABLE_TRACING_DEEP_GFX
+				TRACE("VDC[HDR].h = %d, ", V);
 #endif
 				break;
 
@@ -1041,10 +1040,12 @@ IO_write(uint16 A, uchar V)
 				ScrollYDiff -= io.VDC[VPR].B.h + io.VDC[VPR].B.l;
 #if ENABLE_TRACING_GFX
 				if (ScrollYDiff < 0)
-					gfx_debug_printf
-						("ScrollYDiff went negative when substraction VPR.h/.l (%d,%d)",
-						 io.VDC[VPR].B.h, io.VDC[VPR].B.l);
-				gfx_debug_printf("ScrollY = %d (h)", ScrollY);
+					TRACE("ScrollYDiff went negative when substraction VPR.h/.l (%d,%d)\n",
+						io.VDC[VPR].B.h, io.VDC[VPR].B.l);
+#endif
+
+#if ENABLE_TRACING_DEEP_GFX
+				TRACE("ScrollY = %d (h), ", ScrollY);
 #endif
 
 				return;
@@ -1350,7 +1351,7 @@ IO_write(uint16 A, uchar V)
 							 io.ac_offset[ac_port]) & 0xffffff;
 					return;
 				default:
-					Log("\nUnknown AC write %d into 0x%04X\n", V, A);
+					Log("Unknown AC write %d into 0x%04X\n", V, A);
 				}
 
 			}

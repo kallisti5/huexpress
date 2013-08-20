@@ -162,8 +162,8 @@ change_pce_screen_height()
 	int temp_vcr = (int) io.VDC[VCR].W;
 
 #if ENABLE_TRACING_GFX
-	TRACE
-		("GFX: Changing pce screen mode\nVDS = %04x VSW = %04x VDW = %04x VCR = %04x\n",
+	TRACE("GFX: Changing pce screen mode\n"
+		" VDS = %04x VSW = %04x VDW = %04x VCR = %04x\n",
 		 temp_vds, temp_vsw, temp_vdw, temp_vcr);
 	// getchar();
 #endif
@@ -180,9 +180,8 @@ change_pce_screen_height()
 		cur_display += 3 + temp_vcr;
 
 #if ENABLE_TRACING_GFX
-		TRACE
-			("GFX: Adding vdw to the height of graphics, cur_display = %d\n",
-			 cur_display);
+		TRACE("GFX: Adding vdw to the height of graphics,"
+			" cur_display = %d\n", cur_display);
 #endif
 	}
 
@@ -256,17 +255,19 @@ save_gfx_context(int slot_number)
 			gfx_need_redraw = 1;
 		else {					// Context is already saved + we haven't render the line using it
 			TRACE("Canceled context saving as a previous one wasn't "
-				  "consumed yet\n");
+				"consumed yet\n");
 			return;
 		}
 	}
 	if (slot_number >= MAX_GFX_CONTEXT_SLOT_NUMBER) {
+		TRACE("Internal error in %s(%s), slot %d >= %d\n", __FUNCTION__,
+			__FILE__, slot_number, MAX_GFX_CONTEXT_SLOT_NUMBER);
 		Log("Internal error in %s(%s), slot %d >= %d\n", __FUNCTION__,
 			__FILE__, slot_number, MAX_GFX_CONTEXT_SLOT_NUMBER);
 		return;
 	}
 
-	TRACE("Saving context %d, scroll = (%d,%d,%d), CR = 0x%02d",
+	TRACE("Saving context %d, scroll = (%d,%d,%d), CR = 0x%02d\n",
 		  slot_number, ScrollX, ScrollY, ScrollYDiff, io.VDC[CR].W);
 
 	destination_context->scroll_x = ScrollX;
@@ -294,7 +295,7 @@ load_gfx_context(int slot_number)
 	ScrollYDiff = source_context->scroll_y_diff;
 	io.VDC[CR].W = source_context->cr;
 
-	TRACE("Restoring context %d, scroll = (%d,%d,%d), CR = 0x%02d",
+	TRACE("Restoring context %d, scroll = (%d,%d,%d), CR = 0x%02d\n",
 		  slot_number, ScrollX, ScrollY, ScrollYDiff, io.VDC[CR].W);
 }
 
