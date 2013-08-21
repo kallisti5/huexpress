@@ -168,35 +168,34 @@ osd_gfx_put_image_normal(void)
 	uint16 y;
 	uint32 sdlFlags = SDL_GetWindowFlags(sdlWindow);
 
-	//if (!host.video.hardware_scaling) {
-		Slock(screen);
+	Slock(screen);
 
-		for (y = 0; y < io.screen_h; y++)
-			memmove(screen->pixels + y * io.screen_w,
-				osd_gfx_buffer + y * XBUF_WIDTH, io.screen_w);
+	for (y = 0; y < io.screen_h; y++)
+		memmove(screen->pixels + y * io.screen_w,
+			osd_gfx_buffer + y * XBUF_WIDTH, io.screen_w);
 
-		Sulock(screen);
+	Sulock(screen);
 
-		if (sdlFlags & SDL_WINDOW_FULLSCREEN
-			|| option.window_size > 1)
-			SDL_BlitScaled(screen, NULL, physical_screen,
-				&physical_screen_rect);
-		else
-			memmove(physical_screen->pixels, screen->pixels,
-				io.screen_w * io.screen_h);
+	if (sdlFlags & SDL_WINDOW_FULLSCREEN
+		|| option.window_size > 1)
+		SDL_BlitScaled(screen, NULL, physical_screen,
+			&physical_screen_rect);
+	else
+		memmove(physical_screen->pixels, screen->pixels,
+			io.screen_w * io.screen_h);
 
-		// After drawing the game, throw in any onscreen text
-		if (message_delay && osd_texture) {
-			SDL_BlitSurface(osd_texture, NULL, physical_screen, &osd_rect);
-			message_delay--;
-		}
+	// After drawing the game, throw in any onscreen text
+	if (message_delay && osd_texture) {
+		SDL_BlitSurface(osd_texture, NULL, physical_screen, &osd_rect);
+		message_delay--;
+	}
 
-		/*
-		SDL_RenderCopy(sdlRenderer, physical_screen, NULL, &physical_screen_rect);
-		SDL_RenderPresent(sdlRenderer); // was SDL_Flip
-		*/
+	/*
+	SDL_RenderCopy(sdlRenderer, physical_screen, NULL, &physical_screen_rect);
+	SDL_RenderPresent(sdlRenderer); // was SDL_Flip
+	*/
 
-		osd_gfx_blit();
+	osd_gfx_blit();
 
 	#if 0
 	} else {
@@ -444,10 +443,10 @@ osd_gfx_init(void)
 	osd_font = loadfont("font.otf", 24);
 
 	if (!host.video.hardware_scaling) {
-		if ((screen = SDL_CreateRGBSurface(SDL_SWSURFACE, fake_io_screen_w,
-			fake_io_screen_h, 32, 0, 0, 0, 0)) == NULL) {
+		if ((screen = SDL_CreateRGBSurface(0, fake_io_screen_w,
+			fake_io_screen_h, 8, 0, 0, 0, 0)) == NULL) {
 			MESSAGE_ERROR("SDL: CreateRGBSurface failed at %s:%d - %s\n",
-						  __FILE__, __LINE__, SDL_GetError());
+				__FILE__, __LINE__, SDL_GetError());
 			return 0;
 		}
 	}
