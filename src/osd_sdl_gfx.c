@@ -25,6 +25,7 @@ SDL_Color olay_cmap[256];
 //! Host machine rendered screen
 SDL_Surface *physical_screen = NULL;
 SDL_Texture *osd_texture = NULL;
+SDL_GLContext sdlGLContext;
 
 SDL_Color osd_color = { 0, 255, 0, 0 };	// Green
 SDL_Rect osd_rect = { 10, 5, 0, 0 };
@@ -69,6 +70,7 @@ osd_gfx_dummy_func(void)
 }
 
 
+#if 0
 void
 DrawPixel(SDL_Surface * screen, int x, int y, Uint8 R, Uint8 G, Uint8 B)
 {
@@ -113,26 +115,7 @@ DrawPixel(SDL_Surface * screen, int x, int y, Uint8 R, Uint8 G, Uint8 B)
 	}
 
 }
-
-
-void
-Slock(SDL_Surface * screen)
-{
-	if (SDL_MUSTLOCK(screen)) {
-		if (SDL_LockSurface(screen) < 0) {
-			return;
-		}
-	}
-}
-
-
-void
-Sulock(SDL_Surface * screen)
-{
-	if (SDL_MUSTLOCK(screen)) {
-		SDL_UnlockSurface(screen);
-	}
-}
+#endif
 
 
 TTF_Font *
@@ -145,6 +128,26 @@ loadfont(char *file, int ptsize)
 					  TTF_GetError());
 	}
 	return tmpfont;
+}
+
+
+static void
+Slock(SDL_Surface * screen)
+{
+	if (SDL_MUSTLOCK(screen)) {
+		if (SDL_LockSurface(screen) < 0) {
+			return;
+		}
+	}
+}
+
+
+static void
+Sulock(SDL_Surface * screen)
+{
+	if (SDL_MUSTLOCK(screen)) {
+		SDL_UnlockSurface(screen);
+	}
 }
 
 
@@ -163,10 +166,9 @@ void
 osd_gfx_put_image_normal(void)
 {
 	uint16 y;
-
 	uint32 sdlFlags = SDL_GetWindowFlags(sdlWindow);
 
-	if (!host.video.hardware_scaling) {
+	//if (!host.video.hardware_scaling) {
 		Slock(screen);
 
 		for (y = 0; y < io.screen_h; y++)
@@ -175,11 +177,9 @@ osd_gfx_put_image_normal(void)
 
 		Sulock(screen);
 
-		if (sdlFlags & SDL_WINDOW_FULLSCREEN)
-			SDL_SoftStretch(screen, NULL, physical_screen,
-				&physical_screen_rect);
-		else if (option.window_size > 1)
-			SDL_SoftStretch(screen, NULL, physical_screen,
+		if (sdlFlags & SDL_WINDOW_FULLSCREEN
+			|| option.window_size > 1)
+			SDL_BlitScaled(screen, NULL, physical_screen,
 				&physical_screen_rect);
 		else
 			memmove(physical_screen->pixels, screen->pixels,
@@ -191,11 +191,16 @@ osd_gfx_put_image_normal(void)
 			message_delay--;
 		}
 
+		/*
+		SDL_RenderCopy(sdlRenderer, physical_screen, NULL, &physical_screen_rect);
 		SDL_RenderPresent(sdlRenderer); // was SDL_Flip
+		*/
 
+		osd_gfx_blit();
+
+	#if 0
 	} else {
 		// TODO: Fix hardware scaling
-		#if 0
 		uint16 x;
 		uchar *p, *op;
 
@@ -232,8 +237,8 @@ osd_gfx_put_image_normal(void)
 		// TODO: Review
 		SDL_RenderCopy(sdlRenderer, osd_overlay, NULL, &physical_screen_rect);
 		SDL_RenderPresent(sdlRenderer);
-		#endif
 	}
+	#endif
 }
 
 
@@ -277,8 +282,6 @@ osd_gfx_set_message(char *mess)
 int
 osd_gfx_init(void)
 {
-	struct generic_rect rect;
-
 	// We can't rely anymore on io variable being accessible at this stage of a game launching
 	const int fake_io_screen_w = 352;
 	const int fake_io_screen_h = 256;
@@ -297,9 +300,10 @@ osd_gfx_init(void)
 		? option.fullscreen_height : fake_io_screen_h * option.window_size;
 	uint16 bpp = option.want_hardware_scaling ? 0 : 32;
 
-	SDL_CreateWindowAndRenderer(width, height,
-		option.want_fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0,
-		&sdlWindow, &sdlRenderer);
+	// TODO: Fix fullscreen
+	sdlWindow = SDL_CreateWindow("HuExpress", SDL_WINDOWPOS_UNDEFINED,
+		SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_SHOWN
+		| SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
 
 	if (sdlWindow == NULL) {
 		MESSAGE_ERROR("SDL: %s failed at %s:%d - %s\n", __func__, __FILE__,
@@ -307,7 +311,26 @@ osd_gfx_init(void)
 		return 0;
 	}
 
-	SDL_SetWindowTitle(sdlWindow, "HuExpress");
+	sdlGLContext = SDL_GL_CreateContext(sdlWindow);
+
+	if (sdlGLContext == NULL) {
+		MESSAGE_ERROR("SDL: %s failed at %s:%d - %s\n", __func__, __FILE__,
+			__LINE__, SDL_GetError());
+		return 0;
+	}
+
+	SDL_GL_MakeCurrent(sdlWindow, sdlGLContext);
+
+	sdlRenderer = SDL_CreateRenderer(sdlWindow, -1, SDL_RENDERER_ACCELERATED);
+	//sdlRenderer = SDL_CreateRenderer(sdlWindow, -1, SDL_RENDERER_SOFTWARE);
+
+	if (sdlRenderer == NULL) {
+		MESSAGE_ERROR("SDL: %s failed at %s:%d - %s\n", __func__, __FILE__,
+			__LINE__, SDL_GetError());
+		return 0;
+	}
+
+	SDL_GL_SetSwapInterval(1);
 
 	#if SDL_BYTEORDER == SDL_BIG_ENDIAN
 	physical_screen = SDL_CreateRGBSurface(0, width, height, bpp,
@@ -323,6 +346,9 @@ osd_gfx_init(void)
 		return 0;
 	}
 
+	osd_gfx_glinit();
+		
+	#if 0
 	// TODO: MOVE TO osd_texture
 	osd_texture = SDL_CreateTexture(physical_screen,
 		SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING,
@@ -396,9 +422,11 @@ osd_gfx_init(void)
 
 	// TODO: Hack to disable hardware scaling
 	host.video.hardware_scaling = FALSE;
+	#endif
 
-	calc_fullscreen_aspect(physical_screen->w, physical_screen->h,
-						   &rect, fake_io_screen_w, fake_io_screen_h);
+	struct generic_rect rect;
+	calc_fullscreen_aspect(width, height, &rect,
+		fake_io_screen_w, fake_io_screen_h);
 
 	physical_screen_rect.x = rect.start_x;
 	physical_screen_rect.y = rect.start_y;
@@ -641,6 +669,73 @@ osd_gfx_set_color(uchar index, uchar r, uchar g, uchar b)
 		olay_cmap[index].g = (b - olay_cmap[index].r) * 0.565 + 128;
 		olay_cmap[index].b = (r - olay_cmap[index].r) * 0.713 + 128;
 	}
+}
+
+void
+osd_gfx_glinit()
+{
+	glEnable( GL_TEXTURE_2D );
+	
+	GLuint texture;
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, linear_filter ? GL_LINEAR : GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	
+	//glViewport( 0, 0, screen->w, screen->h);
+	glViewport(0, 0, physical_screen->w, physical_screen->h);
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_ALPHA_TEST);
+	glDisable(GL_BLEND);
+	glDisable(GL_LIGHTING);
+	glDisable(GL_TEXTURE_3D_EXT);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	
+	/*if (conf->video_mask_overscan) {
+	glOrtho(0.0, (GLdouble)screen->w,
+		(GLdouble)screen->h - (OVERSCAN_BOTTOM * scalefactor),
+		(GLdouble)(OVERSCAN_TOP * scalefactor), -1.0, 1.0);
+	}
+	else {*/
+	//glOrtho(0.0, (GLdouble)screen->w, (GLdouble)screen->h, 0.0, -1.0, 1.0);
+	glOrtho(0.0, (GLdouble)physical_screen->w,
+		(GLdouble)physical_screen->h, 0.0, -1.0, 1.0);
+	//}
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();	
+}
+
+
+void
+osd_gfx_blit()
+{
+	GLint nOfColors = physical_screen->format->BytesPerPixel;
+	GLenum texture_format = GL_RGBA;
+
+	int width = physical_screen->w;
+	int height = physical_screen->h;
+
+	// Edit the texture object's image data	using the information SDL_Surface gives us
+	glTexImage2D(GL_TEXTURE_2D, 0, nOfColors, width, height,
+		0, texture_format, GL_UNSIGNED_BYTE, physical_screen->pixels);
+
+	glBegin(GL_QUADS) ;
+		glTexCoord2f(1.0f, 1.0f);
+		glVertex2i(width, height);
+
+		glTexCoord2f(1.0f, 0.0f);
+		glVertex2i(width, 0);
+
+		glTexCoord2f(0.0f, 0.0f);
+		glVertex2i(0, 0);
+
+		glTexCoord2f(0.0f, 1.0f);
+		glVertex2i(0, height);
+	glEnd();					
+
+	SDL_GL_SwapWindow(sdlWindow);
 }
 
 
