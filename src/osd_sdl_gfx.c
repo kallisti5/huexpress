@@ -120,13 +120,16 @@ osd_gfx_put_image_normal(void)
 	uint16 y;
 	uint32 sdlFlags = SDL_GetWindowFlags(sdlWindow);
 
+
 	Slock(screen);
-
-	for (y = 0; y < io.screen_h; y++)
-		memmove(screen->pixels + y * io.screen_w,
-			osd_gfx_buffer + y * XBUF_WIDTH, io.screen_w);
-
+//	for (y = 0; y < io.screen_h; y++)
+//		memmove(screen->pixels + y * io.screen_w,
+//			osd_gfx_buffer + y * XBUF_WIDTH, io.screen_w);
+	SDL_ConvertPixels(io.screen_w, io.screen_h, SDL_PIXELFORMAT_INDEX8,
+		osd_gfx_buffer, XBUF_WIDTH, SDL_PIXELFORMAT_INDEX8, screen->pixels,
+		io.screen_w);
 	Sulock(screen);
+
 
 	int result = 0;
 	if (sdlFlags & SDL_WINDOW_FULLSCREEN
@@ -145,6 +148,7 @@ osd_gfx_put_image_normal(void)
 				__func__, __FILE__, __LINE__, SDL_GetError());
 	}
 
+	//Slock(screen);
 	// After drawing the game, throw in any onscreen text
 	/*
 	if (message_delay && osd_texture) {
@@ -496,16 +500,15 @@ osd_gfx_glinit()
 void
 osd_gfx_blit()
 {
-	GLint nOfColors = physical_screen->format->BytesPerPixel;
-	GLenum texture_format = GL_RGBA;
+	GLint bytesPerPixel = physical_screen->format->BytesPerPixel;
 
 	#warning For now we use screen vs physical_screen for debugging
 	int width = physical_screen->w;
 	int height = physical_screen->h;
 
 	// Edit the texture object's image data	using the information SDL_Surface gives us
-	glTexImage2D(GL_TEXTURE_2D, 0, physical_screen->format->BytesPerPixel,
-		width, height, 0, texture_format, GL_UNSIGNED_BYTE,
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE,
+		width, height, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE,
 		physical_screen->pixels);
 
 	glBegin(GL_QUADS) ;
