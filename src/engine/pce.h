@@ -182,10 +182,6 @@ extern uchar binbcd[0x100];
 
 extern uint32 pce_cd_sectoraddy;
 
-struct host_video {
-	boolean hardware_scaling;
-};
-
 struct host_sound {
 	boolean stereo;
 	uint32 freq;
@@ -194,7 +190,6 @@ struct host_sound {
 };
 
 struct host_machine {
-	struct host_video video;
 	struct host_sound sound;
 };
 
@@ -204,7 +199,6 @@ struct hugo_options {
 	boolean want_stereo;
 	boolean want_fullscreen;
 	boolean want_fullscreen_aspect;
-	boolean want_hardware_scaling;
 	boolean configure_joypads;
 	boolean want_arcade_card_emulation;
 	boolean want_supergraphx_emulation;

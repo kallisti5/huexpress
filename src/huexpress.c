@@ -23,7 +23,6 @@ init_host(int argc, char *argv[])
 	option.want_fullscreen = FALSE;
 	option.want_fullscreen_aspect = FALSE;
 	option.configure_joypads = FALSE;
-	option.want_hardware_scaling = FALSE;
 
 	// 2 is a good default multiplier for modern desktops
 	option.window_size = 2;

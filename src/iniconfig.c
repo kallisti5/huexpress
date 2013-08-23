@@ -316,11 +316,6 @@ set_arg(char nb_arg, const char *val) {
 		Log ("Minimum Bios hooking set to %d\n", minimum_bios_hooking);
 		return 0;
 
-	case 'o':
-		option.want_hardware_scaling = 1;
-		MESSAGE_INFO("Option: Hardware overlay requested\n");
-		return 0;
-
 #if defined(ENABLE_NETPLAY)
 	case 'n':
 #warning hardcoding of netplay protocol
@@ -362,7 +357,6 @@ set_arg(char nb_arg, const char *val) {
 		"	-dX Debug (0-1)\n"
 		"	-eX Eagle mode (0-1)\n"
 		"	-f	Fullscreen mode\n"
-		"	-o	Enable overlay mode\n"
 		"	-s	Enable Stereo sound\n"
 		"	-SX Scanline mode (0-1)\n"
 		"	-zX	Zoom level X (1-4)\n"
@@ -491,9 +485,6 @@ parse_INIfile_raw ()
 		= get_config_int ("main", "use_fullscreen_aspect", 0);
 
 	Log ("Setting fullscreen aspect to %d\n", option.want_fullscreen_aspect);
-
-	option.want_hardware_scaling = get_config_int ("main", "use_overlay", 0);
-	Log ("Setting hardware scaling to %d\n", option.want_hardware_scaling);
 
 	option.want_stereo = get_config_int ("main", "stereo_sound", 0);
 
@@ -706,7 +697,6 @@ save_config (void)
 	set_config_var_int("main", "start_fullscreen", option.want_fullscreen);
 	set_config_var_int("main", "use_fullscreen_aspect",
 				option.want_fullscreen_aspect);
-	set_config_var_int("main", "use_overlay", option.want_hardware_scaling);
 	set_config_var_int("main", "minimum_bios_hooking", minimum_bios_hooking);
 	set_config_var_str("main", "cdsystem_path", cdsystem_path);
 	set_config_var_str("main", "cd_path", ISO_filename);

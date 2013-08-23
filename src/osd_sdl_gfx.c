@@ -185,22 +185,16 @@ osd_gfx_put_image_normal(void)
 void
 osd_gfx_set_message(char *mess)
 {
-	if (!host.video.hardware_scaling) {
+	if (osd_texture != NULL) {
+		SDL_DestroyTexture(osd_texture);
+	}
 
-		if (osd_texture != NULL) {
-			SDL_DestroyTexture(osd_texture);
-		}
+	osd_texture = TTF_RenderText_Blended(osd_font, mess, osd_color);
 
-		osd_texture = TTF_RenderText_Blended(osd_font, mess, osd_color);
-
-		if (osd_texture == NULL) {
-			MESSAGE_ERROR("SDL: Couldn't render OSD text - %s\n",
-				SDL_GetError());
-			// report error
-		}
-	} else {
-		// TODO : osd_gfx_set_message for SDL overlay
-		printf("%s\n", mess);
+	if (osd_texture == NULL) {
+		MESSAGE_ERROR("SDL: Couldn't render OSD text - %s\n",
+			SDL_GetError());
+		// report error
 	}
 }
 
@@ -548,42 +542,13 @@ ToggleFullScreen(void)
 	SDL_PauseAudio(SDL_ENABLE);
 
 	// TODO: Fix FullScreen
-	#if 0
-	if (sdlFlags & SDL_WINDOW_FULLSCREEN) {
-		if ((physical_screen =
-			 SDL_SetVideoMode(io.screen_w * option.window_size,
-							  io.screen_h * option.window_size,
-							  (host.video.hardware_scaling ? 0 : 8),
-							  (host.video.
-							   hardware_scaling ? SDL_HWSURFACE :
-							   SDL_SWSURFACE) | (host.video.
-												 hardware_scaling ? 0 :
-												 SDL_HWPALETTE))) ==
-			NULL) {
-			Log("Can't get physical_screen for full screen\n");
-			printf("Can't get physical screen\n");
-		}
-	} else {
-		if ((physical_screen =
-			 SDL_SetVideoMode(option.fullscreen_width,
-							  option.fullscreen_height,
-							  (host.video.hardware_scaling ? 0 : 8),
-							  (host.video.
-							   hardware_scaling ? SDL_HWSURFACE :
-							   SDL_SWSURFACE) | (host.video.
-												 hardware_scaling ? 0 :
-												 SDL_HWPALETTE) |
-							  SDL_WINDOW_FULLSCREEN)) == NULL) {
-			Log("Can't get physical_screen for full screen\n");
-			printf("Can't get physical screen\n");
-		}
-	}
-	#endif
+	// option.fullscreen_width
+	// option.fullscreen_height
 
 	SetPalette();
 
 	calc_fullscreen_aspect(physical_screen->w, physical_screen->h, &rect,
-						   io.screen_w, io.screen_h);
+		io.screen_w, io.screen_h);
 
 	physical_screen_rect.x = rect.start_x;
 	physical_screen_rect.y = rect.start_y;
