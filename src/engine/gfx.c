@@ -41,6 +41,7 @@ typedef struct {
 
 rgb_map_struct rgb_map[256];
 
+
 void
 SetPalette(void)
 {
@@ -53,15 +54,15 @@ SetPalette(void)
 
 	for (i = 0; i < 255; i++) {
 		osd_gfx_set_color(i, (i & 0x1C) << 1, (i & 0xe0) >> 2,
-						  (i & 0x03) << 4);
+			(i & 0x03) << 4);
 		rgb_map[i].r = (i & 0x1C) << 3;
 		rgb_map[i].g = (i & 0xe0);
 		rgb_map[i].b = (i & 0x03) << 6;
 	}
 
 #if defined(SDL)
-	olay_cmap[255].r =
-		(Uint8) ((0.299 * 0xff) + (0.587 * 0xff) + (0.114 * 0xff));
+	olay_cmap[255].r
+		= (Uint8) ((0.299 * 0xff) + (0.587 * 0xff) + (0.114 * 0xff));
 	olay_cmap[255].g = (Uint8) ((0xff - olay_cmap[i].r) * 0.565 + 128);
 	olay_cmap[255].b = (Uint8) ((0xff - olay_cmap[i].r) * 0.713 + 128);
 
@@ -88,10 +89,8 @@ SetPalette(void)
  */
 void
 calc_fullscreen_aspect(unsigned short physical_screen_width,
-					   unsigned short physical_screen_height,
-					   struct generic_rect *rect,
-					   unsigned short pce_screen_width,
-					   unsigned short pce_screen_height)
+	unsigned short physical_screen_height, struct generic_rect *rect,
+	unsigned short pce_screen_width, unsigned short pce_screen_height)
 {
 	/*
 	 * Routine not called often so extra sanity checks pose no penalty.
@@ -112,18 +111,17 @@ calc_fullscreen_aspect(unsigned short physical_screen_width,
 		float physical_screen_ratio, pce_ratio;
 		int new_size;
 
-		physical_screen_ratio =
-			(float) physical_screen_width / physical_screen_height;
+		physical_screen_ratio
+			= (float) physical_screen_width / physical_screen_height;
 
-		pce_ratio =
-			(pce_screen_width / physical_screen_ratio) / pce_screen_height;
+		pce_ratio
+			= (pce_screen_width / physical_screen_ratio) / pce_screen_height;
 
 		if (pce_ratio < 1.0) {
 			new_size = (int) (physical_screen_width * pce_ratio);
 
-			(*rect).start_x =
-				(unsigned short int) ((physical_screen_width - new_size) /
-									  2);
+			(*rect).start_x
+				= (unsigned short int)((physical_screen_width - new_size) / 2);
 			(*rect).start_y = 0;
 			(*rect).end_x = (unsigned short int) new_size;
 			(*rect).end_y = physical_screen_height;
@@ -131,9 +129,8 @@ calc_fullscreen_aspect(unsigned short physical_screen_width,
 			new_size = (int) (physical_screen_height / pce_ratio);
 
 			(*rect).start_x = 0;
-			(*rect).start_y =
-				(unsigned short int) ((physical_screen_height - new_size) /
-									  2);
+			(*rect).start_y
+				= (unsigned short int)((physical_screen_height - new_size) / 2);
 			(*rect).end_x = physical_screen_width;
 			(*rect).end_y = (unsigned short int) new_size;
 		}
@@ -268,13 +265,14 @@ save_gfx_context(int slot_number)
 	}
 
 	TRACE("Saving context %d, scroll = (%d,%d,%d), CR = 0x%02d\n",
-		  slot_number, ScrollX, ScrollY, ScrollYDiff, io.VDC[CR].W);
+		slot_number, ScrollX, ScrollY, ScrollYDiff, io.VDC[CR].W);
 
 	destination_context->scroll_x = ScrollX;
 	destination_context->scroll_y = ScrollY;
 	destination_context->scroll_y_diff = ScrollYDiff;
 	destination_context->cr = io.VDC[CR].W;
 }
+
 
 void
 load_gfx_context(int slot_number)
@@ -296,7 +294,7 @@ load_gfx_context(int slot_number)
 	io.VDC[CR].W = source_context->cr;
 
 	TRACE("Restoring context %d, scroll = (%d,%d,%d), CR = 0x%02d\n",
-		  slot_number, ScrollX, ScrollY, ScrollYDiff, io.VDC[CR].W);
+		slot_number, ScrollX, ScrollY, ScrollYDiff, io.VDC[CR].W);
 }
 
 
@@ -331,6 +329,7 @@ render_lines(int min_line, int max_line)
 
 	gfx_need_redraw = 0;
 }
+
 
 //! Rewritten version of Loop6502 from scratch, called when each line drawing should occur
 /* TODO:
@@ -396,7 +395,7 @@ Loop6502()
 			io.vdc_status &= ~VDC_InVBlank;
 
 			TRACE("Cleaning VBlank bit from vdc_status (now, 0x%02x)",
-				  io.vdc_status);
+				io.vdc_status);
 		}
 
 		if (scanline == io.vdc_min_display) {
@@ -516,6 +515,7 @@ Loop6502()
 	return INT_NONE;
 }
 
+
 int video_dump_flag = 0;
 
 //! Raw dump the current frame into the buffer, for video output purposes
@@ -527,8 +527,7 @@ dump_uyvy_frame(char *output_buffer)
 
 	xbuf_pointer = osd_gfx_buffer;
 
-	for (y = 0; y < io.screen_h;
-		 y++, xbuf_pointer += XBUF_WIDTH - io.screen_w)
+	for (y = 0; y < io.screen_h; y++, xbuf_pointer += XBUF_WIDTH - io.screen_w)
 		for (x = 0; x < io.screen_w - 1; x += 2, xbuf_pointer += 2) {
 			*(output_buffer++) = (char) olay_cmap[*xbuf_pointer].g;
 			*(output_buffer++) = (char) olay_cmap[*xbuf_pointer].r;
@@ -547,8 +546,7 @@ dump_yyuv_frame(char *output_buffer)
 
 	xbuf_pointer = osd_gfx_buffer;
 
-	for (y = 0; y < io.screen_h;
-		 y++, xbuf_pointer += XBUF_WIDTH - io.screen_w)
+	for (y = 0; y < io.screen_h; y++, xbuf_pointer += XBUF_WIDTH - io.screen_w)
 		for (x = 0; x < io.screen_w - 1; x += 2, xbuf_pointer += 2) {
 			*(output_buffer++) = (char) olay_cmap[*xbuf_pointer].r;
 			*(output_buffer++) = (char) olay_cmap[*(xbuf_pointer + 1)].r;
@@ -556,6 +554,7 @@ dump_yyuv_frame(char *output_buffer)
 			*(output_buffer++) = (char) olay_cmap[*xbuf_pointer].b;
 		}
 }
+
 
 //! Raw dump the current frame into the buffer, for video output purposes
 void
@@ -566,14 +565,14 @@ dump_rgb_frame(char *output_buffer)
 
 	xbuf_pointer = osd_gfx_buffer;
 
-	for (y = 0; y < io.screen_h;
-		 y++, xbuf_pointer += XBUF_WIDTH - io.screen_w)
+	for (y = 0; y < io.screen_h; y++, xbuf_pointer += XBUF_WIDTH - io.screen_w)
 		for (x = 0; x < io.screen_w; x++, xbuf_pointer++) {
 			*(output_buffer++) = (char) rgb_map[*xbuf_pointer].r;
 			*(output_buffer++) = (char) rgb_map[*xbuf_pointer].g;
 			*(output_buffer++) = (char) rgb_map[*xbuf_pointer].b;
 		}
 }
+
 
 //! Raw dump the current frame into the buffer, for video output purposes
 void
@@ -585,10 +584,10 @@ dump_raw_frame(char *output_buffer)
 	xbuf_pointer = osd_gfx_buffer;
 
 	for (y = 0; y < (io.screen_h & 0xFFFE);
-		 y++, xbuf_pointer += XBUF_WIDTH, output_buffer +=
-		 (io.screen_w & 0xFFFE)) {
+		y++, xbuf_pointer += XBUF_WIDTH, output_buffer
+			+= (io.screen_w & 0xFFFE)) {
 		memcpy(output_buffer, xbuf_pointer,
-			   (size_t) (io.screen_w & 0xFFFE));
+			(size_t) (io.screen_w & 0xFFFE));
 	}
 }
 
@@ -596,7 +595,7 @@ dump_raw_frame(char *output_buffer)
 //! Raw dump the current frame into the buffers, for video output purposes
 void
 dump_uyv_frame_separated(char *output_buffer_u, char *output_buffer_y,
-						 char *output_buffer_v)
+	char *output_buffer_v)
 {
 	int x, y;
 	uchar *xbuf_pointer;
@@ -604,7 +603,7 @@ dump_uyv_frame_separated(char *output_buffer_u, char *output_buffer_y,
 	xbuf_pointer = osd_gfx_buffer;
 
 	for (y = 0; y < (io.screen_h & 0xFFFE);
-		 y++, xbuf_pointer += XBUF_WIDTH - io.screen_w)
+		y++, xbuf_pointer += XBUF_WIDTH - io.screen_w)
 		for (x = 0; x < io.screen_w - 1; x += 2, xbuf_pointer += 2) {
 			*(output_buffer_u++) = (char) olay_cmap[*xbuf_pointer].g;
 			*(output_buffer_y++) = (char) olay_cmap[*xbuf_pointer].r;
@@ -612,6 +611,7 @@ dump_uyv_frame_separated(char *output_buffer_u, char *output_buffer_y,
 			*(output_buffer_y++) = (char) olay_cmap[*(xbuf_pointer + 1)].r;
 		}
 }
+
 
 #if defined(DUMP_UYVY_SINGLE_FILE)
 
@@ -634,10 +634,10 @@ start_dump_video()
 	tm_current_time = localtime(&time_t_current_time);
 
 	snprintf(video_output_filename, PATH_MAX,
-			 "%svideo-%04d-%02d-%02d %02d-%02d-%02d", video_path,
-			 tm_current_time->tm_year + 1900, tm_current_time->tm_mon,
-			 tm_current_time->tm_mday, tm_current_time->tm_hour,
-			 tm_current_time->tm_min, tm_current_time->tm_sec);
+		"%svideo-%04d-%02d-%02d %02d-%02d-%02d", video_path,
+		tm_current_time->tm_year + 1900, tm_current_time->tm_mon,
+		tm_current_time->tm_mday, tm_current_time->tm_hour,
+		tm_current_time->tm_min, tm_current_time->tm_sec);
 
 	video_output_file = fopen(video_output_filename, "wb");
 
@@ -662,10 +662,11 @@ dump_video_frame()
 	dump_uyvy_frame(frame_buffer);
 
 	fwrite(frame_buffer, 4 * io.screen_w * io.screen_h, 1,
-		   video_output_file);
+		video_output_file);
 
 	free(frame_buffer);
 }
+
 
 //! Stop the dump video process
 void
@@ -675,8 +676,9 @@ stop_dump_video()
 		fclose(video_output_file);
 
 	printf("Video dump finished on a %dx%d resolution\n",
-		   io.screen_w, io.screen_h & 0xFFFE);
+		io.screen_w, io.screen_h & 0xFFFE);
 }
+
 
 #elif defined(DUMP_UYVY_MULTI_FILE)
 
@@ -698,16 +700,17 @@ start_dump_video()
 	tm_current_time = localtime(&time_t_current_time);
 
 	snprintf(video_output_base_filename, PATH_MAX,
-			 "%svideo-%04d-%02d-%02d %02d-%02d-%02d", video_path,
-			 tm_current_time->tm_year + 1900, tm_current_time->tm_mon,
-			 tm_current_time->tm_mday, tm_current_time->tm_hour,
-			 tm_current_time->tm_min, tm_current_time->tm_sec);
+		"%svideo-%04d-%02d-%02d %02d-%02d-%02d", video_path,
+		tm_current_time->tm_year + 1900, tm_current_time->tm_mon,
+		tm_current_time->tm_mday, tm_current_time->tm_hour,
+		tm_current_time->tm_min, tm_current_time->tm_sec);
 
 	video_output_frame_count = 0;
 
 	// We can't do much in this case, as we don't open a global handle for dumping
 	return 1;
 }
+
 
 //! Dump the current frame into the video file
 void
@@ -724,20 +727,17 @@ dump_video_frame()
 	FILE *tmp_video_output_file;
 
 	snprintf(video_output_filename_u, PATH_MAX, "%s-%d.U",
-			 video_output_base_filename, video_output_frame_count);
+		video_output_base_filename, video_output_frame_count);
 
 	snprintf(video_output_filename_v, PATH_MAX, "%s-%d.V",
-			 video_output_base_filename, video_output_frame_count);
+		video_output_base_filename, video_output_frame_count);
 
 	snprintf(video_output_filename_y, PATH_MAX, "%s-%d.Y",
-			 video_output_base_filename, video_output_frame_count);
+		video_output_base_filename, video_output_frame_count);
 
-	frame_buffer_u =
-		malloc((io.screen_w & 0xFFFE) * (io.screen_h & 0xFFFE));
-	frame_buffer_v =
-		malloc((io.screen_w & 0xFFFE) * (io.screen_h & 0xFFFE));
-	frame_buffer_y = malloc(2 * (io.screen_w & 0xFFFE)
-							* (io.screen_h & 0xFFFE));
+	frame_buffer_u = malloc((io.screen_w & 0xFFFE) * (io.screen_h & 0xFFFE));
+	frame_buffer_v = malloc((io.screen_w & 0xFFFE) * (io.screen_h & 0xFFFE));
+	frame_buffer_y = malloc(2 * (io.screen_w & 0xFFFE) * (io.screen_h & 0xFFFE));
 
 	if ((frame_buffer_u == NULL)
 		|| (frame_buffer_v == NULL) || (frame_buffer_y == NULL)) {
@@ -745,28 +745,28 @@ dump_video_frame()
 	}
 
 	dump_uyv_frame_separated(frame_buffer_u, frame_buffer_y,
-							 frame_buffer_v);
+		frame_buffer_v);
 
 	tmp_video_output_file = fopen(video_output_filename_u, "wb");
 	if (tmp_video_output_file != NULL) {
 		fwrite(frame_buffer_u,
-			   (io.screen_w & 0xFFFE) * (io.screen_h & 0xFFFE), 1,
-			   tmp_video_output_file);
+			(io.screen_w & 0xFFFE) * (io.screen_h & 0xFFFE), 1,
+			tmp_video_output_file);
 		fclose(tmp_video_output_file);
 	}
 
 	tmp_video_output_file = fopen(video_output_filename_y, "wb");
 	if (tmp_video_output_file != NULL) {
 		fwrite(frame_buffer_y, 2 * (io.screen_w & 0xFFFE)
-			   * (io.screen_h & 0xFFFE), 1, tmp_video_output_file);
+			* (io.screen_h & 0xFFFE), 1, tmp_video_output_file);
 		fclose(tmp_video_output_file);
 	}
 
 	tmp_video_output_file = fopen(video_output_filename_v, "wb");
 	if (tmp_video_output_file != NULL) {
 		fwrite(frame_buffer_v,
-			   (io.screen_w & 0xFFFE) * (io.screen_h & 0xFFFE), 1,
-			   tmp_video_output_file);
+			(io.screen_w & 0xFFFE) * (io.screen_h & 0xFFFE), 1,
+			tmp_video_output_file);
 		fclose(tmp_video_output_file);
 	}
 
@@ -777,13 +777,15 @@ dump_video_frame()
 	free(frame_buffer_y);
 }
 
+
 //! Stop the dump video process
 void
 stop_dump_video()
 {
 	printf("Video dump finished on a %dx%d resolution\n",
-		   io.screen_w & 0xFFFE, io.screen_h & 0xFFFE);
+		io.screen_w & 0xFFFE, io.screen_h & 0xFFFE);
 }
+
 
 #elif defined(DUMP_YYUV_SINGLE_FILE)
 
@@ -805,15 +807,16 @@ start_dump_video()
 	tm_current_time = localtime(&time_t_current_time);
 
 	snprintf(video_output_filename, PATH_MAX,
-			 "%svideo-%04d-%02d-%02d %02d-%02d-%02d", video_path,
-			 tm_current_time->tm_year + 1900, tm_current_time->tm_mon,
-			 tm_current_time->tm_mday, tm_current_time->tm_hour,
-			 tm_current_time->tm_min, tm_current_time->tm_sec);
+		"%svideo-%04d-%02d-%02d %02d-%02d-%02d", video_path,
+		tm_current_time->tm_year + 1900, tm_current_time->tm_mon,
+		tm_current_time->tm_mday, tm_current_time->tm_hour,
+		tm_current_time->tm_min, tm_current_time->tm_sec);
 
 	video_output_file = fopen(video_output_filename, "wb");
 
 	return (video_output_file != NULL ? 1 : 0);
 }
+
 
 //! Dump the current frame into the video file
 void
@@ -832,10 +835,11 @@ dump_video_frame()
 	dump_yyuv_frame(frame_buffer);
 
 	fwrite(frame_buffer, 4 * io.screen_w * io.screen_h, 1,
-		   video_output_file);
+		video_output_file);
 
 	free(frame_buffer);
 }
+
 
 //! Stop the dump video process
 void
@@ -845,7 +849,7 @@ stop_dump_video()
 		fclose(video_output_file);
 
 	printf("Video dump finished on a %dx%d resolution\n", io.screen_w,
-		   io.screen_h & 0xFFFE);
+		io.screen_h & 0xFFFE);
 }
 
 
@@ -869,16 +873,17 @@ start_dump_video()
 	tm_current_time = localtime(&time_t_current_time);
 
 	snprintf(video_output_base_filename, PATH_MAX,
-			 "%svideo-%04d-%02d-%02d %02d-%02d-%02d", video_path,
-			 tm_current_time->tm_year + 1900, tm_current_time->tm_mon,
-			 tm_current_time->tm_mday, tm_current_time->tm_hour,
-			 tm_current_time->tm_min, tm_current_time->tm_sec);
+		"%svideo-%04d-%02d-%02d %02d-%02d-%02d", video_path,
+		tm_current_time->tm_year + 1900, tm_current_time->tm_mon,
+		tm_current_time->tm_mday, tm_current_time->tm_hour,
+		tm_current_time->tm_min, tm_current_time->tm_sec);
 
 	video_output_frame_count = 0;
 
-	// We can't do much in this case, as we don't open a global handle for dumping
+	// We can't do much in this case, as we don't open global handle for dumping
 	return 1;
 }
+
 
 //! Dump the current frame into the video file
 void
@@ -889,10 +894,9 @@ dump_video_frame()
 	FILE *tmp_video_output_file;
 
 	snprintf(video_output_filename, PATH_MAX, "%s-%d.ppm",
-			 video_output_base_filename, video_output_frame_count);
+		video_output_base_filename, video_output_frame_count);
 
-	frame_buffer =
-		malloc(3 * (io.screen_w & 0xFFFE) * (io.screen_h & 0xFFFE));
+	frame_buffer = malloc(3 * (io.screen_w & 0xFFFE) * (io.screen_h & 0xFFFE));
 
 	if (frame_buffer == NULL)
 		return;
@@ -904,10 +908,10 @@ dump_video_frame()
 		char buf[100];
 
 		snprintf(buf, sizeof(buf), "P6\n%d %d\n%d\n", io.screen_w & 0xFFFE,
-				 io.screen_h & 0xFFFE, 255);
+			io.screen_h & 0xFFFE, 255);
 		fwrite(buf, strlen(buf), 1, tmp_video_output_file);
 		fwrite(frame_buffer, 3 * (io.screen_w & 0xFFFE)
-			   * (io.screen_h & 0xFFFE), 1, tmp_video_output_file);
+			* (io.screen_h & 0xFFFE), 1, tmp_video_output_file);
 		fclose(tmp_video_output_file);
 	}
 
@@ -916,13 +920,15 @@ dump_video_frame()
 	free(frame_buffer);
 }
 
+
 //! Stop the dump video process
 void
 stop_dump_video()
 {
 	printf("Video dump finished on a %dx%d resolution\n",
-		   io.screen_w & 0xFFFE, io.screen_h & 0xFFFE);
+		io.screen_w & 0xFFFE, io.screen_h & 0xFFFE);
 }
+
 
 #else
 
@@ -948,10 +954,10 @@ start_dump_video()
 	tm_current_time = localtime(&time_t_current_time);
 
 	snprintf(video_output_filename, PATH_MAX,
-			 "%svideo-%04d-%02d-%02d %02d-%02d-%02d", video_path,
-			 tm_current_time->tm_year + 1900, tm_current_time->tm_mon + 1,
-			 tm_current_time->tm_mday, tm_current_time->tm_hour,
-			 tm_current_time->tm_min, tm_current_time->tm_sec);
+		"%svideo-%04d-%02d-%02d %02d-%02d-%02d", video_path,
+		tm_current_time->tm_year + 1900, tm_current_time->tm_mon + 1,
+		tm_current_time->tm_mday, tm_current_time->tm_hour,
+		tm_current_time->tm_min, tm_current_time->tm_sec);
 
 	video_output_file = fopen(video_output_filename, "wb");
 
@@ -964,6 +970,7 @@ start_dump_video()
 
 	return (video_output_file != NULL ? 1 : 0);
 }
+
 
 //! Dump the current frame into the video file
 void
@@ -987,7 +994,7 @@ dump_video_frame()
 
 	// Compute the rendered buffer CRC
 	for (index = 0; index < ((io.screen_w & ~1) * (io.screen_h & ~1));
-		 index++) {
+		index++) {
 		tmp_data = (uchar) frame_buffer[index];
 		tmp_data ^= CRC;
 		CRC >>= 8;
@@ -1006,8 +1013,7 @@ dump_video_frame()
 		(void) fwrite(&dum, 2, 1, video_output_file);
 
 		(void) fwrite(frame_buffer, (size_t) ((io.screen_w & ~1)
-											  * (io.screen_h & ~1)), 1,
-					  video_output_file);
+			* (io.screen_h & ~1)), 1, video_output_file);
 	} else {
 		uint32 dum;
 
@@ -1025,6 +1031,7 @@ dump_video_frame()
 	video_frame_total++;
 }
 
+
 //! Stop the dump video process
 void
 stop_dump_video()
@@ -1035,10 +1042,9 @@ stop_dump_video()
 		fclose(video_output_file);
 
 	snprintf(finish_message, 100, "Video dump finished, %d frames dumped, "
-			 "%d frames compressed (%.2f%% compression)",
-			 video_frame_total, video_frame_skipped,
-			 (video_frame_total !=
-			  0 ? 100.0 * video_frame_skipped / video_frame_total : 100));
+		"%d frames compressed (%.2f%% compression)",
+		video_frame_total, video_frame_skipped,
+		(video_frame_total != 0 ? 100.0 * video_frame_skipped / video_frame_total : 100));
 
 	osd_gfx_set_message(finish_message);
 }
