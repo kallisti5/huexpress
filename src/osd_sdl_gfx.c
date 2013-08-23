@@ -120,25 +120,7 @@ osd_gfx_put_image_normal(void)
 	uint32 sdlFlags = SDL_GetWindowFlags(sdlWindow);
 
 	Slock(screen);
-	char* frameBuffer = malloc(3 * (io.screen_w & 0xFFFE)
-		* (io.screen_h & 0xFFFE));
-
-	if (frameBuffer == NULL) {
-		MESSAGE_ERROR("%s: Failed to malloc screen\n", __func__);
-		return;
-	}
-	dump_rgb_frame(frameBuffer);
-
-//	uint16 y;
-//	for (y = 0; y < io.screen_h; y++)
-//		memmove(screen->pixels + y * io.screen_w,
-//			frameBuffer + y * io.screen_w, io.screen_w);
-
-	SDL_ConvertPixels(io.screen_w, io.screen_h, SDL_PIXELFORMAT_RGB888,
-		frameBuffer, io.screen_w * 4, SDL_PIXELFORMAT_RGB888, screen->pixels,
-		io.screen_w * 4);
-
-	free(frameBuffer);
+	dump_rgb_frame(screen->pixels);
 	Sulock(screen);
 
 	int result = 0;
@@ -502,7 +484,6 @@ osd_gfx_blit()
 {
 	GLint bytesPerPixel = physical_screen->format->BytesPerPixel;
 
-	#warning For now we use screen vs physical_screen for debugging
 	int width = physical_screen->w;
 	int height = physical_screen->h;
 
