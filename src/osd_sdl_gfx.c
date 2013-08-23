@@ -117,19 +117,29 @@ Sulock(SDL_Surface * screen)
 void
 osd_gfx_put_image_normal(void)
 {
-	uint16 y;
 	uint32 sdlFlags = SDL_GetWindowFlags(sdlWindow);
 
-
 	Slock(screen);
+	char* frameBuffer = malloc(3 * (io.screen_w & 0xFFFE)
+		* (io.screen_h & 0xFFFE));
+
+	if (frameBuffer == NULL) {
+		MESSAGE_ERROR("%s: Failed to malloc screen\n", __func__);
+		return;
+	}
+	dump_rgb_frame(frameBuffer);
+
+//	uint16 y;
 //	for (y = 0; y < io.screen_h; y++)
 //		memmove(screen->pixels + y * io.screen_w,
-//			osd_gfx_buffer + y * XBUF_WIDTH, io.screen_w);
-	SDL_ConvertPixels(io.screen_w, io.screen_h, SDL_PIXELFORMAT_INDEX8,
-		osd_gfx_buffer, XBUF_WIDTH, SDL_PIXELFORMAT_INDEX8, screen->pixels,
-		io.screen_w);
-	Sulock(screen);
+//			frameBuffer + y * io.screen_w, io.screen_w);
 
+	SDL_ConvertPixels(io.screen_w, io.screen_h, SDL_PIXELFORMAT_RGB888,
+		frameBuffer, io.screen_w * 4, SDL_PIXELFORMAT_RGB888, screen->pixels,
+		io.screen_w * 4);
+
+	free(frameBuffer);
+	Sulock(screen);
 
 	int result = 0;
 	if (sdlFlags & SDL_WINDOW_FULLSCREEN
@@ -139,8 +149,6 @@ osd_gfx_put_image_normal(void)
 	} else {
 		result = SDL_BlitSurface(screen, NULL,
 			physical_screen, &physical_screen_rect);
-		//memmove(physical_screen->pixels, screen->pixels,
-		//	physical_screen->width * physical_screen->height);
 	}
 
 	if (result < 0) {
@@ -262,7 +270,6 @@ osd_gfx_init_normal_mode()
 		MESSAGE_ERROR("Correcting out of range screen w %d\n", io.screen_w);
 		io.screen_w = 256;
 	}
-
 	if (io.screen_h < 160 || io.screen_h > 256) {
 		MESSAGE_ERROR("Correcting out of range screen h %d\n", io.screen_h);
 		io.screen_h = 224;
@@ -272,7 +279,7 @@ osd_gfx_init_normal_mode()
 		? option.fullscreen_width : io.screen_w * option.window_size;
 	uint16 height = option.want_fullscreen
 		? option.fullscreen_height : io.screen_h * option.window_size;
-	
+
 	if (sdlWindow != NULL) {
 		SDL_DestroyWindow(sdlWindow);
 		sdlWindow = NULL;
@@ -316,7 +323,7 @@ osd_gfx_init_normal_mode()
 
 	physical_screen = SDL_CreateRGBSurface(0,
 		io.screen_w * option.window_size, io.screen_h * option.window_size,
-		8, 0, 0, 0, 0);
+		32, 0x000000FF, 0x0000FF00, 0x00FF0000, 0);
 
 	if (physical_screen == NULL) {
 		MESSAGE_ERROR("SDL: CreateRGBSurface failed at %s:%d - %s\n",
@@ -339,7 +346,7 @@ osd_gfx_init_normal_mode()
 	}
 
 	screen = SDL_CreateRGBSurface(0, io.screen_w, io.screen_h,
-		8, 0, 0, 0, 0);
+		32, 0x000000FF, 0x0000FF00, 0x00FF0000, 0);
 
 	if (screen == NULL) {
 		MESSAGE_ERROR("SDL: CreateRGBSurface failed at %s:%d - %s\n",
@@ -374,6 +381,7 @@ osd_gfx_shut_normal_mode(void)
 	physical_screen = NULL;
 }
 
+
 /*****************************************************************************
 
 		Function: osd_gfx_savepict
@@ -398,7 +406,7 @@ osd_gfx_savepict()
 
 	if (!strftime
 		(filename_base, PATH_MAX, "%%s/screenshot_%F_%R-%%d.ppm",
-		 localtime(&current_time)))
+			localtime(&current_time)))
 		return 0xFFFF;
 
 	do {
@@ -417,13 +425,11 @@ osd_gfx_savepict()
 	if (output_file != NULL) {
 		char buf[100];
 
-		snprintf(buf, sizeof(buf),
-				 "P6\n%d %d\n%d\n",
-				 io.screen_w & 0xFFFE, io.screen_h & 0xFFFE, 255);
+		snprintf(buf, sizeof(buf), "P6\n%d %d\n%d\n", io.screen_w & 0xFFFE,
+			io.screen_h & 0xFFFE, 255);
 		fwrite(buf, strlen(buf), 1, output_file);
-		fwrite(frame_buffer,
-			   3 * (io.screen_w & 0xFFFE) * (io.screen_h & 0xFFFE), 1,
-			   output_file);
+		fwrite(frame_buffer, 3 * (io.screen_w & 0xFFFE)
+			* (io.screen_h & 0xFFFE), 1, output_file);
 		fclose(output_file);
 	}
 
@@ -507,8 +513,8 @@ osd_gfx_blit()
 	int height = physical_screen->h;
 
 	// Edit the texture object's image data	using the information SDL_Surface gives us
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE,
-		width, height, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE,
+	glTexImage2D(GL_TEXTURE_2D, 0, bytesPerPixel,
+		width, height, 0, GL_RGB, GL_UNSIGNED_BYTE,
 		physical_screen->pixels);
 
 	glBegin(GL_QUADS) ;
