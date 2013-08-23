@@ -23,8 +23,16 @@ input_config config[16] = {
 	{  // Config 0
 		{
 			{ 0, 0, 0, 0, 0, 0,
-				{ SDLK_UP, SDLK_DOWN, SDLK_LEFT, SDLK_RIGHT,
-				SDLK_z, SDLK_x, SDLK_TAB, SDLK_RETURN, SDLK_q, SDLK_w,
+				{ SDL_SCANCODE_UP,
+				  SDL_SCANCODE_DOWN,
+				  SDL_SCANCODE_LEFT, 
+				  SDL_SCANCODE_RIGHT,
+				  SDL_SCANCODE_Z,
+				  SDL_SCANCODE_X,
+				  SDL_SCANCODE_TAB,
+				  SDL_SCANCODE_RETURN,
+				  SDL_SCANCODE_Q,
+				  SDL_SCANCODE_W,
 				-1, -1, -1, -1, -1, -1, -1, -1 } },
 			{ 0, 0, 0, 0, 0, 0, { 0 } },
 			{ 0, 0, 0, 0, 0, 0, { 0 } },
@@ -89,7 +97,7 @@ SDL_Joystick *joypad[5];
 
 /* for keyboard */
 uint16
-read_input (uint16 port)
+read_input(uint16 port)
 {
 	static char autoI_delay = 0, autoII_delay = 0;
 	uint16 tmp;
