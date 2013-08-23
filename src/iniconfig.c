@@ -273,10 +273,10 @@ read_joy_mapping(void)
 char
 set_arg(char nb_arg, const char *val) {
 
-	if (!val
-	&& (nb_arg == 'i' || nb_arg == 't' || nb_arg == 'w' || nb_arg == 'c')) {
-	MESSAGE_ERROR("No value provided for %c arg\n", nb_arg);
-	return 1;
+	if (!val && (nb_arg == 'i' || nb_arg == 't' || nb_arg == 'w'
+		|| nb_arg == 'c' || nb_arg == 'z')) {
+		MESSAGE_ERROR("No value provided for %c arg\n", nb_arg);
+		return 1;
 	}
 
 	switch (nb_arg)
@@ -332,19 +332,19 @@ set_arg(char nb_arg, const char *val) {
 		MESSAGE_INFO("Option: Stereo sound enabled\n");
 		return 0;
 	case 'S':
-		use_scanline = MIN(1, MAX(0, atoi (val)));
+		use_scanline = MIN(1, MAX(0, atoi(val)));
 		Log ("Scanline mode set to %d\n", use_scanline);
 		return 0;
 	case 'u':
-		US_encoded_card = atoi (val);
+		US_encoded_card = atoi(val);
 		Log ("US Card encoding set to %d\n", US_encoded_card);
 		return 0;
 	case 't':
-		nb_max_track = atoi (val);
+		nb_max_track = atoi(val);
 		Log ("Number of tracks set to %d\n", nb_max_track);
 		return 0;
 	case 'z':
-		option.window_size = MIN(1, MAX(4, atoi (val)));
+		option.window_size = MIN(1, MAX(4, atoi(val)));
 		return 0;
 	case 'h':
 		printf(

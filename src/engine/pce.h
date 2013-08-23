@@ -203,7 +203,7 @@ struct hugo_options {
 	boolean want_arcade_card_emulation;
 	boolean want_supergraphx_emulation;
 	boolean want_television_size_emulation;
-	uchar window_size;
+	uint16 window_size;
 	uint16 fullscreen_width;
 	uint16 fullscreen_height;
 	uint32 want_snd_freq;
