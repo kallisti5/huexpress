@@ -23,7 +23,6 @@ SDL_Texture *osd_overlay = NULL;
 SDL_Color olay_cmap[256];
 
 //! Host machine rendered screen
-SDL_Surface *physical_screen = NULL;
 SDL_Texture *osd_texture = NULL;
 SDL_GLContext sdlGLContext;
 
@@ -31,8 +30,6 @@ SDL_Color osd_color = { 0, 255, 0, 0 };	// Green
 SDL_Rect osd_rect = { 10, 5, 0, 0 };
 
 TTF_Font *osd_font;
-
-SDL_Rect physical_screen_rect;
 
 int blit_x, blit_y;
 // where must we blit the screen buffer on screen
@@ -122,11 +119,6 @@ osd_gfx_put_image_normal(void)
 	Slock(screen);
 	dump_rgb_frame(screen->pixels);
 	Sulock(screen);
-
-	if (SDL_BlitSurface(screen, NULL, physical_screen, NULL) < 0) {
-		MESSAGE_ERROR("SDL: %s failed at %s:%d - %s\n",
-				__func__, __FILE__, __LINE__, SDL_GetError());
-	}
 
 	//Slock(screen);
 	// After drawing the game, throw in any onscreen text
@@ -282,27 +274,6 @@ osd_gfx_init_normal_mode()
 
 	SDL_GL_SetSwapInterval(1);
 
-	if (physical_screen != NULL) {
-		SDL_FreeSurface(physical_screen);
-		physical_screen = NULL;
-	}
-
-	physical_screen = SDL_CreateRGBSurface(0, io.screen_w, io.screen_h,	32,
-		0x000000FF, 0x0000FF00, 0x00FF0000, 0);
-
-	if (physical_screen == NULL) {
-		MESSAGE_ERROR("SDL: CreateRGBSurface failed at %s:%d - %s\n",
-			__FILE__, __LINE__, SDL_GetError());
-	}
-
-	calc_fullscreen_aspect(physical_screen->w, physical_screen->h, &rect,
-		io.screen_w, io.screen_h);
-
-	physical_screen_rect.x = rect.start_x;
-	physical_screen_rect.y = rect.start_y;
-	physical_screen_rect.w = rect.end_x;
-	physical_screen_rect.h = rect.end_y;
-
 	if (screen != NULL) {
 		SDL_FreeSurface(screen);
 		screen = NULL;
@@ -318,7 +289,7 @@ osd_gfx_init_normal_mode()
 
 	osd_gfx_glinit();
 
-	return (screen && physical_screen) ? 1 : 0;
+	return (screen) ? 1 : 0;
 }
 
 
@@ -342,8 +313,6 @@ osd_gfx_shut_normal_mode(void)
 
 	/* SDL will free physical_screen internally */
 	SDL_QuitSubSystem(SDL_INIT_VIDEO);
-
-	physical_screen = NULL;
 }
 
 
@@ -427,7 +396,7 @@ osd_gfx_set_color(uchar index, uchar r, uchar g, uchar b)
 	R.g = g;
 	R.b = b;
 
-	SDL_SetPaletteColors(physical_screen->format->palette,
+	SDL_SetPaletteColors(screen->format->palette,
 		&R, 0, 1);
 }
 
@@ -474,17 +443,17 @@ osd_gfx_glinit()
 void
 osd_gfx_blit()
 {
-	Slock(physical_screen);
+	Slock(screen);
 	// Edit the texture object's image data	using the information SDL_Surface gives us
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,
 		screen->w, screen->h, 0, GL_RGB, GL_UNSIGNED_BYTE,
-		physical_screen->pixels);
-	Sulock(physical_screen);
+		screen->pixels);
+	Sulock(screen);
 
 	int X = 0;
 	int Y = 0;
-	int windowWidth = physical_screen->w * option.window_size;
-	int windowHeight = physical_screen->h * option.window_size;
+	int windowWidth = screen->w * option.window_size;
+	int windowHeight = screen->h * option.window_size;
 
 	glBegin(GL_QUADS) ;
 		glTexCoord2f(0, 0);
@@ -515,13 +484,8 @@ ToggleFullScreen(void)
 
 	SetPalette();
 
-	calc_fullscreen_aspect(physical_screen->w, physical_screen->h, &rect,
+	calc_fullscreen_aspect(screen->w, screen->h, &rect,
 		io.screen_w, io.screen_h);
-
-	physical_screen_rect.x = rect.start_x;
-	physical_screen_rect.y = rect.start_y;
-	physical_screen_rect.w = rect.end_x;
-	physical_screen_rect.h = rect.end_y;
 
 	SDL_PauseAudio(SDL_DISABLE);
 
