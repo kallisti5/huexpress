@@ -123,17 +123,7 @@ osd_gfx_put_image_normal(void)
 	dump_rgb_frame(screen->pixels);
 	Sulock(screen);
 
-	int result = 0;
-	if (sdlFlags & SDL_WINDOW_FULLSCREEN
-		|| option.window_size > 1) {
-		result = SDL_BlitScaled(screen, NULL,
-			physical_screen, &physical_screen_rect);
-	} else {
-		result = SDL_BlitSurface(screen, NULL,
-			physical_screen, &physical_screen_rect);
-	}
-
-	if (result < 0) {
+	if (SDL_BlitSurface(screen, NULL, physical_screen, NULL) < 0) {
 		MESSAGE_ERROR("SDL: %s failed at %s:%d - %s\n",
 				__func__, __FILE__, __LINE__, SDL_GetError());
 	}
@@ -251,9 +241,9 @@ osd_gfx_init_normal_mode()
 		io.screen_h = 224;
 	}
 
-	uint16 width = option.want_fullscreen
+	uint16 windowWidth = option.want_fullscreen
 		? option.fullscreen_width : io.screen_w * option.window_size;
-	uint16 height = option.want_fullscreen
+	uint16 windowHeight = option.want_fullscreen
 		? option.fullscreen_height : io.screen_h * option.window_size;
 
 	if (sdlWindow != NULL) {
@@ -262,7 +252,7 @@ osd_gfx_init_normal_mode()
 	}
 
 	sdlWindow = SDL_CreateWindow("HuExpress", SDL_WINDOWPOS_UNDEFINED,
-		SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_SHOWN
+		SDL_WINDOWPOS_UNDEFINED, windowWidth, windowHeight, SDL_WINDOW_SHOWN
 		| SDL_WINDOW_OPENGL);
 
 	if (sdlWindow == NULL) {
@@ -297,9 +287,8 @@ osd_gfx_init_normal_mode()
 		physical_screen = NULL;
 	}
 
-	physical_screen = SDL_CreateRGBSurface(0,
-		io.screen_w * option.window_size, io.screen_h * option.window_size,
-		32, 0x000000FF, 0x0000FF00, 0x00FF0000, 0);
+	physical_screen = SDL_CreateRGBSurface(0, io.screen_w, io.screen_h,	32,
+		0x000000FF, 0x0000FF00, 0x00FF0000, 0);
 
 	if (physical_screen == NULL) {
 		MESSAGE_ERROR("SDL: CreateRGBSurface failed at %s:%d - %s\n",
@@ -314,8 +303,6 @@ osd_gfx_init_normal_mode()
 	physical_screen_rect.w = rect.end_x;
 	physical_screen_rect.h = rect.end_y;
 
-	osd_gfx_glinit();
-
 	if (screen != NULL) {
 		SDL_FreeSurface(screen);
 		screen = NULL;
@@ -328,6 +315,8 @@ osd_gfx_init_normal_mode()
 		MESSAGE_ERROR("SDL: CreateRGBSurface failed at %s:%d - %s\n",
 			__FILE__, __LINE__, SDL_GetError());
 	}
+
+	osd_gfx_glinit();
 
 	return (screen && physical_screen) ? 1 : 0;
 }
@@ -448,6 +437,11 @@ osd_gfx_glinit()
 {
 	glEnable( GL_TEXTURE_2D );
 
+	uint16 windowWidth = option.want_fullscreen
+		? option.fullscreen_width : screen->w * option.window_size;
+	uint16 windowHeight = option.want_fullscreen
+		? option.fullscreen_height : screen->h * option.window_size;
+
 	GLuint texture = 0;
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
@@ -455,8 +449,7 @@ osd_gfx_glinit()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
-	//glViewport( 0, 0, screen->w, screen->h);
-	glViewport(0, 0, physical_screen->w, physical_screen->h);
+	glViewport(0, 0, windowWidth, windowHeight);
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_ALPHA_TEST);
 	glDisable(GL_BLEND);
@@ -471,8 +464,7 @@ osd_gfx_glinit()
 		(GLdouble)(OVERSCAN_TOP * scalefactor), -1.0, 1.0);
 	}
 	else {*/
-	glOrtho(0.0, (GLdouble)physical_screen->w,
-		(GLdouble)physical_screen->h, 0.0, -1.0, 1.0);
+	glOrtho(0.0, (GLdouble)windowWidth,	(GLdouble)windowHeight, 0.0, -1.0, 1.0);
 	//}
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
@@ -482,32 +474,27 @@ osd_gfx_glinit()
 void
 osd_gfx_blit()
 {
-	GLint bytesPerPixel = physical_screen->format->BytesPerPixel;
-
-	int width = physical_screen->w;
-	int height = physical_screen->h;
-
+	Slock(physical_screen);
 	// Edit the texture object's image data	using the information SDL_Surface gives us
-	glTexImage2D(GL_TEXTURE_2D, 0, bytesPerPixel,
-		width, height, 0, GL_RGB, GL_UNSIGNED_BYTE,
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,
+		screen->w, screen->h, 0, GL_RGB, GL_UNSIGNED_BYTE,
 		physical_screen->pixels);
+	Sulock(physical_screen);
+
+	int X = 0;
+	int Y = 0;
+	int windowWidth = physical_screen->w * option.window_size;
+	int windowHeight = physical_screen->h * option.window_size;
 
 	glBegin(GL_QUADS) ;
-		// Bottom-Right
-		glTexCoord2f(1.0f, 1.0f);
-		glVertex2i(width, height);
-
-		// Top-Right
-		glTexCoord2f(1.0f, 0.0f);
-		glVertex2i(width, 0);
-
-		// Top-Left
-		glTexCoord2f(0.0f, 0.0f);
-		glVertex2i(0, 0);
-
-		// Bottom-Left
-		glTexCoord2f(0.0f, 1.0f);
-		glVertex2i(0, height);
+		glTexCoord2f(0, 0);
+		glVertex3f(X, Y, 0);
+		glTexCoord2f(1, 0);
+		glVertex3f(X + windowWidth, Y, 0);
+		glTexCoord2f(1, 1);
+		glVertex3f(X + windowWidth, Y + windowHeight, 0);
+		glTexCoord2f(0, 1);
+		glVertex3f(X, Y + windowHeight, 0);
 	glEnd();
 
 	SDL_GL_SwapWindow(sdlWindow);
