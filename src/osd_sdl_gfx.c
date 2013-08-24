@@ -4,28 +4,27 @@
 /*                                       */
 /* Original Author:                      */
 /*		Zerograd? - Hu-GO!               */
-/* Reworked for HuExpress by:            */
+/* Redesignd for HuExpress by:           */
 /*		Alexander von Gluck, kallisti5   */
 /*****************************************/
+
 
 #include "osd_sdl_gfx.h"
 #include "utils.h"
 
+
+//! Host machine rendered screen
 SDL_Renderer *sdlRenderer = NULL;
 SDL_Window *sdlWindow = NULL;
+SDL_GLContext sdlGLContext;
 
 //! PC Engine rendered screen
 SDL_Surface *screen = NULL;
 
 /* Overlay for hardware scaling */
 SDL_Texture *osd_overlay = NULL;
-
 SDL_Color olay_cmap[256];
-
-//! Host machine rendered screen
 SDL_Texture *osd_texture = NULL;
-SDL_GLContext sdlGLContext;
-
 SDL_Color osd_color = { 0, 255, 0, 0 };	// Green
 SDL_Rect osd_rect = { 10, 5, 0, 0 };
 
@@ -34,21 +33,8 @@ TTF_Font *osd_font;
 int blit_x, blit_y;
 // where must we blit the screen buffer on screen
 
-int screen_blit_x, screen_blit_y;
-// where on the screen we must blit XBuf
-
 uchar *XBuf;
 // buffer for video flipping
-
-uchar index_to_RGB[256];
-// convertion array from bero's reduced pce palette to x11 palette
-
-int osd_gfx_init();
-int osd_gfx_init_normal_mode();
-void osd_gfx_put_image_normal();
-void osd_gfx_shut_normal_mode();
-
-void osd_gfx_dummy_func();
 
 osd_gfx_driver osd_gfx_driver_list[3] = {
 	{osd_gfx_init, osd_gfx_init_normal_mode,
