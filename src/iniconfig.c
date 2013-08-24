@@ -16,8 +16,9 @@
 
 
 #include "iniconfig.h"
-#include "utils.h"
 
+#include "huexpress.h"
+#include "utils.h"
 
 static int default_joy_mapping[J_MAX] = {0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1, -1, -1};
@@ -349,6 +350,7 @@ set_arg(char nb_arg, const char *val) {
 	case 'h':
 		printf(
 		"\nHuExpress, the multi-platform PCEngine emulator\n"
+		"Version %d.%02d, 2012-2013 Alexander von Gluck IV\n"
 		"Based on HuGO! by Zerograd and others\n\n"
 		" Usage: huexpress <GAME> [arguments]\n\n"
 		" Where <GAME> is an pce|iso|zip\n"
@@ -360,7 +362,7 @@ set_arg(char nb_arg, const char *val) {
 		"	-s	Enable Stereo sound\n"
 		"	-SX Scanline mode (0-1)\n"
 		"	-zX	Zoom level X (1-4)\n"
-		"\n");
+		"\n", VERSION_MAJOR, VERSION_MINOR);
 		return 1;
 
 	default:

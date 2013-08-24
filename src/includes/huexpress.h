@@ -5,4 +5,7 @@
 #include "pce.h"
 #include "iniconfig.h"
 
+#define VERSION_MAJOR	3
+#define VERSION_MINOR	1
+
 #endif

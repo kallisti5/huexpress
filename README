@@ -6,8 +6,8 @@
                                        |__|
 
                 CoreGrafx / PC Engine / TurboGrafx-16 Emulator
-                               Version 2.16
-                             August 2nd, 2013
+                               Version 3.01
+                             August 24th, 2013
 
 --[ DISCLAIMER ]-------------------------------------------------------------
 
@@ -58,7 +58,7 @@
     These two last are optionals. The order shouldn't import but the ROM name
     must be before the name of backup RAM.
 
---[ HOW TO CONFIGURE HuExpress! FOR PLAYING CDS ? ]------------------------------
+--[ HOW TO CONFIGURE HuExpress FOR PLAYING CDS ? ]------------------------------
 
 	Under linux, you first have to configure the cd path (ie /dev/cdrom or such)
 	either on the command line (-i <cd path>), the .ini file (variable cd_path),
@@ -73,14 +73,19 @@
 
 --[ SYSTEM REQUIREMENTS ]----------------------------------------------------
 
-    -- Pentium 166 (maybe less without sound; something like 233 or 266 for
-       good sound).
+    -- SDL 2.0 or later
 
-    -- 8MB of RAM.
-
-    -- A Haiku system with libsdl (installoptionalpackage -a sdllib)
+    -- A graphics card that supports OpenGL (or software OpenGL)
 
     -- A sound card (only if you want to hear sound, of course).
+
+--[ KNOWN ISSUES / BUGS ] ---------------------------------------------------
+
+    -- Fullscreen mode is currently broken (doesn't scale)
+
+    -- Netplay is not non-tested / functional
+
+    -- Game state save is known to crash
 
 --[ KEYBOARD CONTROLS ]------------------------------------------------------
 
@@ -93,8 +98,7 @@
     s                    Toggle autofire 2
 
     (These are default keys for all players)
-    You can edit yours using the HU-GO!.INI (dos/windows) or hugo.ini (un*x)
-	file (See details later)
+    You can edit yours using the huexpress.ini file
 
     Special keys:
 

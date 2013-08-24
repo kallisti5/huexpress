@@ -1,4 +1,7 @@
-- HuExpress 2.16
+- HuExpress 3.01
+  * Utilize OpenGL for scaling rendered images
+  * Utilize OpenGL for rendering displayed images
+  * Move to SDL 2.0
   * Display ROM info on startup (based on CRC)
   * Add internal PC Engine / TurboGrafx CRC database
   * Fix memory leaks through static analysis

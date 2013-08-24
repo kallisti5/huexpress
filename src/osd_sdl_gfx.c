@@ -229,9 +229,13 @@ osd_gfx_init_normal_mode()
 		sdlWindow = NULL;
 	}
 
+	uint32 windowFlags = SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL;
+
+	if (option.want_fullscreen) 
+		windowFlags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
+
 	sdlWindow = SDL_CreateWindow("HuExpress", SDL_WINDOWPOS_UNDEFINED,
-		SDL_WINDOWPOS_UNDEFINED, windowWidth, windowHeight, SDL_WINDOW_SHOWN
-		| SDL_WINDOW_OPENGL);
+		SDL_WINDOWPOS_UNDEFINED, windowWidth, windowHeight, windowFlags);
 
 	if (sdlWindow == NULL) {
 		MESSAGE_ERROR("SDL: %s failed at %s:%d - %s\n", __func__, __FILE__,
@@ -459,12 +463,14 @@ osd_gfx_blit()
 int
 ToggleFullScreen(void)
 {
+	// TODO: Fix FullScreen
+	return 1;
+
 	struct generic_rect rect;
 	uint32 sdlFlags = SDL_GetWindowFlags(sdlWindow);
 
 	SDL_PauseAudio(SDL_ENABLE);
 
-	// TODO: Fix FullScreen
 	// option.fullscreen_width
 	// option.fullscreen_height
 
