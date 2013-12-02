@@ -1,4 +1,6 @@
-- HuExpress 3.01
+- HuExpress 3.0.1
+  * No longer need to extract HCD archives from zip files to play
+  * Add script to automatically create HCD backups
   * Utilize OpenGL for scaling rendered images
   * Utilize OpenGL for rendering displayed images
   * Move to SDL 2.0

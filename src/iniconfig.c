@@ -350,19 +350,22 @@ set_arg(char nb_arg, const char *val) {
 	case 'h':
 		printf(
 		"\nHuExpress, the multi-platform PCEngine emulator\n"
-		"Version %d.%02d, 2012-2013 Alexander von Gluck IV\n"
-		"Based on HuGO! by Zerograd and others\n\n"
-		" Usage: huexpress <GAME> [arguments]\n\n"
-		" Where <GAME> is an pce|iso|zip\n"
-		" Where [arguments] are:\n"
-		"	-cX	Force CD Emulation mode X\n"
-		"	-dX Debug (0-1)\n"
-		"	-eX Eagle mode (0-1)\n"
-		"	-f	Fullscreen mode\n"
-		"	-s	Enable Stereo sound\n"
-		"	-SX Scanline mode (0-1)\n"
-		"	-zX	Zoom level X (1-4)\n"
-		"\n", VERSION_MAJOR, VERSION_MINOR);
+		"Version %d.%d.%d\n"
+		"Copyright 2011-2013 Alexander von Gluck IV\n"
+		"Copyright 2001-2005 Zeograd\n"
+		"Copyright 1998 BERO\n"
+		"Copyright 1996 Alex Krasivsky, Marat Fayzullin\n\n"
+		"Usage: huexpress <GAME> [arguments]\n\n"
+		"Where <GAME> is an pce|iso|zip\n"
+		"Where [arguments] are:\n"
+		"	-cX  Force CD Emulation mode X\n"
+		"	-dX  Debug (0-1)\n"
+		"	-eX  Eagle mode (0-1)\n"
+		"	-f   Fullscreen mode\n"
+		"	-s   Enable Stereo sound\n"
+		"	-SX  Scanline mode (0-1)\n"
+		"	-zX  Zoom level X (1-4)\n"
+		"\n", VERSION_MAJOR, VERSION_MINOR, VERSION_UPDATE);
 		return 1;
 
 	default:

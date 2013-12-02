@@ -6,34 +6,36 @@
                                        |__|
 
                 CoreGrafx / PC Engine / TurboGrafx-16 Emulator
-                               Version 3.01
-                             August 24th, 2013
+                               Version 3.0.1
+                            December 1st, 2013
 
 --[ DISCLAIMER ]-------------------------------------------------------------
 
     I can't be held responsible for any misuse of this software, it comes
     with absolutely no warranty. Use it at your own risk.
 
+    The developer of HuExpress does *NOT* condone piracy. Please only
+    use HuExpress to play PC Engine games and backups you legally own.
+
 --[ INTRODUCTION ]-----------------------------------------------------------
 
     This is the first release of HuExpress, a multi-platform PC Engine
     emulator.
+
+    Bugs are expected as this is all new code. Please report any
+    bugs to the issue tracker at https://github.com/kallisti5/huexpress
 
     If you are looking for the original Hu-Go! PC Engine emulator
     see zeograd.com
 
 --[ FORK ]-------------------------------------------------------------------
 
-    HuExpress is a fork of the great Hu-Go! machine emulator by zeograd which
-    is based on a PC Engine emulator produced by "Bero"
-    (http://www.geocities.co.jp/Playtown/2004/)
+    HuExpress is a fork of the great Hu-Go! machine emulator by
+    zeograd which is based on a PC Engine emulator produced by
+    "Bero" (http://www.geocities.co.jp/Playtown/2004/)
  
     Plus improvements at Hmmx's Homepage
     (formerly, http://www.geocities.co.jp/SiliconValley/7052/).
-
-    I decided to fork Hu-Go! because the Hu-Go! project seemed to be
-    abandoned (no updates since 2005), in addition to this the BeOS
-    support has been slowly breaking since 2.10.
 
 --[ HOW TO INSTALL IT ? ]----------------------------------------------------
 
@@ -60,16 +62,16 @@
 
 --[ HOW TO CONFIGURE HuExpress FOR PLAYING CDS ? ]------------------------------
 
-	Under linux, you first have to configure the cd path (ie /dev/cdrom or such)
-	either on the command line (-i <cd path>), the .ini file (variable cd_path),
-	or in the gui, under the tab 'CD emulation'.
-	FreeBSD doesn't have yet the CD support.
-	For any platform, choose the system card rom location. It's the rom which
-	actually boots the CD, and it's called syscard.pce or such. As for all
-	commercial roms, you can only use it if you've bought a system card hucard
-	or an hardware containing it (Any duo for instance).
-	It's a known bug that you can't always play several CDs in a row without
-	restarting the whole emulator.
+    Under linux, you first have to configure the cd path
+    (ie /dev/cdrom or such) either on the command line (-i <path>),
+    or in the .ini file (variable cd_path).
+
+    FreeBSD doesn't have yet the CD support.
+    For any platform, choose the system card rom location. It's the
+    rom which actually boots the CD, and it's called syscard.pce
+    or such. As for all commercial roms, you can only use it if you've
+    bought a system card hucard or an hardware containing it
+    (Any duo for instance).
 
 --[ SYSTEM REQUIREMENTS ]----------------------------------------------------
 
@@ -78,6 +80,12 @@
     -- A graphics card that supports OpenGL (or software OpenGL)
 
     -- A sound card (only if you want to hear sound, of course).
+
+    -- A supported platform
+
+       -- Linux
+       -- FreeBSD (untested, patches welcome)
+       -- Haiku
 
 --[ KNOWN ISSUES / BUGS ] ---------------------------------------------------
 
@@ -148,14 +156,14 @@
     ** Command line options
     Can be either -FV or -F V where F is the flag and V the value
 
-   -- c : CD emulation (This way of emulating ISO is no more compulsory but still works,
-                         is compulsory for using CDs)
+   -- c : CD emulation (This way of emulating ISO is no more compulsory
+		but still works, is compulsory for using CDs)
         0 -> Only Hu-card emulation (Default)
         1 -> CD emulation on
         2 -> ISO file emulation on
         3 -> ISQ file emulation on
         4 -> BIN file emulation on (it's a raw full dump, only 1 track supported
-          right now, and only if <280 Mb)
+             right now, and only if <280 Mb)
 		  
 	-- f : Fullscreen model
 		0 -> Start in window mode
@@ -316,45 +324,97 @@
 
 --[ CHEATING HINTS ]---------------------------------------------------------
 
-     -- Be careful, you may think the cheat didn't work, in fact, some
-     variables aren't updated each frame so try to lose a life or if you
-     modified money try to buy something... then you may see the difference.
-     -- You aren't obliged to search for altered values, you can make a
-     search for 2 lifes then 5 sec. later you search for 2 lifes again,...
-     I suggest you search for the same value twice very quickly. If you look
-     twice for the same value with only a half a sec. interval, you will
-     certainly eliminate a good amount of 'bad' variables.
-     -- Once a search is complete and you no longer get a lot values each
-     time you search, you may stay stuck because two variables have the same
-     value at the same moment (often for core and screen purposes). If that
-     is the case go and check the file named ROM.FP0 (where ROM is the name
-     of the rom), this contains the different possible offsets. It's up to
-     you.
-     -- Sessions of research are kept between two launches of the emulator.
-     -- If you want to start a new session, just make a 'SEARCH FAILED'
-     (Search for 25 then 6 then 79 in a very reduced interval, if you can't
-     get an 'SEARCH FAILED' then you will be the next on my guinea pig list
-     for trying the direct synaptic link ;).
-     -- Sometimes, the value on screen isn't stored like shown, e.g. if you
-     have 5 lives, maybe the variable 'LIFE' is set at 4 or 6, try to search
-     for 'value'+1 or 'value'-1, it may work... (like the number of balls in
-     Devil Cr*sh).
-     The best to avoid this kind of problem is using relative value research.
-     -- The search only works on bytes but a variable may take 2, 3 or more
-     bytes. In this case try modifying the byte just 1 byte above or below
-     the one you found (e.g. if you've found that putting a value at address
-     X would change the money a bit, putting a value at address X+1 will
-     certainly change the money a lot).
+    -- Be careful, you may think the cheat didn't work, in fact, some
+    variables aren't updated each frame so try to lose a life or if you
+    modified money try to buy something... then you may see the difference.
+    -- You aren't obliged to search for altered values, you can make a
+    search for 2 lifes then 5 sec. later you search for 2 lifes again,...
+    I suggest you search for the same value twice very quickly. If you look
+    twice for the same value with only a half a sec. interval, you will
+    certainly eliminate a good amount of 'bad' variables.
+    -- Once a search is complete and you no longer get a lot values each
+    time you search, you may stay stuck because two variables have the same
+    value at the same moment (often for core and screen purposes). If that
+    is the case go and check the file named ROM.FP0 (where ROM is the name
+    of the rom), this contains the different possible offsets. It's up to
+    you.
+    -- Sessions of research are kept between two launches of the emulator.
+    -- If you want to start a new session, just make a 'SEARCH FAILED'
+    (Search for 25 then 6 then 79 in a very reduced interval, if you can't
+    get an 'SEARCH FAILED' then you will be the next on my guinea pig list
+    for trying the direct synaptic link ;).
+    -- Sometimes, the value on screen isn't stored like shown, e.g. if you
+    have 5 lives, maybe the variable 'LIFE' is set at 4 or 6, try to search
+    for 'value'+1 or 'value'-1, it may work... (like the number of balls in
+    Devil Cr*sh).
+    The best to avoid this kind of problem is using relative value research.
+    -- The search only works on bytes but a variable may take 2, 3 or more
+    bytes. In this case try modifying the byte just 1 byte above or below
+    the one you found (e.g. if you've found that putting a value at address
+    X would change the money a bit, putting a value at address X+1 will
+    certainly change the money a lot).
 
 --[ DEVELOPERS CORNER ]------------------------------------------------------
 
-	HuExpress exposes a large part of the current game internal variables
-	via shared memory (only linux/freebsd for now, soon windows too).
-	You can use the shared memory of identifier 25679. It contains a structure
-	of type struct_hard_pce as defined in shared_memory.h (you should grab the
-	source archive of course). You can then alter or read all the quite self
-	explanatory variables out there. As for controlling the cpu, you can use
-	the s_external_control_cpu field.
-	  -1 => Full speed
-	  0  => Emulation paused
-	 >0  => Number of opcodes to run before pausing
+    HuExpress exposes a large part of the current game internal variables
+    via shared memory (only linux/freebsd for now, soon windows too).
+    You can use the shared memory of identifier 25679. It contains a structure
+    of type struct_hard_pce as defined in shared_memory.h (you should grab the
+    source archive of course). You can then alter or read all the quite self
+    explanatory variables out there. As for controlling the cpu, you can use
+    the s_external_control_cpu field.
+         -1  => Full speed
+          0  => Emulation paused
+         >0  => Number of opcodes to run before pausing
+
+--[ FREQUENTLY ASKED QUESTIONS ]---------------------------------------------
+
+    -Q Where is the Windows version?
+    -A I honestly lack the time and interest. You *may* be
+       able to compile HuExpress with mingw.  No clue how though.
+
+    -Q Where is the Mac OS X version?
+    -A If an SDL version could be easily created for OS X, patches welcome.
+       No coca or XCode crap will be accepted however.
+
+    -Q Where can I obtain games to play?
+    -A Ebay, Pawn shops, Japan. Anywhere except the author.
+
+    -Q Why would you fork Hu-GO?
+    -A I decided to fork Hu-Go! because the Hu-Go! project seemed to be
+       abandoned (no updates since 2005), in addition to this the BeOS
+       support has been slowly breaking since 2.10.
+
+--[ ORIGINAL HU-GO AUTHORS ]-------------------------------------------------
+
+The following people helped out with Hu-GO.  I don't want to omit them
+as they helped Zeograd write Hu-GO. (Even though I've rewritten a lot of
+their code ^_^)
+
+- David Shadoff (new kernel code, ideas, ...)
+- Nyef (cd emulation, ...)
+- Ixion (linux coding, sdl joypad, cd emulation, sound emulation, ...)
+- Black- (gfx bug fixes, gp32 port, ...)
+- Cleaner (freeBSD port fixes)
+- Laurent Desnogues (cpu coding, ps2 port, ...)
+- Erich Kitzmuller (sound improvement, dma bug fixes)
+- Pit (gfx)
+- David Michel (ideas, ...)
+- Lester Barrow (linux coding, joypad support, ...)
+- Mooz (ideas, ...)
+- Bt Garner (ideas, ...)
+- Littletux (mandrake packages, ...)
+- Zoop & his gf (gfx bug fixes)
+
+Tests by :
+- Raph
+- Fagemul
+- NaMco
+- Fixo
+- sALTY
+- Gato
+- Nostromo
+- Cissou
+- Leeloo
+- Sir Jaguar
+

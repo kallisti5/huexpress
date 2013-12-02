@@ -60,6 +60,8 @@ init_host(int argc, char *argv[])
 		return -1;
 
 	MESSAGE_INFO("HuExpress, the multi-platform PCEngine emulator\n");
+	MESSAGE_INFO("Version %d.%d.%d\n",
+		VERSION_MAJOR, VERSION_MINOR, VERSION_UPDATE);
 
 	// Initialise the host machine
 	if (!osd_init_machine())
