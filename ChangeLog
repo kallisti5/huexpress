@@ -1,9 +1,12 @@
+- HuExpress Next
+  * Greatly improved tool script to backup CD-ROM2 Discs to HCD archives
+  * New iso2hcd tool to convert iso/cue images into HCD archives
 - HuExpress 3.0.1
   * No longer need to extract HCD archives from zip files to play
   * Add script to automatically create HCD backups
-  * Utilize OpenGL for scaling rendered images
-  * Utilize OpenGL for rendering displayed images
-  * Move to SDL 2.0
+  * Utilize OpenGL for scaling rendered images *BIG*
+  * Utilize OpenGL for rendering displayed images *BIG*
+  * Move to SDL 2.0 *BIG*
   * Display ROM info on startup (based on CRC)
   * Add internal PC Engine / TurboGrafx CRC database
   * Fix memory leaks through static analysis
