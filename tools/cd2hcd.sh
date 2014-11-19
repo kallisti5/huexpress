@@ -1,13 +1,17 @@
 #!/bin/bash
-# Backup a PCEngine CDROM Game into a hcd archive.
-# Copyright 2012-2013, Alexander von Gluck IV for HuExpress
+# Backup an PC Engine CDROM2 game into an hcd archive.
+# Copyright 2012-2014, Alexander von Gluck IV for HuExpress
 # Released under the terms of the MIT license
+
+# DO NOT USE THIS TOOL FOR PIRACY!
+# Archives are for personal use only unless you have
+# written permission of the title publisher.
 
 function checkTools() {
 	echo -n "Checking for required tools... "
 	for var in "$@"; do
 		echo -n "$var "
-		which $var > /dev/null
+		which $var &> /dev/null
 		if [ $? -ne 0 ]; then
 			echo "Error!"
 			echo "$var isn't available! Please install first"
@@ -17,41 +21,53 @@ function checkTools() {
 	echo "OK!"
 }
 
-echo "======================================"
+echo "========================================"
 echo "HuExpress PCengine CD archival utility"
-echo "Revision 0.2"
-echo "======================================"
+echo "Revision 0.3"
+echo "========================================"
+echo ""
+echo "Do not distrubute personal game backups!"
 echo ""
 
+CDROM=${1}
+TEMP="/tmp/cd2hcd"
+CSVDB="./pcecd.csv"
+
 if [ $# -ne 2 ]; then
-	echo "Usage: $0 <cdrom> <destination>"
+	echo "Usage: $0 <cdrom>"
+	echo
 	exit 1
 fi
 
-if [ ! -b $1 ]; then
-	echo "warning: $1 is not a block device!"
+if [ ! -b ${CDROM} ]; then
+	echo "warning: ${CDROM} is not a block device!"
 else
-	echo "Using block device $1"
+	echo "Using block device ${CDROM}"
 fi
 
-if [ ! -e $2 ]; then
-	# Doesn't exist? Make directory
-	mkdir -p $2
-else
-	if [ ! -d $2 ]; then
-		# Exists, but not a directory. error
-		echo "$2 isn't a directory!"
-		exit 1
-	fi
-	echo "Using destination directory $2"
+rm -rf ${TEMP}
+mkdir -p ${TEMP}
+if [ ! -d ${TEMP} ]; then
+	# Exists, but not a directory. error
+	echo "${TEMP} isn't a directory!"
+	exit 1
+fi
+
+if [ -f /usr/share/huexpress/pcecd.csv ]; then
+    CSVDB="/usr/share/huexpress/pcecd.csv";
+fi
+
+if [ ! -f ${CSVDB} ]; then
+	echo "Unable to find pcecd.csv in /usr/share/huexpress or ."
+	exit 1
 fi
 
 # Check for required tools...
-checkTools cdrdao toc2cue bchunk oggenc grep wc
+checkTools cdrdao toc2cue bchunk oggenc grep wc zip
 
 read -p "What is the ID of this game? " -e givenID
 
-gameID=$(grep "${givenID}" pcecd.csv | head -1 | cut -d"," -f1)
+gameID=$(grep "${givenID}" ${CSVDB} | head -1 | cut -d"," -f1)
 gameName="unknown"
 gameDeveloper="unknown"
 gameRelease="unknown"
@@ -60,20 +76,20 @@ gameMedia="CDROM2"
 if [ $(echo ${gameID} | wc -c) -le 2 ]; then
 	echo "Warning: ${gameCountry} id ${gameID} is not known to me. Metadata is unknown"
 else
-	gameName=$(grep "${gameID}" pcecd.csv | head -1 | cut -d"," -f2)
-	gameDeveloper=$(grep "${gameID}" pcecd.csv | head -1 | cut -d"," -f3)
-	gameRelease=$(grep "${gameID}" pcecd.csv | head -1 | cut -d"," -f4)
-	gameCountry=$(grep "${gameID}" pcecd.csv | head -1 | cut -d"," -f5)
-	gameMedia=$(grep "${gameID}" pcecd.csv | head -1 | cut -d"," -f6)
+	gameName=$(grep "${gameID}" ${CSVDB} | head -1 | cut -d"," -f2)
+	gameDeveloper=$(grep "${gameID}" ${CSVDB} | head -1 | cut -d"," -f3)
+	gameRelease=$(grep "${gameID}" ${CSVDB} | head -1 | cut -d"," -f4)
+	gameCountry=$(grep "${gameID}" ${CSVDB} | head -1 | cut -d"," -f5)
+	gameMedia=$(grep "${gameID}" ${CSVDB} | head -1 | cut -d"," -f6)
 	echo "Found game name \"${gameName}\" (${gameCountry}) in local database."
 fi
 
-cd $2
+cd ${TEMP}
 # Rip CD
 echo "Examining ${gameMedia} game information..."
-lastTrack=$(cdrdao disk-info --device /dev/sr0 2>/dev/null | grep "Last Track" | cut -d":" -f2 | tr -d ' ')
+lastTrack=$(cdrdao disk-info --device ${CDROM} 2>/dev/null | grep "Last Track" | cut -d":" -f2 | tr -d ' ')
 echo "Ripping ${gameMedia} image..."
-cdrdao read-cd -v 0 --read-raw --device ${1} --datafile ${gameID}.bin ${gameID}.toc &> /dev/null
+cdrdao read-cd -v 0 --read-raw --device ${CDROM} --datafile ${gameID}.bin ${gameID}.toc &> /dev/null
 echo "Converting TOC to CUE..."
 toc2cue ${gameID}.toc ${gameID}.cue &> /dev/null
 # Break out tracks
@@ -138,8 +154,10 @@ for i in $(find . -name "*.wav" -or -name "*.ugh" -or -name "*.iso" | sort); do
         track=$[track+1];
 done;
 
-zip -9 "${gameName} - ${gameID}.zip" *
-cd -
-echo "Complete! ${gameName} - ${gameID}.zip was created."
+FILEOUT="${gameName} - ${gameID}.zip"
 
-echo 
+zip -9 "$FILEOUT" *
+cd -
+
+mv "${TEMP}/${FILEOUT}" .
+echo "Complete! ${FILEOUT} was created."
