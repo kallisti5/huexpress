@@ -33,7 +33,7 @@ CDROM=${1}
 TEMP="/tmp/cd2hcd"
 CSVDB="./pcecd.csv"
 
-if [ $# -ne 2 ]; then
+if [ $# -ne 1 ]; then
 	echo "Usage: $0 <cdrom>"
 	echo
 	exit 1
@@ -43,6 +43,11 @@ if [ ! -b ${CDROM} ]; then
 	echo "warning: ${CDROM} is not a block device!"
 else
 	echo "Using block device ${CDROM}"
+fi
+
+if [ $(mount | grep ${CDROM} | wc -l) -gt 0 ]; then
+	echo "error: ${CDROM} looks to be mounted, please unmount and retry!"
+	exit 1
 fi
 
 rm -rf ${TEMP}
@@ -89,12 +94,16 @@ cd ${TEMP}
 echo "Examining ${gameMedia} game information..."
 lastTrack=$(cdrdao disk-info --device ${CDROM} 2>/dev/null | grep "Last Track" | cut -d":" -f2 | tr -d ' ')
 echo "Ripping ${gameMedia} image..."
-cdrdao read-cd -v 0 --read-raw --device ${CDROM} --datafile ${gameID}.bin ${gameID}.toc &> /dev/null
+cdrdao read-cd -v 0 --read-raw --device ${CDROM} --datafile ${gameID}.bin ${gameID}.toc &> /tmp/cd2hcd.log
+if [ $? -gt 0 ]; then
+	echo "cdrdao error. Please see /tmp/cd2hcd.log for details"
+	exit 1
+fi
 echo "Converting TOC to CUE..."
-toc2cue ${gameID}.toc ${gameID}.cue &> /dev/null
+toc2cue ${gameID}.toc ${gameID}.cue &>> /tmp/cd2hcd.log
 # Break out tracks
 echo "Breaking apart disc tracks..."
-bchunk -w -s ${gameID}.bin ${gameID}.cue Track &> /dev/null
+bchunk -w -s ${gameID}.bin ${gameID}.cue Track &>> /tmp/cd2hcd.log
 rm ${gameID}.bin ${gameID}.toc
 
 hcdFile=${gameID}.hcd
