@@ -25,11 +25,6 @@ char synchro;
 int vwidth, vheight;
 // size of visible part of the screen (I got troubles with allegro screen->* values!)
 
-#ifndef SDL
-int *fd[4];
-// handle for joypad devices
-#endif
-
 SDL_TimerID timerId;
 // handle for the timer callback
 
@@ -88,16 +83,10 @@ osd_init_machine(void)
 void
 osd_shut_machine (void)
 {
- 
 	free(XBuf);
 
-  if (timerId != NULL)
-	  SDL_RemoveTimer(timerId);
-
-#ifndef SDL  
-	/* closing joypad device */
-	close((int)fd[0]);
-#endif
+	if (timerId > 0)
+		SDL_RemoveTimer(timerId);
 
 	if (dump_snd)
 		fclose(out_snd);

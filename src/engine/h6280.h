@@ -268,20 +268,12 @@ extern int tya(void);
 
 extern uchar flnz_list[256];
 
-inline uchar imm_operand(uint16 addr);
-inline uchar get_8bit_zp(uchar zp_addr);
-inline uint16 get_16bit_zp(uchar zp_addr);
-inline void put_8bit_zp(uchar zp_addr, uchar byte);
-
-
-#if !defined(INLINED_ACCESSORS)
-#define get_8bit_addr(addr) Rd6502((addr))
-#define put_8bit_addr(addr,byte) Wr6502((addr),(byte))
-#define get_16bit_addr(addr) (Rd6502(addr) + (Rd6502(addr + 1) << 8))
-#else
-inline uchar get_8bit_addr(uint16 addr);
-inline void put_8bit_addr(uint16 addr, uchar byte);
-inline uint16 get_16bit_addr(uint16 addr);
-#endif
+uchar imm_operand(uint16 addr);
+void put_8bit_zp(uchar zp_addr, uchar byte);
+uchar get_8bit_zp(uchar zp_addr);
+uint16 get_16bit_zp(uchar zp_addr);
+uint16 get_16bit_addr(uint16 addr);
+void put_8bit_addr(uint16 addr, uchar byte);
+uchar get_8bit_addr(uint16 addr);
 
 #endif
