@@ -60,7 +60,7 @@ osd_snd_init_sound(void)
 		}
 
 		//MIX_DEFAULT_FORMAT : AUDIO_S16SYS (system byte order).
-		host.sound.stereo = option.want_stereo + 1;
+		host.sound.stereo = 2;
 		host.sound.sample_size = sbuf_size;
 		host.sound.freq = option.want_snd_freq;
 

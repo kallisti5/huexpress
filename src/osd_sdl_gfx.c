@@ -166,10 +166,30 @@ osd_gfx_init_normal_mode()
 		io.screen_h = 224;
 	}
 
-	uint16 windowWidth = option.want_fullscreen
-		? option.fullscreen_width : io.screen_w * option.window_size;
-	uint16 windowHeight = option.want_fullscreen
-		? option.fullscreen_height : io.screen_h * option.window_size;
+
+	struct generic_rect viewport;
+	viewport.start_x = 0;
+	viewport.start_y = 0;
+
+	if (option.want_fullscreen) {
+		SDL_DisplayMode current;
+    	if (SDL_GetCurrentDisplayMode(0, &current)) {
+			MESSAGE_ERROR("Unable to determine current DisplayMode");
+		}
+
+		calc_fullscreen_aspect(current.w, current.h, &viewport,
+			io.screen_w, io.screen_h);
+
+		MESSAGE_INFO("%dx%d , %dx%d\n", viewport.start_x, viewport.start_y,
+			viewport.end_x, viewport.end_y);
+	} else {
+		
+		viewport.end_x = io.screen_w * option.window_size;
+		viewport.end_y = io.screen_h * option.window_size;
+	}
+
+	uint16 viewportWidth = viewport.end_x - viewport.start_x;
+	uint16 viewportHeight = viewport.end_y - viewport.start_y;
 
 	if (sdlWindow != NULL) {
 		SDL_DestroyWindow(sdlWindow);
@@ -182,7 +202,7 @@ osd_gfx_init_normal_mode()
 		windowFlags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 
 	sdlWindow = SDL_CreateWindow("HuExpress", SDL_WINDOWPOS_UNDEFINED,
-		SDL_WINDOWPOS_UNDEFINED, windowWidth, windowHeight, windowFlags);
+		SDL_WINDOWPOS_UNDEFINED, viewport.end_x, viewport.end_y, windowFlags);
 
 	if (sdlWindow == NULL) {
 		MESSAGE_ERROR("SDL: %s failed at %s:%d - %s\n", __func__, __FILE__,
@@ -216,7 +236,9 @@ osd_gfx_init_normal_mode()
 		screen = NULL;
 	}
 
-	screen = SDL_CreateRGBSurface(0, io.screen_w, io.screen_h,
+	//screen = SDL_CreateRGBSurface(0, io.screen_w, io.screen_h,
+	//	32, 0x000000FF, 0x0000FF00, 0x00FF0000, 0);
+	screen = SDL_CreateRGBSurface(0, viewportWidth, viewportHeight,
 		32, 0x000000FF, 0x0000FF00, 0x00FF0000, 0);
 
 	if (screen == NULL) {
@@ -224,7 +246,7 @@ osd_gfx_init_normal_mode()
 			__FILE__, __LINE__, SDL_GetError());
 	}
 
-	osd_gfx_glinit();
+	osd_gfx_glinit(&viewport);
 
 	return (screen) ? 1 : 0;
 }
@@ -331,14 +353,9 @@ osd_gfx_set_color(uchar index, uchar r, uchar g, uchar b)
 
 
 void
-osd_gfx_glinit()
+osd_gfx_glinit(struct generic_rect* viewport)
 {
 	glEnable( GL_TEXTURE_2D );
-
-	uint16 windowWidth = option.want_fullscreen
-		? option.fullscreen_width : screen->w * option.window_size;
-	uint16 windowHeight = option.want_fullscreen
-		? option.fullscreen_height : screen->h * option.window_size;
 
 	GLuint texture = 0;
 	glGenTextures(1, &texture);
@@ -349,7 +366,7 @@ osd_gfx_glinit()
 
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
-	glViewport(0, 0, windowWidth, windowHeight);
+	glViewport(0, 0, viewport->end_x, viewport->end_y);
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_ALPHA_TEST);
 	glDisable(GL_BLEND);
@@ -364,7 +381,7 @@ osd_gfx_glinit()
 		(GLdouble)(OVERSCAN_TOP * scalefactor), -1.0, 1.0);
 	}
 	else {*/
-	glOrtho(0.0, (GLdouble)windowWidth,	(GLdouble)windowHeight, 0.0, -1.0, 1.0);
+	glOrtho(0.0, viewport->end_x, viewport->end_y, 0.0, -1.0, 1.0);
 	//}
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
@@ -377,14 +394,14 @@ osd_gfx_blit()
 	Slock(screen);
 	// Edit the texture object's image data	using the information SDL_Surface gives us
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,
-		screen->w, screen->h, 0, GL_RGB, GL_UNSIGNED_BYTE,
+		io.screen_w, io.screen_h, 0, GL_RGB, GL_UNSIGNED_BYTE,
 		screen->pixels);
 	Sulock(screen);
 
 	int X = 0;
 	int Y = 0;
-	int windowWidth = screen->w * option.window_size;
-	int windowHeight = screen->h * option.window_size;
+	int windowWidth = screen->w;
+	int windowHeight = screen->h;
 
 	glBegin(GL_QUADS) ;
 		glTexCoord2f(0, 0);
@@ -411,9 +428,6 @@ ToggleFullScreen(void)
 	uint32 sdlFlags = SDL_GetWindowFlags(sdlWindow);
 
 	SDL_PauseAudio(SDL_ENABLE);
-
-	// option.fullscreen_width
-	// option.fullscreen_height
 
 	SetPalette();
 

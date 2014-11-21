@@ -327,10 +327,6 @@ set_arg(char nb_arg, const char *val) {
 		return 0;
 #endif // NETPLAY
 
-	case 's':
-		option.want_stereo = 1;
-		MESSAGE_INFO("Option: Stereo sound enabled\n");
-		return 0;
 	case 'S':
 		use_scanline = MIN(1, MAX(0, atoi(val)));
 		Log ("Scanline mode set to %d\n", use_scanline);
@@ -361,7 +357,6 @@ set_arg(char nb_arg, const char *val) {
 		"	-dX  Debug (0-1)\n"
 		"	-eX  Eagle mode (0-1)\n"
 		"	-f   Fullscreen mode\n"
-		"	-s   Enable Stereo sound\n"
 		"	-SX  Scanline mode (0-1)\n"
 		"	-zX  Zoom level X (1-4)\n"
 		"\n", VERSION_MAJOR, VERSION_MINOR, VERSION_UPDATE);
@@ -475,21 +470,8 @@ parse_INIfile_raw ()
 		= get_config_int ("main", "use_fullscreen_aspect", 0);
 	Log ("Setting fullscreen aspect to %d\n", option.want_fullscreen_aspect);
 
-	option.want_stereo = get_config_int ("main", "stereo_sound", 0);
-	Log ("Setting stereo sound to %d\n", option.want_stereo);
-
 	option.window_size = get_config_int ("main", "window_size", 2);
 	Log ("Setting window size to %d\n", option.window_size);
-
-	option.fullscreen_width = get_config_int ("main", "fullscreen_width", 640);
-
-	Log ("Setting preferred fullscreen width to %d\n", option.fullscreen_width);
-
-	option.fullscreen_height
-		= get_config_int ("main", "fullscreen_height", 480);
-
-	Log ("Setting preferred fullscreen height to %d\n",
-		option.fullscreen_height);
 
 	option.wanted_hardware_format
 		= get_config_int ("main", "hardware_format", 0);
@@ -674,9 +656,6 @@ save_config (void)
 	set_config_var_int("main", "minimum_bios_hooking", minimum_bios_hooking);
 	set_config_var_str("main", "cdsystem_path", cdsystem_path);
 	set_config_var_str("main", "cd_path", ISO_filename);
-	set_config_var_int("main", "stereo_sound", option.want_stereo);
-	set_config_var_int("main", "fullscreen_width", option.fullscreen_width);
-	set_config_var_int("main", "fullscreen_height", option.fullscreen_height);
 	set_config_var_int("main", "window_size", option.window_size);
 	set_config_var_int("main", "arcade_card",
 				option.want_arcade_card_emulation);

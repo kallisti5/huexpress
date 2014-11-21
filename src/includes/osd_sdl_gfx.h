@@ -14,7 +14,7 @@ extern int blit_x,blit_y;// where must we blit the screen buffer on screen
 
 int ToggleFullScreen(void);
 void drawVolume(char* name, int volume);
-void osd_gfx_glinit();
+void osd_gfx_glinit(struct generic_rect* viewport);
 void osd_gfx_blit();
 
 int osd_gfx_init();

@@ -182,7 +182,6 @@ struct host_machine {
 extern struct host_machine host;
 
 struct hugo_options {
-	boolean want_stereo;
 	boolean want_fullscreen;
 	boolean want_fullscreen_aspect;
 	boolean configure_joypads;
@@ -190,8 +189,6 @@ struct hugo_options {
 	boolean want_supergraphx_emulation;
 	boolean want_television_size_emulation;
 	uint16 window_size;
-	uint16 fullscreen_width;
-	uint16 fullscreen_height;
 	uint32 want_snd_freq;
 	uint32 wanted_hardware_format;
 	char resource_location[PATH_MAX];

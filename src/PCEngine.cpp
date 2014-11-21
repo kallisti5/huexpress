@@ -17,22 +17,22 @@
 
 PCEngine::PCEngine()
 	:
-	fReady(0)
+	fReady(0),
+	fOptions(&option)
 {
-	fOptions.want_stereo = FALSE;
-	fOptions.want_fullscreen = FALSE;
-	fOptions.want_fullscreen_aspect = FALSE;
-	fOptions.configure_joypads = FALSE;
+	fOptions->want_fullscreen = FALSE;
+	fOptions->want_fullscreen_aspect = FALSE;
+	fOptions->configure_joypads = FALSE;
 
 	// 2 is a good default multiplier for modern desktops
-	fOptions.window_size = 2;
+	fOptions->window_size = 2;
 
 #if defined(ENABLE_NETPLAY)
-	fOptions.local_input_mapping[0] = 0;
-	fOptions.local_input_mapping[1] = 1;
-	fOptions.local_input_mapping[2] = -1;
-	fOptions.local_input_mapping[3] = -1;
-	fOptions.local_input_mapping[4] = -1;
+	fOptions->local_input_mapping[0] = 0;
+	fOptions->local_input_mapping[1] = 1;
+	fOptions->local_input_mapping[2] = -1;
+	fOptions->local_input_mapping[3] = -1;
+	fOptions->local_input_mapping[4] = -1;
 	strcpy(fOptions.server_hostname, "localhost");
 #endif
 
@@ -41,7 +41,7 @@ PCEngine::PCEngine()
 	 * gives us.  This frequency will get us really close to the original
 	 * pc engine sound behaviour.
 	 */
-	fOptions.want_snd_freq = 21963;
+	fOptions->want_snd_freq = 21963;
 
 	// Create the log file
 	init_log_file();

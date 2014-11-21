@@ -37,7 +37,7 @@ private:
 	int					fReady;
 
 	struct host_machine	fHost;
-	struct hugo_options	fOptions;
+	struct hugo_options*	fOptions;
 };
 
 

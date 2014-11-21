@@ -174,10 +174,6 @@
                                            accurate)
         1 -> Use no bios at all as possible (slower but make more game works)
 
-	-- s : Stereo mode
-		0 -> Mono mode (Default)
-		1 -> Stereo mode
-
     -- u : US encoded rom
         0 -> Normal rom (Default)
         1 -> US encoded rom, with invertion of bits
@@ -256,16 +252,6 @@
 	
 	-- cd_path : Device name of the cd drive under UN*X systems.
 	   /dev/cdrom is default
-	   
-	-- stereo : Whether to output sound in stereo.
-	   0 -> Mono sound (Default)
-	   1 -> Stereo sound
-	   
-	-- fullscreen_width : Preferred width of fullscreen mode
-	   640 is the default
-	   
-	-- fullscreen_height : Preferred height of fullscreen mode
-	   480 is the default
 	   
 	-- window_size : Zoom factor when in windowed mode
 	   1 to 4 are valid zoom factor (1 being the default)
