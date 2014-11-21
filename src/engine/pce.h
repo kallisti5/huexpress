@@ -78,6 +78,9 @@ int RunPCE(void);
 void pce_cd_read_sector(void);
 void issue_ADPCM_dma(void);
 
+void SetPalette(void);
+
+
 char *search_possible_syscard();
 
 extern FILE *out_snd;
@@ -208,6 +211,7 @@ struct hugo_options {
 	uint16 fullscreen_height;
 	uint32 want_snd_freq;
 	uint32 wanted_hardware_format;
+	char resource_location[PATH_MAX];
 #if defined(ENABLE_NETPLAY)
 	netplay_type want_netplay;
 	char server_hostname[SERVER_HOSTNAME_MAX_SIZE];

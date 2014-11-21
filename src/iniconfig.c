@@ -420,9 +420,6 @@ parse_commandline(int argc, char **argv)
 void
 parse_INIfile_raw ()
 {
-#ifdef MSDOS
-	char x;
-#endif
 	Log ("Looking in %s\n", config_file);
 
 	read_joy_mapping ();
@@ -437,66 +434,52 @@ parse_INIfile_raw ()
 	}
 
 	// rom_dir setting
-
 	Log ("Setting initial path to %s\n", initial_path);
 
 	current_config = get_config_int ("main", "config", 0);
 	// choose input config
-
 	Log ("Setting joypad config number to %d\n", current_config);
 
 	smode = get_config_int ("main", "smode", -1);
 	// sound mode setting
-
 	Log ("Setting sound mode to %d\n", smode);
 
 	use_eagle = get_config_int ("main", "eagle", 0);
 	// do we use EAGLE ?
-
 	Log ("Setting eagle mode to %d\n", use_eagle);
 
 	use_scanline = get_config_int ("main", "scanline", 0);
 	// do we use EAGLE ?
-
 	Log ("Setting scanline mode to %d\n", use_scanline);
 
 	option.want_snd_freq = get_config_int ("main", "snd_freq", 22050);
 	// frequency of the sound generator
-
 	Log ("Setting default frequency to %d\n", option.want_snd_freq);
 
 	sbuf_size = get_config_int ("main", "buffer_size", 512);
 	// size of the sound buffer
-
 	Log ("Setting sound buffer size to %d bytes\n", sbuf_size);
 
 	gamepad_driver = get_config_int ("main", "joy_type", -1);
-
 	Log ("Setting joy type to %d\n", gamepad_driver);
 
 	sound_driver = get_config_int ("main", "sound_driver", 1);
-
 	Log ("Setting sound driver to %d\n", sound_driver);
 
 	synchro = get_config_int ("main", "limit_fps", 0);
-
 	Log ("Setting fps limitation to %d\n", synchro);
 
 	option.want_fullscreen = get_config_int ("main", "start_fullscreen", 0);
-
 	Log ("Setting start in fullscreen mode to %d\n", option.want_fullscreen);
 
 	option.want_fullscreen_aspect
 		= get_config_int ("main", "use_fullscreen_aspect", 0);
-
 	Log ("Setting fullscreen aspect to %d\n", option.want_fullscreen_aspect);
 
 	option.want_stereo = get_config_int ("main", "stereo_sound", 0);
-
 	Log ("Setting stereo sound to %d\n", option.want_stereo);
 
 	option.window_size = get_config_int ("main", "window_size", 2);
-
 	Log ("Setting window size to %d\n", option.window_size);
 
 	option.fullscreen_width = get_config_int ("main", "fullscreen_width", 640);
@@ -515,20 +498,6 @@ parse_INIfile_raw ()
 	Log ("Setting wanted hardware format to %x\n",
 		option.wanted_hardware_format);
 
-#ifdef MSDOS
-
-	x = get_config_int ("main", "cd_driver", 0);
-
-	if (x) {
-		osd_cd_driver = aspi_driver;
-		Log ("Setting cd driver to ASPI\n");
-	} else {
-		osd_cd_driver = mscdex_driver;
-		Log ("Setting cd driver to MSCDEX\n");
-	}
-
-#endif
-
 	minimum_bios_hooking = get_config_int ("main", "minimum_bios_hooking", 0);
 
 	Log ("Minimum Bios hooking set to %d\n", minimum_bios_hooking);
@@ -542,26 +511,27 @@ parse_INIfile_raw ()
 	memset(buffer, 0, BUFSIZ * sizeof(char));
 	get_config_string("main", "cd_path", "", buffer);
 	strcpy(ISO_filename, buffer);
-
 	Log ("CD path set to %s\n", ISO_filename);
 
 	option.want_arcade_card_emulation
 		= get_config_int("main", "arcade_card", 1);
-
 	Log ("Arcade card emulation set to %d\n",
 		option.want_arcade_card_emulation);
 
 	option.want_supergraphx_emulation
 		= get_config_int("main", "supergraphx", 1);
-
 	Log ("SuperGraphX emulation set to %d\n",
 		option.want_supergraphx_emulation);
 
 	option.want_television_size_emulation
 		= get_config_int("main", "tv_size", 0);
-
 	Log ("Limiting graphics size to emulate tv output set to %d\n",
 		option.want_television_size_emulation);
+
+	memset(buffer, 0, BUFSIZ * sizeof(char));
+	get_config_string("main", "resource_path", "/usr/share/huexpress", buffer);
+	strcpy(option.resource_location, buffer);
+	Log ("Resource path set to %s\n", buffer);
 
 	Log ("End of parsing INI file\n\n");
 }

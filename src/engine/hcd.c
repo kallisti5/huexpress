@@ -567,69 +567,9 @@ HCD_iso_read_sector(uchar * p, uint32 dum, uint32 result)
 
 			current_position = ftell(HCD_iso_FILE);	// not useful
 
-		}
-
-#ifdef ALLEGRO
-
-		else if (current_type == 2)	//compacted
-
-		{
-
-			int dummy =
-				(pce_cd_sectoraddy - CD_track[result].beg_lsn) * 2048;
-
-
-
-			if (current_position > dummy)
-			{
-
-				pack_fclose(HCD_packed_iso_FILE);
-
-
-
-				HCD_packed_iso_FILE =
-					pack_fopen(CD_track[result].filename, F_READ_PACKED);
-
-
-
-				pack_fseek(HCD_packed_iso_FILE, dummy);
-
-
-
-				current_position = dummy;
-
-			}
-
-			else if (current_position < dummy)
-			{
-
-				pack_fseek(HCD_packed_iso_FILE, dummy - current_position);
-
-				current_position = dummy;
-
-			}
-
-
-
-			pack_fread(p, 2048, HCD_packed_iso_FILE);
-
-
-
-			current_position += 2048;
-
-
-
-		}
-
-#endif
-
-		else
-		{
-
+		} else {
 			Log("Open mode in HCD read function incorrect\n");
-
 			exit(-2);
-
 		}
 
 	}							// file well opened
@@ -677,43 +617,6 @@ HCD_iso_read_sector(uchar * p, uint32 dum, uint32 result)
 			current_position = 0;
 
 		}
-#ifdef ALLEGRO
-		else if (strcasestr(CD_track[result].filename, ".ISQ"))
-		{
-
-			HCD_packed_iso_FILE =
-				pack_fopen(CD_track[result].filename, F_READ_PACKED);
-
-
-
-			if (!HCD_packed_iso_FILE)
-			{
-
-
-
-				Log("ISQ file not found : %s\nUsed for track %d\n",
-					CD_track[result].filename, result);
-
-
-
-				exit(-3);
-
-
-
-			}
-
-
-
-
-
-			current_file = result;
-
-			current_type = 2;
-
-			current_position = 0;
-
-		}
-#endif
 		goto label_are_bad;
 	}
 

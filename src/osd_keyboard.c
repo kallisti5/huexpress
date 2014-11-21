@@ -489,7 +489,7 @@ osd_keyboard (void)
 						break;
 					}
 
-					case SDLK_F1:
+					case SDLK_F2:
 					{
 						if (key[SDLK_LSHIFT]) {
 							io.psg_channel_disabled[0]
@@ -505,7 +505,7 @@ osd_keyboard (void)
 						break;
 					}
 
-					case SDLK_F2:
+					case SDLK_F3:
 					{
 						if (key[SDLK_LSHIFT]) {
 							io.psg_channel_disabled[1]
@@ -521,51 +521,52 @@ osd_keyboard (void)
 						break;
 					}
 
-					case SDLK_F3:
-					{
-						if (key[SDLK_LSHIFT]) {
-							io.psg_channel_disabled[2]
-								= !io.psg_channel_disabled[2];
-						} else {
-							uint32 sav_timer = timer_60;
-							osd_snd_set_volume (0);
-							freeze_value ();
-							osd_snd_set_volume (gen_vol);
-							timer_60 = sav_timer;
-							return 0;
-						}
-						break;
-					}
+					// TODO: Put these in GUI
+					//case SDLK_F4:
+					//{
+					//	if (key[SDLK_LSHIFT]) {
+					//		io.psg_channel_disabled[2]
+					//			= !io.psg_channel_disabled[2];
+					//	} else {
+					//		uint32 sav_timer = timer_60;
+					//		osd_snd_set_volume (0);
+					//		freeze_value ();
+					//		osd_snd_set_volume (gen_vol);
+					//		timer_60 = sav_timer;
+					//		return 0;
+					//	}
+					//	break;
+					//}
 
-					case SDLK_F4:
-					{
-						if (key[SDLK_LSHIFT])
-						{
-							io.psg_channel_disabled[3]
-								= !io.psg_channel_disabled[3];
-						} else if (key[SDLK_RSHIFT]) {
-							if (dump_snd) {
-								stop_dump_audio ();
-								dump_snd = 0;
-							} else {
-								dump_snd = start_dump_audio ();
-							}
-						} else {
-							if (video_dump_flag || dump_snd) {
-								stop_dump_video ();
-								stop_dump_audio ();
-								video_dump_flag = 0;
-								dump_snd = 0;
-							} else {
-								if (start_dump_video()
-									&& start_dump_audio()) {
-									stop_dump_video();
-									stop_dump_audio();
-								}
-							}
-						}
-						break;
-					}
+					//case SDLK_F5:
+					//{
+					//	if (key[SDLK_LSHIFT])
+					//	{
+					//		io.psg_channel_disabled[3]
+					//			= !io.psg_channel_disabled[3];
+					//	} else if (key[SDLK_RSHIFT]) {
+					//		if (dump_snd) {
+					//			stop_dump_audio ();
+					//			dump_snd = 0;
+					//		} else {
+					//			dump_snd = start_dump_audio ();
+					//		}
+					//	} else {
+					//		if (video_dump_flag || dump_snd) {
+					//			stop_dump_video ();
+					//			stop_dump_audio ();
+					//			video_dump_flag = 0;
+					//			dump_snd = 0;
+					//		} else {
+					//			if (start_dump_video()
+					//				&& start_dump_audio()) {
+					//				stop_dump_video();
+					//				stop_dump_audio();
+					//			}
+					//		}
+					//	}
+					//	break;
+					//}
 
 					case SDLK_F9:
 						SDL_ShowCursor(ToggleFullScreen());
@@ -574,7 +575,7 @@ osd_keyboard (void)
 					case SDLK_ESCAPE:
 						return 1;
 
-					case SDLK_F6:
+					case SDLK_F5:
 					{
 						if (key[SDLK_LSHIFT]) {
 							io.psg_channel_disabled[5]
@@ -606,7 +607,7 @@ osd_keyboard (void)
 						break;
 					}
 
-					case SDLK_F5:
+					case SDLK_F6:
 					{
 						if (key[SDLK_LSHIFT]) {
 							io.psg_channel_disabled[4]
@@ -842,6 +843,7 @@ osd_keyboard (void)
 
 			case SDL_QUIT:
 				return 1;
+				break;
 		}
 	}
 

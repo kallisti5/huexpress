@@ -51,7 +51,7 @@ int shmctl(int, int, int);
 void patch_rom(char* filename, int offset, uchar value);
 
 char *strupr(char *s);
-#if !defined(FREEBSD)
+#if !defined(FREEBSD) && !defined(__cplusplus)
 char *strcasestr (const char *s1, const char *s2);
 #endif
 

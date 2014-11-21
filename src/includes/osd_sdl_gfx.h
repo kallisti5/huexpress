@@ -6,7 +6,6 @@
 
 #include <SDL.h>
 #include <SDL_endian.h>
-#include <SDL_ttf.h>
 #include <GL/glu.h>
 
 extern uchar *OSD_MESSAGE_SPR;

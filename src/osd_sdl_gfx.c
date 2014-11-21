@@ -8,7 +8,6 @@
 /*		Alexander von Gluck, kallisti5   */
 /*****************************************/
 
-
 #include "osd_sdl_gfx.h"
 #include "utils.h"
 
@@ -20,15 +19,6 @@ SDL_GLContext sdlGLContext;
 
 //! PC Engine rendered screen
 SDL_Surface *screen = NULL;
-
-/* Overlay for hardware scaling */
-SDL_Texture *osd_overlay = NULL;
-SDL_Color olay_cmap[256];
-SDL_Texture *osd_texture = NULL;
-SDL_Color osd_color = { 0, 255, 0, 0 };	// Green
-SDL_Rect osd_rect = { 10, 5, 0, 0 };
-
-TTF_Font *osd_font;
 
 int blit_x, blit_y;
 // where must we blit the screen buffer on screen
@@ -50,19 +40,6 @@ void
 osd_gfx_dummy_func(void)
 {
 	return;
-}
-
-
-TTF_Font *
-loadfont(char *file, int ptsize)
-{
-	TTF_Font *tmpfont;
-	tmpfont = TTF_OpenFont(file, ptsize);
-	if (tmpfont == NULL) {
-		MESSAGE_ERROR("Unable to load font: %s %s \n", file,
-			TTF_GetError());
-	}
-	return tmpfont;
 }
 
 
@@ -106,18 +83,6 @@ osd_gfx_put_image_normal(void)
 	dump_rgb_frame(screen->pixels);
 	Sulock(screen);
 
-	//Slock(screen);
-	// After drawing the game, throw in any onscreen text
-	/*
-	if (message_delay && osd_texture) {
-		SDL_BlitSurface(osd_texture, NULL, physical_screen, &osd_rect);
-		message_delay--;
-	}
-	*/
-
-	//SDL_RenderCopy(sdlRenderer, physical_screen, NULL, &physical_screen_rect);
-	//SDL_RenderPresent(sdlRenderer); // was SDL_Flip
-
 	osd_gfx_blit();
 }
 
@@ -135,17 +100,7 @@ osd_gfx_put_image_normal(void)
 void
 osd_gfx_set_message(char *mess)
 {
-	if (osd_texture != NULL) {
-		SDL_DestroyTexture(osd_texture);
-	}
-
-	osd_texture = TTF_RenderText_Blended(osd_font, mess, osd_color);
-
-	if (osd_texture == NULL) {
-		MESSAGE_ERROR("SDL: Couldn't render OSD text - %s\n",
-			SDL_GetError());
-		// report error
-	}
+	
 }
 
 
@@ -172,14 +127,6 @@ osd_gfx_init(void)
 		SDL_ShowCursor(SDL_DISABLE);
 
 	SetPalette();
-
-	if (TTF_Init() < 0) {
-		MESSAGE_ERROR("SDL_ttf: Unable to initialize - %s\n",
-			TTF_GetError());
-		return 0;
-	}
-
-	osd_font = loadfont("font.otf", 24);
 
 	return 1;
 }
@@ -287,16 +234,8 @@ osd_gfx_init_normal_mode()
 void
 osd_gfx_shut_normal_mode(void)
 {
-	if (osd_texture != NULL)
-		SDL_DestroyTexture(osd_texture);
-
 	SDL_FreeSurface(screen);
 	screen = NULL;
-
-	//SDL_DestroyTexture(osd_overlay);
-	//osd_overlay = NULL;
-
-	TTF_CloseFont(osd_font);
 
 	if (sdlWindow != NULL)
 		SDL_DestroyWindow(sdlWindow);
@@ -404,9 +343,11 @@ osd_gfx_glinit()
 	GLuint texture = 0;
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, linear_filter ? GL_LINEAR : GL_NEAREST);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, option.linear_filter ? GL_LINEAR : GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
 	glViewport(0, 0, windowWidth, windowHeight);
 	glDisable(GL_DEPTH_TEST);
