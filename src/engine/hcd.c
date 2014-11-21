@@ -193,7 +193,6 @@ fill_HCD_info(char *name)
 
 			CD_track[current_track].type = (control & 4);
 		} else {
-#ifdef SDL_mixer
 			// FOUND: OTHER (AUDIO)
 			char audio_path[PATH_MAX];
 			get_HCD_path(name, audio_path);
@@ -279,11 +278,6 @@ fill_HCD_info(char *name)
 
 			if (CD_track[current_track].length == 0)
 				CD_track[current_track].length = 30 * 75;	// 30 sec track
-#else
-			MESSAGE_INFO
-				("Track #%d - Audio - ignored due to lack of SDL_mixer\n",
-				 current_track);
-#endif							// END SDL_mixer
 		}
 
 
@@ -344,14 +338,12 @@ HCD_play_track(uchar track, char repeat)
 		osd_cd_play_audio_track((uchar) (CD_track[track].filename[0]));
 		break;
 	case HCD_SOURCE_REGULAR_FILE:
-#if defined(SDL_mixer)
 		if ((strcasestr(CD_track[track].filename, ".mp3"))
 			|| (strcasestr(CD_track[track].filename, ".ogg"))
 			|| (strcasestr(CD_track[track].filename, ".wav"))) {
 			Mix_PlayMusic(sdlmixmusic[track], repeat);
 			MP3_playing = 1;
 		}
-#endif
 		break;
 	}
 };
@@ -424,7 +416,6 @@ HCD_play_sectors(int begin_sect, int sect_len, char repeat)
 	if (CD_track[result].source_type == HCD_SOURCE_REGULAR_FILE) {
 		if (strcasestr(CD_track[result].filename, ".mp3")
 			|| strcasestr(CD_track[result].filename, ".ogg")) {
-#if defined(SDL_mixer)
 			if (-150 < begin_sect - CD_track[result].beg_lsn
 				&& begin_sect - CD_track[result].beg_lsn < 150)
 				Mix_PlayMusic(sdlmixmusic[result], repeat);
@@ -446,7 +437,6 @@ HCD_play_sectors(int begin_sect, int sect_len, char repeat)
 			HCD_current_played_track = result;
 			HCD_current_subtitle = 0;
 			MP3_playing = 1;
-#endif
 		} else if (strcasestr(CD_track[result].filename, ".WAV")) {
 			// TODO: There was only an MSDOS case here? :(
 		}

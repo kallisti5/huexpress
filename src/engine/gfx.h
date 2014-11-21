@@ -1,6 +1,8 @@
 #ifndef _GFX_H_
 #define _GFX_H_
 
+#include <SDL.h>
+
 #include "sys_dep.h"
 
 #define	WIDTH	(360+64)
@@ -37,15 +39,10 @@ typedef struct {
 	 typeof(io.VDC[CR].W) cr;
 } gfx_context;
 
-#ifdef SDL
-
-#include <SDL.h>
 
 extern SDL_Surface *physical_screen;
 extern SDL_Rect physical_screen_rect;
 extern SDL_Color olay_cmap[256];
-
-#endif
 
 extern int video_dump_flag;
 extern int gfx_need_video_mode_change;
@@ -60,10 +57,10 @@ void change_pce_screen_height();
 void save_gfx_context(int slot_number);
 
 int start_dump_video();
-
 void stop_dump_video();
-
 void dump_video_frame();
+
+void dump_rgb_frame(char *output_buffer);
 
 uchar Loop6502();
 
