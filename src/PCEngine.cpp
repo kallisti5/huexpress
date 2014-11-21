@@ -84,9 +84,13 @@ PCEngine::InitPaths()
 {
 	// Populate paths for emulation engine
 
-	if (getenv("HOME"))
+	if (getenv("HOME")) {
+		#ifdef __HAIKU__
+		snprintf(config_basepath, PATH_MAX, "%s/config/huexpress", getenv("HOME"));
+		#else
 		snprintf(config_basepath, PATH_MAX, "%s/.huexpress", getenv("HOME"));
-	else
+		#endif
+	} else
 		sprintf(config_basepath, "./");
 
 	// Create directory if not existing
