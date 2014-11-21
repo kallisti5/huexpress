@@ -1,20 +1,16 @@
-#include "utils.h"
 #include "osd_sdl_snd.h"
+
+#include <SDL.h>
+
+#include "utils.h"
+#include "osd_sdl_music.h"
+
 
 Uint8 *stream;
 Mix_Chunk *chunk;
 SDL_AudioCVT cvt;
 boolean Callback_Stop;
 boolean USE_S16;
-
-#if defined(SDL)
-
-#include <SDL.h>
-#if !defined(SDL_mixer)
-extern void sdl_fill_audio(void *data, Uint8 *stream, int len);
-#else /* SDL_mixer */
-#include "osd_linux_sdl_music.h"
-#endif
 
 
 void
@@ -24,51 +20,15 @@ osd_snd_set_volume(uchar v)
 	TRACE("Sound: Set Volume %c\n", vol);
 	#endif
 
-	#if !defined (SDL_mixer)
-	// TODO : implement set volume for sdl
-
-	#else //SDL_mixer
 	Uint8 vol;
 	vol = v / 2 + ((v == 0) ? 0 : 1);// v=0 <=> vol=0; v=255 <=> vol=128
 	Mix_Volume(-1, vol);
-	#endif
 }
 
 
 int
 osd_snd_init_sound(void)
 {
-	#if !defined(SDL_mixer)
-	SDL_AudioSpec wanted, got;
-
-	if (SDL_InitSubSystem(SDL_INIT_AUDIO)) {
-		printf("SDL_InitSubSystem(SOUND) failed at %s:%d - %s\n",
-			__FILE__, __LINE__, SDL_GetError());
-		return 0;
-	}
-
-	wanted.freq = option.want_snd_freq;
-	wanted.format = AUDIO_U8;
-
-	wanted.samples = sbuf_size;	/* Good low-latency value for callback */
-	wanted.channels = option.want_stereo + 1;
-
-	wanted.callback = sdl_fill_audio;
-	wanted.userdata = main_buf;		 /* Open the audio device, forcing the desired format */
-
-	if (SDL_OpenAudio(&wanted, &got) < 0) {
-		Log("Couldn't open audio: %s\n", SDL_GetError());
-		return 0;
-	}
-
-	host.sound.stereo = (got.channels == 2);
-	host.sound.sample_size = got.samples;
-	host.sound.freq = got.freq;
-	host.sound.signed_sound = (got.format >= 0x8000);
-
-	SDL_PauseAudio(SDL_DISABLE);
-
-	#else //SDL_mixer
 	uint16 i;
 	uint16 format;
 	int numopened, frequency, channels;
@@ -150,7 +110,6 @@ osd_snd_init_sound(void)
 	}
 
 	Mix_Resume(-1);
-	#endif /* SDL_mixer */
 
 	return 1;
 }
@@ -160,10 +119,6 @@ void
 osd_snd_trash_sound(void)
 {
 	uchar chan;
-	#if !defined(SDL_mixer)
-	SDL_CloseAudio();
-	#else //SDL_mixer
-
 	if (sound_driver == 1)
 		osd_snd_set_volume(0);
 
@@ -171,8 +126,6 @@ osd_snd_trash_sound(void)
 	Callback_Stop=TRUE;
 	//SDL_Delay(1000);
 	Mix_CloseAudio();
-
-	#endif
 
 	SDL_QuitSubSystem(SDL_INIT_AUDIO);
 
@@ -183,6 +136,3 @@ osd_snd_trash_sound(void)
 
 	free(stream);
 }
-
-
-#endif //SDL

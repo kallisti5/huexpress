@@ -8,18 +8,16 @@
 
 /* Header */
 
-#include "utils.h"
 #include "sound.h"
 
-#if defined(SDL) && !defined(SDL_mixer)
 #include <SDL_audio.h>
+
+#include "utils.h"
+#include "osd_sdl_music.h"
+
+
 SDL_AudioSpec wanted;			/* For SDL Audio */
 extern void sdl_fill_audio(void *data, Uint8 * stream, int len);
-#endif
-
-#ifdef SDL_mixer
-#include "osd_linux_sdl_music.h"
-#endif
 
 /* Variables definition */
 

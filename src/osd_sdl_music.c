@@ -1,4 +1,4 @@
-#include "osd_linux_sdl_music.h"
+#include "osd_sdl_music.h"
 #include "utils.h"
 
 Mix_Music *sdlmixmusic[MAX_SONGS];

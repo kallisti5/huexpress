@@ -6,10 +6,7 @@
 #include "pce.h"
 #include "lsmp3.h"
 #include "ogglength.h"
-
-#ifdef SDL_mixer
-#include "osd_linux_sdl_music.h"
-#endif
+#include "osd_sdl_music.h"
 
 extern uint32 HCD_first_track;
 /* first track of emulated cd */

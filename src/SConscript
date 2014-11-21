@@ -17,7 +17,8 @@ main_sources = [
 sdl_sources = [
 	'osd_sdl_machine.c',
 	'osd_sdl_snd.c',
-	'osd_sdl_gfx.c'
+	'osd_sdl_music.c',
+	'osd_sdl_gfx.c',
 ]
 
 
@@ -51,13 +52,11 @@ engine_sources = [
 if env['PLATFORM'] in ('posix', 'linux', 'freebsd', 'darwin'):
 	main_sources += [
 		'osd_linux_cd.c',
-		'osd_linux_sdl_music.c',
 		'osd_keyboard.c',
 	]
 elif env['PLATFORM'] in ('haiku'):
 	main_sources += [
 		'osd_haiku_cd.c',
-		'osd_linux_sdl_music.c',
 		'osd_keyboard.c',
 	]
 
