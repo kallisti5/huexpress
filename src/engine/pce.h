@@ -33,14 +33,9 @@
 #define MAX_INPUT 255
 #endif
 
-#ifdef KERNEL_DS
 #include "h6280.h"
 #include "globals.h"
 #include "interupt.h"
-#else
-#include "m6502.h"
-#endif
-
 
 #include <stdarg.h>
 #include <stdio.h>
@@ -57,11 +52,7 @@ void RefreshScreen(void);
 uint32 CRC_file(char *);
 uchar CartInit(char* name);
 int CartLoad(char *name);
-#ifndef KERNEL_DS
-int ResetPCE(M6502 * M);
-#else
 int ResetPCE();
-#endif
 int32 InitMachine(void);
 void TrashMachine(void);
 int32 Joysticks(void);
@@ -128,13 +119,6 @@ extern char tmp_basepath[PATH_MAX];
 
 extern char log_filename[PATH_MAX];
 // filename of the log
-
-
-#ifndef KERNEL_DS
-
-extern M6502 M;
-
-#endif
 
 extern uchar populus;
 
@@ -275,8 +259,6 @@ extern uchar video_driver;
 extern uchar use_scanline;
 
 extern uchar minimum_bios_hooking;
-
-extern uchar cart_reload;
 
 #if !defined(MIN)
 #define MIN(a,b) ({__typeof__(a) _a = (a); __typeof__(b) _b = (b);_a < _b ? _a : _b; })

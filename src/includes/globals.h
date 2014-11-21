@@ -51,4 +51,5 @@ extern uchar   halt_flag;
 extern mode_struct addr_info[];
 extern operation optable[];
 
+
 #endif

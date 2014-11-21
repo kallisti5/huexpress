@@ -118,114 +118,6 @@ display_cd_var ()
 
 }
 
-#ifndef KERNEL_DS
-void
-display_reg ()
-{
-  char *tmp_buf = (char *) alloca (100);
-  uint32 i, j;
-  uchar page1, page2;
-  uint16 stack = Rd6502 (0x2000) + 256 * Rd6502 (0x2001);
-  // __stack is now at 0x2000 but it's not absolutely compulsory
-
-  clear (screen);
-
-  sprintf (tmp_buf, "        GENERAL REGISTERS       ");
-  textoutshadow (screen, font, tmp_buf, blit_x, blit_y, 3, 2, 1, 1);
-
-  sprintf (tmp_buf, " A = %02X  X = %02X  Y = %02X  S = %02X", M.A, M.X, M.Y,
-	   M.S);
-  textoutshadow (screen, font, tmp_buf, blit_x, blit_y + 10, 3, 2, 1, 1);
-
-  sprintf (tmp_buf, " A:X = %04X   [__stack] = %04X",
-	   (uint16) (M.A * 256 + M.X),
-	   (uint16) (Rd6502 (stack) + Rd6502 (stack + 1) * 256));
-  textoutshadow (screen, font, tmp_buf, blit_x, blit_y + 20, 3, 2, 1, 1);
-
-  for (i = 0; i < 8; i += 2)
-    {
-      for (j = 0; j < 256; j++)
-	if (Page[i] == ROMMap[j] - i * 0x2000)
-	  page1 = j;
-
-      for (j = 0; j < 256; j++)
-	if (Page[i + 1] == ROMMap[j] - (i + 1) * 0x2000)
-	  page2 = j;
-
-      sprintf (tmp_buf, "  MMR%d = %02X       MMR%d = %02X", i, page1, i + 1,
-	       page2);
-      textoutshadow (screen, font, tmp_buf, blit_x,
-		     blit_y + 10 * (i / 2) + 40, 3, 2, 1, 1);
-    }
-
-  textoutshadow (screen, font, " ZERO FLAG :", blit_x, blit_y + 90, 3, 2, 1,
-		 1);
-
-  if (M.ZF)
-    textoutshadow (screen, font, "ON", blit_x + 27 * 8, blit_y + 90, 255, 2,
-		   1, 1)
-    else
-    textoutshadow (screen, font, "OFF", blit_x + 27 * 8, blit_y + 90, 3, 2, 1,
-		   1);
-
-
-  textoutshadow (screen, font, " NEGATIVE FLAG :", blit_x, blit_y + 100, 3, 2,
-		 1, 1);
-
-  if (M.NF & N_FLAG)
-    textoutshadow (screen, font, "ON", blit_x + 27 * 8, blit_y + 100, 255, 2,
-		   1, 1)
-    else
-    textoutshadow (screen, font, "OFF", blit_x + 27 * 8, blit_y + 100, 3, 2,
-		   1, 1);
-
-
-  textoutshadow (screen, font, " OVERFLOW FLAG :", blit_x, blit_y + 110, 3, 2,
-		 1, 1);
-
-  if (M.VF)
-    textoutshadow (screen, font, "ON", blit_x + 27 * 8, blit_y + 110, 255, 2,
-		   1, 1)
-    else
-    textoutshadow (screen, font, "OFF", blit_x + 27 * 8, blit_y + 110, 3, 2,
-		   1, 1);
-
-
-  textoutshadow (screen, font, " INTERRUPT DISABLED FLAG :", blit_x,
-		 blit_y + 120, 3, 2, 1, 1);
-
-  if (M.P & I_FLAG)
-    textoutshadow (screen, font, "ON", blit_x + 27 * 8, blit_y + 120, 255, 2,
-		   1, 1)
-    else
-    textoutshadow (screen, font, "OFF", blit_x + 27 * 8, blit_y + 120, 3, 2,
-		   1, 1);
-
-
-  textoutshadow (screen, font, " DECIMAL MODE FLAG :", blit_x, blit_y + 130,
-		 3, 2, 1, 1) if (M.P & D_FLAG)
-    textoutshadow (screen, font, "ON", blit_x + 27 * 8, blit_y + 130, 255, 2,
-		   1, 1)
-    else
-    textoutshadow (screen, font, "OFF", blit_x + 27 * 8, blit_y + 130, 3, 2,
-		   1, 1);
-
-
-  textoutshadow (screen, font, " CARRY FLAG :", blit_x, blit_y + 140, 3, 2, 1,
-		 1) if (M.P & C_FLAG)
-    textoutshadow (screen, font, "ON", blit_x + 27 * 8, blit_y + 140, 255, 2,
-		   1, 1)
-    else
-    textoutshadow (screen, font, "OFF", blit_x + 27 * 8, blit_y + 140, 3, 2,
-		   1, 1);
-
-
-  sprintf (tmp_buf, "                 PAGE %d/%d", page + 1, MAX_PAGES);
-  textoutshadow (screen, font, tmp_buf, blit_x, blit_y + 10 * 19, 3, 2, 1, 1);
-
-  return;
-}
-#else
 void
 display_reg ()
 {
@@ -328,8 +220,6 @@ display_reg ()
 
   return;
 }
-
-#endif
 
 void 
 display_satb(uchar number_page, uchar index_low, uchar index_mid, uchar index_hi)

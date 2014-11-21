@@ -15,8 +15,6 @@
  */
 
 
-#include "huexpress.h"
-
 #include <stdlib.h>
 #include <stdio.h>
 #include "netplay.h"

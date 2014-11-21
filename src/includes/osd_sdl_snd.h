@@ -6,9 +6,13 @@
 #include "sound.h"
 
 
-#if defined(SDL)
 #include <SDL.h>
-#endif
+#include <SDL_mixer.h>
 
+extern Uint8 *stream;
+extern Mix_Chunk *chunk;
+extern SDL_AudioCVT cvt;
+extern boolean Callback_Stop;
+extern boolean USE_S16;
 
 #endif

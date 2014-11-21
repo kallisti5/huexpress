@@ -1,6 +1,7 @@
 #include "osd_linux_sdl_music.h"
 #include "utils.h"
 
+Mix_Music *sdlmixmusic[MAX_SONGS];
 
 #ifdef SDL_mixer
 /* Callback for SDL Mixer */

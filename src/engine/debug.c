@@ -87,11 +87,7 @@ disass_menu()
 	}
 #endif
 
-#ifndef KERNEL_DS
-	disassemble(M.PC.W);
-#else
 	disassemble(reg_pc);
-#endif
 
 #ifdef ALLEGRO
 	if (save_background)

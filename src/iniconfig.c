@@ -17,7 +17,6 @@
 
 #include "iniconfig.h"
 
-#include "huexpress.h"
 #include "utils.h"
 
 static int default_joy_mapping[J_MAX] = {0, 0, 0, 0,
@@ -381,37 +380,37 @@ parse_commandline(int argc, char **argv)
 	char arg_value, i, arg_error = 0;
 
 	for (i = 1; i < argc; i++) {
-	// first option should always be our game
-	if (i == 1 && argv[i][0] != '-') {
-		strcpy (cart_name, argv[i]);
-		int x;
-		for (x = 0; x < strlen (cart_name); x++)
-		if (cart_name[x] == '\\')
-			cart_name[x] = '/';
-	} else {
-		if (argv[i][0] == '-') {
-		// if argument
-		if (strlen(argv[i]) > 2) {
-			arg_error |= set_arg(argv[i][1], (char *) &argv[i][2]);
+		// first option should always be our game
+		if (i == 1 && argv[i][0] != '-') {
+			strcpy (cart_name, argv[i]);
+			int x;
+			for (x = 0; x < strlen (cart_name); x++)
+			if (cart_name[x] == '\\')
+				cart_name[x] = '/';
 		} else {
-			arg_error |= set_arg(argv[i][1], NULL);
+			if (argv[i][0] == '-') {
+				// if argument
+				if (strlen(argv[i]) > 2) {
+					arg_error |= set_arg(argv[i][1], (char *) &argv[i][2]);
+				} else {
+					arg_error |= set_arg(argv[i][1], NULL);
+				}
+			} else {
+				MESSAGE_ERROR("Unknown option: %s\n", argv[i]);
+				arg_error = 1;
+			}
 		}
-		} else {
-		MESSAGE_ERROR("Unknown option: %s\n", argv[i]);
-		arg_error = 1;
-		}
-	}
 	}
 
 	if (arg_error)
-	return 1;
+		return 1;
 
 	video_driver = 0;
 
 	if (use_eagle)
-	video_driver = 1;
+		video_driver = 1;
 	else if (use_scanline)
-	video_driver = 2;
+		video_driver = 2;
 
 	return 0;
 }

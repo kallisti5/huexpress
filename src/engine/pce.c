@@ -43,6 +43,9 @@
 
 /* Variable section */
 
+struct host_machine host;
+struct hugo_options option;
+
 uchar minimum_bios_hooking = 0;
 
 uchar can_write_debug = 0;
@@ -164,10 +167,6 @@ char *server_hostname = NULL;
 
 char *bmdefault = NULL;
 // Name of the backup memory
-
-uchar cart_reload = 0;
-// Once the game ended, do we need to load another rom
-// i.e. do we escape game by pressing F12 or do we called the file selector
 
 char effectively_played = 0;
 // Well, the name is enough I think...
@@ -1370,12 +1369,7 @@ IO_write(uint16 A, uchar V)
 	fprintf(stderr,
 			"ignore I/O write %04x,%02x\tBase adress of port %X\nat PC = %04X\n",
 			A, V, A & 0x1CC0,
-#ifdef KERNEL_DS
 			reg_pc);
-#else
-			M.PC.W);
-#endif
-
 #endif
 //          DebugDumpTrace(4, TRUE);
 }
@@ -1863,10 +1857,10 @@ InitPCE(char *name, char *backmemname)
 	char local_us_encoded_card = 0;
 
 	if ((!strcmp(name, "")) && (CD_emulation != 1))
-		return -1;
+		return 1;
 
 	if (CartLoad(name))
-		return -1;
+		return 1;
 
 	osd_fix_filename_slashes(cart_name);
 
@@ -2259,15 +2253,6 @@ InitPCE(char *name, char *backmemname)
 }
 
 
-#ifndef KERNEL_DS
-int
-RunPCE(void)
-{
-	if (!ResetPCE(&M))
-		Run6502();
-	return 1;
-}
-#else
 int
 RunPCE(void)
 {
@@ -2275,8 +2260,6 @@ RunPCE(void)
 		exe_go();
 	return 1;
 }
-#endif
-
 
 void
 TrashPCE(char *backmemname)

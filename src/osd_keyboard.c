@@ -888,17 +888,18 @@ osd_keyboard (void)
 
 
 int
-osd_init_input (void)
+osd_init_input(void)
 {
-  if (SDL_InitSubSystem (SDL_INIT_JOYSTICK))
-    {
-      return -1;
-    }
+	if (SDL_InitSubSystem(SDL_INIT_JOYSTICK) != 0) {
+		MESSAGE_ERROR("Unable to init SDL Input layer!\n");
+		return 1;
+	}
 
-  sdl_init_joypads ();
+	sdl_init_joypads ();
 
-  return 0;
+	return 0;
 }
+
 
 void
 osd_shutdown_input ()

@@ -638,11 +638,6 @@ IO_read_raw(uint16 A)
 	case 0x1800:				// CD-ROM extention
 		return pce_cd_handle_read_1800(A);
 	}
-#ifndef FINAL_RELEASE
-#if !defined(KERNEL_DS)
-	fprintf(stderr, "ignore I/O read %04X\nat PC = %04X\n", A, M.PC.W);
-#endif
-#endif
 	return NODATA;
 }
 

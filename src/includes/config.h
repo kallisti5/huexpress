@@ -28,9 +28,6 @@
 /* for hugo developers working on hu6280 emulation */
 #undef KERNEL_DEBUG
 
-/* defined if user wants new kernel */
-#define KERNEL_DS 1
-
 /* for hugo developers working on netplay emulation */
 #undef NETPLAY_DEBUG
 

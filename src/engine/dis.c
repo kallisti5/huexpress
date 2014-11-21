@@ -243,11 +243,7 @@ dis_key()
 		return 1;
 
 	case KEY_F5:				/* F5 */
-#ifndef KERNEL_DS
-		_PC_ = selected_position;
-#else
 		reg_pc = selected_position;
-#endif
 		return 0;
 
 	case KEY_F6:				/* F6 */
@@ -275,11 +271,7 @@ dis_key()
 		}
 
 		running_mode = TRACING;
-#ifndef KERNEL_DS
-		set_bp_following(_PC_, GIVE_HAND_BP);
-#else
 		set_bp_following(reg_pc, GIVE_HAND_BP);
-#endif
 
 		save_background = 0;
 
@@ -295,12 +287,7 @@ dis_key()
 
 		running_mode = STEPPING;
 
-#ifndef KERNEL_DS
-		set_bp_following(_PC_, GIVE_HAND_BP);
-#else
 		set_bp_following(reg_pc, GIVE_HAND_BP);
-#endif
-
 		save_background = 0;
 
 		return 1;
@@ -375,11 +362,8 @@ disassemble()
 	char *tmp_buf = (char *) alloca(100);
 
 	save_background = 1;
-#ifndef KERNEL_DS
-	selected_position = init_pos = _PC_;
-#else
 	selected_position = init_pos = reg_pc;
-#endif
+
 	key_delay = 10;
 
 	do {
@@ -437,11 +421,7 @@ disassemble()
 				textoutshadow(screen, font, linebuf, blit_x + 5 * 8,
 							  blit_y + 10 * line, -10, 2, 1, 1);
 			}
-#ifndef KERNEL_DS
-			else if (position - size != _PC_)
-#else
 			else if (position - size != reg_pc)
-#endif
 			{
 				textoutshadow(screen, font, tmp_buf, blit_x,
 							  blit_y + 10 * line, -5, 0, 1, 1);

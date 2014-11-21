@@ -3477,7 +3477,7 @@ exe_go(void)
 
 //    Log("Pc = %04x : %s\n", reg_pc, optable_runtime[Page[reg_pc>>13][reg_pc]].opname);
 
-#ifdef DEBUG_KERNEL_DS
+#ifdef KERNEL_DEBUG
 /*
       if (reg_pc<0xE000)
       {

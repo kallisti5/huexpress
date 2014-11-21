@@ -1,6 +1,11 @@
 #include "utils.h"
 #include "osd_sdl_snd.h"
 
+Uint8 *stream;
+Mix_Chunk *chunk;
+SDL_AudioCVT cvt;
+boolean Callback_Stop;
+boolean USE_S16;
 
 #if defined(SDL)
 
@@ -129,7 +134,7 @@ osd_snd_init_sound(void)
 
 		//FIXME: start playing silently!!
 		//needed for sound fx to start
-		len = sbuf_size * host.sound.stereo;
+		int len = sbuf_size * host.sound.stereo;
 		stream = (Uint8*)malloc(len);
 		//memset(stream,0,len); //FIXME start playing silently!!
 

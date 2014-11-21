@@ -5,7 +5,8 @@ import platform
 Import("env")
 
 main_sources = [
-	'huexpress.c',
+	'huexpress.cpp',
+	'PCEngine.cpp',
 	'iniconfig.c',
 	'utils.c',
 	'view_inf.c',

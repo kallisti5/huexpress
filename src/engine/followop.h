@@ -7,15 +7,7 @@
 #include "cleantypes.h"
 #include "optable.h"
 
-#if defined(KERNEL_DS)
-
 #include "h6280.h"
-
-#else
-
-#include "m6502.h"
-
-#endif
 
 #include "pce.h"
 
