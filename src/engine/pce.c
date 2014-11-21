@@ -1407,15 +1407,18 @@ search_possible_syscard()
 	MESSAGE_INFO("We need a syscard to load a CD, begining search...\n");
 	FILE *f;
 
+	char* config_path[PATH_MAX];
+	snprintf(config_path, PATH_MAX, "%s/", config_basepath);
+
 #if defined(__haiku__)
-#define POSSIBLE_LOCATION_COUNT 3
+#define POSSIBLE_LOCATION_COUNT 2
 	const char *POSSIBLE_LOCATION[POSSIBLE_LOCATION_COUNT] = {
-		"./", "../", "/boot/common/data/huexpress/"
+		"./", config_path
 	};
 #else
 #define POSSIBLE_LOCATION_COUNT 3
 	const char *POSSIBLE_LOCATION[POSSIBLE_LOCATION_COUNT] = {
-		"./", "../", "/usr/local/lib/huexpress/"
+		"./", config_path, "/usr/share/huexpress/syscard"
 	};
 #endif
 
