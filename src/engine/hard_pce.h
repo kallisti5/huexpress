@@ -16,19 +16,9 @@
 #include "cleantypes.h"
 
 #if defined(SHARED_MEMORY)
-
-#if !defined(WIN32)
-
 #include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
-
-#else
-
-#include "utils.h"
-
-#endif
-
 #endif
 
 #define PSG_VOICE_REG           0	/* voice index */

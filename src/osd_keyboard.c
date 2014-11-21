@@ -361,10 +361,8 @@ sdl_config_joypad (short which)
 	  "    Press [ENTER] when ready to begin, [ENTER] can also be used to skip configuration steps.\n");
   getchar ();
 
-#if !defined(WIN32)
   sa = fcntl (fileno (stdin), F_GETFL);
   fcntl (fileno (stdin), F_SETFL, O_NONBLOCK);
-#endif
 
   n = SDL_JoystickNumAxes (joypad[which]);
   bad_vals = (uint16 *) calloc (sizeof (uint16), n);
@@ -420,9 +418,7 @@ sdl_config_joypad (short which)
 	  config[current_config].individual_config[which].joy_mapping[J_PSELECT],
 	  config[current_config].individual_config[which].joy_mapping[J_PRUN]);
 
-#if !defined(WIN32)
   fcntl (fileno (stdin), F_SETFL, sa);
-#endif
 }
 
 
@@ -1031,15 +1027,12 @@ netplay_debug_printf (char *format, ...)
 
   ftime (&time_structure);
 
-#if !defined(WIN32)
   ctime_r (&time_structure.time, time_buffer);
-#endif
 
-  if (strlen (time_buffer) > 0)
-    {
+  if (strlen (time_buffer) > 0) {
       /* If this buffer is not empty, remove the last character (which is normally a newline) */
       time_buffer[strlen (time_buffer) - 1] = 0;
-    }
+  }
 
   fprintf (stderr, "%s:%3u ", time_buffer, time_structure.millitm);
   fprintf (stderr, buf);

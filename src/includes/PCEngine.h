@@ -32,10 +32,9 @@ public:
 
 private:
 
-	int					fReady;
+	void				InitPaths();
 
-	//! name of the backup ram filename
-	char				fBackupMem[PATH_MAX];
+	int					fReady;
 
 	struct host_machine	fHost;
 	struct hugo_options	fOptions;

@@ -542,14 +542,14 @@ parse_INIfile ()
 	Log ("--[ PARSING INI FILE ]------------------------------\n");
 
 #ifndef LINUX
-	sprintf(config_file, "%s/%s", short_exe_name, SETTINGS_FILENAME);
+	sprintf(config_file, "%s/%s", config_basepath, SETTINGS_FILENAME);
 #else
 	{
 
 		char tmp_home[256];
 		FILE *f;
 
-		sprintf(tmp_home, "%s/%s", short_exe_name, SETTINGS_FILENAME);
+		sprintf(tmp_home, "%s/%s", config_basepath, SETTINGS_FILENAME);
 
 		f = fopen(tmp_home, "rb");
 
@@ -744,7 +744,7 @@ save_config (void)
 	qsort (config_ar, config_ar_index, sizeof (config_var), config_var_cmp);
 
 	// Dump the configuration into a file
-	sprintf (config_name, "%s/huexpress.ini", short_exe_name);
+	sprintf (config_name, "%s/huexpress.ini", config_basepath);
 	dump_config (config_name);
 
 	dispose_config ();

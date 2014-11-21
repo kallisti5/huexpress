@@ -3432,17 +3432,11 @@ dump_pce_core()
 static double
 osd_getTime(void)
 {
-#ifdef WIN32
-	return (SDL_GetTicks() * 1e-3);
-#elif defined(DJGPP)
-	return uclock() * (1.0 / UCLOCKS_PER_SEC);
-#else
 	struct timeval tp;
 
 	gettimeofday(&tp, NULL);
 	// printf("current microsec = %f\n",tp.tv_sec + 1e-6 * tp.tv_usec);
 	return tp.tv_sec + 1e-6 * tp.tv_usec;
-#endif
 }
 #endif
 
@@ -3541,11 +3535,7 @@ exe_go(void)
 #if defined(SHARED_MEMORY)
 		if (external_control_cpu >= 0) {
 			while (external_control_cpu == 0) {
-#if defined(WIN32)
-				SDL_Delay(1);
-#else
 				usleep(1);
-#endif
 			}
 			if (external_control_cpu > 0)
 				external_control_cpu--;

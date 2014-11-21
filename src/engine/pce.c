@@ -140,10 +140,8 @@ char rom_file_name[PATH_MAX];
 // the name of the file containing the ROM (with path, ext)
 // Now needed 'coz of ZIP archiving...
 
-char short_exe_name[PATH_MAX];
-// Used to function whatever the launching directory
-// Help working under WIN9X without troubles
-// Actually, the path of the EXE
+char config_basepath[PATH_MAX];
+// base path for all configs (in users home)
 
 char sav_path[PATH_MAX];
 // The filename for saving games
@@ -164,9 +162,6 @@ uchar force_header = 1;
 // Force the first sector of the code track to be the correct header
 
 char *server_hostname = NULL;
-
-char *bmdefault = NULL;
-// Name of the backup memory
 
 char effectively_played = 0;
 // Well, the name is enough I think...
@@ -1438,7 +1433,7 @@ search_possible_syscard()
 			if (location < POSSIBLE_LOCATION_COUNT)
 				strcpy(temp_buffer, POSSIBLE_LOCATION[location]);
 			else {
-				strcpy(temp_buffer, short_exe_name);
+				strcpy(temp_buffer, config_basepath);
 				strcat(temp_buffer, "/");
 			}
 
@@ -1850,7 +1845,7 @@ ResetPCE()
 
 
 int
-InitPCE(char *name, char *backmemname)
+InitPCE(char *name)
 {
 	int i = 0, ROMmask;
 	char *tmp_dummy;
@@ -1861,8 +1856,6 @@ InitPCE(char *name, char *backmemname)
 
 	if (CartLoad(name))
 		return 1;
-
-	osd_fix_filename_slashes(cart_name);
 
 	if (!(tmp_dummy = (char *) (strrchr(cart_name, '/'))))
 		tmp_dummy = &cart_name[0];
@@ -1880,8 +1873,6 @@ InitPCE(char *name, char *backmemname)
 			short_cart_name[strlen(short_cart_name) + 1] = 0;
 			short_cart_name[strlen(short_cart_name)] = '.';
 		}
-
-	osd_fix_filename_slashes(ISO_filename);
 
 	if (!(tmp_dummy = (char *) (strrchr(ISO_filename, '\\'))))
 		tmp_dummy = &ISO_filename[0];
@@ -1913,13 +1904,13 @@ InitPCE(char *name, char *backmemname)
 				short_cart_name);
 		break;
 	case 1:
-		sprintf(sav_path, "%s/cd_sav", short_exe_name);
+		sprintf(sav_path, "%s/cd_sav", config_basepath);
 		break;
 	case 2:
 	case 3:
 	case 4:
 	case 5:
-		sprintf(sav_path, "%s/cd.svi", short_exe_name);
+		sprintf(sav_path, "%s/cd.svi", config_basepath);
 		break;
 	}
 
@@ -2205,11 +2196,14 @@ InitPCE(char *name, char *backmemname)
 	ROMMapW[0xFF] = IOAREA;
 
 	{
+		char* backupmem[PATH_MAX];
+		snprintf(backupmem, PATH_MAX, "%s/backupmem.bin", config_basepath);
+
 		FILE *fp;
-		fp = fopen(backmemname, "rb");
+		fp = fopen(backupmem, "rb");
 
 		if (fp == NULL)
-			fprintf(stderr, "Can't open %s\n", backmemname);
+			fprintf(stderr, "Can't open %s\n", backupmem);
 		else {
 			fread(WRAM, 0x2000, 1, fp);
 			fclose(fp);
@@ -2262,28 +2256,31 @@ RunPCE(void)
 }
 
 void
-TrashPCE(char *backmemname)
+TrashPCE()
 {
 	FILE *fp;
 	char *tmp_buf = (char *) alloca(256);
 
+	char* backupmem[PATH_MAX];
+	snprintf(backupmem, PATH_MAX, "%s/backupmem.bin", config_basepath);
+
 	// Save the backup ram into file
-	if (!(fp = fopen(backmemname, "wb"))) {
+	if (!(fp = fopen(backupmem, "wb"))) {
 		memset(WRAM, 0, 0x2000);
-		MESSAGE_ERROR("Can't open %s for saving RAM\n", backmemname);
+		MESSAGE_ERROR("Can't open %s for saving RAM\n", backupmem);
 	} else {
 		fwrite(WRAM, 0x2000, 1, fp);
 		fclose(fp);
-		MESSAGE_INFO("%s used for saving RAM\n", backmemname);
+		MESSAGE_INFO("%s used for saving RAM\n", backupmem);
 	}
 
 	// Set volume to zero
 	io.psg_volume = 0;
 
-	sprintf(tmp_buf, "rm -rf %s/tmp/*", short_exe_name);
+	sprintf(tmp_buf, "rm -rf %s/tmp/*", config_basepath);
 	system(tmp_buf);
 
-	sprintf(tmp_buf, "%s/tmp", short_exe_name);
+	sprintf(tmp_buf, "%s/tmp", config_basepath);
 	rmdir(tmp_buf);
 
 	if (CD_emulation == 1)

@@ -37,11 +37,7 @@ get_HCD_path(char* hcdFile, char* result)
 	char fullPath[PATH_MAX + 1];
 	realpath(hcdFile, fullPath);
 
-#ifdef _WIN32
-	const char slash = '\\';
-#else
 	const char slash = '/';
-#endif
 
 	char *lastSlash = strrchr(fullPath, slash);
 	if (lastSlash)

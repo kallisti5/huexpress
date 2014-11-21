@@ -10,6 +10,7 @@
  *  Copyright 1996 Alex Krasivsky, Marat Fayzullin
  */
 
+#include <sys/stat.h>
 
 #include "PCEngine.h"
 
@@ -51,14 +52,6 @@ PCEngine::PCEngine()
 	// Read configuration in ini file
 	parse_INIfile();
 
-	// If backup memory name hasn't been overriden on command line, use the default
-	if ((bmdefault) && (strcmp(bmdefault, "")))
-		snprintf(fBackupMem, sizeof(fBackupMem), "%s/%s", short_exe_name,
-			bmdefault);
-	else
-		snprintf(fBackupMem, sizeof(fBackupMem), "%s/backup.dat",
-			short_exe_name);
-
 	// Initialise the host machine
 	if (!osd_init_machine()) {
 		MESSAGE_ERROR("Unable to initialize the host machine!\n");
@@ -70,6 +63,8 @@ PCEngine::PCEngine()
 		MESSAGE_ERROR("Unable to initialize input subsystem!\n");
 		return;
 	}
+
+	InitPaths();
 
 	fReady = 1;
 }
@@ -84,10 +79,40 @@ PCEngine::~PCEngine()
 }
 
 
+void
+PCEngine::InitPaths()
+{
+	// Populate paths for emulation engine
+
+	if (getenv("HOME"))
+		snprintf(config_basepath, PATH_MAX, "%s/.huexpress", getenv("HOME"));
+	else
+		sprintf(config_basepath, "./");
+
+	// Create directory if not existing
+	mkdir(config_basepath, 0777);
+
+	// Set the log file
+	sprintf(log_filename,"%s/%s", config_basepath, "huexpress.log");
+
+	// Set a temporary path per user (should it be by process ?)
+	sprintf(tmp_basepath, "%s/tmp", config_basepath);
+	mkdir(tmp_basepath, 0777);
+
+	// Set the saved game directory
+	sprintf (sav_basepath, "%s/sav/", config_basepath);
+	mkdir(sav_basepath, 0777);
+
+	// Set the video output directory
+	sprintf (video_path, "%s/video/", config_basepath);
+	mkdir(video_path, 0777);
+}
+
+
 int
 PCEngine::LoadFile(char* file)
 {
-	if (InitPCE(file, fBackupMem) != 0) {
+	if (InitPCE(file) != 0) {
 		MESSAGE_ERROR("Unable to load file %s!\n", file);
 		return 1;
 	}
@@ -124,5 +149,5 @@ PCEngine::Run()
 	(*osd_gfx_driver_list[video_driver].shut) ();
 
 	// Free the target machine (pce)
-	TrashPCE(fBackupMem);
+	TrashPCE();
 }

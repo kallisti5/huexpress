@@ -24,9 +24,6 @@ main(int argc, char *argv[])
 		return 1;
 	}
 
-	// Initialise paths
-	osd_init_paths(argc, argv);
-
 	// Read the command line
 	if (parse_commandline(argc, argv) != 0) {
 		delete engine;

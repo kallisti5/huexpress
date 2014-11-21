@@ -29,8 +29,6 @@
 #include <sys/param.h>
 #include <sys/types.h>
 #include <sys/ioctl.h>
-#elif defined(WIN32)
-#define MAX_INPUT 255
 #endif
 
 #include "h6280.h"
@@ -63,8 +61,8 @@ void delete_file_tmp(char *name, int dummy, int dummy2);
 uchar TimerInt();
 
 void init_log_file();
-int InitPCE(char *name, char *backmemname);
-void TrashPCE(char *backmemname);
+int InitPCE(char *name);
+void TrashPCE();
 int RunPCE(void);
 void pce_cd_read_sector(void);
 void issue_ADPCM_dma(void);
@@ -109,8 +107,6 @@ extern char cart_name[PATH_MAX];
 extern char initial_path[PATH_MAX];
 // initial path for rom seeking
 
-extern char short_exe_name[PATH_MAX];
-
 extern char sav_basepath[PATH_MAX];
 // base path for saved games
 
@@ -119,6 +115,9 @@ extern char tmp_basepath[PATH_MAX];
 
 extern char log_filename[PATH_MAX];
 // filename of the log
+
+extern char config_basepath[PATH_MAX];
+// ~/.huexpress/
 
 extern uchar populus;
 

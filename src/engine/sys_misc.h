@@ -45,26 +45,6 @@ char osd_keypressed(void);
    */
 uint16 osd_readkey(void);
 
-  /*
-   * osd_fix_filename_slashes
-   *
-   * Update a string in parameter, converting the "wrong slashes" into slashes
-   * expected by the current os
-   */
-void osd_fix_filename_slashes(char *s);
-
-	/*
-	 * osd_init_paths
-	 *
-	 * Set global path and filename variables :
-	 *  - short_exe_name
-	 *  - log_filename
-	 *  - sav_basepath
-	 *  - tmp_basepath
-	 *  - video_path
-	 */
-void osd_init_paths(int argc, char *argv[]);
-
 	/*
 	 * gamepad_driver
 	 *

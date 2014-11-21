@@ -69,17 +69,11 @@ Log(char *format, ...)
 #ifndef BENCHMARK
 static double osd_getTime(void)
 {
-#ifdef WIN32
-	return (SDL_GetTicks() * 1e - 3);
-#elif defined(DJGPP)
-	return uclock() * (1.0 / UCLOCKS_PER_SEC);
-#else
 	struct timeval tp;
 
 	gettimeofday(&tp, NULL);
 	// printf("current microsec = %f\n",tp.tv_sec + 1e-6 * tp.tv_usec);
 	return tp.tv_sec + 1e-6 * tp.tv_usec;
-#endif
 }
 #endif /* !BENCHMARK */
 
@@ -92,20 +86,12 @@ static void osd_sleep(double s)
 	// Log("Sleeping %f seconds\n", s);
 	if (s > 0)
 	{
-#ifdef linux
 		struct timeval tp;
 
 		tp.tv_sec = 0;
 		tp.tv_usec = 1e6 * s;
 		select(1, NULL, NULL, NULL, &tp);
-#elif defined(WIN32)
-		SDL_Delay((unsigned int)(s * 1e3));
-#elif defined(DJGPP)
-		double curtime = osd_time();
-		while ((curtime + s) > osd_time());
-#else
 		usleep(s * 1e6);
-#endif
 		// emu_too_fast = 1;
 	}
 }
@@ -134,53 +120,6 @@ wait_next_vsync()
 #endif
 }
 
-
-#if defined(WIN32)
-static char memory_name[50];
-
-int
-shmget(key_t identifier, int size, int flags)
-{
-	int handle;
-
-	snprintf(memory_name, sizeof(memory_name), "%05d huexpress shared mem",
-		identifier);
-
-	handle = CreateFileMapping((HANDLE)0xFFFFFFFF, NULL, PAGE_READWRITE, 0,
-		size, memory_name);
-
-	if (handle == 0) {
-		Log("Couldn't get shared memory\n");
-		return -1;
-	}
-
-	return handle;
-}
-
-
-char*
-shmat(int handle, int dummy1, int dummy2)
-{
-	char* result;
-
-	result = (char*)MapViewOfFile((HANDLE)handle, FILE_MAP_WRITE, 0, 0, 10);
-
-	if (result == NULL)
-		Log("Couldn't attach shared memory\n");
-
-	return result;
-}
-
-
-int
-shmctl(int handle, int dummy, int flags)
-{
-	UnmapViewOfFile((HANDLE)handle);
-	return 0;
-}
-
-
-#endif /* WIN32 */
 
 unsigned long TAB_CONST[256] = {
 	0X0,

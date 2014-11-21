@@ -20,18 +20,11 @@
 #define ZIP_HAS_ISO	0x0004
 #define ZIP_HAS_HCD	0x0008
 
-#if !defined(WIN32)
 #define PATH_SLASH "/"
-#else
-#define PATH_SLASH "\\"
-#endif
-
 
 uint32 zipmgr_probe_file(char* zipFilename, char* foundGameFile);
 uint32 zipmgr_extract_to_disk(char* zipFilename, char* destination);
 char* zipmgr_extract_to_memory(char* zipFilename, char* cartFilename,
 	size_t* cartSize);
-
-
 
 #endif /* ZIPMGR_H */
