@@ -1970,24 +1970,13 @@ InitPCE(char *name)
 
 	memset(vchanges, 1, VRAMSIZE / 128);
 
-#ifndef FINAL_RELEASE
-	if (kKnownRoms != NULL && NO_ROM != 0xFFFF)
-		fprintf(stderr, "flags = %x\n",
-				kKnownRoms[NO_ROM]->Flags);
-#endif
-
 	local_us_encoded_card = US_encoded_card;
 
-	if (kKnownRoms != NULL && (NO_ROM != 0xFFFF)
-		&& (kKnownRoms[NO_ROM].Flags & US_ENCODED))
+	if ((NO_ROM != 0xFFFF) && (kKnownRoms[NO_ROM].Flags & US_ENCODED))
 		local_us_encoded_card = 1;
 
 	if (ROM[0x1FFF] < 0xE0) {
 		Log("This rom is probably US encrypted, decrypting...\n");
-#if !defined(FINAL_RELEASE)
-		fprintf(stderr,
-				"This rom is probably US encrypted, decrypting...\n");
-#endif
 		local_us_encoded_card = 1;
 	}
 
@@ -2032,11 +2021,9 @@ InitPCE(char *name)
 		}
 */
 
-	if (kKnownRoms != NULL && (NO_ROM != 0xFFFF)
-		&& (kKnownRoms[NO_ROM].Flags & TWO_PART_ROM)) {
+	// For example with Devil Crush 512Ko
+	if ((NO_ROM != 0xFFFF) && (kKnownRoms[NO_ROM].Flags & TWO_PART_ROM))
 		ROM_size = 0x30;
-		// Used for example with Devil Crush 512Ko
-	}
 
 	ROMmask = 1;
 	while (ROMmask < ROM_size)
@@ -2124,8 +2111,7 @@ InitPCE(char *name)
 		MESSAGE_ERROR("Unknown ROM\n");
 	}
 
-	if (kKnownRoms != NULL && (NO_ROM != 0xFFFF)
-		&& (kKnownRoms[NO_ROM].Flags & POPULOUS)) {
+	if ((NO_ROM != 0xFFFF) && (kKnownRoms[NO_ROM].Flags & POPULOUS)) {
 		populus = TRUE;
 
 		MESSAGE_INFO("Special Rom: Populous detected!\n");
@@ -2214,8 +2200,7 @@ InitPCE(char *name)
 
 	}
 
-	if (kKnownRoms != NULL && (NO_ROM != 0xFFFF)
-		&& (kKnownRoms[NO_ROM].Flags & CD_SYSTEM)) {
+	if ((NO_ROM != 0xFFFF) && (kKnownRoms[NO_ROM].Flags & CD_SYSTEM)) {
 		uint16 offset = 0;
 		uchar new_val = 0;
 
