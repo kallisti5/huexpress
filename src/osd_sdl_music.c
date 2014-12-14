@@ -9,7 +9,7 @@ Mix_Music *sdlmixmusic[MAX_SONGS];
 void
 sdlmixer_fill_audio(int channel)
 {
-	if (Callback_Stop == TRUE) {
+	if (Callback_Stop == 1) {
 		// free things and 
 		//stop calling backs...
 		if (chunk)
@@ -59,7 +59,7 @@ sdlmixer_fill_audio(int channel)
     // Mix streams and apply master volume.
     //
 
-	if ( USE_S16 == TRUE ) {
+	if (USE_S16 == 1) {
     	for (i = 0; i < cvt.len ; i++) {
       		cvt.buf[i] = 128 + ((uint32) ((sbuf[0][i] + sbuf[1][i] + sbuf[2][i] + sbuf[3][i] + sbuf[4][i] + sbuf[5][i]
 				+ adpcmbuf[i]) * (!(i % 2) ? lvol : rvol)) >> 7);

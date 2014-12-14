@@ -9,8 +9,8 @@
 Uint8 *stream;
 Mix_Chunk *chunk;
 SDL_AudioCVT cvt;
-bool Callback_Stop;
-bool USE_S16;
+int Callback_Stop;
+int USE_S16;
 
 
 void
@@ -65,7 +65,7 @@ osd_snd_init_sound(void)
 		host.sound.freq = option.want_snd_freq;
 
 		if (Mix_OpenAudio((host.sound.freq), (USE_S16 ? AUDIO_S16 : AUDIO_U8),
-			(USE_S16?2:host.sound.stereo), sbuf_size) < 0) {
+			(USE_S16 ? 2 : host.sound.stereo), sbuf_size) < 0) {
 			Log("Couldn't open audio: %s\n", Mix_GetError());
 			return 0;
 		}
@@ -88,7 +88,7 @@ osd_snd_init_sound(void)
 
 
 		// sets the callback
-		Callback_Stop = FALSE;
+		Callback_Stop = 0;
 		Mix_AllocateChannels(1);
 		Mix_ChannelFinished(sdlmixer_fill_audio);
 
@@ -123,7 +123,7 @@ osd_snd_trash_sound(void)
 		osd_snd_set_volume(0);
 
 	//needed to stop properly...
-	Callback_Stop=TRUE;
+	Callback_Stop = 1;
 	//SDL_Delay(1000);
 	Mix_CloseAudio();
 

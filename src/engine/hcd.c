@@ -419,7 +419,7 @@ HCD_play_sectors(int begin_sect, int sect_len, char repeat)
 				&& begin_sect - CD_track[result].beg_lsn < 150)
 				Mix_PlayMusic(sdlmixmusic[result], repeat);
 			else				/* can't yet easily repeat "inside" a track */
-				Mix_PlayMusic(sdlmixmusic[result], FALSE);
+				Mix_PlayMusic(sdlmixmusic[result], 0);
 
 			Mix_RewindMusic();
 			if (Mix_SetMusicPosition

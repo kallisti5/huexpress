@@ -1366,7 +1366,7 @@ IO_write(uint16 A, uchar V)
 			A, V, A & 0x1CC0,
 			reg_pc);
 #endif
-//          DebugDumpTrace(4, TRUE);
+//          DebugDumpTrace(4, 1);
 }
 
 
@@ -2108,7 +2108,7 @@ InitPCE(char *name)
 	}
 
 	if ((NO_ROM != 0xFFFF) && (kKnownRoms[NO_ROM].Flags & POPULOUS)) {
-		populus = TRUE;
+		populus = 1;
 
 		MESSAGE_INFO("Special Rom: Populous detected!\n");
 		if (!(PopRAM = (uchar*)malloc(PopRAMsize)))
@@ -2125,7 +2125,7 @@ InitPCE(char *name)
 		ROMMapR[0x43] = PopRAM + 0x6000;
 
 	} else {
-		populus = FALSE;
+		populus = 0;
 		PopRAM = NULL;
 	}
 

@@ -84,7 +84,7 @@ typedef struct tagIO {
 
 	uchar psg_da_data[6][PSG_DIRECT_ACCESS_BUFSIZE];
 	uint16 psg_da_index[6], psg_da_count[6];
-	bool psg_channel_disabled[6];
+	int psg_channel_disabled[6];
 
 	/* TIMER */
 	uchar timer_reload, timer_start, timer_counter;

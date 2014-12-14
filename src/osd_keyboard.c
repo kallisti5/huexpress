@@ -226,7 +226,7 @@ sdl_config_joypad_axis(short which, joymap axis, uint16 * bad_axes,
 	uint16 num_axes) {
 
 	uchar t;
-	bool done = FALSE;
+	int done = 0;
 
 	while (1) {
 		if (read (fileno (stdin), &t, 1) == -1)
@@ -289,7 +289,7 @@ sdl_config_joypad_button (short which, joymap button, uint16 * bad_buttons,
 	uint16 num_buttons)
 {
 	uchar t;
-	bool done = FALSE;
+	int done = 0;
 
 	while (1) {
 		if (read (fileno (stdin), &t, 1) == -1)
@@ -320,7 +320,7 @@ sdl_config_joypad_button (short which, joymap button, uint16 * bad_buttons,
 				config[current_config].individual_config[which]
 					.joy_mapping[button] = buttons;
 
-				done = TRUE;
+				done = 1;
 
 				stime = time (NULL);
 
@@ -331,7 +331,7 @@ sdl_config_joypad_button (short which, joymap button, uint16 * bad_buttons,
 
 					if ((ntime - stime) > 3) {
 						bad_buttons[buttons] = 1;
-						done = FALSE;
+						done = 0;
 
 						printf
 						("    ** Button %d still claiming to be pressed after 3 seconds, marked as invalid\n\n"

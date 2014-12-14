@@ -76,9 +76,9 @@ CheckSprites(void)
 		w = (((spr->atr >> 8) & 1) + 1) * 16;
 		h = (((spr->atr >> 12) & 3) + 1) * 16;
 		if ((x < x0 + w0) && (x + w > x0) && (y < y0 + h0) && (y + h > y0))
-			return TRUE;
+			return 1;
 	}
-	return FALSE;
+	return 0;
 }
 
 

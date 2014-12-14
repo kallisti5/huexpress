@@ -36,7 +36,7 @@ typedef struct {
 	typeof(io.VDC[BXR].W) scroll_x;
 	typeof(io.VDC[BYR].W) scroll_y;
 	int scroll_y_diff;
-	 typeof(io.VDC[CR].W) cr;
+	typeof(io.VDC[CR].W) cr;
 } gfx_context;
 
 

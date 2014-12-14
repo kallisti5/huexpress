@@ -20,9 +20,9 @@ PCEngine::PCEngine()
 	fReady(0),
 	fOptions(&option)
 {
-	fOptions->want_fullscreen = FALSE;
-	fOptions->want_fullscreen_aspect = FALSE;
-	fOptions->configure_joypads = FALSE;
+	fOptions->want_fullscreen = 0;
+	fOptions->want_fullscreen_aspect = 0;
+	fOptions->configure_joypads = 0;
 
 	// 2 is a good default multiplier for modern desktops
 	fOptions->window_size = 2;

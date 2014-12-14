@@ -12,7 +12,7 @@
 extern Uint8 *stream;
 extern Mix_Chunk *chunk;
 extern SDL_AudioCVT cvt;
-extern bool Callback_Stop;
-extern bool USE_S16;
+extern int Callback_Stop;
+extern int USE_S16;
 
 #endif

@@ -20,7 +20,7 @@
 #include "cleantypes.h"
 
 
-#if defined(LINUX)
+#if defined(__linux__)
 #include <sys/param.h>
 #include <sys/types.h>
 #include <sys/ioctl.h>
@@ -169,10 +169,10 @@ extern uchar binbcd[0x100];
 extern uint32 pce_cd_sectoraddy;
 
 struct host_sound {
-	bool stereo;
+	int stereo;
+	int signed_sound;
 	uint32 freq;
 	uint16 sample_size;
-	bool signed_sound;
 };
 
 struct host_machine {
@@ -182,12 +182,12 @@ struct host_machine {
 extern struct host_machine host;
 
 struct hugo_options {
-	bool want_fullscreen;
-	bool want_fullscreen_aspect;
-	bool configure_joypads;
-	bool want_arcade_card_emulation;
-	bool want_supergraphx_emulation;
-	bool want_television_size_emulation;
+	int want_fullscreen;
+	int want_fullscreen_aspect;
+	int configure_joypads;
+	int want_arcade_card_emulation;
+	int want_supergraphx_emulation;
+	int want_television_size_emulation;
 	uint16 window_size;
 	uint32 want_snd_freq;
 	uint32 wanted_hardware_format;

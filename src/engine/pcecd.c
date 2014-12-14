@@ -725,7 +725,7 @@ pce_cd_handle_write_1800(uint16 A, uchar V)
 #endif
 		}
 		/* TEST
-		   else { io.adpcm_rptr = io.adpcm_ptr.W; io.adpcm_firstread = TRUE; }
+		   else { io.adpcm_rptr = io.adpcm_ptr.W; io.adpcm_firstread = 1; }
 		 */
 		/* TEST */
 		// if (V & 0x08) io.

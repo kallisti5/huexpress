@@ -82,7 +82,7 @@ InitSound(void)
 	silent = 1;
 
 	if (smode == 0)				// No sound
-		return TRUE;
+		return 1;
 
 /* SDL Audio / Mixer Begin */
 /*
