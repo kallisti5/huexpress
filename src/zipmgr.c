@@ -28,6 +28,19 @@ zipmgr_probe_file(char* zipFilename, char* foundGameFile)
 		ZIP_FL_UNCHANGED);
 
 	zip_int64_t position;
+	// First scan through entire zip for an HCD
+	for (position = 0; position < numberOfFiles; position++) {
+		const char* filename = zip_get_name(zipHandle, position, 0);
+		if (strcasestr(filename, ".HCD")) {
+			MESSAGE_INFO("Found a valid cd game definition within zip file: "
+				"%s\n", filename);
+			strncpy(foundGameFile, filename, PATH_MAX);
+			zip_close(zipHandle);
+			return ZIP_HAS_HCD;
+		}
+	}
+
+	// Then scan zip for PCE or ISO
 	for (position = 0; position < numberOfFiles; position++) {
 		const char* filename = zip_get_name(zipHandle, position, 0);
 		if (strcasestr(filename, ".PCE")) {
@@ -36,13 +49,6 @@ zipmgr_probe_file(char* zipFilename, char* foundGameFile)
 			strncpy(foundGameFile, filename, PATH_MAX);
 			zip_close(zipHandle);
 			return ZIP_HAS_PCE;
-		}
-		if (strcasestr(filename, ".HCD")) {
-			MESSAGE_INFO("Found a valid cd game definition within zip file: "
-				"%s\n", filename);
-			strncpy(foundGameFile, filename, PATH_MAX);
-			zip_close(zipHandle);
-			return ZIP_HAS_HCD;
 		}
 		if (strcasestr(filename, ".ISO")) {
 			MESSAGE_INFO("Found an ISO within the zip file: %s\n",
