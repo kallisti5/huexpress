@@ -13,14 +13,15 @@
 # and converts them into a HCD enabled zip archive.
 
 # This tool makes a few assumptions:
-#   Tracks are in order starting at 01.
+#   Tracks are in order starting at 01, Track01, etc
+#   No "extra mp3's or iso's are in the archive"
 #   Tracks are already broken apart and audio compressed as mp3 or ogg
 #   Game name is in the title of the archive.
 #   Archive is a zip or a rar
 
 # The output of this tool can be a little rough, it is
 # made to assit converting a large number of games into
-# a common HCD format. YMMV
+# a common HCD format that contain game metadata. YMMV
 
 if [ $# -ne 2 ]; then
 	echo "Usage: $0 <search path> <out path>"
