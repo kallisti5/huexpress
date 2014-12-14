@@ -21,19 +21,13 @@
 #define __CLEANTYPES_H
 
 
-#ifdef TRUE
-#undef TRUE
+#ifndef FALSE
+#   define FALSE    0
+#endif
+#ifndef TRUE
+#   define TRUE     1
 #endif
 
-#ifdef FALSE
-#undef FALSE
-#endif
-
-typedef enum
-{
-	FALSE,
-	TRUE
-} boolean;
 
 /*
  * Set datatype sizes

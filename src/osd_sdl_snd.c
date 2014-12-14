@@ -9,8 +9,8 @@
 Uint8 *stream;
 Mix_Chunk *chunk;
 SDL_AudioCVT cvt;
-boolean Callback_Stop;
-boolean USE_S16;
+bool Callback_Stop;
+bool USE_S16;
 
 
 void

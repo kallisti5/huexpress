@@ -86,7 +86,7 @@ PCEngine::InitPaths()
 
 	if (getenv("HOME")) {
 		#ifdef __HAIKU__
-		snprintf(config_basepath, PATH_MAX, "%s/config/huexpress", getenv("HOME"));
+		snprintf(config_basepath, PATH_MAX, "%s/config/settings/huexpress", getenv("HOME"));
 		#else
 		snprintf(config_basepath, PATH_MAX, "%s/.huexpress", getenv("HOME"));
 		#endif

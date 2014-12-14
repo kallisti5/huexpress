@@ -226,7 +226,7 @@ sdl_config_joypad_axis(short which, joymap axis, uint16 * bad_axes,
 	uint16 num_axes) {
 
 	uchar t;
-	boolean done = FALSE;
+	bool done = FALSE;
 
 	while (1) {
 		if (read (fileno (stdin), &t, 1) == -1)
@@ -289,7 +289,7 @@ sdl_config_joypad_button (short which, joymap button, uint16 * bad_buttons,
 	uint16 num_buttons)
 {
 	uchar t;
-	boolean done = FALSE;
+	bool done = FALSE;
 
 	while (1) {
 		if (read (fileno (stdin), &t, 1) == -1)

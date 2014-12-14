@@ -1897,13 +1897,9 @@ InitPCE(char *name)
 		}
 	}
 
-	char home_directory[256];
-
-	strcpy(home_directory, getenv("HOME"));
-
 	switch (CD_emulation) {
 	case 0:
-		sprintf(sav_path, "%s/.huexpress/%ssav", home_directory,
+		sprintf(sav_path, "%s/%ssav", config_basepath,
 				short_cart_name);
 		break;
 	case 1:
