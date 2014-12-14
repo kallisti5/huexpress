@@ -17,7 +17,7 @@ void
 osd_snd_set_volume(uchar v)
 {
 	#if ENABLE_TRACING_SND
-	TRACE("Sound: Set Volume %c\n", vol);
+	TRACE("Sound: Set Volume 0x%X\n", v);
 	#endif
 
 	Uint8 vol;

@@ -313,8 +313,8 @@ fill_HCD_info(char *name)
 void
 HCD_pause_playing()
 {
-	if (MP3_playing)
-		MP3_playing = 0;
+	if (Mix_PlayingMusic())
+		Mix_HaltMusic();
 };
 
 
@@ -342,7 +342,6 @@ HCD_play_track(uchar track, char repeat)
 			|| (strcasestr(CD_track[track].filename, ".ogg"))
 			|| (strcasestr(CD_track[track].filename, ".wav"))) {
 			Mix_PlayMusic(sdlmixmusic[track], repeat);
-			MP3_playing = 1;
 		}
 		break;
 	}
@@ -436,7 +435,6 @@ HCD_play_sectors(int begin_sect, int sect_len, char repeat)
 			   the beginning of the track */
 			HCD_current_played_track = result;
 			HCD_current_subtitle = 0;
-			MP3_playing = 1;
 		} else if (strcasestr(CD_track[result].filename, ".WAV")) {
 			// TODO: There was only an MSDOS case here? :(
 		}

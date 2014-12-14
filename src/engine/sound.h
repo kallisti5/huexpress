@@ -50,9 +50,6 @@ extern uint32 dwNewPos;
 
 extern uint32 AdpcmFilledBuf;
 
-extern char MP3_playing;
-// is MP3 playing ?
-
 int InitSound(void);
 void TrashSound(void);
 void write_psg(int ch);
