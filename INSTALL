@@ -9,10 +9,10 @@ You need :
 - scons
 - libzip development libraries
 
-Those were very common and you're extremely likely to already have them.
+Those are very common and you likely already have them.
 
 - sdl2 development library
-- sdl2_ttf development library
+- sdl2_mixer development library
 
 Then, run 'scons' to begin the build process.
 
@@ -33,6 +33,8 @@ You need :
 You need gcc4 versions of:
 - sdl2_devel
 - sdl2
+- sdl2_mixer
+- sdl2_mixer_devel
 - libzip
 
 Windows development environment

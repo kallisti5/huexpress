@@ -6,8 +6,8 @@
                                        |__|
 
                 CoreGrafx / PC Engine / TurboGrafx-16 Emulator
-                               Version 3.0.2
-                            December 13th, 2014
+                               Version 3.0.3
+                            September 9th, 2015
 
 --[ DISCLAIMER ]-------------------------------------------------------------
 
@@ -77,6 +77,10 @@
 
     -- SDL 2.0 or later
 
+    -- SDL Mixer 2.0 or later
+
+    -- libzip
+
     -- A graphics card that supports OpenGL (or software OpenGL)
 
     -- A sound card (only if you want to hear sound, of course).
@@ -86,6 +90,7 @@
        -- Linux
        -- FreeBSD (untested, patches welcome)
        -- Haiku
+       -- Mac OS X (homebrew)
 
 --[ KNOWN ISSUES / BUGS ] ---------------------------------------------------
 

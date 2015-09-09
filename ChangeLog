@@ -1,3 +1,5 @@
+- HuExpress 3.0.3
+  * Early Mac OS X support
 - HuExpress 3.0.2
   * Greatly improved tool script to backup CD-ROM2 Discs to HCD archives
   * New iso2hcd tool to convert iso/cue images into HCD archives

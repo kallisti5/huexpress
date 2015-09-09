@@ -30,16 +30,16 @@ if not conf.CheckPKG('sdl2'):
 env = conf.Finish()
 
 env.Append(CPPPATH = ['#src/includes/', '#src/engine/'])
-env.Append(LIBS = ['-lSDL2_mixer', '-lvorbisfile'])
+env.Append(LIBS = ['SDL2_mixer', 'vorbisfile'])
 if env['PLATFORM'] == 'darwin':
     env.Append(FRAMEWORKS = ['OpenGL'])
 else:
-    env.Append(LIBS = ['-lGL', '-GLu'])
+    env.Append(LIBS = ['GL', 'GLU'])
 env.Append(CFLAGS = ['-g'])
 env.Append(LINKFLAGS = ['-g'])
 env.Append(CPPDEFINES={'VERSION_MAJOR' : '3'})
 env.Append(CPPDEFINES={'VERSION_MINOR' : '0'})
-env.Append(CPPDEFINES={'VERSION_UPDATE' : '2'})
+env.Append(CPPDEFINES={'VERSION_UPDATE' : '3'})
 
 Export("env")
 SConscript('src/SConscript')
