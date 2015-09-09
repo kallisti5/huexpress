@@ -9,7 +9,7 @@
 
 #include "romdb.h"
 
-#if defined(__linux__)
+#if defined(__linux__) || defined(__APPLE__)
 #include <limits.h>
 #endif
 #include <stdlib.h>

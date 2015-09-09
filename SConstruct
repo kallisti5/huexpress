@@ -30,7 +30,11 @@ if not conf.CheckPKG('sdl2'):
 env = conf.Finish()
 
 env.Append(CPPPATH = ['#src/includes/', '#src/engine/'])
-env.Append(LIBS = ['-lSDL2_mixer', '-lvorbisfile', '-lGL', '-lGLU'])
+env.Append(LIBS = ['-lSDL2_mixer', '-lvorbisfile'])
+if env['PLATFORM'] == 'darwin':
+    env.Append(FRAMEWORKS = ['OpenGL'])
+else:
+    env.Append(LIBS = ['-lGL', '-GLu'])
 env.Append(CFLAGS = ['-g'])
 env.Append(LINKFLAGS = ['-g'])
 env.Append(CPPDEFINES={'VERSION_MAJOR' : '3'})

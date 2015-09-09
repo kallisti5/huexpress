@@ -371,7 +371,9 @@ osd_gfx_glinit(struct generic_rect* viewport)
 	glDisable(GL_ALPHA_TEST);
 	glDisable(GL_BLEND);
 	glDisable(GL_LIGHTING);
+#if !defined(__APPLE__)
 	glDisable(GL_TEXTURE_3D_EXT);
+#endif
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 

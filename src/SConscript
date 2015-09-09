@@ -49,11 +49,16 @@ engine_sources = [
 	'engine/trans_fx.c'
 ]
 
-if env['PLATFORM'] in ('posix', 'linux', 'freebsd', 'darwin'):
+if env['PLATFORM'] in ('posix', 'linux', 'freebsd'):
 	main_sources += [
 		'osd_linux_cd.c',
 		'osd_keyboard.c',
 	]
+elif env['PLATFORM'] in ('darwin'):
+   main_sources += [
+       'osd_dummy_cd.c',
+       'osd_keyboard.c',
+   ]
 elif env['PLATFORM'] in ('haiku'):
 	main_sources += [
 		'osd_haiku_cd.c',
