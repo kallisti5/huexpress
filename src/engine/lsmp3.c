@@ -40,7 +40,7 @@
 #include <stdarg.h>
 #include <string.h>
 #include <ctype.h>
-#if defined(__linux__)
+#if defined(__linux__) || defined(__APPLE__)
 #include <limits.h>
 #endif
 #include <assert.h>

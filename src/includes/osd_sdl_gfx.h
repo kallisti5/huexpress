@@ -6,7 +6,11 @@
 
 #include <SDL.h>
 #include <SDL_endian.h>
+#if defined(__APPLE__)
+#include <OpenGL/glu.h>
+#else
 #include <GL/glu.h>
+#endif
 
 extern uchar *OSD_MESSAGE_SPR;
 
