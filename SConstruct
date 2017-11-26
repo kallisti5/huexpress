@@ -21,10 +21,10 @@ conf = Configure(env, custom_tests = { 'CheckPKGConfig' : CheckPKGConfig,
 	'CheckPKG' : CheckPKG })
 
 if not conf.CheckPKGConfig('0.15.0'):
-	print 'pkg-config >= 0.15.0 not found.'
+	print('pkg-config >= 0.15.0 not found.')
 	Exit(1)
 if not conf.CheckPKG('sdl2'):
-	print 'sdl 2.x not found.'
+	print('sdl 2.x not found.')
 	Exit(1)
 
 env = conf.Finish()
