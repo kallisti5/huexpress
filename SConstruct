@@ -38,7 +38,7 @@ env.Append(CFLAGS = ['-g'])
 env.Append(LINKFLAGS = ['-g'])
 env.Append(CPPDEFINES={'VERSION_MAJOR' : '3'})
 env.Append(CPPDEFINES={'VERSION_MINOR' : '0'})
-env.Append(CPPDEFINES={'VERSION_UPDATE' : '3'})
+env.Append(CPPDEFINES={'VERSION_UPDATE' : '4'})
 
 Export("env")
 SConscript('src/SConscript')
