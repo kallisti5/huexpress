@@ -30,7 +30,6 @@ if not conf.CheckPKG('sdl2'):
 env = conf.Finish()
 
 env.Append(CPPPATH = ['#src/includes/', '#src/engine/'])
-env.Append(LIBS = ['SDL2_mixer', 'vorbisfile'])
 if env['PLATFORM'] == 'darwin':
     env.Append(FRAMEWORKS = ['OpenGL'])
 else:

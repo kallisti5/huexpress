@@ -74,6 +74,7 @@ program_sources = [
 huexpress = env.Clone()
 huexpress.ParseConfig('pkg-config --cflags --libs sdl2')
 huexpress.ParseConfig('pkg-config --cflags --libs SDL2_mixer')
+huexpress.ParseConfig('pkg-config --cflags --libs vorbisfile')
 huexpress.ParseConfig('pkg-config --cflags --libs --static libzip')
 huexpress.Program(target = 'huexpress', source = program_sources)
 huexpress.Program(target = 'hucrc', source = ['hucrc.c', 'utils.c', 'engine/romdb.c'])
