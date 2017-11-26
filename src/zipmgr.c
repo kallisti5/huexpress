@@ -10,6 +10,7 @@
 #include "zipmgr.h"
 
 #include <zip.h>
+#include <sys/stat.h>
 
 #include "debug.h"
 

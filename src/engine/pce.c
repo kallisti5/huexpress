@@ -1407,7 +1407,7 @@ search_possible_syscard()
 	MESSAGE_INFO("We need a syscard to load a CD, begining search...\n");
 	FILE *f;
 
-	char* config_path[PATH_MAX];
+	char config_path[PATH_MAX];
 	snprintf(config_path, PATH_MAX, "%s/", config_basepath);
 
 #if defined(__haiku__)
@@ -2181,7 +2181,7 @@ InitPCE(char *name)
 	ROMMapW[0xFF] = IOAREA;
 
 	{
-		char* backupmem[PATH_MAX];
+		char backupmem[PATH_MAX];
 		snprintf(backupmem, PATH_MAX, "%s/backupmem.bin", config_basepath);
 
 		FILE *fp;
@@ -2245,7 +2245,7 @@ TrashPCE()
 	FILE *fp;
 	char *tmp_buf = (char *) alloca(256);
 
-	char* backupmem[PATH_MAX];
+	char backupmem[PATH_MAX];
 	snprintf(backupmem, PATH_MAX, "%s/backupmem.bin", config_basepath);
 
 	// Save the backup ram into file
