@@ -13,6 +13,7 @@ Those are very common and you likely already have them.
 
 - sdl2 development library
 - sdl2_mixer development library
+- libvorbis development library
 
 Then, run 'scons' to begin the build process.
 
@@ -36,6 +37,8 @@ You need gcc4 versions of:
 - sdl2_mixer
 - sdl2_mixer_devel
 - libzip
+- libvorbis
+- libvorbis_devel
 
 Windows development environment
 ===================================
