@@ -11,29 +11,32 @@
  */
 
 #include <sys/stat.h>
+#include <stdlib.h>
 
 #include "PCEngine.h"
 
+static void PCEngine_InitPaths(struct PCEngine *engine);
 
-PCEngine::PCEngine()
-	:
-	fReady(0),
-	fOptions(&option)
+
+void PCEngine_init(struct PCEngine* engine)
 {
-	fOptions->want_fullscreen = 0;
-	fOptions->want_fullscreen_aspect = 0;
-	fOptions->configure_joypads = 0;
+	engine->fReady = 0;
+	engine->fOptions = calloc(1, sizeof(*engine->fOptions));
+
+	engine->fOptions->want_fullscreen = 0;
+	engine->fOptions->want_fullscreen_aspect = 0;
+	engine->fOptions->configure_joypads = 0;
 
 	// 2 is a good default multiplier for modern desktops
-	fOptions->window_size = 2;
+	engine->fOptions->window_size = 2;
 
 #if defined(ENABLE_NETPLAY)
-	fOptions->local_input_mapping[0] = 0;
-	fOptions->local_input_mapping[1] = 1;
-	fOptions->local_input_mapping[2] = -1;
-	fOptions->local_input_mapping[3] = -1;
-	fOptions->local_input_mapping[4] = -1;
-	strcpy(fOptions.server_hostname, "localhost");
+	engine->fOptions->local_input_mapping[0] = 0;
+	engine->fOptions->local_input_mapping[1] = 1;
+	engine->fOptions->local_input_mapping[2] = -1;
+	engine->fOptions->local_input_mapping[3] = -1;
+	engine->fOptions->local_input_mapping[4] = -1;
+	strcpy(engine->fOptions.server_hostname, "localhost");
 #endif
 
 	/*
@@ -41,7 +44,7 @@ PCEngine::PCEngine()
 	 * gives us.  This frequency will get us really close to the original
 	 * pc engine sound behaviour.
 	 */
-	fOptions->want_snd_freq = 21963;
+	engine->fOptions->want_snd_freq = 21963;
 
 	// Create the log file
 	init_log_file();
@@ -64,23 +67,24 @@ PCEngine::PCEngine()
 		return;
 	}
 
-	InitPaths();
+	PCEngine_InitPaths(engine);
 
-	fReady = 1;
+	engine->fReady = 1;
 }
 
 
-PCEngine::~PCEngine()
+void PCEngine_deinit(struct PCEngine *engine)
 {
 	osd_shutdown_input();
 
 	// Deinitialise the host machine
 	osd_shut_machine();
+	free(engine->fOptions);
 }
 
 
-void
-PCEngine::InitPaths()
+static void
+PCEngine_InitPaths(struct PCEngine *engine)
 {
 	// Populate paths for emulation engine
 
@@ -114,7 +118,7 @@ PCEngine::InitPaths()
 
 
 int
-PCEngine::LoadFile(char* file)
+PCEngine_LoadFile(struct PCEngine *engine, char* file)
 {
 	if (InitPCE(file) != 0) {
 		MESSAGE_ERROR("Unable to load file %s!\n", file);
@@ -126,7 +130,7 @@ PCEngine::LoadFile(char* file)
 
 
 void
-PCEngine::Run()
+PCEngine_Run(struct PCEngine *engine)
 {
 	if (!(*osd_gfx_driver_list[video_driver].init) ())
 		MESSAGE_ERROR("Can't set graphic resolution\n");

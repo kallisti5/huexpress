@@ -12,33 +12,21 @@
 #ifndef _PCENGINE_H
 #define _PCENGINE_H
 
-extern "C" {
 #include "debug.h"
 #include "pce.h"
 #include "iniconfig.h"
-}
 
-
-class PCEngine {
-
-public:
-						PCEngine();
-						~PCEngine();
-
-	int					LoadFile(char* file);
-	void				Run();
-
-	int					isReady() { return fReady; };
-
-private:
-
-	void				InitPaths();
-
-	int					fReady;
-
-	struct host_machine	fHost;
-	struct hugo_options*	fOptions;
+struct PCEngine {
+	int fReady;
+	struct host_machine  fHost;
+	struct hugo_options* fOptions;
 };
 
+void PCEngine_init(struct PCEngine *);
+void PCEngine_deinit(struct PCEngine *);
+
+int PCEngine_LoadFile(struct PCEngine *, char* file);
+void PCEngine_Run(struct PCEngine *);
+static inline int PCEngine_isReady(struct PCEngine * thIs) { return thIs->fReady; };
 
 #endif

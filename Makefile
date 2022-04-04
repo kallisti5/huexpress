@@ -1,8 +1,6 @@
-CXX_SRCS = \
-	src/huexpress.cpp \
-	src/PCEngine.cpp \
-
 MAIN_SRCS = \
+	src/huexpress.c \
+	src/PCEngine.c \
 	src/iniconfig.c \
 	src/utils.c \
 	src/view_inf.c \
@@ -57,7 +55,6 @@ PLATFORM_SRCS_HAIKU = \
 
 SRCS = $(MAIN_SRCS) $(SDL_SRCS) $(ENGINE_SRCS) $(PLATFORM_SRCS)
 OBJS = $(SRCS:%.c=%.o)
-CXX_OBJS = $(CXX_SRCS:%.cpp=%.o)
 
 PKG_CONFIG ?= pkg-config
 
@@ -75,13 +72,13 @@ CPPFLAGS += -Isrc/includes -Isrc/engine $(REQ_FLAGS) \
 
 all: huexpress hucrc
 
-huexpress : $(OBJS) $(CXX_OBJS)
-	$(CXX) $(CXXFLAGS) $(CFLAGS) -o $@ $^ $(REQ_FLAGS) -lGL $(LDFLAGS)
+huexpress : $(OBJS)
+	$(CC) $(CFLAGS) -o $@ $^ $(REQ_FLAGS) -lGL $(LDFLAGS)
 
 hucrc: src/hucrc.c src/utils.c src/engine/romdb.c
 	$(CC) $(CPPFLAGS) $(CFLAGS) -o $@ $^
 
 clean:
-	rm -f $(CXXOBJS) $(OBJS) huexpress hucrc
+	rm -f $(OBJS) huexpress hucrc
 
 .PHONY: all clean
