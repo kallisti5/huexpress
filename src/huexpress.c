@@ -18,16 +18,23 @@ main(int argc, char *argv[])
 {
 	// Create a new PC Engine
 	struct PCEngine eng, *engine = &eng;
+
+	InitPaths();
+	// Create the log file
+	init_log_file();
+
+	// Read configuration in ini file
+	parse_INIfile();
+
+	// Read the command line
+	if (parse_commandline(argc, argv) != 0) {
+		return 1;
+	}
+
 	PCEngine_init(engine);
 
 	if (!PCEngine_isReady(engine)) {
 		MESSAGE_ERROR("PC Engine is not ready!\n");
-		return 1;
-	}
-
-	// Read the command line
-	if (parse_commandline(argc, argv) != 0) {
-		PCEngine_deinit(engine);
 		return 1;
 	}
 

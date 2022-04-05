@@ -15,9 +15,6 @@
 
 #include "PCEngine.h"
 
-static void PCEngine_InitPaths(struct PCEngine *engine);
-
-
 void PCEngine_init(struct PCEngine* engine)
 {
 	engine->fReady = 0;
@@ -46,14 +43,8 @@ void PCEngine_init(struct PCEngine* engine)
 	 */
 	engine->fOptions->want_snd_freq = 21963;
 
-	// Create the log file
-	init_log_file();
-
 	// Init the random seed
 	srand((unsigned int) time(NULL));
-
-	// Read configuration in ini file
-	parse_INIfile();
 
 	// Initialise the host machine
 	if (!osd_init_machine()) {
@@ -66,8 +57,6 @@ void PCEngine_init(struct PCEngine* engine)
 		MESSAGE_ERROR("Unable to initialize input subsystem!\n");
 		return;
 	}
-
-	PCEngine_InitPaths(engine);
 
 	engine->fReady = 1;
 }
@@ -83,8 +72,8 @@ void PCEngine_deinit(struct PCEngine *engine)
 }
 
 
-static void
-PCEngine_InitPaths(struct PCEngine *engine)
+void
+InitPaths(void)
 {
 	// Populate paths for emulation engine
 

@@ -16,6 +16,8 @@
 #include "pce.h"
 #include "iniconfig.h"
 
+void InitPaths(void);
+
 struct PCEngine {
 	int fReady;
 	struct host_machine  fHost;
