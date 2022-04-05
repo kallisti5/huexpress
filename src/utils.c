@@ -43,7 +43,7 @@
  *****************************************************************************/
 
 char log_filename[PATH_MAX];
-// real filename of the logging file
+// real filename of the logging file, may be "-" for stdout
 // it thus also includes full path on advanced system
 
 void
@@ -57,12 +57,13 @@ Log(char *format, ...)
 	vsprintf (buf, format, ap);
 	va_end (ap);
 
-	if (!(log_file = fopen (log_filename, "at")))
-		return;
+	if (!strcmp(log_filename, "-") ||
+	    !(log_file = fopen (log_filename, "at")))
+		log_file = stdout;
 
 	fprintf (log_file, buf);
 	fflush (log_file);
-	fclose (log_file);
+	if (log_file != stdout) fclose (log_file);
 }
 
 
