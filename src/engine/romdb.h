@@ -40,7 +40,7 @@ extern struct rom_database kKnownRoms[KNOWN_ROM_COUNT];
 
 
 unsigned long filesize(FILE * F);
-uint32 CRC_file(char *name);
-
+uint32 CRC_mem(uchar *data, uint32 dlen);
+uint32 CRC_file(char *fn);
 
 #endif /* _ROMDB_H */

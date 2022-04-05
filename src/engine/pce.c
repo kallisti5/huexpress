@@ -1928,7 +1928,7 @@ InitPCE(char *name)
 	/* TEST */
 	io.screen_w = 256;
 
-	uint32 CRC = CRC_file(rom_file_name);
+	uint32 CRC = CRC_mem(ROM, ROM_size*0x2000);
 
 	/* I'm doing it only here 'coz cartload set
 	   true_file_name       */

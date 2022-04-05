@@ -491,32 +491,38 @@ unsigned long pack_filesize(PACKFILE *F)
 #endif
 
 uint32
-CRC_file(char *name)
+CRC_mem(uchar *data, uint32 dlen)
 {
-	FILE *F = fopen(name, "rb");
 	uchar *tmp_data;
-	uint32 taille, index, CRC = -1, true_size;
+	uint32 taille, index, CRC = -1, true_size, off = 0;
 
-	if (!F)
-		return -1;
-
-	taille = filesize(F);
+	taille = dlen;
 	true_size = taille & 0xFFFFF000;
 	if (taille & 0x0FFF) {
-		//fprintf(stderr,"HEADER OF 0X%X BYTES\n",taille & 0x0FFF);
-		fseek(F, taille & 0x0FFF, SEEK_SET);
+		off = taille & 0x0FFF;
 	}
-	if (!(tmp_data = (uchar *) (malloc(true_size))))
-		exit(-1);
-	fread(tmp_data, true_size, 1, F);
 	for (index = 0; index < true_size; index++) {
-		tmp_data[index] ^= CRC;
+		uchar tmp = data[off+index] ^ CRC;
 		CRC >>= 8;
-		CRC ^= TAB_CONST[tmp_data[index]];
+		CRC ^= TAB_CONST[tmp];
 	}
-	free(tmp_data);
 	CRC = ~CRC;
-//      fprintf(stderr,"CRC = 0X%lX\n",CRC);
-	fclose(F);
 	return CRC;
+}
+
+uint32 CRC_file(char *fn) {
+	FILE *f = fopen(fn, "rb");
+	uint32 fs, crc;
+	uchar *tmp_data;
+	if(!f) return -1U;
+	fs = filesize(f);
+	if (!(tmp_data = malloc(fs))) {
+		fclose(f);
+		return -1U;
+	}
+	fread(tmp_data, fs, 1, f);
+	crc = CRC_mem(tmp_data, fs);
+	fclose(f);
+	free(tmp_data);
+	return crc;
 }
