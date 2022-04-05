@@ -565,7 +565,7 @@ osd_keyboard (void)
 					//}
 
 					case SDLK_F9:
-						SDL_ShowCursor(ToggleFullScreen());
+						ToggleFullScreen();
 						break;
 
 					case SDLK_ESCAPE:

@@ -17,6 +17,7 @@ SDL_Renderer *sdlRenderer = NULL;
 SDL_Window *sdlWindow = NULL;
 //! PC Engine rendered screen
 static SDL_Texture *sdlTexture;
+static int fullscreen;
 
 int blit_x, blit_y;
 // where must we blit the screen buffer on screen
@@ -169,8 +170,10 @@ osd_gfx_init_normal_mode()
 
 	uint32 windowFlags = SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL;
 
-	if (option.want_fullscreen) 
+	if (option.want_fullscreen) {
 		windowFlags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
+		fullscreen = 1;
+	}
 
 	sdlWindow = SDL_CreateWindow("HuExpress", SDL_WINDOWPOS_UNDEFINED,
 		SDL_WINDOWPOS_UNDEFINED, viewport.end_x, viewport.end_y, windowFlags);
@@ -309,25 +312,12 @@ osd_gfx_blit()
 int
 ToggleFullScreen(void)
 {
-	// TODO: Fix FullScreen
-	return 1;
-
-	struct generic_rect rect;
-	uint32 sdlFlags = SDL_GetWindowFlags(sdlWindow);
-
 	SDL_PauseAudio(SDL_ENABLE);
-
-	SetPalette();
-
-#if 0
-	// FIXME: change this to get window size from sdlWindow
-	calc_fullscreen_aspect(screen->w, screen->h, &rect,
-		io.screen_w, io.screen_h);
-#endif
-
+	SDL_SetWindowFullscreen(sdlWindow, fullscreen ? 0 : SDL_WINDOW_FULLSCREEN);
+	fullscreen = !fullscreen;
 	SDL_PauseAudio(SDL_DISABLE);
-
-	return (sdlFlags & SDL_WINDOW_FULLSCREEN) ? 0 : 1;
+	SDL_ShowCursor(!fullscreen);
+	return fullscreen;
 }
 
 
