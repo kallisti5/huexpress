@@ -34,41 +34,25 @@
 #define TRACE(x...)
 #endif
 
-
-typedef struct {
-	uchar r, g, b;
-} rgb_map_struct;
-
 rgb_map_struct rgb_map[256];
 
 
 void
 SetPalette(void)
 {
-	uchar i;
+	int i;
 
-	osd_gfx_set_color(255, 0x3f, 0x3f, 0x3f);
 	rgb_map[255].r = 255;
 	rgb_map[255].b = 255;
 	rgb_map[255].g = 255;
+	rgb_map[255].a = 0;
 
 	for (i = 0; i < 255; i++) {
-		osd_gfx_set_color(i, (i & 0x1C) << 1, (i & 0xe0) >> 2,
-			(i & 0x03) << 4);
 		rgb_map[i].r = (i & 0x1C) << 3;
 		rgb_map[i].g = (i & 0xe0);
 		rgb_map[i].b = (i & 0x03) << 6;
+		rgb_map[i].a = 0;
 	}
-
-#if defined(SDL)
-	for (i = 0; i < 255; i++) {
-		int r, g, b;
-		r = (i & 0x1C) << 3;
-		g = (i & 0xe0);
-		b = (i & 0x03) << 6;
-	}
-#endif
-
 }
 
 
@@ -525,6 +509,19 @@ dump_rgb_frame(char *output_buffer)
 			*(output_buffer++) = (char) rgb_map[*xbuf_pointer].g;
 			*(output_buffer++) = (char) rgb_map[*xbuf_pointer].b;
 		}
+}
+
+void
+dump_rgb_frame32(uint32_t *output_buffer)
+{
+	int x, y;
+	uchar *xbuf_pointer;
+
+	xbuf_pointer = osd_gfx_buffer;
+
+	for (y = 0; y < io.screen_h; y++, xbuf_pointer += XBUF_WIDTH - io.screen_w)
+		for (x = 0; x < io.screen_w; x++, xbuf_pointer++)
+			*(output_buffer++) = rgb_map[*xbuf_pointer].u;
 }
 
 

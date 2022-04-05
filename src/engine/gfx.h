@@ -1,6 +1,7 @@
 #ifndef _GFX_H_
 #define _GFX_H_
 
+#include <stdint.h>
 #include <SDL.h>
 
 #include "sys_dep.h"
@@ -40,6 +41,15 @@ typedef struct {
 } gfx_context;
 
 
+typedef struct {
+	union {
+		struct { uchar b, g, r, a; };
+		uint32_t u;
+	};
+} rgb_map_struct;
+
+extern rgb_map_struct rgb_map[256];
+
 extern SDL_Surface *physical_screen;
 extern SDL_Rect physical_screen_rect;
 extern SDL_Color olay_cmap[256];
@@ -61,6 +71,7 @@ void stop_dump_video();
 void dump_video_frame();
 
 void dump_rgb_frame(char *output_buffer);
+void dump_rgb_frame32(uint32_t *output_buffer);
 
 uchar Loop6502();
 

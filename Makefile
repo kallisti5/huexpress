@@ -73,7 +73,7 @@ CPPFLAGS += -Isrc/includes -Isrc/engine $(REQ_FLAGS) \
 all: huexpress hucrc
 
 huexpress : $(OBJS)
-	$(CC) $(CFLAGS) -o $@ $^ $(REQ_FLAGS) -lGL $(LDFLAGS)
+	$(CC) $(CFLAGS) -o $@ $^ $(REQ_FLAGS) $(LDFLAGS)
 
 hucrc: src/hucrc.c src/utils.c src/engine/romdb.c
 	$(CC) $(CPPFLAGS) $(CFLAGS) -o $@ $^
