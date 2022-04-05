@@ -50,9 +50,7 @@ typedef struct {
 
 extern rgb_map_struct rgb_map[256];
 
-extern SDL_Surface *physical_screen;
 extern SDL_Rect physical_screen_rect;
-extern SDL_Color olay_cmap[256];
 
 extern int video_dump_flag;
 extern int gfx_need_video_mode_change;
