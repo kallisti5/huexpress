@@ -273,8 +273,8 @@ read_joy_mapping(void)
 char
 set_arg(char nb_arg, const char *val) {
 
-	if (!val && (nb_arg == 'i' || nb_arg == 't' || nb_arg == 'w'
-		|| nb_arg == 'c' || nb_arg == 'z')) {
+	if (!val && strchr("cdeimStuz", nb_arg))
+	{
 		MESSAGE_ERROR("No value provided for %c arg\n", nb_arg);
 		return 1;
 	}
