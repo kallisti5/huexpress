@@ -353,11 +353,17 @@ set_arg(char nb_arg, const char *val) {
 		"Usage: huexpress <GAME> [arguments]\n\n"
 		"Where <GAME> is an pce|iso|zip\n"
 		"Where [arguments] are:\n"
+		"	-a   Fullscreen aspect ratio mode\n"
 		"	-cX  Force CD Emulation mode X\n"
 		"	-dX  Debug (0-1)\n"
 		"	-eX  Eagle mode (0-1)\n"
 		"	-f   Fullscreen mode\n"
+		"	-h   Display this help screen\n"
+		"	-iX  Set iso filename to X\n"
+		"	-mX  Set minimum BIOS hooking X\n"
 		"	-SX  Scanline mode (0-1)\n"
+		"	-tX  Set number of tracks to X\n"
+		"	-uX  Set US card encoding X\n"
 		"	-zX  Zoom level X (1-4)\n"
 		"\n", VERSION_MAJOR, VERSION_MINOR, VERSION_UPDATE);
 		return 1;
