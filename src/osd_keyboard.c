@@ -563,7 +563,9 @@ osd_keyboard (void)
 					//	}
 					//	break;
 					//}
-
+					case SDLK_RETURN:
+						if(!(event.key.keysym.mod & KMOD_ALT)) break;
+						/* fall-through */
 					case SDLK_F9:
 						ToggleFullScreen();
 						break;
