@@ -397,8 +397,10 @@ parse_commandline(int argc, char **argv)
 		}
 	}
 
-	if (arg_error)
+	if (arg_error) {
+		set_arg('h', 0);
 		return 1;
+	}
 
 	video_driver = 0;
 
