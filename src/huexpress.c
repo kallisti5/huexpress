@@ -43,8 +43,10 @@ main(int argc, char *argv[])
 		VERSION_MAJOR, VERSION_MINOR, VERSION_UPDATE);
 
 	if (game_asked()) {
-		PCEngine_LoadFile(engine, cart_name);
-		PCEngine_Run(engine);
+		if(PCEngine_LoadFile(engine, cart_name))
+			MESSAGE_ERROR("failed to load %s\n", cart_name);
+		else
+			PCEngine_Run(engine);
 	} else {
 		MESSAGE_ERROR("No game specified\n");
 	}
