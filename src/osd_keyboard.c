@@ -447,7 +447,7 @@ sdl_init_joypads (void)
 		//      printf("joypad[%d] = %p\n", n, joypad[n]);
 
 		MESSAGE_INFO("PCE joypad %d: %s, %d axes, %d buttons\n",
-			n + 1, SDL_JoystickName (n), SDL_JoystickNumAxes (joypad[n]),
+			n + 1, SDL_JoystickNameForIndex (n), SDL_JoystickNumAxes (joypad[n]),
 			SDL_JoystickNumButtons (joypad[n]));
 
 	//      if (option.configure_joypads)
