@@ -1655,6 +1655,11 @@ CartLoad(char *name)
 
 	// Load PCE, we always load a PCE even with a cd (syscard)
 	FILE *fp = fopen(rom_file_name, "rb");
+
+	if (!fp) {
+		fprintf(stderr, "Couldn't load rom %s\n", rom_file_name);
+		return -1;
+	}
 	// find file size
 	fseek(fp, 0, SEEK_END);
 	int fsize = ftell(fp);
@@ -1928,7 +1933,7 @@ InitPCE(char *name)
 	/* TEST */
 	io.screen_w = 256;
 
-	uint32 CRC = CRC_file(rom_file_name);
+	uint32 CRC = CRC_mem(ROM, ROM_size*0x2000);
 
 	/* I'm doing it only here 'coz cartload set
 	   true_file_name       */

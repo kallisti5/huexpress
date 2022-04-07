@@ -17,16 +17,24 @@ int
 main(int argc, char *argv[])
 {
 	// Create a new PC Engine
-	PCEngine* engine = new PCEngine();
+	struct PCEngine eng, *engine = &eng;
 
-	if (!engine->isReady()) {
-		MESSAGE_ERROR("PC Engine is not ready!\n");
-		return 1;
-	}
+	InitPaths();
+	// Create the log file
+	init_log_file();
+
+	// Read configuration in ini file
+	parse_INIfile();
 
 	// Read the command line
 	if (parse_commandline(argc, argv) != 0) {
-		delete engine;
+		return 1;
+	}
+
+	PCEngine_init(engine);
+
+	if (!PCEngine_isReady(engine)) {
+		MESSAGE_ERROR("PC Engine is not ready!\n");
 		return 1;
 	}
 
@@ -35,12 +43,14 @@ main(int argc, char *argv[])
 		VERSION_MAJOR, VERSION_MINOR, VERSION_UPDATE);
 
 	if (game_asked()) {
-		engine->LoadFile(cart_name);
-		engine->Run();
+		if(PCEngine_LoadFile(engine, cart_name))
+			MESSAGE_ERROR("failed to load %s\n", cart_name);
+		else
+			PCEngine_Run(engine);
 	} else {
 		MESSAGE_ERROR("No game specified\n");
 	}
 
-	delete engine;
+	PCEngine_deinit(engine);
 	return 0;
 }

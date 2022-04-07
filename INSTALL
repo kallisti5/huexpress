@@ -7,6 +7,8 @@ Linux development environment
 You need :
 - gcc (gcc-3.0 or later) or clang
 - scons
+  (there's an alternative GNU make Makefile, which is not officially supported,
+  it may or may not work)
 - libzip development libraries
 
 Those are very common and you likely already have them.

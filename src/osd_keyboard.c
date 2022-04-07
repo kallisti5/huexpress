@@ -447,7 +447,7 @@ sdl_init_joypads (void)
 		//      printf("joypad[%d] = %p\n", n, joypad[n]);
 
 		MESSAGE_INFO("PCE joypad %d: %s, %d axes, %d buttons\n",
-			n + 1, SDL_JoystickName (n), SDL_JoystickNumAxes (joypad[n]),
+			n + 1, SDL_JoystickNameForIndex (n), SDL_JoystickNumAxes (joypad[n]),
 			SDL_JoystickNumButtons (joypad[n]));
 
 	//      if (option.configure_joypads)
@@ -563,9 +563,11 @@ osd_keyboard (void)
 					//	}
 					//	break;
 					//}
-
+					case SDLK_RETURN:
+						if(!(event.key.keysym.mod & KMOD_ALT)) break;
+						/* fall-through */
 					case SDLK_F9:
-						SDL_ShowCursor(ToggleFullScreen());
+						ToggleFullScreen();
 						break;
 
 					case SDLK_ESCAPE:

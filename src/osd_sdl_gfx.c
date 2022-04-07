@@ -15,15 +15,14 @@
 //! Host machine rendered screen
 SDL_Renderer *sdlRenderer = NULL;
 SDL_Window *sdlWindow = NULL;
-SDL_GLContext sdlGLContext;
-
 //! PC Engine rendered screen
-SDL_Surface *screen = NULL;
+static SDL_Texture *sdlTexture;
+static int fullscreen;
 
 int blit_x, blit_y;
 // where must we blit the screen buffer on screen
 
-uchar *XBuf;
+extern uchar *XBuf;
 // buffer for video flipping
 
 osd_gfx_driver osd_gfx_driver_list[3] = {
@@ -42,27 +41,6 @@ osd_gfx_dummy_func(void)
 	return;
 }
 
-
-static void
-Slock(SDL_Surface * screen)
-{
-	if (SDL_MUSTLOCK(screen)) {
-		if (SDL_LockSurface(screen) < 0) {
-			return;
-		}
-	}
-}
-
-
-static void
-Sulock(SDL_Surface * screen)
-{
-	if (SDL_MUSTLOCK(screen)) {
-		SDL_UnlockSurface(screen);
-	}
-}
-
-
 /*****************************************************************************
 
 		Function: osd_gfx_put_image_normal
@@ -77,12 +55,6 @@ Sulock(SDL_Surface * screen)
 void
 osd_gfx_put_image_normal(void)
 {
-	uint32 sdlFlags = SDL_GetWindowFlags(sdlWindow);
-
-	Slock(screen);
-	dump_rgb_frame(screen->pixels);
-	Sulock(screen);
-
 	osd_gfx_blit();
 }
 
@@ -198,8 +170,10 @@ osd_gfx_init_normal_mode()
 
 	uint32 windowFlags = SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL;
 
-	if (option.want_fullscreen) 
+	if (option.want_fullscreen) {
 		windowFlags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
+		fullscreen = 1;
+	}
 
 	sdlWindow = SDL_CreateWindow("HuExpress", SDL_WINDOWPOS_UNDEFINED,
 		SDL_WINDOWPOS_UNDEFINED, viewport.end_x, viewport.end_y, windowFlags);
@@ -210,15 +184,6 @@ osd_gfx_init_normal_mode()
 		return 0;
 	}
 
-	sdlGLContext = SDL_GL_CreateContext(sdlWindow);
-
-	if (sdlGLContext == NULL) {
-		MESSAGE_ERROR("SDL: %s failed at %s:%d - %s\n", __func__, __FILE__,
-			__LINE__, SDL_GetError());
-		return 0;
-	}
-
-	SDL_GL_MakeCurrent(sdlWindow, sdlGLContext);
 
 	sdlRenderer = SDL_CreateRenderer(sdlWindow, -1, SDL_RENDERER_ACCELERATED);
 	//sdlRenderer = SDL_CreateRenderer(sdlWindow, -1, SDL_RENDERER_SOFTWARE);
@@ -229,26 +194,15 @@ osd_gfx_init_normal_mode()
 		return 0;
 	}
 
-	SDL_GL_SetSwapInterval(1);
+	sdlTexture = SDL_CreateTexture(sdlRenderer, SDL_PIXELFORMAT_BGRA32,
+                        SDL_TEXTUREACCESS_STREAMING, io.screen_w, io.screen_h);
 
-	if (screen != NULL) {
-		SDL_FreeSurface(screen);
-		screen = NULL;
-	}
-
-	//screen = SDL_CreateRGBSurface(0, io.screen_w, io.screen_h,
-	//	32, 0x000000FF, 0x0000FF00, 0x00FF0000, 0);
-	screen = SDL_CreateRGBSurface(0, viewportWidth, viewportHeight,
-		32, 0x000000FF, 0x0000FF00, 0x00FF0000, 0);
-
-	if (screen == NULL) {
-		MESSAGE_ERROR("SDL: CreateRGBSurface failed at %s:%d - %s\n",
+	if (sdlTexture == NULL) {
+		MESSAGE_ERROR("SDL: SDL_CreateTexture failed at %s:%d - %s\n",
 			__FILE__, __LINE__, SDL_GetError());
 	}
 
-	osd_gfx_glinit(&viewport);
-
-	return (screen) ? 1 : 0;
+	return sdlTexture ? 1 : 0;
 }
 
 
@@ -256,8 +210,8 @@ osd_gfx_init_normal_mode()
 void
 osd_gfx_shut_normal_mode(void)
 {
-	SDL_FreeSurface(screen);
-	screen = NULL;
+	if (sdlTexture) SDL_DestroyTexture(sdlTexture);
+	sdlTexture = NULL;
 
 	if (sdlWindow != NULL)
 		SDL_DestroyWindow(sdlWindow);
@@ -337,108 +291,33 @@ osd_gfx_savepict()
 void
 osd_gfx_set_color(uchar index, uchar r, uchar g, uchar b)
 {
-	SDL_Color R;
-
-	r <<= 2;
-	g <<= 2;
-	b <<= 2;
-
-	R.r = r;
-	R.g = g;
-	R.b = b;
-
-	SDL_SetPaletteColors(screen->format->palette,
-		&R, 0, 1);
+	rgb_map[index].r = r;
+	rgb_map[index].g = g;
+	rgb_map[index].b = b;
 }
-
-
-void
-osd_gfx_glinit(struct generic_rect* viewport)
-{
-	glEnable( GL_TEXTURE_2D );
-
-	GLuint texture = 0;
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, option.linear_filter ? GL_LINEAR : GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-
-	glViewport(0, 0, viewport->end_x, viewport->end_y);
-	glDisable(GL_DEPTH_TEST);
-	glDisable(GL_ALPHA_TEST);
-	glDisable(GL_BLEND);
-	glDisable(GL_LIGHTING);
-#if !defined(__APPLE__)
-	glDisable(GL_TEXTURE_3D_EXT);
-#endif
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-
-	/*if (conf->video_mask_overscan) {
-	glOrtho(0.0, (GLdouble)screen->w,
-		(GLdouble)screen->h - (OVERSCAN_BOTTOM * scalefactor),
-		(GLdouble)(OVERSCAN_TOP * scalefactor), -1.0, 1.0);
-	}
-	else {*/
-	glOrtho(0.0, viewport->end_x, viewport->end_y, 0.0, -1.0, 1.0);
-	//}
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-}
-
 
 void
 osd_gfx_blit()
 {
-	Slock(screen);
-	// Edit the texture object's image data	using the information SDL_Surface gives us
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,
-		io.screen_w, io.screen_h, 0, GL_RGB, GL_UNSIGNED_BYTE,
-		screen->pixels);
-	Sulock(screen);
-
-	int X = 0;
-	int Y = 0;
-	int windowWidth = screen->w;
-	int windowHeight = screen->h;
-
-	glBegin(GL_QUADS) ;
-		glTexCoord2f(0, 0);
-		glVertex3f(X, Y, 0);
-		glTexCoord2f(1, 0);
-		glVertex3f(X + windowWidth, Y, 0);
-		glTexCoord2f(1, 1);
-		glVertex3f(X + windowWidth, Y + windowHeight, 0);
-		glTexCoord2f(0, 1);
-		glVertex3f(X, Y + windowHeight, 0);
-	glEnd();
-
-	SDL_GL_SwapWindow(sdlWindow);
+	void *pixels;
+	int pitch;
+	SDL_LockTexture(sdlTexture, NULL, &pixels, &pitch);
+	dump_rgb_frame32(pixels);
+	SDL_UnlockTexture(sdlTexture);
+	SDL_RenderCopy(sdlRenderer, sdlTexture, 0, 0);
+	SDL_RenderPresent(sdlRenderer);
 }
 
 
 int
 ToggleFullScreen(void)
 {
-	// TODO: Fix FullScreen
-	return 1;
-
-	struct generic_rect rect;
-	uint32 sdlFlags = SDL_GetWindowFlags(sdlWindow);
-
 	SDL_PauseAudio(SDL_ENABLE);
-
-	SetPalette();
-
-	calc_fullscreen_aspect(screen->w, screen->h, &rect,
-		io.screen_w, io.screen_h);
-
+	SDL_SetWindowFullscreen(sdlWindow, fullscreen ? 0 : SDL_WINDOW_FULLSCREEN);
+	fullscreen = !fullscreen;
 	SDL_PauseAudio(SDL_DISABLE);
-
-	return (sdlFlags & SDL_WINDOW_FULLSCREEN) ? 0 : 1;
+	SDL_ShowCursor(!fullscreen);
+	return fullscreen;
 }
 
 

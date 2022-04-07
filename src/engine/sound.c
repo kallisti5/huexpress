@@ -74,12 +74,13 @@ uint32 sbuf_size = 10 * 1024;
 int
 InitSound(void)
 {
-	for (silent = 0; silent < 6; silent++)
-		sbuf[silent] = (char *) calloc(sizeof(char), SBUF_SIZE_BYTE);
+	int i;
+	for (i = 0; i < 6; i++)
+		sbuf[i] = (char *) calloc(sizeof(char), SBUF_SIZE_BYTE);
 
 	adpcmbuf = (char *) calloc(sizeof(char), SBUF_SIZE_BYTE);
 
-	silent = 1;
+	silent = smode == 0;
 
 	if (smode == 0)				// No sound
 		return 1;
@@ -113,10 +114,8 @@ InitSound(void)
       SDL_PauseAudio(0);
 #endif
 
-      silent=0;
 	  Mix_Resume(-1);
 	  */
-	silent = 0;
 
 /* End of SDL Audio / Mixer */
 
@@ -124,14 +123,14 @@ InitSound(void)
 }
 
 
+/* Shut down sound  */
 void
 TrashSound(void)
-{								/* Shut down sound  */
-	uchar dum;
-
+{
+	int i;
 	if (!silent) {
-		for (dum = 0; dum < 6; dum++)
-			free(sbuf[dum]);
+		for (i = 0; i < 6; i++)
+			free(sbuf[i]);
 
 		free(adpcmbuf);
 
