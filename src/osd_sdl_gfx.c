@@ -22,7 +22,7 @@ static int fullscreen;
 int blit_x, blit_y;
 // where must we blit the screen buffer on screen
 
-uchar *XBuf;
+extern uchar *XBuf;
 // buffer for video flipping
 
 osd_gfx_driver osd_gfx_driver_list[3] = {
